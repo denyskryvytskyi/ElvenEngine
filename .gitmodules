@@ -1,0 +1,3 @@
+[submodule "Elven/vendor/spdlog"]
+	path = Elven/vendor/spdlog
+	url = https://github.com/gabime/spdlog

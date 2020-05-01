@@ -1,7 +1,13 @@
 # Directories
-.vs/
-bin/
+**/bin/
 bin-int/
+!vendor/bin/premake/
 
-# Files
-*.user
+# Elven engine files
+*.log
+
+# Visual studio files and folder
+.vs/
+**.sln
+**.vcxproj
+**.vcxproj.user

@@ -1,7 +1,7 @@
 #pragma once
 
-#ifdef EV_PLATFORM_WINDOWS
-    #ifdef EV_BUILD_DLL
+#ifdef EL_PLATFORM_WINDOWS
+    #ifdef EL_BUILD_DLL
         #define ELVEN_API __declspec(dllexport)
     #else
         #define ELVEN_API __declspec(dllimport)
