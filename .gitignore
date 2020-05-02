@@ -1,5 +1,5 @@
 # Directories
-**/bin/
+/bin/
 bin-int/
 !vendor/bin/premake/
 
