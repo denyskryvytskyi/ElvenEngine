@@ -10,6 +10,8 @@ workspace "Elven"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+startproject "Sandbox"
+
 project "Elven"
     location "Elven"
     kind "SharedLib"
@@ -17,6 +19,9 @@ project "Elven"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    pchheader "elpch.h"
+    pchsource "Elven/src/elpch.cpp"
 
     files
     {
@@ -26,6 +31,7 @@ project "Elven"
 
     includedirs 
     {
+        "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include"
     }
 
@@ -42,7 +48,7 @@ project "Elven"
 
         postbuildcommands
         {
-            ("{COPY} %{cfg.buildtarget.relpath} ..bin/" .. outputdir .. "/Sandbox")
+            ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
         }
 
     filter "configurations:Debug"

@@ -1,7 +1,6 @@
 # Directories
 /bin/
 bin-int/
-!vendor/bin/premake/
 
 # Elven engine files
 *.log
@@ -10,4 +9,5 @@ bin-int/
 .vs/
 **.sln
 **.vcxproj
+**.vcxproj.filters
 **.vcxproj.user

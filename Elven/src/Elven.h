@@ -2,9 +2,9 @@
 
 // For use by Elven Engine applications
 
-#include "Core/Log.h"
-#include "Core/Application.h"
+#include "Elven/Core/Log.h"
+#include "Elven/Core/Application.h"
 
 // Entry Point
-#include "Core/EntryPoint.h"
+#include "Elven/Core/EntryPoint.h"
 // ----------------------------------------------------------------
