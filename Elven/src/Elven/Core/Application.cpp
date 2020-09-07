@@ -4,10 +4,13 @@
 #include "Elven/Events/ApplicationEvent.h"
 #include "Elven/Core/Log.h"
 
+#include <GLFW/glfw3.h>
+
 namespace Elven
 {
     Application::Application()
     {
+        m_Window = Window::Create();
     }
 
     Application::~Application()
@@ -16,16 +19,11 @@ namespace Elven
 
     void Application::Run()
     {
-        WindowResizeEvent e(1280, 720);
-        if (e.IsInCategory(EventCategory_Application))
+        while (m_Running)
         {
-            EL_TRACE(e);
+            glClearColor(0, 1, 0, 0);
+            glClear(GL_COLOR_BUFFER_BIT);
+            m_Window->OnUpdate();
         }
-        if (e.IsInCategory(EventCategory_Keybord))
-        {
-            EL_TRACE(e);
-        }
-
-        while (true);
     }
 }
