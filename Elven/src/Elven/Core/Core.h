@@ -38,7 +38,7 @@
     #define EL_CORE_ASSERT(expr, ...) if (expr) {} \
         else \
         { \
-            EL_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
+            EL_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
             EL_DEBUGBREAK(); \
         }
 #else
@@ -65,5 +65,4 @@ namespace Elven
     {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
-
 }

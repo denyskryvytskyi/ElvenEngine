@@ -1,7 +1,8 @@
 #pragma once
 
 #include <string>
-#include <iostream>
+#include <sstream>
+#include <functional>
 
 #include "Elven/Core/Core.h"
 

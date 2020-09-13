@@ -1,5 +1,6 @@
 workspace "Elven"
     architecture "x64"
+    startproject "Sandbox"
 
     configurations
     {
@@ -9,8 +10,6 @@ workspace "Elven"
     }
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-
-startproject "Sandbox"
 
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
@@ -66,14 +65,17 @@ project "Elven"
 
     filter "configurations:Debug"
         defines "EL_DEBUG"
+        buildoptions "/MDd"
         symbols "On"
 
     filter "configurations:Release"
         defines "EL_RELEASE"
+        buildoptions "/MD"
         optimize "On"
 
     filter "configurations:Dist"
         defines "EL_DIST"
+        buildoptions "/MD"
         optimize "On"
 
 project "Sandbox"
@@ -113,12 +115,15 @@ project "Sandbox"
 
         filter "configurations:Debug"
             defines "EL_DEBUG"
+            buildoptions "/MDd"
             symbols "On"
 
         filter "configurations:Release"
             defines "EL_RELEASE"
+            buildoptions "/MD"
             optimize "On"
 
         filter "configurations:Dist"
             defines "EL_DIST"
+            buildoptions "/MD"
             optimize "On"

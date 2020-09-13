@@ -1,9 +1,6 @@
 #pragma once
 
-#include "Elven/Core/Core.h"
 #include "Elven/Events/Event.h"
-
-#include <sstream>
 
 namespace Elven
 {

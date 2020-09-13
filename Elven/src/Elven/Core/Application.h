@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Core.h"
+#include "Elven/Core/Core.h"
 #include "Elven/Events/Event.h"
 #include "Elven/Events/ApplicationEvent.h"
-#include "Window.h"
+#include "Elven/Core/Window.h"
+#include "Elven/Core/LayerStack.h"
 
 namespace Elven
 {
@@ -13,14 +14,18 @@ namespace Elven
         Application();
         virtual ~Application();
 
-        void Run();
-
         void OnEvent(Event& e);
+
+        void PushLayer(Layer* layer);
+        void PushOverlay(Layer* overlay);
+
+        void Run();
 
     private:
         bool OnWindowClose(WindowCloseEvent& e);
 
     private:
+        LayerStack m_LayerStack;
         Scope<Window> m_Window;
         bool m_Running = true;
     };

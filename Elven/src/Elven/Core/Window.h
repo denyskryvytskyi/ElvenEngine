@@ -1,7 +1,5 @@
 #pragma once
 
-#include "elpch.h"
-
 #include "Elven/Core/Core.h"
 #include "Elven/Events/Event.h"
 

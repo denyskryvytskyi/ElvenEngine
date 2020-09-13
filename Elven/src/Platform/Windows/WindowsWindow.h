@@ -40,6 +40,4 @@ namespace Elven
 
         WindowData m_Data;
     };
-
 }
-
