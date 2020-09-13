@@ -31,7 +31,7 @@ namespace Elven
 
         int GetRepeatCount() const { return m_RepeatCount; }
 
-        std::string ToString()
+        std::string ToString() const override
         {
             std::stringstream ss;
             ss << "KeyPressedEvent: " << m_KeyCode << " (" << m_RepeatCount << " repeats)";
@@ -50,7 +50,7 @@ namespace Elven
         KeyReleasedEvent(int keyCode)
             : KeyEvent(keyCode) {}
 
-        std::string ToString()
+        std::string ToString() const override
         {
             std::stringstream ss;
             ss << "KeyReleasedEvent: " << m_KeyCode;

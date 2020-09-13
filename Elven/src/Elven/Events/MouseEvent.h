@@ -38,11 +38,10 @@ namespace Elven
             : m_XOffset(xOffset),
             m_YOffset(yOffset) {}
 
-
         float GetXOffset() const { return m_XOffset; }
         float GetYOffset() const { return m_YOffset; }
 
-        std::string ToString()
+        std::string ToString() const override
         {
             std::stringstream ss;
             ss << "MouseScrolledEvent: " << m_XOffset << ", " << m_YOffset;
@@ -76,7 +75,7 @@ namespace Elven
         MouseButtonPressedEvent(int button)
             : MouseButtonEvent(button) {}
 
-        std::string ToString()
+        std::string ToString() const override
         {
             std::stringstream ss;
             ss << "MouseButtonPressedEvent: " << m_Button;
@@ -92,7 +91,7 @@ namespace Elven
         MouseButtonReleasedEvent(int button)
             : MouseButtonEvent(button) {}
 
-        std::string ToString()
+        std::string ToString() const override
         {
             std::stringstream ss;
             ss << "MouseButtonReleasedEvent: " << m_Button;
