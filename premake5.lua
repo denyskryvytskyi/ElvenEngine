@@ -14,8 +14,10 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
 IncludeDir["GLFW"] = "Elven/vendor/GLFW/include"
+IncludeDir["Glad"] = "Elven/vendor/Glad/include"
 
 include "Elven/vendor/GLFW"
+include "Elven/vendor/GLAD"
 
 project "Elven"
     location "Elven"
@@ -38,13 +40,20 @@ project "Elven"
     {
         "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
-        "%{IncludeDir.GLFW}"
+        "%{IncludeDir.GLFW}",
+        "%{IncludeDir.Glad}"
     }
 
     links
     {
         "GLFW",
+        "GLAD",
         "opengl32.lib"
+    }
+
+    defines
+    {
+        "GLFW_INCLUDE_NONE",
     }
 
     filter "system:windows"
@@ -82,6 +91,8 @@ project "Sandbox"
     location "Sandbox"
     kind "ConsoleApp"
     language "C++"
+    cppdialect "C++17"
+    staticruntime "on"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -104,8 +115,6 @@ project "Sandbox"
     }
 
     filter "system:windows"
-        cppdialect "C++17"
-        staticruntime "On"
         systemversion "latest"
 
         defines

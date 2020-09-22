@@ -1,5 +1,6 @@
 # Directories
-/bin/
+**/bin/
+!vendor/premake/bin
 bin-int/
 
 # Elven engine files
