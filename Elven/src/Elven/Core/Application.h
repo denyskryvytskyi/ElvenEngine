@@ -21,10 +21,15 @@ namespace Elven
 
         void Run();
 
+        static Application& Get() { return *s_Instance; }
+        Window& GetWindow() { return *m_Window; }
+
     private:
         bool OnWindowClose(WindowCloseEvent& e);
 
     private:
+        static Application* s_Instance;
+
         LayerStack m_LayerStack;
         Scope<Window> m_Window;
         bool m_Running = true;

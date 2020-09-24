@@ -7,6 +7,8 @@
 #include "Elven/Core/Layer.h"
 #include "Elven/Core/Log.h"
 
+#include "Elven/ImGui/ImGuiLayer.h"
+
 // Entry Point
 #include "Elven/Core/EntryPoint.h"
 // ----------------------------------------------------------------
