@@ -1,14 +1,10 @@
 #include "elpch.h"
 #include "Application.h"
 
-#include "Elven/Core/Log.h"
-
 #include <glad/glad.h>
 
 namespace Elven
 {
-    #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
-
     Application* Application::s_Instance = nullptr;
 
     Application::Application()
@@ -17,7 +13,7 @@ namespace Elven
         s_Instance = this;
 
         m_Window = Window::Create();
-        m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+        m_Window->SetEventCallback(EL_BIND_EVENT_FN(Application::OnEvent));
 
         unsigned int id;
         glGenVertexArrays(1, &id);
@@ -30,7 +26,7 @@ namespace Elven
     void Application::OnEvent(Event& e)
     {
         EventDispatcher dispatcher(e);
-        dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+        dispatcher.Dispatch<WindowCloseEvent>(EL_BIND_EVENT_FN(Application::OnWindowClose));
 
         EL_CORE_TRACE(e.ToString());
 

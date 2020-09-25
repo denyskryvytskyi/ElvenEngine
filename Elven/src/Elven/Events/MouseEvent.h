@@ -55,7 +55,7 @@ namespace Elven
     class ELVEN_API MouseButtonEvent : public Event
     {
     public:
-        int GetButton() const { return m_Button; }
+        int GetMouseButton() const { return m_Button; }
 
         EVENT_CLASS_CATEGORY(EventCategory_Mouse | EventCategory_Input)
 
