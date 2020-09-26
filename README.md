@@ -15,6 +15,6 @@ Run GenerateProject.bat file from the scripts folder to build the solution.
 
 - [premake](https://github.com/premake/premake-core)
 - [spdlog](https://github.com/gabime/spdlog)
-- [GLFW](https://github.com/kryvytskyidenys/glfw).
+- [GLFW](https://github.com/kryvytskyidenys/glfw)
 - [Glad](https://glad.dav1d.de/)
 - [Deat ImGui](https://github.com/kryvytskyidenys/imgui)
