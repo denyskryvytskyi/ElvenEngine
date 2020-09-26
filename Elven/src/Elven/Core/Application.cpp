@@ -1,6 +1,6 @@
 #include "elpch.h"
-#include "Application.h"
-
+#include "Elven/Core/Application.h"
+#include "Elven/Core/Input.h"
 #include <glad/glad.h>
 
 namespace Elven
@@ -14,9 +14,6 @@ namespace Elven
 
         m_Window = Window::Create();
         m_Window->SetEventCallback(EL_BIND_EVENT_FN(Application::OnEvent));
-
-        unsigned int id;
-        glGenVertexArrays(1, &id);
     }
 
     Application::~Application()
@@ -27,8 +24,6 @@ namespace Elven
     {
         EventDispatcher dispatcher(e);
         dispatcher.Dispatch<WindowCloseEvent>(EL_BIND_EVENT_FN(Application::OnWindowClose));
-
-        EL_CORE_TRACE(e.ToString());
 
         for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
         {

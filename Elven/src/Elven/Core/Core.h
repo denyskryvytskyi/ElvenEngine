@@ -42,8 +42,8 @@
             EL_DEBUGBREAK(); \
         }
 #else
-    #define EL_ASSERT(expr) // evaluates to nothing
-    #define EL_CORE_ASSERT(expr) // evaluates to nothing
+    #define EL_ASSERT(expr)
+    #define EL_CORE_ASSERT(expr)
 #endif
 
 #define BIT(x) (1 << x)
