@@ -1,4 +1,5 @@
 #include <Elven.h>
+#include "imgui/imgui.h"
 
 class TestLayer : public Elven::Layer
 {
@@ -13,6 +14,13 @@ public:
         //EL_INFO("TestLayer::Update");
     }
 
+    virtual void OnImGuiRender() override
+    {
+        ImGui::Begin("Test");
+        ImGui::Text("Hello ImGui!");
+        ImGui::End();
+    }
+
     void OnEvent(Elven::Event& event) override
     {
         //EL_TRACE("{0}", event);
@@ -25,7 +33,6 @@ public:
     Sandbox()
     {
         PushLayer(new TestLayer());
-        PushOverlay(new Elven::ImGuiLayer());
     }
 
     ~Sandbox()

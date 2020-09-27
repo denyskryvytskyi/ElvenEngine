@@ -1,10 +1,13 @@
 #pragma once
 
 #include "Elven/Core/Core.h"
-#include "Elven/Events/Event.h"
-#include "Elven/Events/ApplicationEvent.h"
 #include "Elven/Core/Window.h"
 #include "Elven/Core/LayerStack.h"
+
+#include "Elven/Events/Event.h"
+#include "Elven/Events/ApplicationEvent.h"
+
+#include "Elven/ImGui/ImGuiLayer.h"
 
 namespace Elven
 {
@@ -30,8 +33,9 @@ namespace Elven
     private:
         static Application* s_Instance;
 
-        LayerStack m_LayerStack;
         Scope<Window> m_Window;
+        ImGuiLayer* m_ImGuiLayer;
+        LayerStack m_LayerStack;
         bool m_Running = true;
     };
 

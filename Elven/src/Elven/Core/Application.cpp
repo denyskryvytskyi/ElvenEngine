@@ -14,6 +14,9 @@ namespace Elven
 
         m_Window = Window::Create();
         m_Window->SetEventCallback(EL_BIND_EVENT_FN(Application::OnEvent));
+
+        m_ImGuiLayer = new ImGuiLayer();
+        PushOverlay(m_ImGuiLayer);
     }
 
     Application::~Application()
@@ -52,11 +55,21 @@ namespace Elven
             glClearColor(0, 1, 0, 0);
             glClear(GL_COLOR_BUFFER_BIT);
 
+            // Layers update
             for (Layer* layer : m_LayerStack)
             {
                 layer->OnUpdate();
             }
 
+            // ImGui layers render
+            m_ImGuiLayer->Begin();
+            for (Layer* layer : m_LayerStack)
+            {
+                layer->OnImGuiRender();
+            }
+            m_ImGuiLayer->End();
+
+            // Window update
             m_Window->OnUpdate();
         }
     }

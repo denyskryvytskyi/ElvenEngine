@@ -115,6 +115,7 @@ project "Sandbox"
     {
         "Elven/vendor/spdlog/include",
         "Elven/src",
+        "Elven/vendor",
         "%{IncludeDir.glm}"
     }
     
