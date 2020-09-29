@@ -7,7 +7,7 @@
 
 namespace Elven
 {
-    class ELVEN_API Log
+    class Log
     {
     public:
         static void Init();

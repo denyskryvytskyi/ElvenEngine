@@ -11,7 +11,7 @@
 
 namespace Elven
 {
-    class ELVEN_API Application
+    class Application
     {
     public:
         Application();

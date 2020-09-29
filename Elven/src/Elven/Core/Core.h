@@ -2,16 +2,6 @@
 
 #include <memory>
 
-#ifdef EL_PLATFORM_WINDOWS
-    #ifdef EL_BUILD_DLL
-        #define ELVEN_API __declspec(dllexport)
-    #else
-        #define ELVEN_API __declspec(dllimport)
-    #endif
-#else
-    #error Elven only support Windows!
-#endif
-
 #ifdef EL_DEBUG
     #if defined(EL_PLATFORM_WINDOWS)
         #define EL_DEBUGBREAK() __debugbreak()
