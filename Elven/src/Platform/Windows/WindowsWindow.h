@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Elven/Core/Window.h"
+#include "Elven/Renderer/GraphicsContext.h"
 
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 namespace Elven
 {
@@ -30,6 +31,7 @@ namespace Elven
 
     private:
         GLFWwindow* m_Window;
+        Scope<GraphicsContext> m_Context;
 
         struct WindowData
         {

@@ -1,11 +1,10 @@
 #include "elpch.h"
-#include "WindowsWindow.h"
+#include "Platform/Windows/WindowsWindow.h"
+#include "Platform/OpenGL/OpenGLContext.h"
 
 #include "Elven/Events/ApplicationEvent.h"
 #include "Elven/Events/KeyEvent.h"
 #include "Elven/Events/MouseEvent.h"
-
-#include "glad/glad.h"
 
 namespace Elven
 {
@@ -29,7 +28,7 @@ namespace Elven
     void WindowsWindow::OnUpdate()
     {
         glfwPollEvents();
-        glfwSwapBuffers(m_Window);
+        m_Context->SwapBuffers();
     }
 
     void WindowsWindow::SetVSync(bool enabled)
@@ -63,10 +62,9 @@ namespace Elven
         }
 
         m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
-        glfwMakeContextCurrent(m_Window);
 
-        int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-        EL_CORE_ASSERT(status, "Failed to initialize Glad.");
+        m_Context = GraphicsContext::Create(m_Window);
+        m_Context->Init();
 
         glfwSetWindowUserPointer(m_Window, &m_Data);
         SetVSync(true);
