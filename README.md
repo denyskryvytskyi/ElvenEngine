@@ -11,7 +11,7 @@ You can clone repository using git (**`--recursive`** is required to fetch all o
 
 Run GenerateProject.bat file from the scripts folder to build the solution.
 
-## Cool stuff in use
+## Third party libraries
 
 - [premake](https://github.com/premake/premake-core)
 - [spdlog](https://github.com/gabime/spdlog)
