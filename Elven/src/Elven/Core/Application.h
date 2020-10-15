@@ -9,6 +9,9 @@
 
 #include "Elven/ImGui/ImGuiLayer.h"
 
+#include "Elven/Renderer/Shader.h"
+
+
 namespace Elven
 {
     class Application
@@ -37,6 +40,8 @@ namespace Elven
         ImGuiLayer* m_ImGuiLayer;
         LayerStack m_LayerStack;
         bool m_Running = true;
+
+        ShaderManager shaderManager;
     };
 
     // To be defined in CLIENT

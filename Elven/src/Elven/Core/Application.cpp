@@ -1,10 +1,16 @@
 #include "elpch.h"
+
 #include "Elven/Core/Application.h"
 #include "Elven/Core/Input.h"
-#include <glad/glad.h>
+#include "Elven/Renderer/Shader.h"
+#include "Elven/Renderer/Buffer.h"
+#include "Elven/Renderer/VertexArray.h"
+#include "Elven/Renderer/Renderer.h"
 
 namespace Elven
 {
+    Ref<VertexArray> VA;
+
     Application* Application::s_Instance = nullptr;
 
     Application::Application()
@@ -17,6 +23,33 @@ namespace Elven
 
         m_ImGuiLayer = new ImGuiLayer();
         PushOverlay(m_ImGuiLayer);
+
+        float vertices[] = {
+            -0.5f, -0.5f, 0.0f, 0.1f, 0.2f, 0.6f, 1.0f,
+            -0.5f, 0.5f, 0.0f, 0.6f, 0.2f, 0.2f, 1.0f,
+            0.5f, 0.5f, 0.0f, 0.1f, 0.7f, 0.1f, 1.0f,
+            0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.5f, 1.0f
+        };
+
+        VA = VertexArray::Create();
+
+        Ref<VertexBuffer> VBO = VertexBuffer::Create(vertices, sizeof(vertices));
+        VertexBufferLayout layout = {
+            {BufferAttributeType::Float3, "a_Position" },
+            {BufferAttributeType::Float4, "a_Color" }
+        };
+        VBO->SetLayout(layout);
+
+        VA->AddVertexBuffer(VBO);
+
+        uint32_t indices[] = {
+            0, 1, 2, 0, 2, 3
+        };
+        Ref<IndexBuffer> IBO = IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
+
+        VA->SetIndexBuffer(IBO);
+
+        shaderManager.Load("test", "res/shaders/shader.vert", "res/shaders/shader.frag");
     }
 
     Application::~Application()
@@ -50,10 +83,17 @@ namespace Elven
 
     void Application::Run()
     {
+
+
         while (m_Running)
         {
-            glClearColor(0, 1, 0, 0);
-            glClear(GL_COLOR_BUFFER_BIT);
+            RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
+            RenderCommand::Clear();
+
+            Renderer::BeginScene();
+
+            shaderManager.Get("test")->Bind();
+            Renderer::Submit(VA);
 
             // Layers update
             for (Layer* layer : m_LayerStack)

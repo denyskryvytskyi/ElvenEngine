@@ -10,7 +10,7 @@ project "Glad"
     {
         "include/glad/glad.h",
         "include/KHR/khrplatform.h",
-        "src/glad.c",
+        "src/glad.c"
     }
 
     includedirs
