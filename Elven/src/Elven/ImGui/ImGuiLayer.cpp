@@ -46,7 +46,7 @@ namespace Elven
         // Setup Platform/Renderer bindings
         GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
         ImGui_ImplGlfw_InitForOpenGL(window, true);
-        ImGui_ImplOpenGL3_Init("#version 430");
+        ImGui_ImplOpenGL3_Init("#version 330");
     }
 
     void ImGuiLayer::OnDetach()
