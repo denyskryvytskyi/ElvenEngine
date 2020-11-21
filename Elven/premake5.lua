@@ -15,7 +15,9 @@ project "Elven"
         "src/**.h",
         "src/**.cpp",
         "vendor/glm/glm/**.hpp",
-        "vendor/glm/glm/**.inl"
+        "vendor/glm/glm/**.inl",
+        "vendor/gdm/gdm/**.h",
+        "vendor/gdm/gdm/**.cpp"
     }
 
     defines
@@ -31,7 +33,8 @@ project "Elven"
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.gdm}"
     }
 
     links

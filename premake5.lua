@@ -17,6 +17,7 @@ IncludeDir["GLFW"] = "%{wks.location}/Elven/vendor/GLFW/include"
 IncludeDir["Glad"] = "%{wks.location}/Elven/vendor/Glad/include"
 IncludeDir["ImGui"] = "%{wks.location}/Elven/vendor/imgui"
 IncludeDir["glm"] = "%{wks.location}/Elven/vendor/glm"
+IncludeDir["gdm"] = "%{wks.location}/Elven/vendor/gdm"
 
 group "Dependencies"
     include "Elven/vendor/GLFW"
