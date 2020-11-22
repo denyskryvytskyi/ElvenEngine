@@ -20,7 +20,10 @@ namespace Elven
         void SetVector3f(const std::string & name, glm::vec3 & value) override;
         void SetVector4f(const std::string & name, float x, float y, float z, float w) override;
         void SetVector4f(const std::string & name, glm::vec4 & value) override;
-        void SetMatrix4(const std::string & name, glm::mat4 & value) override;
+        void SetMatrix4(const std::string & name, const glm::mat4 & value) override;
+
+        // custom math GDM
+        void SetMatrix4g(const std::string& name, const gdm::mat4& matrix) override;
 
         int GetUniformLocation(const std::string& name);
 

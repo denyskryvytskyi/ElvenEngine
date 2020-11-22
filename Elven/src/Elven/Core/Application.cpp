@@ -14,6 +14,7 @@ namespace Elven
     Application* Application::s_Instance = nullptr;
 
     Application::Application()
+        : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
     {
         EL_CORE_ASSERT(!s_Instance, "Application already exist!");
         s_Instance = this;
@@ -83,17 +84,19 @@ namespace Elven
 
     void Application::Run()
     {
-
-
         while (m_Running)
         {
             RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
             RenderCommand::Clear();
 
-            Renderer::BeginScene();
+            Renderer::BeginScene(m_Camera);
 
             shaderManager.Get("test")->Bind();
-            Renderer::Submit(VA);
+
+            m_Camera.SetPosition(gdm::vec3(0.5f, 0.5f, 0.0f));
+            m_Camera.SetRotation(65.0f);
+
+            Renderer::Submit(shaderManager.Get("test"), VA);
 
             // Layers update
             for (Layer* layer : m_LayerStack)

@@ -16,8 +16,7 @@ project "Elven"
         "src/**.cpp",
         "vendor/glm/glm/**.hpp",
         "vendor/glm/glm/**.inl",
-        "vendor/gdm/gdm/**.h",
-        "vendor/gdm/gdm/**.cpp"
+        "vendor/gdm/gdm/**.h"
     }
 
     defines

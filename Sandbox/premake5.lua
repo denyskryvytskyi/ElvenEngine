@@ -18,7 +18,8 @@ project "Sandbox"
         "%{wks.location}/Elven/vendor/spdlog/include",
         "%{wks.location}/Elven/src",
         "%{wks.location}/Elven/vendor",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.gdm}"
     }
     
     links 
