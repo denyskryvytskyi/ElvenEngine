@@ -1,11 +1,7 @@
 #pragma once
 
-#include "Elven/Core/Core.h"
 #include "Elven/Core/Window.h"
 #include "Elven/Core/LayerStack.h"
-
-#include "Elven/Events/Event.h"
-#include "Elven/Events/ApplicationEvent.h"
 
 #include "Elven/ImGui/ImGuiLayer.h"
 

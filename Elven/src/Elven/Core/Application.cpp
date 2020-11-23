@@ -2,7 +2,7 @@
 
 #include "Elven/Core/Application.h"
 #include "Elven/Core/Input.h"
-#include "Elven/Renderer/Shader.h"
+
 #include "Elven/Renderer/Buffer.h"
 #include "Elven/Renderer/VertexArray.h"
 #include "Elven/Renderer/Renderer.h"

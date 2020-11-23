@@ -26,7 +26,7 @@ namespace Elven
     void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray)
     {
         shader->Bind();
-        shader->SetMatrix4g("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
+        shader->SetMatrix4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
 
         vertexArray->Bind();
         RenderCommand::DrawIndexed(vertexArray);

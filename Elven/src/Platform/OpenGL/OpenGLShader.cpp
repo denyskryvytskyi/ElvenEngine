@@ -2,7 +2,6 @@
 #include "Platform/OpenGL/OpenGLShader.h"
 
 #include <glad/glad.h>
-#include <glm/gtc/type_ptr.hpp>
 
 namespace Elven
 {
@@ -38,7 +37,7 @@ namespace Elven
         glUniform2f(GetUniformLocation(name), x, y);
     }
 
-    void OpenGLShader::SetVector2f(const std::string& name, glm::vec2& value)
+    void OpenGLShader::SetVector2f(const std::string& name, const gdm::vec2& value)
     {
         glUniform2f(GetUniformLocation(name), value.x, value.y);
     }
@@ -48,7 +47,7 @@ namespace Elven
         glUniform3f(GetUniformLocation(name), x, y, z);
     }
 
-    void OpenGLShader::SetVector3f(const std::string& name, glm::vec3& value)
+    void OpenGLShader::SetVector3f(const std::string& name, const gdm::vec3& value)
     {
         glUniform3f(GetUniformLocation(name), value.x, value.y, value.z);
     }
@@ -58,19 +57,12 @@ namespace Elven
         glUniform4f(GetUniformLocation(name), x, y, z, w);
     }
 
-    void OpenGLShader::SetVector4f(const std::string& name, glm::vec4& value)
+    void OpenGLShader::SetVector4f(const std::string& name, const gdm::vec4& value)
     {
         glUniform4f(GetUniformLocation(name), value.x, value.y, value.z, value.w);
     }
 
-    void OpenGLShader::SetMatrix4(const std::string& name, const glm::mat4& value)
-    {
-        glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
-    }
-
-    /////////// GDM ///////////
-
-    void OpenGLShader::SetMatrix4g(const std::string& name, const gdm::mat4& matrix)
+    void OpenGLShader::SetMatrix4(const std::string& name, const gdm::mat4& matrix)
     {
         glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, matrix.ElementsPtr());
     }
