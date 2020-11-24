@@ -5,9 +5,6 @@
 
 #include "Elven/ImGui/ImGuiLayer.h"
 
-#include "Elven/Renderer/Shader.h"
-#include "Elven/Renderer/OrthographicCamera.h"
-
 namespace Elven
 {
     class Application
@@ -35,11 +32,8 @@ namespace Elven
         Scope<Window> m_Window;
         ImGuiLayer* m_ImGuiLayer;
         LayerStack m_LayerStack;
+
         bool m_Running = true;
-
-        ShaderManager shaderManager;
-
-        OrthographicCamera m_Camera;
     };
 
     // To be defined in CLIENT

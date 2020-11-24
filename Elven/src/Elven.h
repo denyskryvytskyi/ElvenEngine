@@ -1,6 +1,9 @@
 #pragma once
 
 // For use by Elven Engine applications
+
+/// Core ////////////////////////////////////////
+
 #include "Elven//Core/Core.h"
 
 #include "Elven/Core/Application.h"
@@ -9,6 +12,14 @@
 
 #include "Elven/ImGui/ImGuiLayer.h"
 
-// Entry Point
-#include "Elven/Core/EntryPoint.h"
-// ----------------------------------------------------------------
+/// Renderer ////////////////////////////////////
+
+#include "Elven/Renderer/Renderer.h"
+#include "Elven/Renderer/RenderCommand.h"
+#include "Elven/Renderer/OrthographicCamera.h"
+
+#include "Elven/Renderer/Buffer.h"
+#include "Elven/Renderer/Shader.h"
+#include "Elven/Renderer/VertexArray.h"
+
+///////////////////////////////////////////////////
