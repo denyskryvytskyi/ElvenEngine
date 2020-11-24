@@ -19,5 +19,5 @@ private:
     Elven::Ref<Elven::Shader> m_Shader;
     Elven::Ref<Elven::VertexArray> m_VAO;
 
-    Elven::OrthographicCamera m_Camera;
+    Elven::OrthographicCameraController m_CameraController;
 };

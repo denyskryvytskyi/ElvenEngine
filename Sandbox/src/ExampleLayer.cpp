@@ -1,17 +1,16 @@
 #include "ExampleLayer.h"
 
 ExampleLayer::ExampleLayer()
-    : Layer("ExampleLayer")
-    , m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
+    : Layer("ExampleLayer"), m_CameraController(1280.0f / 720.0f)
 {
+    m_VAO = Elven::VertexArray::Create();
+
     float vertices[] = {
             -0.5f, -0.5f, 0.0f, 0.1f, 0.2f, 0.6f, 1.0f,
             -0.5f, 0.5f, 0.0f, 0.6f, 0.2f, 0.2f, 1.0f,
             0.5f, 0.5f, 0.0f, 0.1f, 0.7f, 0.1f, 1.0f,
             0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.5f, 1.0f
     };
-
-    m_VAO = Elven::VertexArray::Create();
 
     Elven::Ref<Elven::VertexBuffer> vbo = Elven::VertexBuffer::Create(vertices, sizeof(vertices));
     Elven::VertexBufferLayout layout = {
@@ -42,16 +41,14 @@ void ExampleLayer::OnDetach()
 
 void ExampleLayer::OnUpdate()
 {
+    m_CameraController.OnUpdate();
+
+    // Render
     Elven::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
     Elven::RenderCommand::Clear();
 
-    Elven::Renderer::BeginScene(m_Camera);
-
-    m_Camera.SetPosition(gdm::vec3(0.5f, 0.5f, 0.0f));
-    m_Camera.SetRotation(65.0f);
-
+    Elven::Renderer::BeginScene(m_CameraController.GetCamera());
     Elven::Renderer::Submit(m_Shader, m_VAO);
-
     Elven::Renderer::EndScene();
 }
 
@@ -61,4 +58,5 @@ void ExampleLayer::OnImGuiRender()
 
 void ExampleLayer::OnEvent(Elven::Event& event)
 {
+    m_CameraController.OnEvent(event);
 }
