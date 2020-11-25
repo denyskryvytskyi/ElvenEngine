@@ -39,9 +39,9 @@ void ExampleLayer::OnDetach()
 {
 }
 
-void ExampleLayer::OnUpdate()
+void ExampleLayer::OnUpdate(float dt)
 {
-    m_CameraController.OnUpdate();
+    m_CameraController.OnUpdate(dt);
 
     // Render
     Elven::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });

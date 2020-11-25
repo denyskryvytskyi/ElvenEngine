@@ -11,7 +11,7 @@ namespace Elven
     public:
         OrthographicCameraController(float aspectRatio);
 
-        void OnUpdate();
+        void OnUpdate(float dt);
         void OnEvent(Event& e);
 
         void OnResize(float width, float height);

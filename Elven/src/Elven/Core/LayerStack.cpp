@@ -3,6 +3,10 @@
 
 namespace Elven
 {
+    LayerStack::LayerStack()
+        : m_LayerInsertIndex(0)
+    {
+    }
     Elven::LayerStack::~LayerStack()
     {
         for (Layer* layer : m_Layers)

@@ -10,7 +10,7 @@ public:
 
     virtual void OnAttach() override;
     virtual void OnDetach() override;
-    void OnUpdate() override;
+    void OnUpdate(float dt) override;
     virtual void OnImGuiRender() override;
     void OnEvent(Elven::Event& event) override;
 

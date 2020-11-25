@@ -12,6 +12,7 @@ namespace Elven
     Application* Application::s_Instance = nullptr;
 
     Application::Application()
+        : m_Running(true)
     {
         EL_CORE_ASSERT(!s_Instance, "Application already exist!");
         s_Instance = this;
@@ -54,12 +55,16 @@ namespace Elven
 
     void Application::Run()
     {
+        Timer timer;
         while (m_Running)
         {
+            float elapsedTime = timer.elapsed();
+            timer.restart();
+
             // Layers update
             for (Layer* layer : m_LayerStack)
             {
-                layer->OnUpdate();
+                layer->OnUpdate(elapsedTime);
             }
 
             // ImGui layers render

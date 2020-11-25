@@ -2,6 +2,7 @@
 
 #include "Elven/Core/Window.h"
 #include "Elven/Core/LayerStack.h"
+#include "Elven/Core/Timer.h"
 
 #include "Elven/ImGui/ImGuiLayer.h"
 
@@ -33,11 +34,9 @@ namespace Elven
         ImGuiLayer* m_ImGuiLayer;
         LayerStack m_LayerStack;
 
-        bool m_Running = true;
+        bool m_Running;
     };
 
     // To be defined in CLIENT
     Application* CreateApplication();
 }
-
-

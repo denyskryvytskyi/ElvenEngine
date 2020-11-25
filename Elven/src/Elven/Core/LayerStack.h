@@ -10,7 +10,7 @@ namespace Elven
     class LayerStack
     {
     public:
-        LayerStack() = default;
+        LayerStack();
         ~LayerStack();
 
         void PushLayer(Layer* layer);
@@ -30,7 +30,7 @@ namespace Elven
 
     private:
         std::vector<Layer*> m_Layers;
-        unsigned int m_LayerInsertIndex = 0;
+        unsigned int m_LayerInsertIndex;
     };
 }
 
