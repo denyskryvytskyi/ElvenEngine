@@ -17,7 +17,8 @@ public:
 private:
     Elven::ShaderManager m_ShaderManager;
     Elven::Ref<Elven::Shader> m_Shader;
-    Elven::Ref<Elven::VertexArray> m_VAO;
+    Elven::Ref<Elven::VertexArray> m_VAOGrid;
+    Elven::Ref<Elven::VertexArray> m_VAOTriangle;
 
     Elven::OrthographicCameraController m_CameraController;
 };

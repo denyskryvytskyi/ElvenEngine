@@ -15,7 +15,7 @@ namespace Elven
         static void BeginScene(OrthographicCamera& camera);
         static void EndScene();
 
-        static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray);
+        static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const gdm::mat4& modelMatrix = gdm::mat4());
 
         static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 

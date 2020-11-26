@@ -23,10 +23,11 @@ namespace Elven
     {
     }
 
-    void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray)
+    void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const gdm::mat4& modelMatrix)
     {
         shader->Bind();
         shader->SetMatrix4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
+        shader->SetMatrix4("u_Model", modelMatrix);
 
         vertexArray->Bind();
         RenderCommand::DrawIndexed(vertexArray);
