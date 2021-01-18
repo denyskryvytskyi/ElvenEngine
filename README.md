@@ -1,5 +1,5 @@
 # Elven Engine
-Game engine from scratch.
+Elven Engine is primarily real-time development platform and rendering engine
 
 ## Getting Started
 Visual Studio 2017 or 2019. 
@@ -39,13 +39,13 @@ Run GenerateProject.bat file from the scripts folder to build the solution.
 - visual-editor
 - 2D spritesheet animation
 - Scripting Engine
+- 3D renderer:
+  + Deffered/Forward Rendering
+  + PBR Rendering
 - 2D physics engine (Box2d)
 - Text rendering
 
 ## Features (Backlog)
-- 3D renderer:
-  + Deffered/Forward Rendering
-  + PBR Rendering
 - Audio engine
 - Support for Mac, Linux
 - DirectX 11, DirecX 12, Vulkan support
