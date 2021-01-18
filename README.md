@@ -1,5 +1,5 @@
 # Elven Engine
-Elven Engine is primarily real-time development platform and rendering engine
+Elven Engine is primarily 2D/3D real-time development platform and rendering engine
 
 ## Getting Started
 Visual Studio 2017 or 2019. 
