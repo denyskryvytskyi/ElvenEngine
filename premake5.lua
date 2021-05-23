@@ -25,5 +25,6 @@ group "Dependencies"
     include "Elven/vendor/imgui"
 group ""
 
+include "Allocators"
 include "Elven"
 include "Sandbox"

@@ -33,7 +33,8 @@ project "Elven"
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.glm}",
-        "%{IncludeDir.gdm}"
+        "%{IncludeDir.gdm}",
+        "%{wks.location}/Allocators/src"
     }
 
     links
@@ -41,7 +42,8 @@ project "Elven"
         "GLFW",
         "Glad",
         "ImGui",
-        "opengl32.lib"
+        "opengl32.lib",
+        "Allocators"
     }
 
     filter "system:windows"
@@ -66,3 +68,5 @@ project "Elven"
         defines "EL_DIST"
         runtime "Release"
         optimize "on"
+
+include "Allocators"
