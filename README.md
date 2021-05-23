@@ -1,5 +1,5 @@
 # Elven Engine
-Game engine from scratch.
+Elven Engine is primarily 2D/3D real-time development platform and rendering engine
 
 ## Getting Started
 Visual Studio 2017 or 2019. 
@@ -21,31 +21,43 @@ Run GenerateProject.bat file from the scripts folder to build the solution.
 | [Deat ImGui](https://github.com/kryvytskyidenys/imgui) | library using for GUI (visual-editor) |
 | [GDM](https://github.com/kryvytskyidenys/gdm) | my custom 3D mathematics library |
 
-## Features
+## Features (In progress)
 
-- Logging system and assertions
-- Event sytem
-- Input Handler System
-- Custom math library
-- Shader Manager (shader files loading)
-- Material system
-- Renderer architecture aimed to support different graphics API (OpenGL only for now)
-- Orthographic camera
+- Logging system and assertions (using spdlog lib)
+- Allocators:
+  + Stack-based: simple stack, double-ended
+  + Pool allocator
+  + Aligned allocations
+  + Single-Frame and Double-Buffered Memory Allocators
+- Event sytem (using modern c++ and event bus pattern)
+- Input Handler System (using glfw and custom event system)
+- Custom math library (as separate project)
+- Graphics core:
+  + Shader Manager (shader files loading)
+  + Renderer API (VAO, VBO, Shader abstractions)
+  + Camera (orthographic, perspective)
+
+
+
 
 ## Features (To-do)
-- Events queue
-- 2D renderer
-- Enitity-component based system
-- visual-editor
-- 2D spritesheet animation
-- Scripting Engine
-- 2D physics engine (Box2d)
-- Text rendering
 
-## Features (Backlog)
-- 3D renderer:
-  + Deffered/Forward Rendering
-  + PBR Rendering
+- Renderer 
+  - Architecture should support usage of different graphics API (OpenGL only for now)
+  - 2D renderer (sprites, 2D spritesheet animation)
+  - Material system
+  - 3D renderer:
+    - Deffered/Forward Rendering
+    - PBR Rendering
+  - Text rendering
+- Enitity-component based system
+- Visual-editor (based of ImGui)
+- Scripting Engine
+- Physics support:
+  - 2D - Box2d
+  - 2D - Bullet Physics Library (Bullet)
+
+## Backlog
 - Audio engine
 - Support for Mac, Linux
 - DirectX 11, DirecX 12, Vulkan support
