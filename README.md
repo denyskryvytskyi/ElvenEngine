@@ -18,8 +18,9 @@ Run GenerateProject.bat file from the scripts folder to build the solution.
 | [spdlog](https://github.com/gabime/spdlog) | header-only logging library |
 | [GLFW](https://github.com/kryvytskyidenys/glfw) | windows, OpenGL contexts and handle input |
 | [Glad](https://glad.dav1d.de/) | OpenGL loader |
+| [GDM](https://github.com/kryvytskyidenys/gdm) | my custom linear algebra library |
 | [Deat ImGui](https://github.com/kryvytskyidenys/imgui) | library using for GUI (visual-editor) |
-| [GDM](https://github.com/kryvytskyidenys/gdm) | my custom 3D mathematics library |
+
 
 ## Features (In progress)
 
