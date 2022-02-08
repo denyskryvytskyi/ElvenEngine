@@ -7,10 +7,10 @@
 
 namespace Elven
 {
-    Scope<Window> Elven::Window::Create(const WindowProps& props)
+    Window* Elven::Window::Create(const WindowProps& props)
     {
         #ifdef EL_PLATFORM_WINDOWS
-            return CreateScope<WindowsWindow>(props);
+            return new WindowsWindow(props);
         #else
             EL_CORE_ASSERT(false, "Unknown platform!");
             retur nullptr;

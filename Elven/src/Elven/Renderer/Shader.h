@@ -29,20 +29,20 @@ namespace Elven
 
         virtual const std::string& GetName() const = 0;
 
-        static Ref<Shader> Create(const std::string& name, const ShaderProgramSource& shaderSrc);
+        static Shader* Create(const std::string& name, const ShaderProgramSource& shaderSrc);
     };
 
     class ShaderManager
     {
     public:
-        Ref<Shader> Load(std::string name, const std::string& vShaderFile, const std::string& fShaderFile);
+        Shader* Load(std::string name, const std::string& vShaderFile, const std::string& fShaderFile);
 
-        Ref<Shader> Get(const std::string& name);
+        Shader* Get(const std::string& name);
 
     private:
         std::string ReadFile(const std::string& shaderFile);
 
     private:
-        std::unordered_map<std::string, Ref<Shader>> m_Shaders;
+        std::unordered_map<std::string, Shader*> m_Shaders;
     };
 }

@@ -13,10 +13,10 @@ ExampleLayer::ExampleLayer()
             0.5f, -0.5f, 0.0f, 0.36f, 0.28f, 0.55f, 1.0f
     };
 
-    Elven::Ref<Elven::VertexBuffer> vbo = Elven::VertexBuffer::Create(vertices_grid, sizeof(vertices_grid));
+    Elven::VertexBuffer* vbo = Elven::VertexBuffer::Create(vertices_grid, sizeof(vertices_grid));
     Elven::VertexBufferLayout layout = {
-        {Elven::BufferAttributeType::Float3, "a_Position" },
-        {Elven::BufferAttributeType::Float4, "a_Color" }
+        { Elven::BufferAttributeType::Float3, "a_Position" },
+        { Elven::BufferAttributeType::Float4, "a_Color" }
     };
     vbo->SetLayout(layout);
 
@@ -25,7 +25,7 @@ ExampleLayer::ExampleLayer()
     uint32_t indices[] = {
         0, 1, 2, 0, 2, 3
     };
-    Elven::Ref<Elven::IndexBuffer> ibo = Elven::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
+    Elven::IndexBuffer* ibo = Elven::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 
     m_VAOGrid->SetIndexBuffer(ibo);
 
@@ -38,7 +38,7 @@ ExampleLayer::ExampleLayer()
             0.5f, -0.5f, 0.0f, 0.1f, 0.7f, 0.1f, 1.0f,
     };
 
-    Elven::Ref<Elven::VertexBuffer> vbo_triangle = Elven::VertexBuffer::Create(vertices_triangle, sizeof(vertices_triangle));
+    Elven::VertexBuffer* vbo_triangle = Elven::VertexBuffer::Create(vertices_triangle, sizeof(vertices_triangle));
     Elven::VertexBufferLayout layout_triangle = {
         {Elven::BufferAttributeType::Float3, "a_Position" },
         {Elven::BufferAttributeType::Float4, "a_Color" }
@@ -50,12 +50,19 @@ ExampleLayer::ExampleLayer()
     uint32_t indices_triangle[] = {
        0, 1, 2
     };
-    Elven::Ref<Elven::IndexBuffer> ibo_triangle = Elven::IndexBuffer::Create(indices_triangle, sizeof(indices_triangle) / sizeof(uint32_t));
+    Elven::IndexBuffer* ibo_triangle = Elven::IndexBuffer::Create(indices_triangle, sizeof(indices_triangle) / sizeof(uint32_t));
 
     m_VAOTriangle->SetIndexBuffer(ibo_triangle);
 
     // Shader
     m_Shader = m_ShaderManager.Load("example_shader", "res/shaders/shader.vert", "res/shaders/shader.frag");
+}
+
+ExampleLayer::~ExampleLayer()
+{
+    delete m_Shader;
+    delete m_VAOGrid;
+    delete m_VAOTriangle;
 }
 
 void ExampleLayer::OnAttach()

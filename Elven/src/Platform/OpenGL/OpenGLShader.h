@@ -33,6 +33,6 @@ namespace Elven
     private:
         std::unordered_map<std::string, int> m_UniformLocationCache;
         std::string m_Name;
-        uint32_t m_RendererId;
+        uint32_t m_RendererId = 0;
     };
 }

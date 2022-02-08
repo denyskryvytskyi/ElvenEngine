@@ -6,7 +6,7 @@ class ExampleLayer : public Elven::Layer
 {
 public:
     ExampleLayer();
-    virtual ~ExampleLayer() = default;
+    virtual ~ExampleLayer();
 
     virtual void OnAttach() override;
     virtual void OnDetach() override;
@@ -16,9 +16,9 @@ public:
 
 private:
     Elven::ShaderManager m_ShaderManager;
-    Elven::Ref<Elven::Shader> m_Shader;
-    Elven::Ref<Elven::VertexArray> m_VAOGrid;
-    Elven::Ref<Elven::VertexArray> m_VAOTriangle;
+    Elven::Shader* m_Shader;
+    Elven::VertexArray* m_VAOGrid;
+    Elven::VertexArray* m_VAOTriangle;
 
     Elven::OrthographicCameraController m_CameraController;
 };

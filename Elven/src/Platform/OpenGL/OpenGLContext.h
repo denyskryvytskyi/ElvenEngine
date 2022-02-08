@@ -14,7 +14,7 @@ namespace Elven
         void Init() override;
         void SwapBuffers() override;
     private:
-        GLFWwindow* m_WindowHandle;
+        GLFWwindow* m_WindowHandle = nullptr;
     };
 }
 

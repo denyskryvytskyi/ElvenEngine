@@ -7,14 +7,15 @@ namespace Elven
 {
     struct WindowProps
     {
-        std::string Title;
-        unsigned int Width;
-        unsigned int Height;
-
         WindowProps(const std::string& title = "Elven Engine", unsigned int width = 1280, unsigned int height = 720)
             : Title(title), Width(width), Height(height)
         {
         }
+
+    public:
+        std::string Title;
+        unsigned int Width = 0;
+        unsigned int Height = 0;
     };
 
     class Window
@@ -22,7 +23,7 @@ namespace Elven
     public:
         using EventCallbackFn = std::function<void(Event&)>;
 
-        virtual ~Window() {}
+        virtual ~Window() = default;
 
         virtual void OnUpdate() = 0;
 
@@ -36,6 +37,6 @@ namespace Elven
 
         virtual void* GetNativeWindow() const = 0;
 
-        static Scope<Window> Create(const WindowProps& props = WindowProps());
+        static Window* Create(const WindowProps& props = WindowProps());
     };
 }

@@ -11,6 +11,14 @@ namespace Elven
         {
             s_RendererAPI->Init();
         }
+        
+        static void Shutdown()
+        {
+            if (s_RendererAPI)
+            {
+                DeleteRawPointer(s_RendererAPI);
+            }
+        }
 
         static void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
         {
@@ -27,13 +35,13 @@ namespace Elven
             s_RendererAPI->Clear();
         }
 
-        static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0)
+        static void DrawIndexed(const VertexArray* vertexArray, uint32_t indexCount = 0)
         {
             s_RendererAPI->DrawIndexed(vertexArray, indexCount);
         }
 
     private:
-        static Scope<RendererAPI> s_RendererAPI;
+        static RendererAPI* s_RendererAPI;
     };
 }
 

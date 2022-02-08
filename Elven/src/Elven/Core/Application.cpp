@@ -7,8 +7,6 @@
 
 namespace Elven
 {
-    Ref<VertexArray> VA;
-
     Application* Application::s_Instance = nullptr;
 
     Application::Application()
@@ -26,6 +24,7 @@ namespace Elven
 
     Application::~Application()
     {
+        DeleteRawPointer(m_Window);
     }
 
     void Application::OnEvent(Event& e)

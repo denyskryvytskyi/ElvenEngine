@@ -12,6 +12,6 @@ namespace Elven
         void SetClearColor(const gdm::vec4 & color) override;
         void Clear() override;
 
-        void DrawIndexed(const Ref<VertexArray> & vertexArray, uint32_t indexCount = 0) override;
+        void DrawIndexed(const VertexArray* vertexArray, uint32_t indexCount = 0) override;
     };
 }

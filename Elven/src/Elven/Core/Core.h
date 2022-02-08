@@ -57,4 +57,12 @@ namespace Elven
     {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
+
+    static void DeleteRawPointer(void* ptr)
+    {
+        if (ptr)
+        {
+            delete ptr;
+        }
+    }
 }

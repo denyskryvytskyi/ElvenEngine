@@ -27,7 +27,6 @@ namespace Elven
     ////////////////////////////////////////////////////////////////////////
 
     OpenGLVertexArray::OpenGLVertexArray()
-        : m_VertexBufferIndex(0)
     {
         glCreateVertexArrays(1, &m_RendererId);
     }
@@ -35,6 +34,12 @@ namespace Elven
     OpenGLVertexArray::~OpenGLVertexArray()
     {
         glDeleteVertexArrays(1, &m_RendererId);
+
+        DeleteRawPointer(m_IndexBuffer);
+        for (size_t i = 0; i < m_VertexBuffers.size(); i++)
+        {
+            DeleteRawPointer(m_VertexBuffers[i]);
+        }
     }
 
     void OpenGLVertexArray::Bind() const
@@ -47,7 +52,7 @@ namespace Elven
         glBindVertexArray(0);
     }
 
-    void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
+    void OpenGLVertexArray::AddVertexBuffer(VertexBuffer* vertexBuffer)
     {
         glBindVertexArray(m_RendererId);
         vertexBuffer->Bind();
@@ -64,7 +69,7 @@ namespace Elven
         m_VertexBuffers.push_back(vertexBuffer);
     }
 
-    void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer)
+    void OpenGLVertexArray::SetIndexBuffer(IndexBuffer* indexBuffer)
     {
         glBindVertexArray(m_RendererId);
         indexBuffer->Bind();

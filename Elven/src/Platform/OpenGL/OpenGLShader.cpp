@@ -7,7 +7,6 @@ namespace Elven
 {
     OpenGLShader::OpenGLShader(const std::string& name, const ShaderProgramSource& shaderSrc)
         : m_Name(name)
-        , m_RendererId(0)
     {
         CompileProgram(shaderSrc);
     }

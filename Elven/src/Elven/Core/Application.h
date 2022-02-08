@@ -30,11 +30,11 @@ namespace Elven
     private:
         static Application* s_Instance;
 
-        Scope<Window> m_Window;
-        ImGuiLayer* m_ImGuiLayer;
+        Window* m_Window = nullptr;
+        ImGuiLayer* m_ImGuiLayer = nullptr;
         LayerStack m_LayerStack;
 
-        bool m_Running;
+        bool m_Running = false;
     };
 
     // To be defined in CLIENT

@@ -5,9 +5,9 @@
 
 namespace Elven
 {
-    Scope<GraphicsContext> GraphicsContext::Create(void* window)
+    GraphicsContext* GraphicsContext::Create(void* window)
     {
-        // todo: temporary opengl maker only for now
-        return CreateScope<OpenGLContext>(static_cast<GLFWwindow*>(window));
+        // Opengl maker only for now
+        return new OpenGLContext(static_cast<GLFWwindow*>(window));
     }
 }

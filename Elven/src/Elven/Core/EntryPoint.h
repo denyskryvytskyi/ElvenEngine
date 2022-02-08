@@ -15,7 +15,7 @@ int main(int argc, char** argv)
 
     auto app = Elven::CreateApplication();
     app->Run();
-    delete app;
+    DeleteRawPointer(app);
 }
 
 #endif

@@ -3,7 +3,7 @@
 
 namespace Elven
 {
-    Ref<Renderer::SceneData> Renderer::m_SceneData = CreateRef<Renderer::SceneData>();
+    Renderer::SceneData* Renderer::m_SceneData = new Renderer::SceneData();
 
     void Renderer::Init()
     {
@@ -12,6 +12,12 @@ namespace Elven
 
     void Renderer::Shutdown()
     {
+        RenderCommand::Shutdown();
+
+        if (m_SceneData)
+        {
+            DeleteRawPointer(m_SceneData);
+        }
     }
 
     void Renderer::BeginScene(OrthographicCamera& camera)
@@ -23,7 +29,7 @@ namespace Elven
     {
     }
 
-    void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const gdm::mat4& modelMatrix)
+    void Renderer::Submit(Shader* shader, const VertexArray* vertexArray, const gdm::mat4& modelMatrix)
     {
         shader->Bind();
         shader->SetMatrix4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);

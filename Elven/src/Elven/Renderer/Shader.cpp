@@ -6,7 +6,7 @@
 
 namespace Elven
 {
-    Ref<Shader> Shader::Create(const std::string& name, const ShaderProgramSource& shaderSrc)
+    Shader* Shader::Create(const std::string& name, const ShaderProgramSource& shaderSrc)
     {
         switch (Renderer::GetAPI())
         {
@@ -14,7 +14,7 @@ namespace Elven
             EL_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
             return nullptr;
         case RendererAPI::API::OpenGL:
-            return CreateRef<OpenGLShader>(name, shaderSrc);
+            return new OpenGLShader(name, shaderSrc);
         }
 
         EL_CORE_ASSERT(false, "Unknown RendererAPI!");
@@ -23,7 +23,7 @@ namespace Elven
 
     //////////////////////////////////////////////////////////
 
-    Ref<Shader> ShaderManager::Load(std::string name, const std::string& vShaderFile, const std::string& fShaderFile)
+    Shader* ShaderManager::Load(std::string name, const std::string& vShaderFile, const std::string& fShaderFile)
     {
         ShaderProgramSource shaderProgram;
 
@@ -36,7 +36,7 @@ namespace Elven
         return shader;
     }
 
-    Ref<Shader> ShaderManager::Get(const std::string& name)
+    Shader* ShaderManager::Get(const std::string& name)
     {
         return m_Shaders[name];
     }
