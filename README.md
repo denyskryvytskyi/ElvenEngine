@@ -29,35 +29,30 @@ Run GenerateProject.bat file from the scripts folder to build the solution.
   + Pool allocator
   + Aligned allocations
   + Single-Frame and Double-Buffered Memory Allocators
-- Event sytem (using modern c++ and event bus pattern)
-- Input Handler System (using glfw and custom event system)
+- Event sytem
 - Custom math library (as separate project)
-- Graphics core:
+- Renderer core:
   + Shader Manager (shader files loading)
   + Renderer API (VAO, VBO, Shader abstractions)
   + Camera (orthographic, perspective)
-
-
-
+  + Support usage of different graphics API (OpenGL only for now)
 
 ## Features (To-do)
-
 - Renderer 
-  - Architecture should support usage of different graphics API (OpenGL only for now)
   - 2D renderer (sprites, 2D spritesheet animation)
+  - Text rendering
+- Enitity-component-system
+- Visual-editor (based of ImGui)
+- 2D Physics support (Box2d)
+
+## Backlog
+- Renderer
   - Material system
   - 3D renderer:
     - Deffered/Forward Rendering
     - PBR Rendering
-  - Text rendering
-- Enitity-component based system
-- Visual-editor (based of ImGui)
 - Scripting Engine
-- Physics support:
-  - 2D - Box2d
-  - 2D - Bullet Physics Library (Bullet)
-
-## Backlog
+- 3D Physics Library (Bullet)
 - Audio engine
 - Support for Mac, Linux
 - DirectX 11, DirecX 12, Vulkan support
