@@ -22,21 +22,21 @@ Run GenerateProject.bat file from the scripts folder to build the solution.
 | [Deat ImGui](https://github.com/kryvytskyidenys/imgui) | library using for GUI (visual-editor) |
 
 
-## Features (In progress)
+## Features
 
-- Logging system and assertions (using spdlog lib)
-- Allocators:
-  + Stack-based: simple stack, double-ended
-  + Pool allocator
-  + Aligned allocations
-  + Single-Frame and Double-Buffered Memory Allocators
-- Event sytem
-- Custom math library (as separate project)
-- Renderer core:
-  + Shader Manager (shader files loading)
-  + Renderer API (VAO, VBO, Shader abstractions)
-  + Camera (orthographic, perspective)
-  + Support usage of different graphics API (OpenGL only for now)
+- [x] Logging system and assertions (using spdlog lib)
+- [ ] Allocators:
+  + [ ] Stack-based: simple stack, double-ended
+  + [ ] Pool allocator
+  + [ ] Aligned allocations
+  + [ ] Single-Frame and Double-Buffered Memory Allocators
+- [ ] Event sytem
+- [x] Custom math library (as separate project)
+- [ ] Renderer core:
+  + [ ] Shader Manager (shader files loading)
+  + [ ] Renderer API (VAO, VBO, Shader abstractions)
+  + [ ] Camera (orthographic, perspective)
+  + [ ] Support usage of different graphics API (OpenGL only for now)
 
 ## Features (To-do)
 - Renderer 
