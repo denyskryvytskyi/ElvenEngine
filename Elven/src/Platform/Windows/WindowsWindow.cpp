@@ -6,6 +6,8 @@
 #include "Elven/Events/KeyEvent.h"
 #include "Elven/Events/MouseEvent.h"
 
+#include "Elven/Events/EventManager.h"
+
 namespace Elven
 {
     static uint8_t s_GLFWindowCount = 0;
@@ -74,8 +76,7 @@ namespace Elven
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-            WindowResizeEvent event(width, height);
-            data.EventCallback(event);
+            gEventManager.Fire(new WindowResizeEvent(width, height));
             data.Width = width;
             data.Height = height;
         });
@@ -84,8 +85,7 @@ namespace Elven
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-            WindowCloseEvent event;
-            data.EventCallback(event);
+            gEventManager.Fire(new WindowCloseEvent());
         });
 
         glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -96,20 +96,17 @@ namespace Elven
             {
             case GLFW_PRESS:
             {
-                KeyPressedEvent event(key, 0);
-                data.EventCallback(event);
+                gEventManager.Fire(new KeyPressedEvent(key, 0));
                 break;
             }
             case GLFW_RELEASE:
             {
-                KeyReleasedEvent event(key);
-                data.EventCallback(event);
+                gEventManager.Fire(new KeyReleasedEvent(key));
                 break;
             }
             case GLFW_REPEAT:
             {
-                KeyPressedEvent event(key, 1);
-                data.EventCallback(event);
+                gEventManager.Fire(new KeyPressedEvent(key, 1));
                 break;
             }
             }
@@ -119,8 +116,7 @@ namespace Elven
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-            KeyTypedEvent event(keycode);
-            data.EventCallback(event);
+            gEventManager.Fire(new KeyTypedEvent(keycode));
         });
 
         glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
@@ -131,14 +127,12 @@ namespace Elven
             {
             case GLFW_PRESS:
             {
-                MouseButtonPressedEvent event(button);
-                data.EventCallback(event);
+                gEventManager.Fire(new MouseButtonPressedEvent(button));
                 break;
             }
             case GLFW_RELEASE:
             {
-                MouseButtonReleasedEvent event(button);
-                data.EventCallback(event);
+                gEventManager.Fire(new MouseButtonReleasedEvent(button));
                 break;
             }
             }
@@ -148,8 +142,7 @@ namespace Elven
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-            MouseScrolledEvent event((float)xOffset, (float)yOffset);
-            data.EventCallback(event);
+            gEventManager.Fire(new MouseScrolledEvent((float)xOffset, (float)yOffset));
         });
 
         glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
@@ -157,7 +150,7 @@ namespace Elven
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
             MouseMovedEvent event((float)xPos, (float)yPos);
-            data.EventCallback(event);
+            gEventManager.Fire(new MouseMovedEvent((float)xPos, (float)yPos));
         });
     }
 

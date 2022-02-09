@@ -10,12 +10,12 @@ namespace Elven
     public:
         static void Init();
 
-        static Ref<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
-        static Ref<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
+        static SharedPtr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
+        static SharedPtr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
 
     private:
-        static Ref<spdlog::logger> s_CoreLogger;
-        static Ref<spdlog::logger> s_ClientLogger;
+        static SharedPtr<spdlog::logger> s_CoreLogger;
+        static SharedPtr<spdlog::logger> s_ClientLogger;
     };
 
 }

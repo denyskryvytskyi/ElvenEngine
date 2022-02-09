@@ -5,8 +5,8 @@
 
 namespace Elven
 {
-    Ref<spdlog::logger> Log::s_CoreLogger;
-    Ref<spdlog::logger> Log::s_ClientLogger;
+    SharedPtr<spdlog::logger> Log::s_CoreLogger;
+    SharedPtr<spdlog::logger> Log::s_ClientLogger;
 
     void Elven::Log::Init()
     {

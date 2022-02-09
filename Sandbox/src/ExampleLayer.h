@@ -12,7 +12,6 @@ public:
     virtual void OnDetach() override;
     void OnUpdate(float dt) override;
     virtual void OnImGuiRender() override;
-    void OnEvent(Elven::Event& event) override;
 
 private:
     Elven::ShaderManager m_ShaderManager;

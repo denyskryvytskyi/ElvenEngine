@@ -7,59 +7,31 @@ namespace Elven
     class WindowResizeEvent : public Event
     {
     public:
-        WindowResizeEvent(unsigned int width, unsigned int height)
-            : m_Width(width), m_Height(height) {}
+        EVENT_ID("{7CCF9526-19A3-431E-B9CB-B6AA7C775469}")
 
-        unsigned int GetWidth() const { return m_Width; }
-        unsigned int GetHeight() const { return m_Height; }
+        WindowResizeEvent(unsigned int width, unsigned int height) :
+            m_width(width),
+            m_height(height) {}
+
+        unsigned int GetWidth() const { return m_width; }
+        unsigned int GetHeight() const { return m_height; }
 
         std::string ToString() const override
         {
             std::stringstream ss;
-            ss << "WindowResizeEvent: " << m_Width << ", " << m_Height;
+            ss << "WindowResizeEvent: " << m_width << ", " << m_height;
             return ss.str();
         }
 
-        EVENT_CLASS_TYPE(WindowResize)
-        EVENT_CLASS_CATEGORY(EventCategory_Application)
-
     private:
-        unsigned int m_Width, m_Height;
+        unsigned int m_width, m_height;
     };
 
     class WindowCloseEvent : public Event
     {
     public:
+        EVENT_ID("{1FF1FDDE-2983-4F3E-88D6-16D03D6A04A4}")
+
         WindowCloseEvent() = default;
-
-        EVENT_CLASS_TYPE(WindowClose)
-        EVENT_CLASS_CATEGORY(EventCategory_Application)
-    };
-
-    class AppTickEvent : public Event
-    {
-    public:
-        AppTickEvent() = default;
-
-        EVENT_CLASS_TYPE(AppTick)
-        EVENT_CLASS_CATEGORY(EventCategory_Application)
-    };
-
-    class AppUpdateEvent : public Event
-    {
-    public:
-        AppUpdateEvent() = default;
-
-        EVENT_CLASS_TYPE(AppUpdate)
-        EVENT_CLASS_CATEGORY(EventCategory_Application)
-    };
-
-    class AppRenderEvent : public Event
-    {
-    public:
-        AppRenderEvent() = default;
-
-        EVENT_CLASS_TYPE(AppRender)
-        EVENT_CLASS_CATEGORY(EventCategory_Application)
     };
 }

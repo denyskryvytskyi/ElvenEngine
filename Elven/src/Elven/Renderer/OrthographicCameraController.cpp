@@ -2,6 +2,8 @@
 #include "OrthographicCameraController.h"
 
 #include "Elven/Core/Input.h"
+#include "Elven/Events/EventManager.h"
+#include "Elven/Events/EventDispatcher.h"
 
 namespace Elven
 {
@@ -10,6 +12,8 @@ namespace Elven
         , m_Position(0.0f), m_AspectRatio(aspectRatio), m_ZoomLevel(1.0f)
         , m_Rotation(0.0f), m_TranslationSpeed(5.0f), m_RotationSpeed(180.0f)
     {
+        gEventManager.Subscribe(MouseScrolledEvent::GetStaticUUID(), EL_BIND_EVENT_FN(OrthographicCameraController::OnEvent));
+        gEventManager.Subscribe(WindowResizeEvent::GetStaticUUID(), EL_BIND_EVENT_FN(OrthographicCameraController::OnEvent));
     }
 
     // need add timestep
@@ -78,7 +82,7 @@ namespace Elven
 
     bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e)
     {
-        OnResize((float)e.GetWidth(), (float)e.GetHeight());
+        OnResize(static_cast<float>(e.GetWidth()), static_cast<float>(e.GetHeight()));
         return false;
     }
 }

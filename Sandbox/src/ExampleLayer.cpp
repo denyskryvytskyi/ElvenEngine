@@ -104,8 +104,3 @@ void ExampleLayer::OnUpdate(float dt)
 void ExampleLayer::OnImGuiRender()
 {
 }
-
-void ExampleLayer::OnEvent(Elven::Event& event)
-{
-    m_CameraController.OnEvent(event);
-}
