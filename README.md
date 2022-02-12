@@ -30,7 +30,7 @@ Run GenerateProject.bat file from the scripts folder to build the solution.
   + [ ] Pool allocator
   + [ ] Aligned allocations
   + [ ] Single-Frame and Double-Buffered Memory Allocators
-- [ ] Event sytem
+- [x] Event sytem
 - [x] Custom math library (as separate project)
 - [ ] Renderer core:
   + [ ] Shader Manager (shader files loading)
