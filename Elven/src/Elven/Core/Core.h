@@ -47,7 +47,7 @@ namespace Elven
     template<typename T, typename ... Args>
     constexpr UniquePtr<T> CreateUniquePtr(Args&& ... args)
     {
-        return std::make_shared<T>(std::forward<Args>(args)...);
+        return std::make_unique<T>(std::forward<Args>(args)...);
     }
 
     template<typename T>
@@ -58,7 +58,7 @@ namespace Elven
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
 
-    static void DeleteRawPointer(void* ptr)
+    static void SafePointerDelete(void* ptr)
     {
         if (ptr)
         {

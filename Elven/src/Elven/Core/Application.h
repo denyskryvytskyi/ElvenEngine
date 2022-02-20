@@ -1,20 +1,23 @@
 #pragma once
 
-#include "Elven/Core/Window.h"
 #include "Elven/Core/LayerStack.h"
-#include "Elven/Core/Timer.h"
 
-#include "Elven/ImGui/ImGuiLayer.h"
+#include "Elven/Events/EventDispatcher.h"
+#include "Elven/Events/ApplicationEvent.h"
 
 namespace Elven
 {
+    class Window;
+    class Layer;
+    class ImGuiLayer;
+
     class Application
     {
     public:
         Application();
         virtual ~Application();
 
-        void OnEvent(Event& e);
+        void OnEvent(Events::Event& e);
 
         void PushLayer(Layer* layer);
         void PushOverlay(Layer* overlay);
@@ -25,7 +28,7 @@ namespace Elven
         Window& GetWindow() { return *m_Window; }
 
     private:
-        bool OnWindowClose(WindowCloseEvent& e);
+        bool OnWindowClose(Events::WindowCloseEvent& e);
 
     private:
         static Application* s_Instance;

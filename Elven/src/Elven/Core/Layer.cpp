@@ -1,5 +1,7 @@
 #include "elpch.h"
-#include "Layer.h"
+
+#include "Elven/Core/Layer.h"
+#include "Elven/Core/Core.h"
 
 namespace Elven
 {

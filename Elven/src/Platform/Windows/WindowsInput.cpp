@@ -1,6 +1,7 @@
 #include "elpch.h"
 #include "Elven/Core/Input.h"
 #include "Elven/Core/Application.h"
+#include "Elven/Core/Window.h"
 #include <GLFW/glfw3.h>
 
 namespace Elven

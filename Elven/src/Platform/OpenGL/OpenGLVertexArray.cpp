@@ -35,10 +35,10 @@ namespace Elven
     {
         glDeleteVertexArrays(1, &m_RendererId);
 
-        DeleteRawPointer(m_IndexBuffer);
+        SafePointerDelete(m_IndexBuffer);
         for (size_t i = 0; i < m_VertexBuffers.size(); i++)
         {
-            DeleteRawPointer(m_VertexBuffers[i]);
+            SafePointerDelete(m_VertexBuffers[i]);
         }
     }
 

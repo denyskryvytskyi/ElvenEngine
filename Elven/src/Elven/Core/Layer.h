@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Elven/Core/Core.h"
 #include "Elven/Events/Event.h"
 
 namespace Elven
@@ -15,7 +14,7 @@ namespace Elven
         virtual void OnDetach() {}
         virtual void OnUpdate(float dt) {}
         virtual void OnImGuiRender() {}
-        virtual void OnEvent(Event& event) {}
+        virtual void OnEvent(Events::Event& event) {}
 
         const std::string& GetName() const { return m_DebugName; }
 

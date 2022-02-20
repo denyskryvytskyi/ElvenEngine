@@ -76,7 +76,7 @@ namespace Elven
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-            gEventManager.Fire(new WindowResizeEvent(width, height));
+            FIRE_EVENT(new Events::WindowResizeEvent(width, height));
             data.Width = width;
             data.Height = height;
         });
@@ -85,7 +85,7 @@ namespace Elven
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-            gEventManager.Fire(new WindowCloseEvent());
+            FIRE_EVENT(new Events::WindowCloseEvent());
         });
 
         glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -96,17 +96,17 @@ namespace Elven
             {
             case GLFW_PRESS:
             {
-                gEventManager.Fire(new KeyPressedEvent(key, 0));
+                FIRE_EVENT(new Events::KeyPressedEvent(key, 0));
                 break;
             }
             case GLFW_RELEASE:
             {
-                gEventManager.Fire(new KeyReleasedEvent(key));
+                FIRE_EVENT(new Events::KeyReleasedEvent(key));
                 break;
             }
             case GLFW_REPEAT:
             {
-                gEventManager.Fire(new KeyPressedEvent(key, 1));
+                FIRE_EVENT(new Events::KeyPressedEvent(key, 1));
                 break;
             }
             }
@@ -116,7 +116,7 @@ namespace Elven
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-            gEventManager.Fire(new KeyTypedEvent(keycode));
+            FIRE_EVENT(new Events::KeyTypedEvent(keycode));
         });
 
         glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
@@ -127,12 +127,12 @@ namespace Elven
             {
             case GLFW_PRESS:
             {
-                gEventManager.Fire(new MouseButtonPressedEvent(button));
+                FIRE_EVENT(new Events::MouseButtonPressedEvent(button));
                 break;
             }
             case GLFW_RELEASE:
             {
-                gEventManager.Fire(new MouseButtonReleasedEvent(button));
+                FIRE_EVENT(new Events::MouseButtonReleasedEvent(button));
                 break;
             }
             }
@@ -142,15 +142,14 @@ namespace Elven
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-            gEventManager.Fire(new MouseScrolledEvent((float)xOffset, (float)yOffset));
+            FIRE_EVENT(new Events::MouseScrolledEvent((float)xOffset, (float)yOffset));
         });
 
         glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-            MouseMovedEvent event((float)xPos, (float)yPos);
-            gEventManager.Fire(new MouseMovedEvent((float)xPos, (float)yPos));
+            FIRE_EVENT(new Events::MouseMovedEvent((float)xPos, (float)yPos));
         });
     }
 
@@ -164,6 +163,6 @@ namespace Elven
             glfwTerminate();
         }
 
-        DeleteRawPointer(m_Context);
+        SafePointerDelete(m_Context);
     }
 }

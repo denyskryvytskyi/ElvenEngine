@@ -6,8 +6,8 @@
 #include "Elven/ImGui/imgui_impl_opengl3.h""
 
 #include "Elven/Core/Application.h"
+#include "Elven/Core/Window.h"
 
-// todo: temporary
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 

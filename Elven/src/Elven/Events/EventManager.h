@@ -1,23 +1,33 @@
 #pragma once
+
 #include <unordered_map>
-#include "Elven/Events/Event.h"
+#include <functional>
+
+#define SUBSCRIBE_ON_EVENT(event_uuid, callback) Elven::Events::gEventManager.Subscribe(event_uuid, callback);
+#define FIRE_EVENT(event) Elven::Events::gEventManager.Fire(event);
+
 namespace Elven
 {
-    class EventManager
+    namespace Events
     {
-        using EventCallback = std::function<void(Event&)>;
+        class Event;
+        class EventManager
+        {
+            using EventCallback = std::function<void(Event&)>;
 
-    public:
-        void Shutdown();
+        public:
+            void Shutdown();
 
-        void Subscribe(const std::string eventId, EventCallback&& callback);
-        void Fire(Event* event);
-        void DispatchEvents();
+            void Subscribe(const std::string eventId, EventCallback&& callback);
+            void Unsubscribe(const std::string eventId, EventCallback&& callback);
+            void Fire(Event* event);
+            void DispatchEvents();
 
-    private:
-        std::vector<Event*> m_eventsQueue;
-        std::unordered_map<std::string, std::vector<EventCallback>> m_callbacks;
-    };
+        private:
+            std::vector<Event*> m_eventsQueue;
+            std::unordered_map<std::string, std::vector<EventCallback>> m_subscribers;
+        };
 
-    extern EventManager gEventManager;
+        extern EventManager gEventManager;
+    }
 }

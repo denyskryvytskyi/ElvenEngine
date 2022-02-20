@@ -2,10 +2,12 @@
 
 #include "Elven/Core/Application.h"
 #include "Elven/Core/Input.h"
+#include "Elven/Core/Window.h"
+#include "Elven/Core/Timer.h"
 
 #include "Elven/Renderer/Renderer.h"
-#include "Elven/Events/EventManager.h"
-#include "Elven/Events/EventDispatcher.h"
+
+#include "Elven/ImGui/ImGuiLayer.h"
 
 namespace Elven
 {
@@ -18,22 +20,22 @@ namespace Elven
         s_Instance = this;
 
         m_Window = Window::Create();
-        gEventManager.Subscribe(WindowCloseEvent::GetStaticUUID(), EL_BIND_EVENT_FN(Application::OnEvent));
+        SUBSCRIBE_ON_EVENT(Events::WindowCloseEvent::GetStaticUUID(), EL_BIND_EVENT_FN(Application::OnEvent));
         m_ImGuiLayer = new ImGuiLayer();
         PushOverlay(m_ImGuiLayer);
     }
 
     Application::~Application()
     {
-        DeleteRawPointer(m_Window);
+        SafePointerDelete(m_Window);
 
-        gEventManager.Shutdown();
+        Events::gEventManager.Shutdown();
     }
 
-    void Application::OnEvent(Event& e)
+    void Application::OnEvent(Events::Event& e)
     {
-        EventDispatcher dispatcher(e);
-        dispatcher.Dispatch<WindowCloseEvent>(EL_BIND_EVENT_FN(Application::OnWindowClose));
+        Events::EventDispatcher dispatcher(e);
+        dispatcher.Dispatch<Events::WindowCloseEvent>(EL_BIND_EVENT_FN(Application::OnWindowClose));
     }
 
     void Application::PushLayer(Layer* layer)
@@ -74,11 +76,11 @@ namespace Elven
             m_Window->OnUpdate();
 
             // Dispatch queued events
-            gEventManager.DispatchEvents();
+            Events::gEventManager.DispatchEvents();
         }
     }
 
-    bool Application::OnWindowClose(WindowCloseEvent& e)
+    bool Application::OnWindowClose(Events::WindowCloseEvent& e)
     {
         m_Running = false;
 

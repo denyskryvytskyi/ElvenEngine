@@ -12,8 +12,8 @@ namespace Elven
         , m_Position(0.0f), m_AspectRatio(aspectRatio), m_ZoomLevel(1.0f)
         , m_Rotation(0.0f), m_TranslationSpeed(5.0f), m_RotationSpeed(180.0f)
     {
-        gEventManager.Subscribe(MouseScrolledEvent::GetStaticUUID(), EL_BIND_EVENT_FN(OrthographicCameraController::OnEvent));
-        gEventManager.Subscribe(WindowResizeEvent::GetStaticUUID(), EL_BIND_EVENT_FN(OrthographicCameraController::OnEvent));
+        SUBSCRIBE_ON_EVENT(Events::MouseScrolledEvent::GetStaticUUID(), EL_BIND_EVENT_FN(OrthographicCameraController::OnEvent));
+        SUBSCRIBE_ON_EVENT(Events::WindowResizeEvent::GetStaticUUID(), EL_BIND_EVENT_FN(OrthographicCameraController::OnEvent));
     }
 
     // need add timestep
@@ -59,11 +59,11 @@ namespace Elven
         m_TranslationSpeed = m_ZoomLevel;
     }
 
-    void OrthographicCameraController::OnEvent(Event& e)
+    void OrthographicCameraController::OnEvent(Events::Event& e)
     {
-        EventDispatcher dispatcher(e);
-        dispatcher.Dispatch<MouseScrolledEvent>(EL_BIND_EVENT_FN(OrthographicCameraController::OnMouseScrolled));
-        dispatcher.Dispatch<WindowResizeEvent>(EL_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
+        Events::EventDispatcher dispatcher(e);
+        dispatcher.Dispatch<Events::MouseScrolledEvent>(EL_BIND_EVENT_FN(OrthographicCameraController::OnMouseScrolled));
+        dispatcher.Dispatch<Events::WindowResizeEvent>(EL_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
     }
 
     void OrthographicCameraController::OnResize(float width, float height)
@@ -72,7 +72,7 @@ namespace Elven
         m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
     }
 
-    bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
+    bool OrthographicCameraController::OnMouseScrolled(Events::MouseScrolledEvent& e)
     {
         m_ZoomLevel -= e.GetYOffset() * 0.25f;
         m_ZoomLevel = std::max<float>(m_ZoomLevel, 0.25f);
@@ -80,7 +80,7 @@ namespace Elven
         return false;
     }
 
-    bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e)
+    bool OrthographicCameraController::OnWindowResized(Events::WindowResizeEvent& e)
     {
         OnResize(static_cast<float>(e.GetWidth()), static_cast<float>(e.GetHeight()));
         return false;

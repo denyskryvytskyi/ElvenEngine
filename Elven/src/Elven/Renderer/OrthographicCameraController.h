@@ -12,7 +12,7 @@ namespace Elven
         OrthographicCameraController(float aspectRatio);
 
         void OnUpdate(float dt);
-        void OnEvent(Event& e);
+        void OnEvent(Events::Event& e);
 
         void OnResize(float width, float height);
 
@@ -23,8 +23,8 @@ namespace Elven
         float GetZoomLevel() const { return m_ZoomLevel; }
         
     private:
-        bool OnMouseScrolled(MouseScrolledEvent& e);
-        bool OnWindowResized(WindowResizeEvent& e);
+        bool OnMouseScrolled(Events::MouseScrolledEvent& e);
+        bool OnWindowResized(Events::WindowResizeEvent& e);
 
     private:
         OrthographicCamera m_Camera;
