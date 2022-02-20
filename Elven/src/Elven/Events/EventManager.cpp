@@ -45,7 +45,15 @@ namespace Elven
             }
         }
 
-        void EventManager::Fire(Event* event)
+        void EventManager::TriggerEvent(Event* event)
+        {
+            for (auto callback : m_subscribers[event->GetUUID()])
+            {
+                callback(*event);
+            }
+        }
+
+        void EventManager::QueueEvent(Event* event)
         {
             m_eventsQueue.emplace_back(event);
         }
@@ -56,10 +64,7 @@ namespace Elven
             {
                 if (!(*eventIt)->Handled)
                 {
-                    for (auto callback : m_subscribers[(*eventIt)->GetUUID()])
-                    {
-                        callback(*(*eventIt));
-                    }
+                    TriggerEvent(*eventIt);
                     eventIt = m_eventsQueue.erase(eventIt);
                 }
                 else

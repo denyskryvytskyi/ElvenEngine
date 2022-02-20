@@ -4,7 +4,8 @@
 #include <functional>
 
 #define SUBSCRIBE_ON_EVENT(event_uuid, callback) Elven::Events::gEventManager.Subscribe(event_uuid, callback);
-#define FIRE_EVENT(event) Elven::Events::gEventManager.Fire(event);
+#define TRIGGER_EVENT(event) Elven::Events::gEventManager.TriggerEvent(event);
+#define QUEUE_EVENT(event) Elven::Events::gEventManager.QueueEvent(event);
 
 namespace Elven
 {
@@ -20,7 +21,8 @@ namespace Elven
 
             void Subscribe(const std::string eventId, EventCallback&& callback);
             void Unsubscribe(const std::string eventId, EventCallback&& callback);
-            void Fire(Event* event);
+            void TriggerEvent(Event* event);
+            void QueueEvent(Event* event);
             void DispatchEvents();
 
         private:
