@@ -4,6 +4,7 @@
 #include <functional>
 
 #define SUBSCRIBE_ON_EVENT(event_uuid, callback) Elven::Events::gEventManager.Subscribe(event_uuid, callback);
+#define UNSUBSCRIBE_EVENT(event_uuid, callback) Elven::Events::gEventManager.Unsubscribe(event_uuid, callback);
 #define TRIGGER_EVENT(event) Elven::Events::gEventManager.TriggerEvent(event);
 #define QUEUE_EVENT(event) Elven::Events::gEventManager.QueueEvent(event);
 

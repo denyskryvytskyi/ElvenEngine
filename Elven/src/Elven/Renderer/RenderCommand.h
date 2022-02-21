@@ -16,7 +16,7 @@ namespace Elven
         {
             if (s_RendererAPI)
             {
-                SafePointerDelete(s_RendererAPI);
+                delete s_RendererAPI;
             }
         }
 

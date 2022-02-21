@@ -57,12 +57,4 @@ namespace Elven
     {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
-
-    static void SafePointerDelete(void* ptr)
-    {
-        if (ptr)
-        {
-            delete ptr;
-        }
-    }
 }

@@ -10,6 +10,7 @@ namespace Elven
     {
     public:
         OrthographicCameraController(float aspectRatio);
+        ~OrthographicCameraController();
 
         void OnUpdate(float dt);
         void OnEvent(Events::Event& e);

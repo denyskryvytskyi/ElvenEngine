@@ -12,7 +12,7 @@ namespace Elven
         for (Layer* layer : m_Layers)
         {
             layer->OnDetach();
-            SafePointerDelete(layer);
+            delete layer;
         }
     }
 
@@ -35,7 +35,7 @@ namespace Elven
             layer->OnDetach();
             m_Layers.erase(it);
             m_LayerInsertIndex--;
-            SafePointerDelete(layer);
+            delete layer;
         }
     }
 
@@ -46,7 +46,7 @@ namespace Elven
         {
             overlay->OnDetach();
             m_Layers.erase(it);
-            SafePointerDelete(overlay);
+            delete overlay;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Elven
 
         if (m_SceneData)
         {
-            SafePointerDelete(m_SceneData);
+            delete m_SceneData;
         }
     }
 

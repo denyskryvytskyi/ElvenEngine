@@ -16,6 +16,12 @@ namespace Elven
         SUBSCRIBE_ON_EVENT(Events::WindowResizeEvent::GetStaticUUID(), EL_BIND_EVENT_FN(OrthographicCameraController::OnEvent));
     }
 
+    OrthographicCameraController::~OrthographicCameraController()
+    {
+        UNSUBSCRIBE_EVENT(Events::MouseScrolledEvent::GetStaticUUID(), EL_BIND_EVENT_FN(OrthographicCameraController::OnEvent));
+        UNSUBSCRIBE_EVENT(Events::WindowResizeEvent::GetStaticUUID(), EL_BIND_EVENT_FN(OrthographicCameraController::OnEvent));
+    }
+
     // need add timestep
     void OrthographicCameraController::OnUpdate(float dt)
     {

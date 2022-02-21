@@ -163,6 +163,6 @@ namespace Elven
             glfwTerminate();
         }
 
-        SafePointerDelete(m_Context);
+        delete m_Context;
     }
 }

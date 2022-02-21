@@ -12,34 +12,41 @@ namespace Elven
         {
             for (auto event : m_eventsQueue)
             {
-                SafePointerDelete(event);
+                delete event;
             }
         }
 
         void EventManager::Subscribe(const std::string eventId, EventCallback&& callback)
         {
-            auto callbacks = m_subscribers.find(eventId);
-            if (callbacks != m_subscribers.end())
+            auto subscribers = m_subscribers.find(eventId);
+            if (subscribers != m_subscribers.end())
             {
-                callbacks->second.emplace_back(std::move(callback));
+                auto& callbacks = subscribers->second;
+                for (auto it = callbacks.begin(); it != callbacks.end(); ++it)
+                {
+                    if (it->target_type().name() == callback.target_type().name())
+                    {
+                        EL_ASSERT(false, "Attempting to double-register callback");
+                        return;
+                    }
+                }
+                callbacks.emplace_back(std::move(callback));
             }
             else
             {
-                m_subscribers[eventId].emplace_back(callback);
+                m_subscribers[eventId].emplace_back(std::move(callback));
             }
         }
 
+        #pragma optimize("", off)
         void EventManager::Unsubscribe(const std::string eventId, EventCallback&& callback)
         {
-            const size_t function_adress = *reinterpret_cast<long*>(reinterpret_cast<char*>(&callback));
             auto& callbacks = m_subscribers[eventId];
-
-            for (auto it = m_subscribers.begin(); it != m_subscribers.end();)
+            for (auto it = callbacks.begin(); it != callbacks.end(); ++it)
             {
-                const size_t callback_adress = *reinterpret_cast<long*>(reinterpret_cast<char*>(&(*it)));
-                if (callback_adress == function_adress)
+                if (it->target_type().name() == callback.target_type().name())
                 {
-                    it = m_subscribers.erase(it);
+                    it = callbacks.erase(it);
                     return;
                 }
             }

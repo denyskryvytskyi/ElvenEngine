@@ -20,15 +20,17 @@ namespace Elven
         s_Instance = this;
 
         m_Window = Window::Create();
-        SUBSCRIBE_ON_EVENT(Events::WindowCloseEvent::GetStaticUUID(), EL_BIND_EVENT_FN(Application::OnEvent));
         m_ImGuiLayer = new ImGuiLayer();
         PushOverlay(m_ImGuiLayer);
+
+        SUBSCRIBE_ON_EVENT(Events::WindowCloseEvent::GetStaticUUID(), EL_BIND_EVENT_FN(Application::OnEvent));
     }
 
     Application::~Application()
     {
-        SafePointerDelete(m_Window);
+        delete m_Window;
 
+        UNSUBSCRIBE_EVENT(Events::WindowCloseEvent::GetStaticUUID(), EL_BIND_EVENT_FN(Application::OnEvent));
         Events::gEventManager.Shutdown();
     }
 
