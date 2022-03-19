@@ -1,0 +1,15 @@
+# Directories
+**/bin/
+bin-int/
+Sandbox/
+
+# Files
+premake5.lua
+vs2019-Win-GenProject.bat
+
+# Visual studio files and folder
+.vs/
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user
