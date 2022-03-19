@@ -84,13 +84,13 @@ void ExampleLayer::OnUpdate(float dt)
     Elven::Renderer::BeginScene(m_CameraController.GetCamera());
 
     // grid
-    lia::mat4 scale = lia::scale(lia::mat4(), lia::vec3(0.1f));
+    glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
     for (size_t y = 0; y < 20; y++)
     {
         for (size_t x = 0; x < 20; x++)
         {
-            lia::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
-            lia::mat4 model = scale * lia::translate(lia::mat4(), pos);
+            glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), pos) * scale;
 
             Elven::Renderer::Submit(m_Shader, m_VAOGrid, model);
         }

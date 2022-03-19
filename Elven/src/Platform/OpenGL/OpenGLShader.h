@@ -15,12 +15,12 @@ namespace Elven
 
         void SetInteger(const std::string& name, uint32_t value) override;
         void SetVector2f(const std::string& name, float x, float y) override;
-        void SetVector2f(const std::string& name, const lia::vec2& value) override;
+        void SetVector2f(const std::string& name, const glm::vec2& value) override;
         void SetVector3f(const std::string& name, float x, float y, float z) override;
-        void SetVector3f(const std::string& name, const lia::vec3& value) override;
+        void SetVector3f(const std::string& name, const glm::vec3& value) override;
         void SetVector4f(const std::string& name, float x, float y, float z, float w) override;
-        void SetVector4f(const std::string& name, const lia::vec4& value) override;
-        void SetMatrix4(const std::string& name, const lia::mat4& matrix) override;
+        void SetVector4f(const std::string& name, const glm::vec4& value) override;
+        void SetMatrix4(const std::string& name, const glm::mat4& matrix) override;
 
         int GetUniformLocation(const std::string& name);
 

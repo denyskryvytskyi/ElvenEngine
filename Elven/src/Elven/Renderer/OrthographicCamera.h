@@ -1,6 +1,8 @@
 #pragma once
 
-#include <lia/lia.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Elven
 {
@@ -11,25 +13,25 @@ namespace Elven
 
         void SetProjection(float left, float right, float bottom, float top);
 
-        void SetPosition(const lia::vec3& position) { m_Position = position; RecalculateViewMatrix(); }
-        const lia::vec3& GetPosition() const { return m_Position; }
+        void SetPosition(const glm::vec3& position) { m_Position = position; RecalculateViewMatrix(); }
+        const glm::vec3& GetPosition() const { return m_Position; }
 
         void SetRotation(const float& rotationAngle) { m_Rotation = rotationAngle; RecalculateViewMatrix(); }
         float GetRotation() const { return m_Rotation; }
 
-        const lia::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
-        const lia::mat4& GetViewMatrix() const { return m_ViewMatrix; }
-        const lia::mat4& GetViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
+        const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
+        const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
+        const glm::mat4& GetViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
 
     private:
         void RecalculateViewMatrix();
 
     private:
-        lia::mat4 m_ProjectionMatrix;
-        lia::mat4 m_ViewMatrix;
-        lia::mat4 m_ViewProjectionMatrix;
+        glm::mat4 m_ProjectionMatrix;
+        glm::mat4 m_ViewMatrix;
+        glm::mat4 m_ViewProjectionMatrix;
 
-        lia::vec3 m_Position;
+        glm::vec3 m_Position;
 
         // rotation around z-axis
         float m_Rotation;

@@ -29,7 +29,7 @@ namespace Elven
     {
     }
 
-    void Renderer::Submit(Shader* shader, const VertexArray* vertexArray, const lia::mat4& modelMatrix)
+    void Renderer::Submit(Shader* shader, const VertexArray* vertexArray, const glm::mat4& modelMatrix)
     {
         shader->Bind();
         shader->SetMatrix4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
