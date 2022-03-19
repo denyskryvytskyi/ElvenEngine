@@ -30,7 +30,7 @@ namespace Elven
     private:
         OrthographicCamera m_Camera;
 
-        gdm::vec3 m_Position;
+        lia::vec3 m_Position;
 
         float m_AspectRatio;
         float m_ZoomLevel;

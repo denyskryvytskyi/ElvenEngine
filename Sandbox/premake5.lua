@@ -19,7 +19,7 @@ project "Sandbox"
         "%{wks.location}/Elven/src",
         "%{wks.location}/Elven/vendor",
         "%{IncludeDir.glm}",
-        "%{IncludeDir.gdm}"
+        "%{IncludeDir.lia}"
     }
     
     links 
@@ -32,7 +32,8 @@ project "Sandbox"
 
         defines
         {
-            "EL_PLATFORM_WINDOWS"
+            "EL_PLATFORM_WINDOWS",
+            "NOMINMAX"
         }
 
         filter "configurations:Debug"

@@ -16,7 +16,7 @@ project "Elven"
         "src/**.cpp",
         "vendor/glm/glm/**.hpp",
         "vendor/glm/glm/**.inl",
-        "vendor/gdm/gdm/**.h"
+        "vendor/lia/lia/**.h"
     }
 
     defines
@@ -32,9 +32,9 @@ project "Elven"
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
-        "%{IncludeDir.glm}",
-        "%{IncludeDir.gdm}",
-        "%{wks.location}/Allocators/src"
+        "%{IncludeDir.lia}",
+        "%{wks.location}/Allocators/src",
+        "%{IncludeDir.glm}"
     }
 
     links
@@ -51,7 +51,8 @@ project "Elven"
 
         defines
         {
-            "EL_PLATFORM_WINDOWS"
+            "EL_PLATFORM_WINDOWS",
+            "NOMINMAX"
         }
 
     filter "configurations:Debug"

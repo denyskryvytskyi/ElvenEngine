@@ -36,7 +36,7 @@ namespace Elven
         glViewport(x, y, width, height);
     }
 
-    void OpenGLRendererAPI::SetClearColor(const gdm::vec4& color)
+    void OpenGLRendererAPI::SetClearColor(const lia::vec4& color)
     {
         glClearColor(color.x, color.y, color.z, color.w);
     }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <gdm/gdm.h>
+#include "lia/lia.h"
 
 namespace Elven
 {
@@ -20,12 +20,12 @@ namespace Elven
 
         virtual void SetInteger(const std::string& name, uint32_t value) = 0;
         virtual void SetVector2f(const std::string& name, float x, float y) = 0;
-        virtual void SetVector2f(const std::string& name, const gdm::vec2& value) = 0;
+        virtual void SetVector2f(const std::string& name, const lia::vec2& value) = 0;
         virtual void SetVector3f(const std::string& name, float x, float y, float z) = 0;
-        virtual void SetVector3f(const std::string& name, const gdm::vec3& value) = 0;
+        virtual void SetVector3f(const std::string& name, const lia::vec3& value) = 0;
         virtual void SetVector4f(const std::string& name, float x, float y, float z, float w) = 0;
-        virtual void SetVector4f(const std::string& name, const gdm::vec4& value) = 0;
-        virtual void SetMatrix4(const std::string& name, const gdm::mat4& matrix) = 0;
+        virtual void SetVector4f(const std::string& name, const lia::vec4& value) = 0;
+        virtual void SetMatrix4(const std::string& name, const lia::mat4& matrix) = 0;
 
         virtual const std::string& GetName() const = 0;
 
