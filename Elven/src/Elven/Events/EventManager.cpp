@@ -38,7 +38,6 @@ namespace Elven
             }
         }
 
-        #pragma optimize("", off)
         void EventManager::Unsubscribe(const std::string eventId, EventCallback&& callback)
         {
             auto& callbacks = m_subscribers[eventId];
