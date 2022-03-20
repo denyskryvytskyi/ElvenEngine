@@ -2,8 +2,8 @@
 Elven Engine is primarily 2D/3D real-time development platform and rendering engine
 
 ## Getting Started
-Visual Studio 2017 or 2019. 
-Windows platform only support for now (MacOS and Linux platforms are for the future support)
+Visual Studio 2019/2022 support. 
+Windows platform only support for now (Linux and MacOS platforms are for the future support)
 
 You can clone repository using git (**`--recursive`** is required to fetch all of the submodules):
 
