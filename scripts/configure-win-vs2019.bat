@@ -1,5 +1,7 @@
 @echo off
 pushd %~dp0\..\
-call vendor\bin\premake\premake5.exe vs2019
+mkdir build
+cd build
+call cmake .. -G "Visual Studio 16 2019" -A x64
 popd
 PAUSE

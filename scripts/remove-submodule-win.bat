@@ -8,7 +8,7 @@ rem Remove the submodule directory from the superproject's .git/modules director
 rmdir /s /q .git\modules\path\to\submodule
 
 rem Remove the submodule files from the working tree and index:
-git rm --cached Elven/vendor/imgui
+git rm --cached example: Elven/vendor/imgui
 
 rem Remove the entry in .gitmodules and remove the submodule directory located at path/to/submodule
 git rm -f path/to/submodule
