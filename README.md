@@ -9,14 +9,22 @@ You can clone repository using git (**`--recursive`** is required to fetch all o
 
 `git clone --recursive https://github.com/kryvytskyidenys/ElvenEngine`
 
-Run GenerateProject.bat file from the scripts folder to build the solution.
+Firstly you need to install [cmake](https://cmake.org/).
+
+To generate Visual Studio solution you can run script `configure-win-vs2019` or `configure-win-vs2022` from the `script` folder.
+
+Or just call on of the commands from the build directory:
+- `cmake -G "Visual Studio 16 2019" -A Win32`
+- `cmake -G "Visual Studio 16 2019" -A x64`
+- `cmake -G "Visual Studio 17 2022" -A Win32`
+- `cmake -G "Visual Studio 17 2022" -A x64`
 
 ## Third party libraries
 | Lib |  |
 | ------ | ------ |
-| [premake](https://github.com/premake/premake-core) | build configuration |
+| [cmake](https://github.com/Kitware/CMake) | build system |
 | [spdlog](https://github.com/gabime/spdlog) | header-only logging library |
-| [GLFW](https://github.com/kryvytskyidenys/glfw) | windows, OpenGL contexts and handle input |
+| [GLFW](https://github.com/glfw/glfw) | windows, OpenGL contexts and handle input |
 | [glad](https://glad.dav1d.de/) | OpenGL loader |
 | [lia](https://github.com/kryvytskyidenys/lia) | my custom linear algebra library |
 | [Deat ImGui](https://github.com/kryvytskyidenys/imgui) | library using for GUI (visual-editor) |
