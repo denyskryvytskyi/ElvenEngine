@@ -1,5 +1,6 @@
 #include "ExampleLayer.h"
-
+#include <filesystem>
+#include <iostream>
 ExampleLayer::ExampleLayer()
     : Layer("ExampleLayer"), m_CameraController(1280.0f / 720.0f)
 {
@@ -55,7 +56,9 @@ ExampleLayer::ExampleLayer()
     m_VAOTriangle->SetIndexBuffer(ibo_triangle);
 
     // Shader
-    m_Shader = m_ShaderManager.Load("example_shader", "res/shaders/shader.vert", "res/shaders/shader.frag");
+    auto path = std::filesystem::current_path();
+    EL_INFO("Shaders path: {0}", path);
+    m_Shader = m_ShaderManager.Load("example_shader", "Debug/res/shaders/shader.vert", "Debug/res/shaders/shader.frag");
 }
 
 ExampleLayer::~ExampleLayer()
