@@ -84,6 +84,7 @@ set(glad ${VENDOR_PATH}/GLAD)
 set(spdlog ${VENDOR_PATH}/spdlog)
 set(glm ${VENDOR_PATH}/glm)
 set(imgui ${VENDOR_PATH}/imgui)
+set(lia ${VENDOR_PATH}/lia)
 
 set(STATIC_THIRD_PARTY_LIBRARIES
     glfw
@@ -91,6 +92,7 @@ set(STATIC_THIRD_PARTY_LIBRARIES
     spdlog
     glm
     imgui
+    lia
 )
 
 add_subdirectory(${glfw})
@@ -98,6 +100,7 @@ add_subdirectory(${glad})
 add_subdirectory(${spdlog})
 add_subdirectory(${glm})
 add_subdirectory(${imgui})
+add_subdirectory(${lia})
 
 # link dependencies
 target_link_libraries(${LIBRARY_NAME} ${STATIC_THIRD_PARTY_LIBRARIES})

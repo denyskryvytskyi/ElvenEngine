@@ -1,9 +1,14 @@
 #include "ExampleLayer.h"
+
 #include <filesystem>
 #include <iostream>
+
+#include <lia/tests.h>
+
 ExampleLayer::ExampleLayer()
     : Layer("ExampleLayer"), m_CameraController(1280.0f / 720.0f)
 {
+    lia::tests();
     // grid
     m_VAOGrid = Elven::VertexArray::Create();
 
