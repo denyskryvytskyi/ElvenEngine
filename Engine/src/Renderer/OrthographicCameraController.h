@@ -1,5 +1,7 @@
 #pragma once
 
+#include <lia/lia.h>
+
 #include "Renderer/OrthographicCamera.h"
 #include "Events/MouseEvent.h"
 #include "Events/ApplicationEvent.h"
@@ -30,7 +32,7 @@ namespace Elven
     private:
         OrthographicCamera m_Camera;
 
-        glm::vec3 m_Position;
+        lia::vec3 m_Position;
 
         float m_AspectRatio;
         float m_ZoomLevel;

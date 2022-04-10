@@ -29,24 +29,24 @@ namespace Elven
 
         if (Input::IsKeyPressed(Key::A))
         {
-            m_Position.x -= cos(glm::radians(m_Rotation)) * m_TranslationSpeed * dt;
-            m_Position.y -= sin(glm::radians(m_Rotation)) * m_TranslationSpeed * dt;
+            m_Position.x -= cos(lia::radians(m_Rotation)) * m_TranslationSpeed * dt;
+            m_Position.y -= sin(lia::radians(m_Rotation)) * m_TranslationSpeed * dt;
         }
         else if (Input::IsKeyPressed(Key::D))
         {
-            m_Position.x += cos(glm::radians(m_Rotation)) * m_TranslationSpeed * dt;
-            m_Position.y += sin(glm::radians(m_Rotation)) * m_TranslationSpeed * dt;
+            m_Position.x += cos(lia::radians(m_Rotation)) * m_TranslationSpeed * dt;
+            m_Position.y += sin(lia::radians(m_Rotation)) * m_TranslationSpeed * dt;
         }
 
         if (Input::IsKeyPressed(Key::W))
         {
-            m_Position.x += -sin(glm::radians(m_Rotation)) * m_TranslationSpeed * dt;
-            m_Position.y += cos(glm::radians(m_Rotation)) * m_TranslationSpeed * dt;
+            m_Position.x += -sin(lia::radians(m_Rotation)) * m_TranslationSpeed * dt;
+            m_Position.y += cos(lia::radians(m_Rotation)) * m_TranslationSpeed * dt;
         }
         else if (Input::IsKeyPressed(Key::S))
         {
-            m_Position.x -= -sin(glm::radians(m_Rotation)) * m_TranslationSpeed * dt;
-            m_Position.y -= cos(glm::radians(m_Rotation)) * m_TranslationSpeed * dt;
+            m_Position.x -= -sin(lia::radians(m_Rotation)) * m_TranslationSpeed * dt;
+            m_Position.y -= cos(lia::radians(m_Rotation)) * m_TranslationSpeed * dt;
         }
 
         if (Input::IsKeyPressed(Key::Q))

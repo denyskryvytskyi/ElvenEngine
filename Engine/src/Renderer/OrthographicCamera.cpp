@@ -4,24 +4,24 @@
 namespace Elven
 {
     OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top)
-        : m_ProjectionMatrix(glm::ortho(left, right, bottom, top, -1.0f, 1.0f))
+        : m_ProjectionMatrix(lia::orthographic(left, right, bottom, top, -1.0f, 1.0f))
         , m_ViewMatrix(1.0f), m_Position(0.0f), m_Rotation(0.0f)
     {
-        m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
+        m_ViewProjectionMatrix = m_ViewMatrix * m_ProjectionMatrix;
     }
 
     void OrthographicCamera::SetProjection(float left, float right, float bottom, float top)
     {
-        m_ProjectionMatrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
-        m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
+        m_ProjectionMatrix = lia::orthographic(left, right, bottom, top, -1.0f, 1.0f);
+        m_ViewProjectionMatrix = m_ViewMatrix * m_ProjectionMatrix;
     }
 
     void OrthographicCamera::RecalculateViewMatrix()
     {
-        glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_Position)
-            * glm::rotate(glm::mat4(1.0f), glm::radians(m_Rotation), glm::vec3(0, 0, 1));
+        lia::mat4 transform = lia::rotate(lia::mat4(1.0f), lia::radians(m_Rotation), lia::vec3(0, 0, 1));
+        transform = lia::translate(transform, m_Position);
 
-        m_ViewMatrix = glm::inverse(transform);
-        m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
+        m_ViewMatrix = lia::inverse(transform);
+        m_ViewProjectionMatrix = m_ViewMatrix * m_ProjectionMatrix;
     }
 }

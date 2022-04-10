@@ -17,6 +17,8 @@
 #include "Core/Core.h"
 #include "Core/Log.h"
 
+#include <lia/lia.h>
+
 #ifdef EL_PLATFORM_WINDOWS
     #include <Windows.h>
 #endif
