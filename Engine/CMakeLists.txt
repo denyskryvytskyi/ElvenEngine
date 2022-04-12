@@ -105,8 +105,10 @@ add_subdirectory(${lia})
 # link dependencies
 target_link_libraries(${LIBRARY_NAME} ${STATIC_THIRD_PARTY_LIBRARIES})
 
+set(ENGINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
 set(ENGINE_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${ENGINE_SOURCE_DIR}
     ${glfw}/include
     ${glad}/include
     ${spdlog}/include
@@ -116,13 +118,12 @@ set(ENGINE_INCLUDE_DIRS
 
 # state that anybody linking to us needs to include the current source dir, while we don't
 target_include_directories(ElvenEngine
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
         PUBLIC ${ENGINE_INCLUDE_DIRS}
         )
 
 # pch header file path
 set(ENGINE_PRECOMPILED_HEADERS
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/elpch.h
+    ${ENGINE_SOURCE_DIR}/elpch.h
 )
 target_precompile_headers(ElvenEngine PRIVATE ${ENGINE_PRECOMPILED_HEADERS})
 

@@ -10,7 +10,7 @@ set(SANDBOX_SOURCES
 )
 
 set(PROJECT_INCLUDE_DIRECTORIES
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${ENGINE_INCLUDE_DIR}
 )
 
@@ -18,6 +18,6 @@ add_executable(Sandbox ${SANDBOX_SOURCES})
 
 target_link_libraries(Sandbox PUBLIC ElvenEngine)
 
-target_include_directories(ElvenEngine
-        PUBLIC ${PROJECT_INCLUDE_DIRECTORIES}
+target_include_directories(Sandbox
+        PRIVATE ${PROJECT_INCLUDE_DIRECTORIES}
         )
