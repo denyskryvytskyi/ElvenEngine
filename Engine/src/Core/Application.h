@@ -29,6 +29,7 @@ namespace Elven
 
     private:
         bool OnWindowClose(Events::WindowCloseEvent& e);
+        bool OnWindowResize(Events::WindowResizeEvent& e);
 
     private:
         static Application* s_Instance;

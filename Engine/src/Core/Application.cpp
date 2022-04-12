@@ -24,12 +24,14 @@ namespace Elven
         PushOverlay(m_ImGuiLayer);
 
         SUBSCRIBE_ON_EVENT(Events::WindowCloseEvent::GetStaticUUID(), EL_BIND_EVENT_FN(Application::OnEvent));
+        SUBSCRIBE_ON_EVENT(Events::WindowResizeEvent::GetStaticUUID(), EL_BIND_EVENT_FN(Application::OnEvent));
     }
 
     Application::~Application()
     {
         delete m_Window;
 
+        UNSUBSCRIBE_EVENT(Events::WindowResizeEvent::GetStaticUUID(), EL_BIND_EVENT_FN(Application::OnEvent));
         UNSUBSCRIBE_EVENT(Events::WindowCloseEvent::GetStaticUUID(), EL_BIND_EVENT_FN(Application::OnEvent));
         Events::gEventManager.Shutdown();
     }
@@ -38,6 +40,7 @@ namespace Elven
     {
         Events::EventDispatcher dispatcher(e);
         dispatcher.Dispatch<Events::WindowCloseEvent>(EL_BIND_EVENT_FN(Application::OnWindowClose));
+        dispatcher.Dispatch<Events::WindowResizeEvent>(EL_BIND_EVENT_FN(Application::OnWindowResize));
     }
 
     void Application::PushLayer(Layer* layer)
@@ -85,6 +88,19 @@ namespace Elven
     bool Application::OnWindowClose(Events::WindowCloseEvent& e)
     {
         m_Running = false;
+
+        return true;
+    }
+
+    bool Application::OnWindowResize(Events::WindowResizeEvent& e)
+    {
+        if (e.GetWidth() == 0 || e.GetHeight() == 0)
+        {
+            // minimized logic
+            return true;
+        }
+
+        Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
 
         return true;
     }

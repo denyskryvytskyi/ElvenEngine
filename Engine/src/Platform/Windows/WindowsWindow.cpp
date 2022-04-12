@@ -10,7 +10,7 @@
 
 namespace Elven
 {
-    static uint8_t s_GLFWindowCount = 0;
+    static uint8_t s_GLFWwindowCount = 0;
 
     static void GLFWErrorCallback(int error, const char* description)
     {
@@ -56,12 +56,15 @@ namespace Elven
 
         EL_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
 
-        if (s_GLFWindowCount == 0)
+        if (s_GLFWwindowCount == 0)
         {
             int success = glfwInit();
             EL_CORE_ASSERT(success, "Could not initialize GLFW!");
             glfwSetErrorCallback(GLFWErrorCallback);
         }
+
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 
         m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 
@@ -75,10 +78,10 @@ namespace Elven
         glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-            QUEUE_EVENT(new Events::WindowResizeEvent(width, height));
             data.Width = width;
             data.Height = height;
+            
+            QUEUE_EVENT(new Events::WindowResizeEvent(width, height));
         });
 
         glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
@@ -156,9 +159,9 @@ namespace Elven
     void WindowsWindow::Shutdown()
     {
         glfwDestroyWindow(m_Window);
-        --s_GLFWindowCount;
+        --s_GLFWwindowCount;
 
-        if (s_GLFWindowCount == 0)
+        if (s_GLFWwindowCount == 0)
         {
             glfwTerminate();
         }

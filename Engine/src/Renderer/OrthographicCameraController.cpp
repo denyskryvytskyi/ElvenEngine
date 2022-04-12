@@ -18,8 +18,8 @@ namespace Elven
 
     OrthographicCameraController::~OrthographicCameraController()
     {
-        UNSUBSCRIBE_EVENT(Events::MouseScrolledEvent::GetStaticUUID(), EL_BIND_EVENT_FN(OrthographicCameraController::OnEvent));
         UNSUBSCRIBE_EVENT(Events::WindowResizeEvent::GetStaticUUID(), EL_BIND_EVENT_FN(OrthographicCameraController::OnEvent));
+        UNSUBSCRIBE_EVENT(Events::MouseScrolledEvent::GetStaticUUID(), EL_BIND_EVENT_FN(OrthographicCameraController::OnEvent));
     }
 
     // need add timestep
@@ -89,6 +89,6 @@ namespace Elven
     bool OrthographicCameraController::OnWindowResized(Events::WindowResizeEvent& e)
     {
         OnResize(static_cast<float>(e.GetWidth()), static_cast<float>(e.GetHeight()));
-        return false;
+        return true;
     }
 }
