@@ -131,4 +131,5 @@ target_precompile_headers(ElvenEngine PRIVATE ${ENGINE_PRECOMPILED_HEADERS})
 add_compile_definitions(
     _CRT_SECURE_NO_WARNINGS
     GLFW_INCLUDE_NONE
+    EL_ASSERTIONS_ENABLED
 )
