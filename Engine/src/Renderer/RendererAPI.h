@@ -1,7 +1,5 @@
 #pragma once
 
-#include <lia/lia.h>
-
 #include "Renderer/VertexArray.h"
 
 namespace Elven

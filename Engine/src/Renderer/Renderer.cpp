@@ -1,4 +1,3 @@
-#include "elpch.h"
 #include "Renderer/Renderer.h"
 
 namespace Elven

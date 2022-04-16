@@ -41,6 +41,7 @@ set(ENGINE_HEADERS
 
 set(ENGINE_SOURCES 
 "src/Core/Application.cpp"
+"src/Core/EntryPoint.cpp"
 "src/Core/Layer.cpp"
 "src/Core/LayerStack.cpp"
 "src/Core/Log.cpp"

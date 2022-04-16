@@ -9,9 +9,9 @@ namespace Elven
         class MouseMovedEvent : public Event
         {
         public:
-            EVENT_ID("{F40458FE-A406-4ECF-9EB8-D603716E4E4E}")
+            EVENT_TYPE("{F40458FE-A406-4ECF-9EB8-D603716E4E4E}")
 
-                MouseMovedEvent(float x, float y) :
+            MouseMovedEvent(float x, float y) :
                 m_mouseX(x),
                 m_mouseY(y)
             {}
@@ -27,13 +27,14 @@ namespace Elven
             }
 
         private:
-            float m_mouseX, m_mouseY;
+            float m_mouseX { 0.0f };
+            float m_mouseY { 0.0f };
         };
 
         class MouseScrolledEvent : public Event
         {
         public:
-            EVENT_ID("{961D7FE1-F601-47C4-BB5F-0D93F601DD2D}")
+            EVENT_TYPE("{961D7FE1-F601-47C4-BB5F-0D93F601DD2D}")
 
                 MouseScrolledEvent(float xOffset, float yOffset) :
                 m_xOffset(xOffset),
@@ -51,16 +52,16 @@ namespace Elven
             }
 
         private:
-            float m_xOffset = 0;
-            float m_yOffset = 0;
+            float m_xOffset = 0.0f;
+            float m_yOffset = 0.0f;
         };
 
         class MouseButtonEvent : public Event
         {
         public:
-            EVENT_ID("{BC44A1F0-989F-4013-8516-005BA864CB12}")
+            EVENT_TYPE("{BC44A1F0-989F-4013-8516-005BA864CB12}")
 
-                int GetMouseButton() const { return m_button; }
+            int GetMouseButton() const { return m_button; }
 
         protected:
             MouseButtonEvent(int button) :
@@ -68,15 +69,15 @@ namespace Elven
             {}
 
         protected:
-            int m_button;
+            int m_button { 0 };
         };
 
         class MouseButtonPressedEvent : public MouseButtonEvent
         {
         public:
-            EVENT_ID("{BF946F16-6077-4550-A579-CCF199E83C45}")
+            EVENT_TYPE("{BF946F16-6077-4550-A579-CCF199E83C45}")
 
-                MouseButtonPressedEvent(int button) :
+            MouseButtonPressedEvent(int button) :
                 MouseButtonEvent(button)
             {}
 
@@ -91,9 +92,9 @@ namespace Elven
         class MouseButtonReleasedEvent : public MouseButtonEvent
         {
         public:
-            EVENT_ID("{FDD0D4DB-E81F-450F-9472-81A794A5F92E}")
+            EVENT_TYPE("{FDD0D4DB-E81F-450F-9472-81A794A5F92E}")
 
-                MouseButtonReleasedEvent(int button) :
+            MouseButtonReleasedEvent(int button) :
                 MouseButtonEvent(button)
             {}
 

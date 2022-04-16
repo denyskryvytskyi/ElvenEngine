@@ -1,4 +1,3 @@
-#include "elpch.h"
 #include "Events/Event.h"
 #include "Events/EventManager.h"
 
@@ -53,7 +52,7 @@ namespace Elven
 
         void EventManager::TriggerEvent(Event* event)
         {
-            for (auto callback : m_subscribers[event->GetUUID()])
+            for (auto callback : m_subscribers[event->GetEventType()])
             {
                 callback(*event);
             }

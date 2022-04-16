@@ -1,4 +1,4 @@
-#include "elpch.h"
+
 
 #include "Renderer/GraphicsContext.h"
 #include "Platform/OpenGL/OpenGLContext.h"

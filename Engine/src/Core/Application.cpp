@@ -1,9 +1,9 @@
-#include "elpch.h"
-
 #include "Core/Application.h"
 #include "Core/Input.h"
 #include "Core/Window.h"
 #include "Core/Timer.h"
+
+#include "Events/EventDispatcher.h"
 
 #include "Renderer/Renderer.h"
 
@@ -16,31 +16,31 @@ namespace Elven
     Application::Application()
         : m_Running(true)
     {
-        EL_CORE_ASSERT(!s_Instance, "Application already exist!");
+        EL_CORE_ASSERT(!s_Instance, "Application already exists!");
         s_Instance = this;
 
         m_Window = Window::Create();
         m_ImGuiLayer = new ImGuiLayer();
         PushOverlay(m_ImGuiLayer);
 
-        SUBSCRIBE_ON_EVENT(Events::WindowCloseEvent::GetStaticUUID(), EL_BIND_EVENT_FN(Application::OnEvent));
-        SUBSCRIBE_ON_EVENT(Events::WindowResizeEvent::GetStaticUUID(), EL_BIND_EVENT_FN(Application::OnEvent));
+        Events::Subscribe<Events::WindowCloseEvent>(EVENT_CALLBACK(Application::OnEvent));
+        Events::Subscribe<Events::WindowResizeEvent>(EVENT_CALLBACK(Application::OnEvent));
     }
 
     Application::~Application()
     {
         delete m_Window;
 
-        UNSUBSCRIBE_EVENT(Events::WindowResizeEvent::GetStaticUUID(), EL_BIND_EVENT_FN(Application::OnEvent));
-        UNSUBSCRIBE_EVENT(Events::WindowCloseEvent::GetStaticUUID(), EL_BIND_EVENT_FN(Application::OnEvent));
+        Events::Unsubscribe<Events::WindowResizeEvent>(EVENT_CALLBACK(Application::OnEvent));
+        Events::Unsubscribe<Events::WindowCloseEvent>(EVENT_CALLBACK(Application::OnEvent));
         Events::gEventManager.Shutdown();
     }
 
     void Application::OnEvent(Events::Event& e)
     {
         Events::EventDispatcher dispatcher(e);
-        dispatcher.Dispatch<Events::WindowCloseEvent>(EL_BIND_EVENT_FN(Application::OnWindowClose));
-        dispatcher.Dispatch<Events::WindowResizeEvent>(EL_BIND_EVENT_FN(Application::OnWindowResize));
+        dispatcher.Dispatch<Events::WindowCloseEvent>(EVENT_CALLBACK(Application::OnWindowClose));
+        dispatcher.Dispatch<Events::WindowResizeEvent>(EVENT_CALLBACK(Application::OnWindowResize));
     }
 
     void Application::PushLayer(Layer* layer)

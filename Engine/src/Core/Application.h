@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Core/LayerStack.h"
-
-#include "Events/EventDispatcher.h"
 #include "Events/ApplicationEvent.h"
 
 namespace Elven

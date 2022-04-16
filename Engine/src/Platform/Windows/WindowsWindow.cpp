@@ -1,4 +1,3 @@
-#include "elpch.h"
 #include "Platform/Windows/WindowsWindow.h"
 #include "Platform/OpenGL/OpenGLContext.h"
 
@@ -7,6 +6,8 @@
 #include "Events/MouseEvent.h"
 
 #include "Events/EventManager.h"
+
+#include <GLFW/glfw3.h>
 
 namespace Elven
 {
@@ -81,14 +82,14 @@ namespace Elven
             data.Width = width;
             data.Height = height;
             
-            QUEUE_EVENT(new Events::WindowResizeEvent(width, height));
+            Events::QueueEvent(new Events::WindowResizeEvent(width, height));
         });
 
         glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-            QUEUE_EVENT(new Events::WindowCloseEvent());
+            Events::QueueEvent(new Events::WindowCloseEvent());
         });
 
         glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -99,17 +100,17 @@ namespace Elven
             {
             case GLFW_PRESS:
             {
-                QUEUE_EVENT(new Events::KeyPressedEvent(key, 0));
+                Events::QueueEvent(new Events::KeyPressedEvent(key, 0));
                 break;
             }
             case GLFW_RELEASE:
             {
-                QUEUE_EVENT(new Events::KeyReleasedEvent(key));
+                Events::QueueEvent(new Events::KeyReleasedEvent(key));
                 break;
             }
             case GLFW_REPEAT:
             {
-                QUEUE_EVENT(new Events::KeyPressedEvent(key, 1));
+                Events::QueueEvent(new Events::KeyPressedEvent(key, 1));
                 break;
             }
             }
@@ -119,7 +120,7 @@ namespace Elven
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-            QUEUE_EVENT(new Events::KeyTypedEvent(keycode));
+            Events::QueueEvent(new Events::KeyTypedEvent(keycode));
         });
 
         glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
@@ -130,12 +131,12 @@ namespace Elven
             {
             case GLFW_PRESS:
             {
-                QUEUE_EVENT(new Events::MouseButtonPressedEvent(button));
+                Events::QueueEvent(new Events::MouseButtonPressedEvent(button));
                 break;
             }
             case GLFW_RELEASE:
             {
-                QUEUE_EVENT(new Events::MouseButtonReleasedEvent(button));
+                Events::QueueEvent(new Events::MouseButtonReleasedEvent(button));
                 break;
             }
             }
@@ -145,14 +146,14 @@ namespace Elven
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-            TRIGGER_EVENT(new Events::MouseScrolledEvent((float)xOffset, (float)yOffset));
+            Events::TriggerEvent(new Events::MouseScrolledEvent((float)xOffset, (float)yOffset));
         });
 
         glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-            QUEUE_EVENT(new Events::MouseMovedEvent((float)xPos, (float)yPos));
+            Events::QueueEvent(new Events::MouseMovedEvent((float)xPos, (float)yPos));
         });
     }
 

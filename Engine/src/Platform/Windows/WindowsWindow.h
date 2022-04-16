@@ -3,7 +3,7 @@
 #include "Core/Window.h"
 #include "Renderer/GraphicsContext.h"
 
-#include <GLFW/glfw3.h>
+struct GLFWwindow;
 
 namespace Elven
 {

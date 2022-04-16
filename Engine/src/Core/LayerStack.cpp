@@ -1,4 +1,3 @@
-#include "elpch.h"
 #include "LayerStack.h"
 
 namespace Elven

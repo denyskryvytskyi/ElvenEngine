@@ -1,9 +1,5 @@
 #pragma once
 
-#include "Core/Core.h"
-
-#include <string>
-
 namespace Elven
 {
     struct WindowProps

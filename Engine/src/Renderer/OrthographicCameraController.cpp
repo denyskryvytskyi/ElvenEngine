@@ -1,4 +1,3 @@
-#include "elpch.h"
 #include "OrthographicCameraController.h"
 
 #include "Core/Input.h"
@@ -12,14 +11,14 @@ namespace Elven
         , m_Position(0.0f), m_AspectRatio(aspectRatio), m_ZoomLevel(1.0f)
         , m_Rotation(0.0f), m_TranslationSpeed(5.0f), m_RotationSpeed(180.0f)
     {
-        SUBSCRIBE_ON_EVENT(Events::MouseScrolledEvent::GetStaticUUID(), EL_BIND_EVENT_FN(OrthographicCameraController::OnEvent));
-        SUBSCRIBE_ON_EVENT(Events::WindowResizeEvent::GetStaticUUID(), EL_BIND_EVENT_FN(OrthographicCameraController::OnEvent));
+        Events::Subscribe<Events::MouseScrolledEvent>(EVENT_CALLBACK(OrthographicCameraController::OnEvent));
+        Events::Subscribe<Events::WindowResizeEvent>(EVENT_CALLBACK(OrthographicCameraController::OnEvent));
     }
 
     OrthographicCameraController::~OrthographicCameraController()
     {
-        UNSUBSCRIBE_EVENT(Events::WindowResizeEvent::GetStaticUUID(), EL_BIND_EVENT_FN(OrthographicCameraController::OnEvent));
-        UNSUBSCRIBE_EVENT(Events::MouseScrolledEvent::GetStaticUUID(), EL_BIND_EVENT_FN(OrthographicCameraController::OnEvent));
+        Events::Unsubscribe<Events::WindowResizeEvent>(EVENT_CALLBACK(OrthographicCameraController::OnEvent));
+        Events::Unsubscribe<Events::MouseScrolledEvent>(EVENT_CALLBACK(OrthographicCameraController::OnEvent));
     }
 
     // need add timestep
@@ -68,8 +67,8 @@ namespace Elven
     void OrthographicCameraController::OnEvent(Events::Event& e)
     {
         Events::EventDispatcher dispatcher(e);
-        dispatcher.Dispatch<Events::MouseScrolledEvent>(EL_BIND_EVENT_FN(OrthographicCameraController::OnMouseScrolled));
-        dispatcher.Dispatch<Events::WindowResizeEvent>(EL_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
+        dispatcher.Dispatch<Events::MouseScrolledEvent>(EVENT_CALLBACK(OrthographicCameraController::OnMouseScrolled));
+        dispatcher.Dispatch<Events::WindowResizeEvent>(EVENT_CALLBACK(OrthographicCameraController::OnWindowResized));
     }
 
     void OrthographicCameraController::OnResize(float width, float height)

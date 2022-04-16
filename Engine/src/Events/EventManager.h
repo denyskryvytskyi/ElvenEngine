@@ -1,21 +1,18 @@
 #pragma once
 
-#include <unordered_map>
 #include <functional>
 
-#define SUBSCRIBE_ON_EVENT(event_uuid, callback) Elven::Events::gEventManager.Subscribe(event_uuid, callback);
-#define UNSUBSCRIBE_EVENT(event_uuid, callback) Elven::Events::gEventManager.Unsubscribe(event_uuid, callback);
-#define TRIGGER_EVENT(event) Elven::Events::gEventManager.TriggerEvent(event);
-#define QUEUE_EVENT(event) Elven::Events::gEventManager.QueueEvent(event);
+#define EVENT_CALLBACK(fn) std::bind(&fn, this, std::placeholders::_1)
 
 namespace Elven
 {
     namespace Events
     {
+        using EventCallback = std::function<void(Event&)>;
+
         class Event;
         class EventManager
         {
-            using EventCallback = std::function<void(Event&)>;
 
         public:
             void Shutdown();
@@ -32,5 +29,29 @@ namespace Elven
         };
 
         extern EventManager gEventManager;
+
+        template<typename EventType>
+        static void Subscribe(EventCallback&& callback)
+        {
+            gEventManager.Subscribe(EventType::GetStaticEventType(), std::move(callback));
+        }
+        
+        template<typename EventType>
+        static void Unsubscribe(EventCallback&& callback)
+        {
+            gEventManager.Unsubscribe(EventType::GetStaticEventType(), std::move(callback));
+        }
+        
+        template<typename TEvent>
+        static void TriggerEvent(TEvent triggeredEvent)
+        {
+            gEventManager.TriggerEvent(triggeredEvent);
+        }
+        
+        template<typename QEvent>
+        static void QueueEvent(QEvent queuedEvent)
+        {
+            gEventManager.QueueEvent(queuedEvent);
+        }
     }
 }

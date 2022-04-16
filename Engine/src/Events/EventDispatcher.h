@@ -17,7 +17,7 @@ namespace Elven
             template<typename T, typename F>
             bool Dispatch(const F& func)
             {
-                if (m_Event.GetUUID() == T::GetStaticUUID())
+                if (m_Event.GetEventType() == T::GetStaticEventType())
                 {
                     m_Event.Handled = func(*(T*)&m_Event);
                     return true;

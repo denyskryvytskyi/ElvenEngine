@@ -1,4 +1,3 @@
-#include "elpch.h"
 #include "Core/Window.h"
 
 #ifdef EL_PLATFORM_WINDOWS

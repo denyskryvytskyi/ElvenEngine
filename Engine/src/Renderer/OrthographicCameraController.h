@@ -1,7 +1,5 @@
 #pragma once
 
-#include <lia/lia.h>
-
 #include "Renderer/OrthographicCamera.h"
 #include "Events/MouseEvent.h"
 #include "Events/ApplicationEvent.h"

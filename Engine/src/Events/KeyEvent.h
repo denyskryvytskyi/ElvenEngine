@@ -9,24 +9,25 @@ namespace Elven
         class KeyEvent : public Event
         {
         public:
-            EVENT_ID("{498CE06D-7EE3-465F-9EA7-B6D6E8CE963D}")
+            EVENT_TYPE("{498CE06D-7EE3-465F-9EA7-B6D6E8CE963D}")
 
-                int GetKeyCode() const { return m_keyCode; }
+            int GetKeyCode() const { return m_keyCode; }
 
         protected:
             KeyEvent(int keyCode) :
                 m_keyCode(keyCode)
             {}
 
-            int m_keyCode;
+        protected:
+            int m_keyCode { 0 };
         };
 
         class KeyPressedEvent : public KeyEvent
         {
         public:
-            EVENT_ID("{FAAB99F1-7E9B-4533-9DE6-A84B49DD3230}")
+            EVENT_TYPE("{FAAB99F1-7E9B-4533-9DE6-A84B49DD3230}")
 
-                KeyPressedEvent(int keyCode, int repeatCount) : KeyEvent(keyCode),
+            KeyPressedEvent(int keyCode, int repeatCount) : KeyEvent(keyCode),
                 m_repeatCount(repeatCount)
             {}
 
@@ -40,15 +41,15 @@ namespace Elven
             }
 
         private:
-            int m_repeatCount;
+            int m_repeatCount { 0 };
         };
 
         class KeyReleasedEvent : public KeyEvent
         {
         public:
-            EVENT_ID("{59165F38-446B-47E1-994D-E67BEC9832BD}")
+            EVENT_TYPE("{59165F38-446B-47E1-994D-E67BEC9832BD}")
 
-                KeyReleasedEvent(int keyCode) : KeyEvent(keyCode) {}
+            KeyReleasedEvent(int keyCode) : KeyEvent(keyCode) {}
 
             std::string ToString() const override
             {
@@ -61,9 +62,9 @@ namespace Elven
         class KeyTypedEvent : public KeyEvent
         {
         public:
-            EVENT_ID("{5CAFF4C9-2EF6-4A0B-9664-850CA2173AF7}")
+            EVENT_TYPE("{5CAFF4C9-2EF6-4A0B-9664-850CA2173AF7}")
 
-                KeyTypedEvent(int keyCode) : KeyEvent(keyCode) {}
+            KeyTypedEvent(int keyCode) : KeyEvent(keyCode) {}
 
             std::string ToString() const override
             {

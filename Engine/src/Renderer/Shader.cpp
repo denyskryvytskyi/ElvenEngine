@@ -1,4 +1,4 @@
-#include "elpch.h"
+
 #include "Renderer/Shader.h"
 
 #include "Renderer/Renderer.h"

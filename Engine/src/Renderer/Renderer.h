@@ -1,7 +1,5 @@
 #pragma once
 
-#include <lia/lia.h>
-
 #include "Renderer/RenderCommand.h"
 #include "Renderer/OrthographicCamera.h"
 #include "Shader.h"

@@ -1,4 +1,4 @@
-#include "elpch.h"
+
 #include "Core/Input.h"
 #include "Core/Application.h"
 #include "Core/Window.h"

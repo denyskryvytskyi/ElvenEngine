@@ -1,7 +1,5 @@
 #pragma once
 
-#include <lia/lia.h>
-
 namespace Elven
 {
     struct ShaderProgramSource
