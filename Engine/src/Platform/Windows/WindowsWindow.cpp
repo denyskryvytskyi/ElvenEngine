@@ -30,8 +30,8 @@ namespace Elven
 
     void WindowsWindow::OnUpdate()
     {
-        glfwPollEvents();
         m_Context->SwapBuffers();
+        glfwPollEvents();
     }
 
     void WindowsWindow::SetVSync(bool enabled)
@@ -82,7 +82,7 @@ namespace Elven
             data.Width = width;
             data.Height = height;
             
-            Events::QueueEvent(new Events::WindowResizeEvent(width, height));
+            Events::TriggerEvent(new Events::WindowResizeEvent(width, height));
         });
 
         glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)

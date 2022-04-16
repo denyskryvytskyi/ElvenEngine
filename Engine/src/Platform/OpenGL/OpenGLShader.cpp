@@ -1,7 +1,7 @@
 
 #include "Platform/OpenGL/OpenGLShader.h"
 
-#include <glad/glad.h>
+#include <glad/gl.h>
 
 namespace Elven
 {

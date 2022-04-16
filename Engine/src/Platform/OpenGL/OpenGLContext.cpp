@@ -2,7 +2,7 @@
 #include "Platform/OpenGL/OpenGLContext.h"
 
 #include <GLFW/glfw3.h>
-#include <glad/glad.h>
+#include <glad/gl.h>
 
 namespace Elven
 {
@@ -14,8 +14,8 @@ namespace Elven
     void OpenGLContext::Init()
     {
         glfwMakeContextCurrent(m_WindowHandle);
-
-        int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+        
+        int status = gladLoadGL(glfwGetProcAddress);
         EL_CORE_ASSERT(status, "Failed to initialize Glad.");
 
         EL_CORE_INFO("OpenGL Info:");
@@ -23,7 +23,7 @@ namespace Elven
         EL_CORE_INFO("  Renderer: {0}", glGetString(GL_RENDERER));
         EL_CORE_INFO("  Version: {0}", glGetString(GL_VERSION));
 
-        EL_CORE_ASSERT(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 5), "Elven requires at least OpenGL version 4.5!");
+        EL_CORE_ASSERT(GLAD_VERSION_MAJOR(status) > 4 || (GLAD_VERSION_MAJOR(status) == 4 && GLAD_VERSION_MINOR(status) >= 5), "Elven requires at least OpenGL version 4.5!");
     }
 
     void OpenGLContext::SwapBuffers()

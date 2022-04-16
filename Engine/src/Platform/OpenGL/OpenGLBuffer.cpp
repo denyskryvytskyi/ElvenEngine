@@ -1,7 +1,7 @@
 
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
-#include <glad/glad.h>
+#include <glad/gl.h>
 
 namespace Elven
 {
