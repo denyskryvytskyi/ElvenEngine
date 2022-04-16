@@ -29,6 +29,7 @@ add_compile_definitions(MXENGINE_CMAKE_BUILD)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
+    add_compile_definitions(EL_DEBUG)
 endif()
 
 add_subdirectory(Engine)
