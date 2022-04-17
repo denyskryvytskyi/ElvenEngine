@@ -30,11 +30,6 @@ Or just call command from the build directory:
 ## Features
 
 - [x] Logging system and assertions (using spdlog lib)
-- [ ] Allocators:
-  + [ ] Stack-based: simple stack, double-ended
-  + [ ] Pool allocator
-  + [ ] Aligned allocations
-  + [ ] Single-Frame and Double-Buffered Memory Allocators
 - [x] Event sytem
 - [x] Custom math library (as separate project)
 - [ ] Renderer core:
@@ -42,6 +37,11 @@ Or just call command from the build directory:
   + [ ] Renderer API (VAO, VBO, Shader abstractions)
   + [ ] Camera (orthographic, perspective)
   + [ ] Support usage of different graphics API (OpenGL only for now)
+- [ ] Allocators:
+  + [ ] Stack-based: simple stack, double-ended
+  + [ ] Pool allocator
+  + [ ] Aligned allocations
+  + [ ] Single-Frame and Double-Buffered Memory Allocators
 
 ## Features (To-do)
 - Renderer 
