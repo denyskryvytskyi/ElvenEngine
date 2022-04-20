@@ -13,8 +13,9 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
 
 To generate Visual Studio solution you can run script `configure-win-vs<2019/2022>` from the `script` folder.
 
-Or just call command from the build directory:
-`cmake -G <Visual Studio Generator 2019/2022> -A <x64/Win32>`
+Or just call command from the build directory with your version of VS and platform name (architecture):
+
+`cmake -G "Visual Studio Generator 17 2022" -A x64`
 
 ## Third party libraries
 | Lib |  |
