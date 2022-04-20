@@ -11,7 +11,7 @@ You can clone repository using git (**`--recursive`** is required to fetch all o
 
 Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for VS 2022 support)
 
-To generate Visual Studio solution you can run script `configure-win-vs<2019/2022>` from the `script` folder.
+To generate Visual Studio solution you can run script `configure-win-vs2022` from the `script` folder.
 
 Or just call command from the build directory with your version of VS and platform name (architecture):
 
@@ -58,6 +58,7 @@ Or just call command from the build directory with your version of VS and platfo
   - [ ] Inspector: transform component
   - [ ] Graphics stats
 + [ ] 2D Physics support (Box2d)
++ [ ] Multithreading support
 + [ ] Allocators (separate project):
   - [ ] Stack-based: simple stack, double-ended
   - [ ] Pool allocator
