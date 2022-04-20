@@ -59,6 +59,7 @@ Or just call command from the build directory with your version of VS and platfo
   - [ ] Graphics stats
 + [ ] 2D Physics support (Box2d)
 + [ ] Multithreading support
+  - [ ] Thread pool
 + [ ] Allocators (separate project):
   - [ ] Stack-based: simple stack, double-ended
   - [ ] Pool allocator
