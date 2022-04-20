@@ -9,9 +9,9 @@ You can clone repository using git (**`--recursive`** is required to fetch all o
 
 `git clone --recursive https://github.com/kryvytskyidenys/ElvenEngine`
 
-Firstly you need to install [cmake](https://cmake.org/).
+Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for VS 2022 support)
 
-To generate Visual Studio solution you can run script `configure-win-vs2019` or `configure-win-vs2022` from the `script` folder.
+To generate Visual Studio solution you can run script `configure-win-vs<2019/2022>` from the `script` folder.
 
 Or just call command from the build directory:
 `cmake -G <Visual Studio Generator 2019/2022> -A x64/Win32`
