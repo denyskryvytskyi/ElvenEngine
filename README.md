@@ -9,12 +9,13 @@ You can clone repository using git (**`--recursive`** is required to fetch all o
 
 `git clone --recursive https://github.com/kryvytskyidenys/ElvenEngine`
 
-Firstly you need to install [cmake](https://cmake.org/).
+Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for VS 2022 support)
 
-To generate Visual Studio solution you can run script `configure-win-vs2019` or `configure-win-vs2022` from the `script` folder.
+To generate Visual Studio solution you can run script `configure-win-vs2022` from the `script` folder.
 
-Or just call command from the build directory:
-`cmake -G <Visual Studio Generator 2019/2022> -A x64/Win32`
+Or just call command from the build directory with your version of VS and platform name (architecture):
+
+`cmake -G "Visual Studio Generator 17 2022" -A x64`
 
 ## Third party libraries
 | Lib |  |
@@ -27,40 +28,52 @@ Or just call command from the build directory:
 | [Deat ImGui](https://github.com/kryvytskyidenys/imgui) | library using for GUI (visual-editor) |
 
 
-## Features
+## Features (In Progress)
 
-- [x] Logging system and assertions (using spdlog lib)
-- [ ] Allocators:
-  + [ ] Stack-based: simple stack, double-ended
-  + [ ] Pool allocator
-  + [ ] Aligned allocations
-  + [ ] Single-Frame and Double-Buffered Memory Allocators
-- [x] Event sytem
-- [x] Custom math library (as separate project)
-- [ ] Renderer core:
-  + [ ] Shader Manager (shader files loading)
-  + [ ] Renderer API (VAO, VBO, Shader abstractions)
-  + [ ] Camera (orthographic, perspective)
-  + [ ] Support usage of different graphics API (OpenGL only for now)
++ [x] Logging system (spdlog)
++ [x] Event sytem (event queue based system)
++ [x] Custom math library (separate project [lia](https://github.com/denyskryvytskyi/lia))
++ [ ] Renderer core
+  - [x] Shader Manager (shader files loading)
+  - [ ] Renderer API (VAO, VBO, Shader abstractions)
+  - [ ] Camera (orthographic, perspective)
+  - [ ] Support usage of different graphics API (OpenGL only for now)
++ [ ] 2D Renderer
+  - [ ] Quad
+  - [ ] Batch rendering
+  - [ ] Textures support
+  - [ ] Sprite
+  - [ ] Spritesheet animation
+  - [ ] Text Rendering
++ [ ] 3D Renderer
+  - [ ] Mesh/Material system
+  - [ ] Primitives: cube, sphere, plane
+  - [ ] Model loading (Assimp)
+  - [ ] Lighting support
++ [ ] ECS
+  - [ ] Scene
+  - [ ] Data-oriented components structure
++ [ ] Visual-editor (based of ImGui)
+  - [ ] Scene hierarchy
+  - [ ] Inspector: transform component
+  - [ ] Graphics stats
++ [ ] 2D Physics support (Box2d)
++ [ ] Multithreading support
+  - [ ] Thread pool
++ [ ] Allocators (separate project):
+  - [ ] Stack-based: simple stack, double-ended
+  - [ ] Pool allocator
+  - [ ] Aligned allocations
+  - [ ] Single-Frame and Double-Buffered Memory Allocators
 
-## Features (To-do)
-- Renderer 
-  - 2D renderer (sprites, 2D spritesheet animation)
-  - Text rendering
-- Enitity-component-system
-- Visual-editor (based of ImGui)
-- 2D Physics support (Box2d)
-
-## Backlog
+## Features (Backlog)
 - Renderer
-  - Material system
-  - 3D renderer:
-    - Deffered/Forward Rendering
+    - Deffered Rendering
     - PBR Rendering
-- Scripting Engine
+    - Vulkan, DirectX 11/12 support
+- Scripting Engine (C++ and lua scripting)
 - 3D Physics Library (Bullet)
 - Audio engine
-- Support for Mac, Linux
-- DirectX 11, DirecX 12, Vulkan support
+- Linux and Mac support
 - Procedural terrain and world generation
 - Artificial Intelligence
