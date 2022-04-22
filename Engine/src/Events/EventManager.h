@@ -42,14 +42,12 @@ namespace Elven
             gEventManager.Unsubscribe(EventType::GetStaticEventType(), std::move(callback));
         }
         
-        template<typename TEvent>
-        static void TriggerEvent(TEvent triggeredEvent)
+        static void TriggerEvent(Event* triggeredEvent)
         {
             gEventManager.TriggerEvent(triggeredEvent);
         }
         
-        template<typename QEvent>
-        static void QueueEvent(QEvent queuedEvent)
+        static void QueueEvent(Event* queuedEvent)
         {
             gEventManager.QueueEvent(queuedEvent);
         }
