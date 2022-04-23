@@ -4,8 +4,6 @@
 
 namespace Elven
 {
-    class Events::Event;
-
     class Layer
     {
     public:

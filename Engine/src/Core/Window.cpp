@@ -12,7 +12,7 @@ namespace Elven
             return new WindowsWindow(props);
         #else
             EL_CORE_ASSERT(false, "Unknown platform!");
-            retur nullptr;
+            return nullptr;
         #endif
     }
 }
