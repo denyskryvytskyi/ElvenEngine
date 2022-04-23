@@ -71,7 +71,7 @@ Or just call command from the build directory with your version of VS and platfo
     - PBR Rendering
     - Vulkan, DirectX 11/12 support
 - Scripting Engine (C++ and lua scripting)
-- 3D Physics Library (Bullet)
+- 3D Physics (Bullet)
 - Audio engine
 - Linux and Mac support
 - Procedural terrain and world generation
