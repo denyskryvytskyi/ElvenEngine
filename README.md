@@ -33,16 +33,15 @@ Or just call command from the build directory with your version of VS and platfo
 + [x] Logging system (spdlog)
 + [x] Event sytem (event queue based system)
 + [x] Custom math library (separate project [lia](https://github.com/denyskryvytskyi/lia))
-+ [ ] Renderer core
++ [ ] Renderer core (support different graphics API)
   - [x] Shader Manager (shader files loading)
-  - [ ] Renderer API (VAO, VBO, Shader abstractions)
+  - [x] Renderer API (VAO, VBO, Shader abstractions)
   - [ ] Camera (orthographic, perspective)
-  - [ ] Support usage of different graphics API (OpenGL only for now)
 + [ ] 2D Renderer
-  - [ ] Quad
+  - [x] Quad rendering
   - [ ] Batch rendering
   - [ ] Textures support
-  - [ ] Sprite
+  - [ ] SpriteComponent
   - [ ] Spritesheet animation
   - [ ] Text Rendering
 + [ ] 3D Renderer
