@@ -1,6 +1,8 @@
 # Elven Engine
 Elven Engine is primarily 2D/3D real-time development platform and rendering engine
 
+[![Build](https://github.com/denyskryvytskyi/ElvenEngine/actions/workflows/cmake.yml/badge.svg)](https://github.com/denyskryvytskyi/ElvenEngine/actions/workflows/cmake.yml)
+
 ## Getting Started
 Visual Studio 2019/2022 support. 
 Windows platform only support for now (Linux and MacOS platforms are for the future support)
