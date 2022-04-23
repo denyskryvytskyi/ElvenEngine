@@ -1,11 +1,12 @@
-#version 330 core
+#version 450 core
+
+uniform vec4 u_Color;
 
 out vec4 color;
 
 in vec3 v_Position;
-in vec4 v_Color;
 
 void main()
 {
-	color = v_Color;
+	color = u_Color;
 }

@@ -28,14 +28,14 @@ namespace Elven
         bool OnWindowResized(Events::WindowResizeEvent& e);
 
     private:
-        OrthographicCamera m_Camera;
-
         lia::vec3 m_Position;
 
-        float m_AspectRatio;
-        float m_ZoomLevel;
-        float m_Rotation;
-        float m_TranslationSpeed;
-        float m_RotationSpeed;
+        float m_AspectRatio = 0.0f;
+        float m_ZoomLevel = 1.0f;
+        float m_Rotation = 0.0f;
+        float m_TranslationSpeed = 5.0f;
+        float m_RotationSpeed = 180.0f;
+
+        OrthographicCamera m_Camera;
     };
 }

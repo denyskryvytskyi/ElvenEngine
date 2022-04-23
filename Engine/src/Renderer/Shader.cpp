@@ -23,6 +23,8 @@ namespace Elven
 
     //////////////////////////////////////////////////////////
 
+    std::unordered_map<std::string, Shader*> ShaderManager::m_Shaders;
+
     Shader* ShaderManager::Load(std::string name, const std::string& vShaderFile, const std::string& fShaderFile)
     {
         ShaderProgramSource shaderProgram;

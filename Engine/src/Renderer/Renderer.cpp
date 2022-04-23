@@ -26,6 +26,7 @@ namespace Elven
 
     void Renderer::EndScene()
     {
+
     }
 
     void Renderer::Submit(Shader* shader, const VertexArray* vertexArray, const lia::mat4& modelMatrix)

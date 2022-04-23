@@ -14,10 +14,5 @@ public:
     virtual void OnImGuiRender() override;
 
 private:
-    Elven::ShaderManager m_ShaderManager;
-    Elven::Shader* m_Shader;
-    Elven::VertexArray* m_VAOGrid;
-    Elven::VertexArray* m_VAOTriangle;
-
     Elven::OrthographicCameraController m_CameraController;
 };

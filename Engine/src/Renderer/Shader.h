@@ -33,14 +33,13 @@ namespace Elven
     class ShaderManager
     {
     public:
-        Shader* Load(std::string name, const std::string& vShaderFile, const std::string& fShaderFile);
-
-        Shader* Get(const std::string& name);
-
-    private:
-        std::string ReadFile(const std::string& shaderFile);
+        static Shader* Load(std::string name, const std::string& vShaderFile, const std::string& fShaderFile);
+        static Shader* Get(const std::string& name);
 
     private:
-        std::unordered_map<std::string, Shader*> m_Shaders;
+        static std::string ReadFile(const std::string& shaderFile);
+
+    private:
+        static std::unordered_map<std::string, Shader*> m_Shaders;
     };
 }

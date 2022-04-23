@@ -5,71 +5,15 @@
 
 #include <lia/lia.h>
 
+#include <Renderer/Shader.h>
+
 ExampleLayer::ExampleLayer()
     : Layer("ExampleLayer"), m_CameraController(1280.0f / 720.0f)
 {
-    // grid
-    m_VAOGrid = Elven::VertexArray::Create();
-
-    float vertices_grid[] = {
-            -0.5f, -0.5f, 0.0f, 0.36f, 0.28f, 0.55f, 1.0f,
-            -0.5f, 0.5f, 0.0f, 0.36f, 0.28f, 0.55f, 1.0f,
-            0.5f, 0.5f, 0.0f, 0.36f, 0.28f, 0.55f, 1.0f,
-            0.5f, -0.5f, 0.0f, 0.36f, 0.28f, 0.55f, 1.0f
-    };
-
-    Elven::VertexBuffer* vbo = Elven::VertexBuffer::Create(vertices_grid, sizeof(vertices_grid));
-    Elven::VertexBufferLayout layout = {
-        { Elven::BufferAttributeType::Float3, "a_Position" },
-        { Elven::BufferAttributeType::Float4, "a_Color" }
-    };
-    vbo->SetLayout(layout);
-
-    m_VAOGrid->AddVertexBuffer(vbo);
-
-    uint32_t indices[] = {
-        0, 1, 2, 0, 2, 3
-    };
-    Elven::IndexBuffer* ibo = Elven::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
-
-    m_VAOGrid->SetIndexBuffer(ibo);
-
-    // triangle
-    m_VAOTriangle = Elven::VertexArray::Create();
-
-    float vertices_triangle[] = {
-            -0.5f, -0.5f, 0.0f, 0.1f, 0.2f, 0.6f, 1.0f,
-            0.0f, 0.5f, 0.0f, 0.6f, 0.2f, 0.2f, 1.0f,
-            0.5f, -0.5f, 0.0f, 0.1f, 0.7f, 0.1f, 1.0f,
-    };
-
-    Elven::VertexBuffer* vbo_triangle = Elven::VertexBuffer::Create(vertices_triangle, sizeof(vertices_triangle));
-    Elven::VertexBufferLayout layout_triangle = {
-        {Elven::BufferAttributeType::Float3, "a_Position" },
-        {Elven::BufferAttributeType::Float4, "a_Color" }
-    };
-    vbo_triangle->SetLayout(layout_triangle);
-
-    m_VAOTriangle->AddVertexBuffer(vbo_triangle);
-
-    uint32_t indices_triangle[] = {
-       0, 1, 2
-    };
-    Elven::IndexBuffer* ibo_triangle = Elven::IndexBuffer::Create(indices_triangle, sizeof(indices_triangle) / sizeof(uint32_t));
-
-    m_VAOTriangle->SetIndexBuffer(ibo_triangle);
-
-    // Shader
-    auto path = std::filesystem::current_path();
-    EL_INFO("Shaders path: {0}", path);
-    m_Shader = m_ShaderManager.Load("example_shader", "Debug/res/shaders/shader.vert", "Debug/res/shaders/shader.frag");
 }
 
 ExampleLayer::~ExampleLayer()
 {
-    delete m_Shader;
-    delete m_VAOGrid;
-    delete m_VAOTriangle;
 }
 
 void ExampleLayer::OnAttach()
@@ -84,28 +28,30 @@ void ExampleLayer::OnUpdate(float dt)
 {
     m_CameraController.OnUpdate(dt);
 
-    // Render
     Elven::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
     Elven::RenderCommand::Clear();
 
-    Elven::Renderer::BeginScene(m_CameraController.GetCamera());
+    Elven::Renderer::Init();
+    Elven::Renderer2D::Init();
 
-    // grid
-    lia::mat4 scale = lia::scale(lia::mat4(1.0f), lia::vec3(0.1f));
+    Elven::Renderer2D::BeginScene(m_CameraController.GetCamera());
+
+    Elven::Renderer2D::DrawQuad({ -0.75f, -0.25f }, { 1.0f, 1.0f }, { 0.3f, 0.7f, 0.3f, 1.0f});
+
     for (size_t y = 0; y < 20; y++)
     {
         for (size_t x = 0; x < 20; x++)
         {
-            lia::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
-            lia::mat4 model = scale * lia::translate(lia::mat4(1.0f), pos);
+            lia::vec2 pos(x * 0.11f, y * 0.11f);
+            lia::vec2 scale = { 0.1f, 0.1f };
+            lia::vec4 color = { 0.3f, 0.3f, 0.5f, 1.0f };
+            
+            float angle = 0.0f;
 
-            Elven::Renderer::Submit(m_Shader, m_VAOGrid, model);
+            Elven::Renderer2D::DrawRotatedQuad(pos, scale, color, angle);
         }
     }
-
-    // triangle
-    Elven::Renderer::Submit(m_Shader, m_VAOTriangle);
-    Elven::Renderer::EndScene();
+    Elven::Renderer2D::EndScene();
 }
 
 void ExampleLayer::OnImGuiRender()

@@ -7,9 +7,8 @@
 namespace Elven
 {
     OrthographicCameraController::OrthographicCameraController(float aspectRatio)
-        : m_Camera(-aspectRatio, aspectRatio, -1.0f, 1.0f)
-        , m_Position(0.0f), m_AspectRatio(aspectRatio), m_ZoomLevel(1.0f)
-        , m_Rotation(0.0f), m_TranslationSpeed(5.0f), m_RotationSpeed(180.0f)
+        : m_Camera(-aspectRatio * m_ZoomLevel, aspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel)
+        , m_AspectRatio(aspectRatio)
     {
         Events::Subscribe<Events::MouseScrolledEvent>(EVENT_CALLBACK(OrthographicCameraController::OnEvent));
         Events::Subscribe<Events::WindowResizeEvent>(EVENT_CALLBACK(OrthographicCameraController::OnEvent));
