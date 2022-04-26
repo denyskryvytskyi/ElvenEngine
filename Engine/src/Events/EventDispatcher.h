@@ -14,12 +14,12 @@ namespace Elven
                 m_Event(event)
             {}
 
-            template<typename T, typename F>
-            bool Dispatch(const F& func)
+            template<typename EventType, typename FuncType>
+            bool Dispatch(const FuncType& func)
             {
-                if (m_Event.GetEventType() == T::GetStaticEventType())
+                if (m_Event.GetEventType() == EventType::GetStaticEventType())
                 {
-                    m_Event.Handled = func(*(T*)&m_Event);
+                    m_Event.Handled = func(static_cast<EventType&>(m_Event));
                     return true;
                 }
                 return false;
