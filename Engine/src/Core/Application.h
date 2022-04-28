@@ -15,8 +15,6 @@ namespace Elven
         Application();
         virtual ~Application();
 
-        void OnEvent(Events::Event& e);
-
         void PushLayer(Layer* layer);
         void PushOverlay(Layer* overlay);
 
@@ -26,8 +24,8 @@ namespace Elven
         Window& GetWindow() { return *m_Window; }
 
     private:
-        bool OnWindowClose(Events::WindowCloseEvent& e);
-        bool OnWindowResize(Events::WindowResizeEvent& e);
+        bool OnWindowClose(const Events::WindowCloseEvent& e);
+        bool OnWindowResize(const Events::WindowResizeEvent& e);
 
     private:
         static Application* s_Instance;

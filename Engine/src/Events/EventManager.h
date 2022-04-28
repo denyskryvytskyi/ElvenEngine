@@ -8,7 +8,47 @@ namespace Elven
 {
     namespace Events
     {
-        using EventCallback = std::function<void(Event&)>;
+        class EventCallbackWrapper
+        {
+        public:
+            void exec(Event& e)
+            {
+                call(e);
+            }
+
+            virtual const char* getType() const = 0;
+
+        private:
+            virtual void call(Event& e) = 0;
+        };
+
+        template<typename EventType>
+        using FuncHandler = std::function<void(EventType& e)>;
+
+        template<typename EventType>
+        class EventCallbackWrapperT : public EventCallbackWrapper
+        {
+        public:
+            EventCallbackWrapperT(FuncHandler<EventType> callback)
+                : functionHandler(callback)
+                , functionType(functionHandler.target_type().name())
+            {};
+
+        private:
+            virtual void call(Event& e) override
+            {
+                if (e.GetEventType() == EventType::GetStaticEventType())
+                {
+                    functionHandler(static_cast<EventType&>(e));
+                }
+            }
+
+            virtual const char* getType() const override { return functionType; }
+
+        private:
+            FuncHandler<EventType> functionHandler;
+            const char* functionType;
+        };
 
         class Event;
         class EventManager
@@ -17,29 +57,32 @@ namespace Elven
         public:
             void Shutdown();
 
-            void Subscribe(const std::string eventId, EventCallback&& callback);
-            void Unsubscribe(const std::string eventId, EventCallback&& callback);
+            void Subscribe(const std::string eventId, EventCallbackWrapper* handler);
+            void Unsubscribe(const std::string eventId, const char* handlerName);
             void TriggerEvent(Event* event);
             void QueueEvent(Event* event);
             void DispatchEvents();
 
         private:
             std::vector<Event*> m_eventsQueue;
-            std::unordered_map<std::string, std::vector<EventCallback>> m_subscribers;
+            std::unordered_map<std::string, std::vector<EventCallbackWrapper*>> m_subscribers;
         };
 
         extern EventManager gEventManager;
 
         template<typename EventType>
-        static void Subscribe(EventCallback&& callback)
+        static void Subscribe(const FuncHandler<EventType>& callback)
         {
-            gEventManager.Subscribe(EventType::GetStaticEventType(), std::move(callback));
+            EventCallbackWrapper* handler = new EventCallbackWrapperT<EventType>(callback);
+
+            gEventManager.Subscribe(EventType::GetStaticEventType(), handler);
         }
         
         template<typename EventType>
-        static void Unsubscribe(EventCallback&& callback)
+        static void Unsubscribe(const FuncHandler<EventType>& callback)
         {
-            gEventManager.Unsubscribe(EventType::GetStaticEventType(), std::move(callback));
+            const char* handlerName = callback.target_type().name();
+            gEventManager.Unsubscribe(EventType::GetStaticEventType(), handlerName);
         }
         
         static void TriggerEvent(Event* triggeredEvent)

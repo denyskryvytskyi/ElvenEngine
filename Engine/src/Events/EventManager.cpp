@@ -13,38 +13,50 @@ namespace Elven
             {
                 delete event;
             }
+
+            for (auto& eventSubscirbersIt = m_subscribers.begin(); eventSubscirbersIt != m_subscribers.end(); ++eventSubscirbersIt)
+            {
+                auto& handlers = eventSubscirbersIt->second;
+                for (auto& it = handlers.begin(); it != handlers.end();)
+                {
+                    delete* it;
+                    it = handlers.erase(it);
+                }
+            }
+            m_subscribers.clear();
         }
 
-        void EventManager::Subscribe(const std::string eventId, EventCallback&& callback)
+        void EventManager::Subscribe(const std::string eventId, EventCallbackWrapper* handler)
         {
             auto subscribers = m_subscribers.find(eventId);
             if (subscribers != m_subscribers.end())
             {
-                auto& callbacks = subscribers->second;
-                for (auto it = callbacks.begin(); it != callbacks.end(); ++it)
+                auto& handlers = subscribers->second;
+                for (auto it = handlers.begin(); it != handlers.end(); ++it)
                 {
-                    if (it->target_type().name() == callback.target_type().name())
+                    if ((*it)->getType() == handler->getType())
                     {
                         EL_ASSERT(false, "Attempting to double-register callback");
                         return;
                     }
                 }
-                callbacks.emplace_back(std::move(callback));
+                handlers.emplace_back(handler);
             }
             else
             {
-                m_subscribers[eventId].emplace_back(std::move(callback));
+                m_subscribers[eventId].emplace_back(handler);
             }
         }
 
-        void EventManager::Unsubscribe(const std::string eventId, EventCallback&& callback)
+        void EventManager::Unsubscribe(const std::string eventId, const char* handlerName)
         {
-            auto& callbacks = m_subscribers[eventId];
-            for (auto it = callbacks.begin(); it != callbacks.end(); ++it)
+            auto& handlers = m_subscribers[eventId];
+            for (auto it = handlers.begin(); it != handlers.end(); ++it)
             {
-                if (it->target_type().name() == callback.target_type().name())
+                if ((*it)->getType() == handlerName)
                 {
-                    it = callbacks.erase(it);
+                    delete* it;
+                    it = handlers.erase(it);
                     return;
                 }
             }
@@ -52,10 +64,11 @@ namespace Elven
 
         void EventManager::TriggerEvent(Event* event)
         {
-            for (auto callback : m_subscribers[event->GetEventType()])
+            for (auto handler : m_subscribers[event->GetEventType()])
             {
-                callback(*event);
+                handler->exec(*event);
             }
+            event->Handled = true;
         }
 
         void EventManager::QueueEvent(Event* event)

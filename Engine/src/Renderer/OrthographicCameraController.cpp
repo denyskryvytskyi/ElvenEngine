@@ -10,14 +10,14 @@ namespace Elven
         : m_Camera(-aspectRatio * m_ZoomLevel, aspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel)
         , m_AspectRatio(aspectRatio)
     {
-        Events::Subscribe<Events::MouseScrolledEvent>(EVENT_CALLBACK(OrthographicCameraController::OnEvent));
-        Events::Subscribe<Events::WindowResizeEvent>(EVENT_CALLBACK(OrthographicCameraController::OnEvent));
+        Events::Subscribe<Events::MouseScrolledEvent>(EVENT_CALLBACK(OrthographicCameraController::OnMouseScrolled));
+        Events::Subscribe<Events::WindowResizeEvent>(EVENT_CALLBACK(OrthographicCameraController::OnWindowResized));
     }
 
     OrthographicCameraController::~OrthographicCameraController()
     {
-        Events::Unsubscribe<Events::WindowResizeEvent>(EVENT_CALLBACK(OrthographicCameraController::OnEvent));
-        Events::Unsubscribe<Events::MouseScrolledEvent>(EVENT_CALLBACK(OrthographicCameraController::OnEvent));
+        Events::Unsubscribe<Events::WindowResizeEvent>(EVENT_CALLBACK(OrthographicCameraController::OnWindowResized));
+        Events::Unsubscribe<Events::MouseScrolledEvent>(EVENT_CALLBACK(OrthographicCameraController::OnMouseScrolled));
     }
 
     // need add timestep
@@ -61,13 +61,6 @@ namespace Elven
         m_Camera.SetPosition(m_Position);
 
         m_TranslationSpeed = m_ZoomLevel;
-    }
-
-    void OrthographicCameraController::OnEvent(Events::Event& e)
-    {
-        Events::EventDispatcher dispatcher(e);
-        dispatcher.Dispatch<Events::MouseScrolledEvent>(EVENT_CALLBACK(OrthographicCameraController::OnMouseScrolled));
-        dispatcher.Dispatch<Events::WindowResizeEvent>(EVENT_CALLBACK(OrthographicCameraController::OnWindowResized));
     }
 
     void OrthographicCameraController::OnResize(float width, float height)

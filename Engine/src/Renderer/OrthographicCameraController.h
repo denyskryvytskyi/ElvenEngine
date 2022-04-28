@@ -13,7 +13,6 @@ namespace Elven
         ~OrthographicCameraController();
 
         void OnUpdate(float dt);
-        void OnEvent(Events::Event& e);
 
         void OnResize(float width, float height);
 
