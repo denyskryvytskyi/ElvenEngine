@@ -23,13 +23,13 @@ namespace Elven
         };
 
         template<typename EventType>
-        using FuncHandler = std::function<void(EventType& e)>;
+        using EventFunctionHandler = std::function<void(EventType& e)>;
 
         template<typename EventType>
         class EventCallbackWrapperT : public EventCallbackWrapper
         {
         public:
-            EventCallbackWrapperT(FuncHandler<EventType> callback)
+            EventCallbackWrapperT(EventFunctionHandler<EventType> callback)
                 : functionHandler(callback)
                 , functionType(functionHandler.target_type().name())
             {};
@@ -46,7 +46,7 @@ namespace Elven
             virtual const char* getType() const override { return functionType; }
 
         private:
-            FuncHandler<EventType> functionHandler;
+            EventFunctionHandler<EventType> functionHandler;
             const char* functionType;
         };
 
@@ -71,25 +71,25 @@ namespace Elven
         extern EventManager gEventManager;
 
         template<typename EventType>
-        static void Subscribe(const FuncHandler<EventType>& callback)
+        static void Subscribe(const EventFunctionHandler<EventType>& callback)
         {
             EventCallbackWrapper* handler = new EventCallbackWrapperT<EventType>(callback);
 
             gEventManager.Subscribe(EventType::GetStaticEventType(), handler);
         }
-        
+
         template<typename EventType>
-        static void Unsubscribe(const FuncHandler<EventType>& callback)
+        static void Unsubscribe(const EventFunctionHandler<EventType>& callback)
         {
             const char* handlerName = callback.target_type().name();
             gEventManager.Unsubscribe(EventType::GetStaticEventType(), handlerName);
         }
-        
+
         static void TriggerEvent(Event* triggeredEvent)
         {
             gEventManager.TriggerEvent(triggeredEvent);
         }
-        
+
         static void QueueEvent(Event* queuedEvent)
         {
             gEventManager.QueueEvent(queuedEvent);

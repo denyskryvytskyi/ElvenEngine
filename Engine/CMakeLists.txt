@@ -15,7 +15,6 @@ set(ENGINE_HEADERS
 "src/Core/Window.h"
 "src/Events/ApplicationEvent.h"
 "src/Events/Event.h"
-"src/Events/EventDispatcher.h"
 "src/Events/EventManager.h"
 "src/Events/KeyEvent.h"
 "src/Events/MouseEvent.h"

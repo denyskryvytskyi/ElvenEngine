@@ -3,8 +3,6 @@
 #include "Core/Window.h"
 #include "Core/Timer.h"
 
-#include "Events/EventDispatcher.h"
-
 #include "Renderer/Renderer.h"
 
 #include "ImGui/ImGuiLayer.h"
@@ -23,16 +21,19 @@ namespace Elven
         m_ImGuiLayer = new ImGuiLayer();
         PushOverlay(m_ImGuiLayer);
 
-        Events::Subscribe<Events::WindowCloseEvent>(EVENT_CALLBACK(Application::OnWindowClose));
-        Events::Subscribe<Events::WindowResizeEvent>(EVENT_CALLBACK(Application::OnWindowResize));
+        m_windowCloseCallback = EVENT_CALLBACK(Application::OnWindowClose);
+        m_windowResizeCallback = EVENT_CALLBACK(Application::OnWindowResize);
+
+        Events::Subscribe<Events::WindowCloseEvent>(m_windowCloseCallback);
+        Events::Subscribe<Events::WindowResizeEvent>(m_windowResizeCallback);
     }
 
     Application::~Application()
     {
         delete m_Window;
 
-        Events::Unsubscribe<Events::WindowResizeEvent>(EVENT_CALLBACK(Application::OnWindowResize));
-        Events::Unsubscribe<Events::WindowCloseEvent>(EVENT_CALLBACK(Application::OnWindowClose));
+        Events::Unsubscribe<Events::WindowResizeEvent>(m_windowResizeCallback);
+        Events::Unsubscribe<Events::WindowCloseEvent>(m_windowCloseCallback);
 
         Events::gEventManager.Shutdown();
     }

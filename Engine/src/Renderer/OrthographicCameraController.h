@@ -4,6 +4,8 @@
 #include "Events/MouseEvent.h"
 #include "Events/ApplicationEvent.h"
 
+#include "Events/EventManager.h"
+
 namespace Elven
 {
     class OrthographicCameraController
@@ -36,5 +38,8 @@ namespace Elven
         float m_RotationSpeed = 180.0f;
 
         OrthographicCamera m_Camera;
+
+        Events::EventFunctionHandler<Events::WindowResizeEvent> m_windowResizeCallback;
+        Events::EventFunctionHandler<Events::MouseScrolledEvent> m_mouseScrolledCallback;
     };
 }

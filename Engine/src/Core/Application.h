@@ -3,6 +3,8 @@
 #include "Core/LayerStack.h"
 #include "Events/ApplicationEvent.h"
 
+#include "Events/EventManager.h"
+
 namespace Elven
 {
     class Window;
@@ -33,6 +35,9 @@ namespace Elven
         Window* m_Window = nullptr;
         ImGuiLayer* m_ImGuiLayer = nullptr;
         LayerStack m_LayerStack;
+
+        Events::EventFunctionHandler<Events::WindowResizeEvent> m_windowResizeCallback;
+        Events::EventFunctionHandler<Events::WindowCloseEvent> m_windowCloseCallback;
 
         bool m_Running = false;
     };

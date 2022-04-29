@@ -1,23 +1,24 @@
 #include "OrthographicCameraController.h"
 
 #include "Core/Input.h"
-#include "Events/EventManager.h"
-#include "Events/EventDispatcher.h"
 
 namespace Elven
 {
     OrthographicCameraController::OrthographicCameraController(float aspectRatio)
-        : m_Camera(-aspectRatio * m_ZoomLevel, aspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel)
+        : m_Camera(-aspectRatio * m_ZoomLevel, aspectRatio* m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel)
         , m_AspectRatio(aspectRatio)
     {
-        Events::Subscribe<Events::MouseScrolledEvent>(EVENT_CALLBACK(OrthographicCameraController::OnMouseScrolled));
-        Events::Subscribe<Events::WindowResizeEvent>(EVENT_CALLBACK(OrthographicCameraController::OnWindowResized));
+        m_windowResizeCallback = EVENT_CALLBACK(OrthographicCameraController::OnWindowResized);
+        m_mouseScrolledCallback = EVENT_CALLBACK(OrthographicCameraController::OnMouseScrolled);
+
+        Events::Subscribe<Events::WindowResizeEvent>(m_windowResizeCallback);
+        Events::Subscribe<Events::MouseScrolledEvent>(m_mouseScrolledCallback);
     }
 
     OrthographicCameraController::~OrthographicCameraController()
     {
-        Events::Unsubscribe<Events::WindowResizeEvent>(EVENT_CALLBACK(OrthographicCameraController::OnWindowResized));
-        Events::Unsubscribe<Events::MouseScrolledEvent>(EVENT_CALLBACK(OrthographicCameraController::OnMouseScrolled));
+        Events::Unsubscribe<Events::MouseScrolledEvent>(m_mouseScrolledCallback);
+        Events::Unsubscribe<Events::WindowResizeEvent>(m_windowResizeCallback);
     }
 
     // need add timestep
