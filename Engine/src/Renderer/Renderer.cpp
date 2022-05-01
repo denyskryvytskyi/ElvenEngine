@@ -1,4 +1,5 @@
 #include "Renderer/Renderer.h"
+#include "Renderer/Renderer2D.h"
 
 namespace Elven
 {
@@ -7,6 +8,7 @@ namespace Elven
     void Renderer::Init()
     {
         RenderCommand::Init();
+        Renderer2D::Init();
     }
 
     void Renderer::Shutdown()

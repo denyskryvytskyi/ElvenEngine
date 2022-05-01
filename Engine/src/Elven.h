@@ -22,5 +22,6 @@
 #include "Renderer/Buffer.h"
 #include "Renderer/Shader.h"
 #include "Renderer/VertexArray.h"
+#include "Renderer/Texture2D.h"
 
 ///////////////////////////////////////////////////

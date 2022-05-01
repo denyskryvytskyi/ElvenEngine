@@ -6,6 +6,7 @@
 
 #include "Core/Application.h"
 #include "Core/Window.h"
+#include "Renderer/Renderer2D.h"
 
 #include <GLFW/glfw3.h>
 #include <glad/gl.h>
@@ -57,8 +58,29 @@ namespace Elven
 
     void ImGuiLayer::OnImGuiRender()
     {
-        static bool show = true;
-        ImGui::ShowDemoWindow(&show);
+        static bool showDemo = false;
+        //ImGui::ShowDemoWindow(&showDemo);
+
+        // ------- Custom panels -------
+        ImGui::Begin("Telemetry");
+        ImGui::SetWindowSize(ImVec2(300.0f, 120.0f));
+        ImGui::Text("FPS: %f", Application::GetTelemetry().fps);
+
+        if (ImGui::Checkbox("V-Sync", &m_vSync))
+        {
+            Application::Get().GetWindow().SetVSync(m_vSync);
+        }
+
+        ImGui::Separator();
+
+        ImGui::Text("2D renderer draw calls: %i", Renderer2D::GetTelemetry().drawCalls);
+
+        ImGui::Spacing();
+        ImGui::Separator();
+
+        ImGui::Text("Renderer: %s", glGetString(GL_RENDERER));
+
+        ImGui::End();
     }
 
     void ImGuiLayer::Begin()

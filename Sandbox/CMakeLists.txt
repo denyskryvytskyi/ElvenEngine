@@ -5,8 +5,10 @@ set(SANDBOX_SOURCES
     "src/SandboxApp.cpp"
     "src/TestAllocatorsLayer.h"
     "src/TestAllocatorsLayer.cpp"
-    "res/shaders/shader.frag"
-    "res/shaders/shader.vert"
+    "assets/shaders/shader.frag"
+    "assets/shaders/shader.vert"
+    "assets/shaders/texture_shader.frag"
+    "assets/shaders/texture_shader.vert"
 )
 
 set(PROJECT_INCLUDE_DIRECTORIES

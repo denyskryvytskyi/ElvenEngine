@@ -1,4 +1,5 @@
 set(ENGINE_HEADERS
+"vendor/stb_image/stb_image.h"
 "src/elpch.h"
 "src/Elven.h"
 "src/Core/Application.h"
@@ -31,15 +32,18 @@ set(ENGINE_HEADERS
 "src/Renderer/RendererAPI.h"
 "src/Renderer/Shader.h"
 "src/Renderer/VertexArray.h"
+"src/Renderer/Texture2D.h"
 "src/Platform/Windows/WindowsWindow.h"
 "src/Platform/OpenGL/OpenGLBuffer.h"
 "src/Platform/OpenGL/OpenGLContext.h"
 "src/Platform/OpenGL/OpenGLRendererAPI.h"
 "src/Platform/OpenGL/OpenGLShader.h"
 "src/Platform/OpenGL/OpenGLVertexArray.h"
+"src/Platform/OpenGL/OpenGLTexture2D.h"
 )
 
-set(ENGINE_SOURCES 
+set(ENGINE_SOURCES
+"vendor/stb_image/stb_image.cpp"
 "src/Core/Application.cpp"
 "src/Core/EntryPoint.cpp"
 "src/Core/Layer.cpp"
@@ -57,6 +61,7 @@ set(ENGINE_SOURCES
 "src/Renderer/RendererAPI.cpp"
 "src/Renderer/Shader.cpp"
 "src/Renderer/VertexArray.cpp"
+"src/Renderer/Texture2D.cpp"
 "src/ImGui/imgui_impl_glfw.cpp"
 "src/ImGui/imgui_impl_opengl3.cpp"
 "src/ImGui/ImGuiLayer.cpp"
@@ -65,6 +70,7 @@ set(ENGINE_SOURCES
 "src/Platform/OpenGL/OpenGLRendererAPI.cpp"
 "src/Platform/OpenGL/OpenGLShader.cpp"
 "src/Platform/OpenGL/OpenGLVertexArray.cpp"
+"src/Platform/OpenGL/OpenGLTexture2D.cpp"
 "src/Platform/Windows/WindowsInput.cpp"
 "src/Platform/Windows/WindowsWindow.cpp"
 ${ENGINE_HEADERS}
@@ -87,6 +93,7 @@ set(spdlog ${VENDOR_PATH}/spdlog)
 set(glm ${VENDOR_PATH}/glm)
 set(imgui ${VENDOR_PATH}/imgui)
 set(lia ${VENDOR_PATH}/lia)
+set(stb_image ${VENDOR_PATH}/stb_image)
 
 set(STATIC_THIRD_PARTY_LIBRARIES
     glfw
@@ -116,6 +123,7 @@ set(ENGINE_INCLUDE_DIRS
     ${spdlog}/include
     ${glm}/glm
     ${imgui}
+    ${stb_image}
     )
 
 # state that anybody linking to us needs to include the current source dir, while we don't

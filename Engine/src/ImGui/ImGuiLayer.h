@@ -19,5 +19,6 @@ namespace Elven
 
     private:
         float m_Time = 0.0f;
+        bool m_vSync = true;
     };
 }

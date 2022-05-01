@@ -3,25 +3,28 @@
 #include "Renderer/RenderCommand.h"
 #include "Shader.h"
 #include "VertexArray.h"
+#include "Texture2D.h"
 
 namespace Elven
 {
-    Renderer2D::Data Renderer2D::data;
+    Renderer2D::Data Renderer2D::s_data;
+    Renderer2D::Telemetry Renderer2D::s_telemetry;
 
     void Renderer2D::Init()
     {
-        data.quadVAO = VertexArray::Create();
+        s_data.quadVAO = VertexArray::Create();
 
         float quadVertices[] = {
-            -0.5f, -0.5f, 0.0f,  // bottom left
-            -0.5f, 0.5f, 0.0f,   // top left
-            0.5f, 0.5f, 0.0f,    // top right
-            0.5f, -0.5f, 0.0f,   // bottom right
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
+            -0.5f, 0.5f, 0.0f,  0.0f, 1.0f, // top left
+            0.5f, 0.5f, 0.0f,   1.0f, 1.0f, // top right
+            0.5f, -0.5f, 0.0f,  1.0f, 0.0f // bottom right
         };
 
         VertexBuffer* quadVBO = VertexBuffer::Create(quadVertices, sizeof(quadVertices));
         quadVBO->SetLayout({
-            { BufferAttributeType::Float3, "a_Position" }
+            { BufferAttributeType::Float3, "a_Position" },
+            { BufferAttributeType::Float2, "a_TextureCoords" }
             });
 
         uint32_t quadIndices[] = {
@@ -31,36 +34,57 @@ namespace Elven
 
         IndexBuffer* quadEBO = IndexBuffer::Create(quadIndices, sizeof(quadIndices) / sizeof(uint32_t));
 
-        data.quadVAO->AddVertexBuffer(quadVBO);
-        data.quadVAO->SetIndexBuffer(quadEBO);
+        s_data.quadVAO->AddVertexBuffer(quadVBO);
+        s_data.quadVAO->SetIndexBuffer(quadEBO);
+        
+        s_data.shader = ShaderManager::Load("texture_shader", "Debug/assets/shaders/texture_shader.vert", "Debug/assets/shaders/texture_shader.frag");
 
-        data.shader = ShaderManager::Load("example_shader", "Debug/res/shaders/shader.vert", "Debug/res/shaders/shader.frag");
+        SharedPtr<Texture2D> texture = Texture2D::Create(1, 1);
+        uint32_t whiteTextureData = 0xffffffff;
+        texture->SetData(&whiteTextureData);
+        s_data.whiteTexture = texture;
     }
 
     void Renderer2D::Shutdown()
     {
-        delete data.quadVAO;
+        delete s_data.quadVAO;
+        delete s_data.shader;
     }
 
     void Renderer2D::BeginScene(const OrthographicCamera& camera)
     {
-        data.viewProjectionMat = camera.GetViewProjectionMatrix();
+        s_telemetry.drawCalls = 0;
+        s_data.viewProjectionMat = camera.GetViewProjectionMatrix();
     }
 
     void Renderer2D::EndScene()
     {
+        
     }
 
     void Renderer2D::DrawQuad(lia::mat4 model, lia::vec4 color)
     {
-        data.shader->Bind();
-        data.shader->SetMatrix4("u_ViewProjection", data.viewProjectionMat);
-        data.shader->SetMatrix4("u_Model", model);
-        data.shader->SetVector4f("u_Color", color);
+        if (s_data.texture.get() == nullptr)
+        {
+            s_data.whiteTexture->Bind();
+        }
+        else
+        {
+            s_data.texture->Bind();
+        }
 
-        data.quadVAO->Bind();
+        s_data.shader->Bind();
+        s_data.shader->SetMatrix4("u_ViewProjection", s_data.viewProjectionMat);
+        s_data.shader->SetMatrix4("u_Model", model);
+        s_data.shader->SetVector4f("u_Color", color);
+        s_data.shader->SetInteger("u_Texture", 0);
 
-        RenderCommand::DrawIndexed(data.quadVAO);
+        s_data.quadVAO->Bind();
+
+        RenderCommand::DrawIndexed(s_data.quadVAO);
+        s_telemetry.drawCalls++;
+
+        s_data.texture.reset();
     }
 
     void Renderer2D::DrawQuad(lia::vec2 pos, lia::vec2 size, lia::vec4 color)
@@ -69,6 +93,12 @@ namespace Elven
         model = lia::translate(model, lia::vec3(pos.x, pos.y, 0.0f));
 
         DrawQuad(model, color);
+    }
+
+    void Renderer2D::DrawQuad(lia::vec2 pos, lia::vec2 size, SharedPtr<Texture2D> texture, lia::vec4 color)
+    {
+        s_data.texture = texture;
+        DrawQuad(pos, size, color);
     }
 
     void Renderer2D::DrawRotatedQuad(lia::vec2 pos, lia::vec2 size, lia::vec4 color, float angle)

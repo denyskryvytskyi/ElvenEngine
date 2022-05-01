@@ -13,6 +13,12 @@ namespace Elven
 
     class Application
     {
+    private:
+        struct Telemetry
+        {
+            float fps{ 0.0f };
+        };
+
     public:
         Application();
         virtual ~Application();
@@ -22,24 +28,27 @@ namespace Elven
 
         void Run();
 
-        static Application& Get() { return *s_Instance; }
-        Window& GetWindow() { return *m_Window; }
+        Window& GetWindow() { return *m_window; }
+
+        static Application& Get() { return *s_instance; }
+        static Telemetry& GetTelemetry() { return s_telemetry; };
 
     private:
         bool OnWindowClose(const Events::WindowCloseEvent& e);
         bool OnWindowResize(const Events::WindowResizeEvent& e);
 
     private:
-        static Application* s_Instance;
+        static Application* s_instance;
+        static Telemetry s_telemetry;
 
-        Window* m_Window = nullptr;
-        ImGuiLayer* m_ImGuiLayer = nullptr;
-        LayerStack m_LayerStack;
+        Window* m_window = nullptr;
+        ImGuiLayer* m_imGuiLayer = nullptr;
+        LayerStack m_layerStack;
 
         Events::EventFunctionHandler<Events::WindowResizeEvent> m_windowResizeCallback;
         Events::EventFunctionHandler<Events::WindowCloseEvent> m_windowCloseCallback;
 
-        bool m_Running = false;
+        bool m_running = false;
     };
 
     // To be defined in CLIENT

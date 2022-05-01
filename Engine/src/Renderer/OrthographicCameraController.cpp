@@ -24,8 +24,6 @@ namespace Elven
     // need add timestep
     void OrthographicCameraController::OnUpdate(float dt)
     {
-        EL_CORE_TRACE("Delta time {0} s", dt);
-
         if (Input::IsKeyPressed(Key::A))
         {
             m_Position.x -= cos(lia::radians(m_Rotation)) * m_TranslationSpeed * dt;

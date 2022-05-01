@@ -9,17 +9,22 @@
 
 namespace Elven
 {
-    Application* Application::s_Instance = nullptr;
+    Application* Application::s_instance = nullptr;
+    Application::Telemetry Application::s_telemetry;
 
     Application::Application()
-        : m_Running(true)
+        : m_running(true)
     {
-        EL_CORE_ASSERT(!s_Instance, "Application already exists!");
-        s_Instance = this;
+        EL_CORE_ASSERT(!s_instance, "Application already exists!");
+        s_instance = this;
 
-        m_Window = Window::Create();
-        m_ImGuiLayer = new ImGuiLayer();
-        PushOverlay(m_ImGuiLayer);
+        m_window = Window::Create();
+        m_imGuiLayer = new ImGuiLayer();
+        PushOverlay(m_imGuiLayer);
+
+        Elven::Renderer::Init();
+
+        EL_CORE_INFO("TEST");
 
         m_windowCloseCallback = EVENT_CALLBACK(Application::OnWindowClose);
         m_windowResizeCallback = EVENT_CALLBACK(Application::OnWindowResize);
@@ -30,7 +35,7 @@ namespace Elven
 
     Application::~Application()
     {
-        delete m_Window;
+        delete m_window;
 
         Events::Unsubscribe<Events::WindowResizeEvent>(m_windowResizeCallback);
         Events::Unsubscribe<Events::WindowCloseEvent>(m_windowCloseCallback);
@@ -40,40 +45,44 @@ namespace Elven
 
     void Application::PushLayer(Layer* layer)
     {
-        m_LayerStack.PushLayer(layer);
+        m_layerStack.PushLayer(layer);
         layer->OnAttach();
     }
 
     void Application::PushOverlay(Layer* overlay)
     {
-        m_LayerStack.PushOverlay(overlay);
+        m_layerStack.PushOverlay(overlay);
         overlay->OnAttach();
     }
 
     void Application::Run()
     {
         Timer timer;
-        while (m_Running)
+        while (m_running)
         {
             float elapsedTime = timer.elapsed();
             timer.restart();
 
+            EL_CORE_TRACE("Delta time {0} s", elapsedTime);
+            s_telemetry.fps = 1.0f / elapsedTime;
+            EL_CORE_TRACE("FPS: {0}", 1.0f / elapsedTime);
+
             // Layers update
-            for (Layer* layer : m_LayerStack)
+            for (Layer* layer : m_layerStack)
             {
                 layer->OnUpdate(elapsedTime);
             }
 
             // ImGui layers render
-            m_ImGuiLayer->Begin();
-            for (Layer* layer : m_LayerStack)
+            m_imGuiLayer->Begin();
+            for (Layer* layer : m_layerStack)
             {
                 layer->OnImGuiRender();
             }
-            m_ImGuiLayer->End();
+            m_imGuiLayer->End();
 
             // Window update
-            m_Window->OnUpdate();
+            m_window->OnUpdate();
 
             // Dispatch queued events
             Events::gEventManager.DispatchEvents();
@@ -82,7 +91,7 @@ namespace Elven
 
     bool Application::OnWindowClose(const Events::WindowCloseEvent& e)
     {
-        m_Running = false;
+        m_running = false;
 
         return true;
     }
