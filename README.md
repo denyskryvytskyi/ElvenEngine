@@ -43,7 +43,7 @@ Or just call command from the build directory with your version of VS and platfo
 + [ ] 2D Renderer
   - [x] Quad rendering
   - [ ] Batch rendering
-  - [ ] Textures support
+  - [x] Textures support
   - [ ] SpriteComponent
   - [ ] Spritesheet animation
   - [ ] Text Rendering
