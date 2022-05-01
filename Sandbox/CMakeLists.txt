@@ -22,3 +22,6 @@ target_link_libraries(Sandbox PUBLIC ElvenEngine)
 target_include_directories(Sandbox
         PRIVATE ${PROJECT_INCLUDE_DIRECTORIES}
         )
+
+set_target_properties(Sandbox PROPERTIES 
+                      VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Debug)

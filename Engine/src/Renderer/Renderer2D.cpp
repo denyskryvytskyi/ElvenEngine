@@ -1,9 +1,11 @@
 #include "Renderer2D.h"
 
 #include "Renderer/RenderCommand.h"
-#include "Shader.h"
-#include "VertexArray.h"
-#include "Texture2D.h"
+#include "Renderer/Shader.h"
+#include "Renderer/VertexArray.h"
+#include "Renderer/Texture2D.h"
+
+#include "Core/FileSystem.h"
 
 namespace Elven
 {
@@ -37,7 +39,7 @@ namespace Elven
         s_data.quadVAO->AddVertexBuffer(quadVBO);
         s_data.quadVAO->SetIndexBuffer(quadEBO);
         
-        s_data.shader = ShaderManager::Load("texture_shader", "Debug/assets/shaders/texture_shader.vert", "Debug/assets/shaders/texture_shader.frag");
+        s_data.shader = ShaderManager::Load("texture_shader", "texture_shader.vert", "texture_shader.frag");
 
         SharedPtr<Texture2D> texture = Texture2D::Create(1, 1);
         uint32_t whiteTextureData = 0xffffffff;

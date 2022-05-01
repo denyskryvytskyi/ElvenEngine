@@ -10,7 +10,7 @@
 ExampleLayer::ExampleLayer()
     : Layer("ExampleLayer"), m_CameraController(1280.0f / 720.0f)
 {
-    m_texture = Elven::Texture2D::Create("Debug/assets/img/wizard.png");
+    m_texture = Elven::Texture2D::Create("wizard.png");
 }
 
 ExampleLayer::~ExampleLayer()

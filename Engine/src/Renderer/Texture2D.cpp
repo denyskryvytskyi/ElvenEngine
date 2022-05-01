@@ -2,10 +2,14 @@
 #include "Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLTexture2D.h"
 
+#include "Core/FileSystem.h"
+
 namespace Elven
 {
-    SharedPtr<Texture2D> Texture2D::Create(const char* filepath)
+    SharedPtr<Texture2D> Texture2D::Create(const std::string& filename)
     {
+        const std::string filepath = FileSystem::GetImagesPath() + filename;
+
         switch (Renderer::GetAPI())
         {
         case RendererAPI::API::OpenGL:

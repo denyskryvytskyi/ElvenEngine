@@ -4,6 +4,8 @@
 #include "Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
+#include "Core/FileSystem.h"
+
 namespace Elven
 {
     Shader* Shader::Create(const std::string& name, const ShaderProgramSource& shaderSrc)
@@ -45,8 +47,9 @@ namespace Elven
 
     std::string ShaderManager::ReadFile(const std::string& shaderFile)
     {
+        const std::string shaderPath = FileSystem::GetShadersPath() + shaderFile;
         std::string result;
-        std::ifstream in(shaderFile, std::ios::in || std::ios::binary);
+        std::ifstream in(shaderPath, std::ios::in || std::ios::binary);
         if (in)
         {
             in.seekg(0, in.end);

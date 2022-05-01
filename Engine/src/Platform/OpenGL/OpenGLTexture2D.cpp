@@ -4,12 +4,12 @@
 
 namespace Elven
 {
-    OpenGLTexture2D::OpenGLTexture2D(const char* filepath)
+    OpenGLTexture2D::OpenGLTexture2D(const std::string& filepath)
     {
         stbi_set_flip_vertically_on_load(true);
 
         int width, height, nrChannels;
-        unsigned char* data = stbi_load(filepath, &width, &height, &nrChannels, 0);
+        unsigned char* data = stbi_load(filepath.c_str(), &width, &height, &nrChannels, 0);
 
         if (data == nullptr)
         {
