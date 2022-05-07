@@ -10,20 +10,19 @@ namespace Elven
         OpenGLVertexArray();
         virtual ~OpenGLVertexArray();
 
-        void Bind() const override;
-        void Unbind() const override;
-
         void AddVertexBuffer(VertexBuffer* vertexBuffer) override;
         void SetIndexBuffer(IndexBuffer* indexBuffer) override;
 
-        const std::vector<VertexBuffer*>& GetVertexBuffer() const override { return m_VertexBuffers; }
-        const IndexBuffer* GetIndexBuffer() const override { return m_IndexBuffer; }
+        virtual void Bind() const override;
+
+        virtual uint32_t GetId() const override { return m_id; }
+        virtual uint32_t GetIndexCount() const override { return m_indexBuffer ? m_indexBuffer->GetCount() : 0; }
 
     private:
-        std::vector<VertexBuffer*> m_VertexBuffers;
-        IndexBuffer* m_IndexBuffer = nullptr;
-        uint32_t m_RendererId = 0;
-        uint32_t m_VertexBufferIndex = 0;
+        std::vector<VertexBuffer*> m_vertexBuffers;
+        IndexBuffer* m_indexBuffer = nullptr;
+        uint32_t m_vertexBufferIndex = 0;
+        uint32_t m_id = 0;
     };
 }
 

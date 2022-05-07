@@ -7,6 +7,8 @@
 
 #include "Core/FileSystem.h"
 
+#include <glad/gl.h>
+
 namespace Elven
 {
     Renderer2D::Data Renderer2D::s_data;
@@ -25,10 +27,11 @@ namespace Elven
 
         VertexBuffer* quadVBO = VertexBuffer::Create(quadVertices, sizeof(quadVertices));
         quadVBO->SetLayout({
-            { BufferAttributeType::Float3, "a_Position" },
-            { BufferAttributeType::Float2, "a_TextureCoords" }
-            });
+            { BufferAttributeType::Float3 },
+            { BufferAttributeType::Float2 }
+        });
 
+        EL_CORE_INFO("Renderer2D::Init ebo create");
         uint32_t quadIndices[] = {
             0, 1, 3,
             1, 2, 3
@@ -38,7 +41,8 @@ namespace Elven
 
         s_data.quadVAO->AddVertexBuffer(quadVBO);
         s_data.quadVAO->SetIndexBuffer(quadEBO);
-        
+
+        EL_CORE_INFO("Renderer2D::Init shader load");
         s_data.shader = ShaderManager::Load("texture_shader", "texture_shader.vert", "texture_shader.frag");
 
         SharedPtr<Texture2D> texture = Texture2D::Create(1, 1);
@@ -61,7 +65,6 @@ namespace Elven
 
     void Renderer2D::EndScene()
     {
-        
     }
 
     void Renderer2D::DrawQuad(lia::mat4 model, lia::vec4 color)
@@ -81,11 +84,9 @@ namespace Elven
         s_data.shader->SetVector4f("u_Color", color);
         s_data.shader->SetInteger("u_Texture", 0);
 
-        s_data.quadVAO->Bind();
-
         RenderCommand::DrawIndexed(s_data.quadVAO);
-        s_telemetry.drawCalls++;
 
+        s_telemetry.drawCalls++;
         s_data.texture.reset();
     }
 

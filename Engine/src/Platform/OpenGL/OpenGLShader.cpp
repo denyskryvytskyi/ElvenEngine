@@ -6,19 +6,19 @@
 namespace Elven
 {
     OpenGLShader::OpenGLShader(const std::string& name, const ShaderProgramSource& shaderSrc)
-        : m_Name(name)
+        : m_name(name)
     {
         CompileProgram(shaderSrc);
     }
 
     OpenGLShader::~OpenGLShader()
     {
-        glDeleteProgram(m_RendererId);
+        glDeleteProgram(m_id);
     }
 
     void OpenGLShader::Bind() const
     {
-        glUseProgram(m_RendererId);
+        glUseProgram(m_id);
     }
 
     void OpenGLShader::Unbind() const
@@ -70,35 +70,35 @@ namespace Elven
 
     int OpenGLShader::GetUniformLocation(const std::string& name)
     {
-        if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end())
-            return m_UniformLocationCache[name];
+        if (m_uniformLocationCache.find(name) != m_uniformLocationCache.end())
+            return m_uniformLocationCache[name];
 
-        int location = glGetUniformLocation(m_RendererId, name.c_str());
-        m_UniformLocationCache[name] = location;
+        int location = glGetUniformLocation(m_id, name.c_str());
+        m_uniformLocationCache[name] = location;
         return location;
     }
 
     void OpenGLShader::CompileProgram(const ShaderProgramSource& shaderSource)
     {
-        m_RendererId = glCreateProgram();
+        m_id = glCreateProgram();
         uint32_t vs = CompileShader(GL_VERTEX_SHADER, shaderSource.VertexSource);
         uint32_t fs = CompileShader(GL_FRAGMENT_SHADER, shaderSource.FragmentSource);
 
-        glAttachShader(m_RendererId, vs);
-        glAttachShader(m_RendererId, fs);
-        glLinkProgram(m_RendererId);
+        glAttachShader(m_id, vs);
+        glAttachShader(m_id, fs);
+        glLinkProgram(m_id);
 
         int isLinked = 0;
-        glGetProgramiv(m_RendererId, GL_LINK_STATUS, (int*)&isLinked);
+        glGetProgramiv(m_id, GL_LINK_STATUS, (int*)&isLinked);
         if (isLinked == GL_FALSE)
         {
             int maxLength = 0;
-            glGetProgramiv(m_RendererId, GL_INFO_LOG_LENGTH, &maxLength);
+            glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &maxLength);
 
             std::vector<GLchar> infoLog(maxLength);
-            glGetProgramInfoLog(m_RendererId, maxLength, &maxLength, &infoLog[0]);
+            glGetProgramInfoLog(m_id, maxLength, &maxLength, &infoLog[0]);
 
-            glDeleteProgram(m_RendererId);
+            glDeleteProgram(m_id);
 
             EL_CORE_ERROR("Failed program linking: {0}", infoLog.data());
         }

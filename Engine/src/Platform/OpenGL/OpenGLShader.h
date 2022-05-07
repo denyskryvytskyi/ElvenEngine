@@ -24,15 +24,15 @@ namespace Elven
 
         int GetUniformLocation(const std::string& name);
 
-        const std::string& GetName() const override { return m_Name; }
+        const std::string& GetName() const override { return m_name; }
 
     private:
         void CompileProgram(const ShaderProgramSource& shaderSource);
         uint32_t CompileShader(uint32_t type, const std::string& source);
 
     private:
-        std::unordered_map<std::string, int> m_UniformLocationCache;
-        std::string m_Name;
-        uint32_t m_RendererId = 0;
+        std::unordered_map<std::string, int> m_uniformLocationCache;
+        std::string m_name;
+        uint32_t m_id = 0;
     };
 }

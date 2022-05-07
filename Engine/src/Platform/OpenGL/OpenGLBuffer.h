@@ -9,17 +9,15 @@ namespace Elven
         OpenGLVertexBuffer(float* vertices, uint32_t size);
         ~OpenGLVertexBuffer();
 
-        void Bind() const override;
-        void Unbind() const override;
-
         void SetData(const void* data, uint32_t size) override;
+        void SetLayout(const VertexBufferLayout& layout_) override { m_layout = layout_; }
 
-        const VertexBufferLayout& GetLayout() const override { return m_Layout; }
-        void SetLayout(const VertexBufferLayout& layout) override { m_Layout = layout; }
+        virtual const uint32_t GetId() const override { return m_id; }
+        const VertexBufferLayout& GetLayout() const override { return m_layout; }
 
     private:
-        VertexBufferLayout m_Layout;
-        uint32_t m_RendererID;
+        VertexBufferLayout m_layout;
+        uint32_t m_id = 0;
     };
 
     class OpenGLIndexBuffer : public IndexBuffer
@@ -28,14 +26,12 @@ namespace Elven
         OpenGLIndexBuffer(uint32_t* indices, uint32_t count);
         ~OpenGLIndexBuffer();
 
-        void Bind() const;
-        void Unbind() const;
-
-        uint32_t GetCount() const { return m_Count; }
+        virtual const uint32_t GetId() const override { return m_id; }
+        uint32_t GetCount() const { return m_count; }
 
     private:
-        uint32_t m_RendererID = 0;
-        uint32_t m_Count = 0;
+        uint32_t m_id = 0;
+        uint32_t m_count = 0;
     };
 }
 

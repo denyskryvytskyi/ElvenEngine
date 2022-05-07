@@ -37,7 +37,6 @@ namespace Elven
         shader->SetMatrix4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
         shader->SetMatrix4("u_Model", modelMatrix);
 
-        vertexArray->Bind();
         RenderCommand::DrawIndexed(vertexArray);
     }
 

@@ -50,6 +50,8 @@ namespace Elven
 
     void OpenGLRendererAPI::DrawIndexed(const VertexArray* vertexArray, uint32_t indexCount)
     {
-        glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+        const uint32_t count = indexCount ? indexCount : vertexArray->GetIndexCount();
+        vertexArray->Bind();
+        glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
     }
 }
