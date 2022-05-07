@@ -10,7 +10,7 @@ namespace Elven
         OpenGLTexture2D(const std::string& filepath);
         OpenGLTexture2D(uint32_t width, uint32_t height);
 
-        virtual void Bind() override;
+        virtual void BindToUnit(uint32_t unit) override;
         virtual void SetData(void* data) override;
 
     private:

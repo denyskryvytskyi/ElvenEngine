@@ -5,7 +5,7 @@ namespace Elven
     class Texture2D
     {
     public:
-        virtual void Bind() = 0;
+        virtual void BindToUnit(uint32_t unit) = 0;
         virtual void SetData(void* data) = 0;
 
         static SharedPtr<Texture2D> Create(const std::string& filepath);

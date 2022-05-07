@@ -71,11 +71,11 @@ namespace Elven
     {
         if (s_data.texture.get() == nullptr)
         {
-            s_data.whiteTexture->Bind();
+            s_data.whiteTexture->BindToUnit(0);
         }
         else
         {
-            s_data.texture->Bind();
+            s_data.texture->BindToUnit(0);
         }
 
         s_data.shader->Bind();

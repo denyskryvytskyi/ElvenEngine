@@ -57,9 +57,9 @@ namespace Elven
         glTextureParameteri(m_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
 
-    void OpenGLTexture2D::Bind()
+    void OpenGLTexture2D::BindToUnit(uint32_t unit)
     {
-        glBindTexture(GL_TEXTURE_2D, m_id);
+        glBindTextureUnit(unit, m_id);
     }
 
     void OpenGLTexture2D::SetData(void* data)
