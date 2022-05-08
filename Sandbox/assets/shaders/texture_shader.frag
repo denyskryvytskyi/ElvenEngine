@@ -1,13 +1,14 @@
 #version 450 core
 
-uniform vec4 u_Color;
-uniform sampler2D u_Texture;
+layout (binding = 0) uniform sampler2D u_Textures[32];
 
-in vec2 v_TextureCoords;
+in vec4 v_Color;
+in vec2 v_UV;
+in float v_TextureUnit;
 
 out vec4 color;
 
 void main()
 {
-	color = texture(u_Texture, v_TextureCoords) * u_Color;
+	color = texture(u_Textures[int(v_TextureUnit)], v_UV) * v_Color;
 }

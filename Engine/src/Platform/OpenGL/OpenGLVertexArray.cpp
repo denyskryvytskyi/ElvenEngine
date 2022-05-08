@@ -45,7 +45,7 @@ namespace Elven
     void OpenGLVertexArray::AddVertexBuffer(VertexBuffer* vertexBuffer)
     {
         const VertexBufferLayout& layout = vertexBuffer->GetLayout();
-        glVertexArrayVertexBuffer(m_id, 0, vertexBuffer->GetId(), 0, layout.GetStride());
+        glVertexArrayVertexBuffer(m_id, m_vertexBufferIndex, vertexBuffer->GetId(), 0, layout.GetStride());
         
         unsigned int attributeIndex = 0;
         for (const auto& attribute : layout.GetAttributes())

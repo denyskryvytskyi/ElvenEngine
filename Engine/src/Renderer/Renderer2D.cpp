@@ -11,106 +11,221 @@
 
 namespace Elven
 {
-    Renderer2D::Data Renderer2D::s_data;
+    struct QuadVertex
+    {
+        lia::vec4 position;
+        lia::vec4 color;
+        lia::vec2 uv;
+        float textureUnit = 0.0f;
+    };
+
+    struct Renderer2DData
+    {
+        lia::mat4 viewProjectionMat;
+        Shader* shader;
+        SharedPtr<Texture2D> whiteTexture;
+
+        // quad batching
+        static const uint32_t maxQuads = 20000;
+        static const uint32_t maxQuadVertices = maxQuads * 4;
+        static const uint32_t maxQuadIndices = maxQuads * 6;
+        static const uint32_t maxTextureSlots = 32;
+        static const uint8_t verticesPerQuad = 4;
+
+        VertexArray* quadVAO = nullptr;
+        VertexBuffer* quadVBO = nullptr;
+        QuadVertex* quadVerticesBegin = nullptr;
+        QuadVertex* quadVerticesCurrent = nullptr;
+        uint32_t quadIndexCount = 0;
+        std::vector<SharedPtr<Texture2D>> textures;
+        float usedTextureSlots = 0.0f;
+
+        const lia::vec4 quadPositions[4] =
+        {
+            { -0.5f, -0.5f, 0.0f, 1.0f },
+            { -0.5f,  0.5f, 0.0f, 1.0f },
+            {  0.5f,  0.5f, 0.0f, 1.0f },
+            {  0.5f, -0.5f, 0.0f, 1.0f }
+        };
+        const lia::vec2 quadUV[4] = {
+            { 0.0f, 0.0f },
+            { 0.0f, 1.0f },
+            { 1.0f, 1.0f },
+            { 1.0f, 0.0f }
+        };
+    };
+
+    Renderer2DData Renderer2D::s_data;
     Renderer2D::Telemetry Renderer2D::s_telemetry;
 
     void Renderer2D::Init()
     {
         s_data.quadVAO = VertexArray::Create();
 
-        float quadVertices[] = {
-            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
-            -0.5f, 0.5f, 0.0f,  0.0f, 1.0f, // top left
-            0.5f, 0.5f, 0.0f,   1.0f, 1.0f, // top right
-            0.5f, -0.5f, 0.0f,  1.0f, 0.0f // bottom right
-        };
+        s_data.quadVerticesBegin = new QuadVertex[s_data.maxQuadVertices];
 
-        VertexBuffer* quadVBO = VertexBuffer::Create(quadVertices, sizeof(quadVertices));
-        quadVBO->SetLayout({
-            { BufferAttributeType::Float3 },
-            { BufferAttributeType::Float2 }
-        });
+        s_data.quadVBO = VertexBuffer::Create(s_data.maxQuadVertices * sizeof(QuadVertex));
+        s_data.quadVBO->SetLayout({
+            { BufferAttributeType::Float4 }, // pos
+            { BufferAttributeType::Float4 }, // color
+            { BufferAttributeType::Float2 }, // uv
+            { BufferAttributeType::Float }   // texture unit
+            });
+        s_data.quadVAO->AddVertexBuffer(s_data.quadVBO);
 
-        EL_CORE_INFO("Renderer2D::Init ebo create");
-        uint32_t quadIndices[] = {
-            0, 1, 3,
-            1, 2, 3
-        };
+        uint32_t* quadIndices = new uint32_t[s_data.maxQuadIndices];
+        uint32_t offset = 0;
+        for (uint32_t i = 0; i < s_data.maxQuadIndices; i += 6)
+        {
+            quadIndices[i] = offset;
+            quadIndices[i + 1] = offset + 1;
+            quadIndices[i + 2] = offset + 3;
 
-        IndexBuffer* quadEBO = IndexBuffer::Create(quadIndices, sizeof(quadIndices) / sizeof(uint32_t));
+            quadIndices[i + 3] = offset + 1;
+            quadIndices[i + 4] = offset + 2;
+            quadIndices[i + 5] = offset + 3;
 
-        s_data.quadVAO->AddVertexBuffer(quadVBO);
+            offset += 4;
+        }
+        IndexBuffer* quadEBO = IndexBuffer::Create(quadIndices, s_data.maxQuadIndices);
         s_data.quadVAO->SetIndexBuffer(quadEBO);
+        delete[] quadIndices;
 
-        EL_CORE_INFO("Renderer2D::Init shader load");
         s_data.shader = ShaderManager::Load("texture_shader", "texture_shader.vert", "texture_shader.frag");
 
-        SharedPtr<Texture2D> texture = Texture2D::Create(1, 1);
+        // textures
+        s_data.whiteTexture = Texture2D::Create(1, 1);
         uint32_t whiteTextureData = 0xffffffff;
-        texture->SetData(&whiteTextureData);
-        s_data.whiteTexture = texture;
+        s_data.whiteTexture->SetData(&whiteTextureData);
+        s_data.whiteTexture->BindToUnit(0);
+        s_data.textures.reserve(s_data.maxTextureSlots);
     }
 
     void Renderer2D::Shutdown()
     {
         delete s_data.quadVAO;
         delete s_data.shader;
+        delete[] s_data.quadVerticesBegin;
     }
 
     void Renderer2D::BeginScene(const OrthographicCamera& camera)
     {
-        s_telemetry.drawCalls = 0;
+        s_telemetry = { 0 };
+
         s_data.viewProjectionMat = camera.GetViewProjectionMatrix();
+
+        StartBatch();
     }
 
     void Renderer2D::EndScene()
     {
+        Flush();
     }
 
-    void Renderer2D::DrawQuad(lia::mat4 model, lia::vec4 color)
+    void Renderer2D::Flush()
     {
-        if (s_data.texture.get() == nullptr)
-        {
-            s_data.whiteTexture->BindToUnit(0);
-        }
-        else
-        {
-            s_data.texture->BindToUnit(0);
-        }
+        s_data.quadVBO->SetData(s_data.quadVerticesBegin, (uint32_t)((char*)s_data.quadVerticesCurrent - (char*)s_data.quadVerticesBegin));
 
         s_data.shader->Bind();
         s_data.shader->SetMatrix4("u_ViewProjection", s_data.viewProjectionMat);
-        s_data.shader->SetMatrix4("u_Model", model);
-        s_data.shader->SetVector4f("u_Color", color);
-        s_data.shader->SetInteger("u_Texture", 0);
 
-        RenderCommand::DrawIndexed(s_data.quadVAO);
+        uint32_t textureUnitIndex = 1;
+        for (auto& texture: s_data.textures)
+        {
+            texture->BindToUnit(textureUnitIndex);
+            ++textureUnitIndex;
+        }
+
+        RenderCommand::DrawIndexed(s_data.quadVAO, s_data.quadIndexCount);
 
         s_telemetry.drawCalls++;
-        s_data.texture.reset();
+    }
+
+    void Renderer2D::StartBatch()
+    {
+        s_data.quadIndexCount = 0;
+        s_data.usedTextureSlots = 0;
+        s_data.quadVerticesCurrent = s_data.quadVerticesBegin;
+        s_data.textures.clear();
+    }
+
+    void Renderer2D::NextBatch()
+    {
+        Flush();
+        StartBatch();
     }
 
     void Renderer2D::DrawQuad(lia::vec2 pos, lia::vec2 size, lia::vec4 color)
     {
+        DrawQuad(pos, size, color, 0);
+    }
+
+    void Renderer2D::DrawQuad(lia::vec2 pos, lia::vec2 size, const SharedPtr<Texture2D>& texture, lia::vec4 color)
+    {
+        if (s_data.usedTextureSlots >= s_data.maxTextureSlots)
+        {
+            NextBatch();
+        }
+        s_data.textures.push_back(texture);
+        s_data.usedTextureSlots++;
+
+        DrawQuad(pos, size, color, s_data.usedTextureSlots);
+    }
+
+    void Renderer2D::DrawRotatedQuad(lia::vec2 pos, lia::vec2 size, float angle, lia::vec4 color)
+    {
+        DrawRotatedQuad(pos, size, angle, color, 0);
+    }
+
+    void Renderer2D::DrawRotatedQuad(lia::vec2 pos, lia::vec2 size, const SharedPtr<Texture2D>& texture, float angle, lia::vec4 color)
+    {
+        if (s_data.usedTextureSlots >= s_data.maxTextureSlots)
+        {
+            NextBatch();
+        }
+        s_data.textures.push_back(texture);
+        s_data.usedTextureSlots++;
+
+        DrawRotatedQuad(pos, size, angle, color, s_data.usedTextureSlots);
+    }
+
+    /// Draw functions only for internal usage ////////////////////
+
+    void Renderer2D::DrawQuad(lia::vec2 pos, lia::vec2 size, lia::vec4 color, float textureUnit)
+    {
         lia::mat4 model = lia::scale(lia::mat4(), lia::vec3(size.x, size.y, 0.0f));
         model = lia::translate(model, lia::vec3(pos.x, pos.y, 0.0f));
 
-        DrawQuad(model, color);
+        DrawQuad(model, color, textureUnit);
     }
 
-    void Renderer2D::DrawQuad(lia::vec2 pos, lia::vec2 size, SharedPtr<Texture2D> texture, lia::vec4 color)
-    {
-        s_data.texture = texture;
-        DrawQuad(pos, size, color);
-    }
-
-    void Renderer2D::DrawRotatedQuad(lia::vec2 pos, lia::vec2 size, lia::vec4 color, float angle)
+    void Renderer2D::DrawRotatedQuad(lia::vec2 pos, lia::vec2 size, float angle, lia::vec4 color, float textureUnit)
     {
         lia::mat4 model = lia::scale(lia::mat4(), lia::vec3(size.x, size.y, 0.0f));
         model = lia::rotate(model, lia::radians(angle), { 0.0f, 0.0f, 1.0f });
         model = lia::translate(model, lia::vec3(pos.x, pos.y, 0.0f));
 
-        DrawQuad(model, color);
+        DrawQuad(model, color, textureUnit);
+    }
+
+    void Renderer2D::DrawQuad(lia::mat4 model, lia::vec4 color, float textureUnit)
+    {
+        if (s_data.quadIndexCount >= s_data.maxQuadIndices)
+        {
+            NextBatch();
+        }
+
+        for (uint8_t i = 0; i < s_data.verticesPerQuad; ++i)
+        {
+            s_data.quadVerticesCurrent->position = s_data.quadPositions[i] * model;
+            s_data.quadVerticesCurrent->color = color;
+            s_data.quadVerticesCurrent->uv = s_data.quadUV[i];
+            s_data.quadVerticesCurrent->textureUnit = textureUnit;
+            s_data.quadVerticesCurrent++;
+        }
+
+        s_data.quadIndexCount += 6;
+        ++s_telemetry.quadCount;
     }
 }
 

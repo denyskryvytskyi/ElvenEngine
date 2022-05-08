@@ -24,8 +24,6 @@ namespace Elven
 
         Elven::Renderer::Init();
 
-        EL_CORE_INFO("TEST");
-
         m_windowCloseCallback = EVENT_CALLBACK(Application::OnWindowClose);
         m_windowResizeCallback = EVENT_CALLBACK(Application::OnWindowResize);
 

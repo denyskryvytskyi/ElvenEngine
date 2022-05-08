@@ -37,7 +37,8 @@ void ExampleLayer::OnUpdate(float dt)
 
     Elven::Renderer2D::DrawQuad({ 0.75f, -0.5f }, { 1.0f, 1.0f }, { 0.6f, 0.5f, 0.4f, 1.0f});
 
-    Elven::Renderer2D::DrawQuad({ -0.75f, -0.25f }, { 1.0f, 0.9f }, m_texture);
+    Elven::Renderer2D::DrawQuad({ -0.75f, -0.5f }, { 1.0f, 0.9f }, m_texture);
+    Elven::Renderer2D::DrawRotatedQuad({ -0.75f, 0.5f }, { 1.0f, 0.9f }, m_texture, 90.0f);
 
     for (size_t y = 0; y < 20; y++)
     {
@@ -49,7 +50,7 @@ void ExampleLayer::OnUpdate(float dt)
 
             float angle = 0.0f;
 
-            Elven::Renderer2D::DrawRotatedQuad(pos, scale, color, angle);
+            Elven::Renderer2D::DrawRotatedQuad(pos, scale, angle, color);
         }
     }
     Elven::Renderer2D::EndScene();
