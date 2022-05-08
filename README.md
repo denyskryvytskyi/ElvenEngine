@@ -40,6 +40,7 @@ Or just call command from the build directory with your version of VS and platfo
   - [x] Shader Manager (shader files loading)
   - [x] Renderer API (VAO, VBO, Shader, Texture abstractions)
   - [ ] Camera (orthographic, perspective)
+  - [x] DSA OpenGL renderer api implementation
 + [ ] 2D Renderer
   - [x] Quad rendering
   - [x] Texture rendering
