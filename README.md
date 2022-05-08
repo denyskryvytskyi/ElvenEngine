@@ -42,8 +42,8 @@ Or just call command from the build directory with your version of VS and platfo
   - [ ] Camera (orthographic, perspective)
 + [ ] 2D Renderer
   - [x] Quad rendering
-  - [ ] Batch rendering
-  - [x] Textures support
+  - [x] Texture rendering
+  - [x] Batch rendering (quad and texture)
   - [ ] SpriteComponent
   - [ ] Spritesheet animation
   - [ ] Text Rendering
