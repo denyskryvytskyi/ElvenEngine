@@ -69,6 +69,10 @@ Or just call command from the build directory with your version of VS and platfo
   - [ ] Aligned allocations
   - [ ] Single-Frame and Double-Buffered Memory Allocators
 
+## Demo
+#### Quad and texture batch rendering
+![](demo/BatchRenderer.png)
+
 ## Features (Backlog)
 - Renderer
     - Deffered Rendering
