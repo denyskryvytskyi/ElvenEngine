@@ -15,5 +15,7 @@ public:
 
 private:
     Elven::OrthographicCameraController m_CameraController;
-    Elven::SharedPtr<Elven::Texture2D> m_texture;
+    Elven::SharedPtr<Elven::Texture2D> m_textureWizard;
+    Elven::SharedPtr<Elven::Texture2D> m_textureWizardFire;
+    Elven::SharedPtr<Elven::Texture2D> m_textureWizardIce;
 };

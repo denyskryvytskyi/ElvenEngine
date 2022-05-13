@@ -10,7 +10,9 @@
 ExampleLayer::ExampleLayer()
     : Layer("ExampleLayer"), m_CameraController(1280.0f / 720.0f)
 {
-    m_texture = Elven::Texture2D::Create("wizard.png");
+    m_textureWizard = Elven::Texture2D::Create("wizard.png");
+    m_textureWizardFire = Elven::Texture2D::Create("wizard_fire.png");
+    m_textureWizardIce = Elven::Texture2D::Create("wizard_ice.png");
 }
 
 ExampleLayer::~ExampleLayer()
@@ -35,10 +37,11 @@ void ExampleLayer::OnUpdate(float dt)
 
     Elven::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-    Elven::Renderer2D::DrawQuad({ 0.75f, -0.5f }, { 1.0f, 1.0f }, { 0.6f, 0.5f, 0.4f, 1.0f});
+    Elven::Renderer2D::DrawRotatedQuad({ -0.5f, 0.5f }, { 0.6f, 0.6f }, 45.0f, { 0.6f, 0.5f, 0.4f, 1.0f});
 
-    Elven::Renderer2D::DrawQuad({ -0.75f, -0.5f }, { 1.0f, 0.9f }, m_texture);
-    Elven::Renderer2D::DrawRotatedQuad({ -0.75f, 0.5f }, { 1.0f, 0.9f }, m_texture, 90.0f);
+    Elven::Renderer2D::DrawQuad({ -1.0f, -0.5f }, { 1.0f, 0.9f }, m_textureWizard);
+    Elven::Renderer2D::DrawRotatedQuad({ -0.1f, -0.5f }, { 1.0f, 0.9f }, m_textureWizardFire, 90.0f);
+    Elven::Renderer2D::DrawQuad({ 1.0f, -0.5f }, { 1.0f, 0.9f }, m_textureWizardIce);
 
     for (size_t y = 0; y < 20; y++)
     {
