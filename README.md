@@ -31,9 +31,10 @@ Or just call command from the build directory with your version of VS and platfo
 | [cmake](https://github.com/Kitware/CMake) | build system |
 | [spdlog](https://github.com/gabime/spdlog) | header-only logging library |
 | [GLFW](https://github.com/glfw/glfw) | windows, OpenGL contexts and handle input |
-| [glad 2]([https://glad.dav1d.de/) | OpenGL loader |
-| [lia](https://github.com/kryvytskyidenys/lia) | my custom linear algebra library |
+| [glad 2](https://glad.dav1d.de/) | OpenGL loader |
+| [lia](https://github.com/kryvytskyidenys/lia) | my custom math library |
 | [Deat ImGui](https://github.com/kryvytskyidenys/imgui) | library using for GUI (visual-editor) |
+| [stb image](https://github.com/nothings/stb/blob/master/stb_image.h) | image loader |
 
 
 ## Features (In Progress)
