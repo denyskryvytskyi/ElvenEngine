@@ -33,7 +33,7 @@ Or just call command from the build directory with your version of VS and platfo
 | [GLFW](https://github.com/glfw/glfw) | windows, OpenGL contexts and handle input |
 | [glad 2](https://glad.dav1d.de/) | OpenGL loader |
 | [lia](https://github.com/kryvytskyidenys/lia) | my custom math library |
-| [Deat ImGui](https://github.com/kryvytskyidenys/imgui) | library using for GUI (visual-editor) |
+| [ImGui](https://github.com/kryvytskyidenys/imgui) | library using for GUI (visual-editor) |
 | [stb image](https://github.com/nothings/stb/blob/master/stb_image.h) | image loader |
 
 
