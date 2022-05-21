@@ -1,11 +1,16 @@
-# Elven Engine
-Elven Engine is primarily 2D/3D real-time development platform and rendering engine
-
+<h1 align="center"> Elven Engine 
+<br/>
+  
 [![Build](https://github.com/denyskryvytskyi/ElvenEngine/actions/workflows/cmake.yml/badge.svg)](https://github.com/denyskryvytskyi/ElvenEngine/actions/workflows/cmake.yml)
 [![License](https://img.shields.io/github/license/denyskryvytskyi/ElvenEngine)](https://github.com/denyskryvytskyi/ElvenEngine/blob/master/LICENSE)
+  
+</h1>
+
+Elven Engine is primarily 2D/3D game engine developing from scratch.
 
 ## Getting Started
-Visual Studio 2019/2022 support. 
+
+Visual Studio 2019/2022 support.
 Windows platform only support for now (Linux and MacOS platforms are for the future support)
 
 You can clone repository using git (**`--recursive`** is required to fetch all of the submodules):
@@ -26,7 +31,7 @@ Or just call command from the build directory with your version of VS and platfo
 | [cmake](https://github.com/Kitware/CMake) | build system |
 | [spdlog](https://github.com/gabime/spdlog) | header-only logging library |
 | [GLFW](https://github.com/glfw/glfw) | windows, OpenGL contexts and handle input |
-| [glad](https://glad.dav1d.de/) | OpenGL loader |
+| [glad 2]([https://glad.dav1d.de/) | OpenGL loader |
 | [lia](https://github.com/kryvytskyidenys/lia) | my custom linear algebra library |
 | [Deat ImGui](https://github.com/kryvytskyidenys/imgui) | library using for GUI (visual-editor) |
 
