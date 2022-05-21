@@ -91,7 +91,6 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ENGINE_SOURCES})
 set(glfw ${VENDOR_PATH}/GLFW)
 set(glad ${VENDOR_PATH}/GLAD)
 set(spdlog ${VENDOR_PATH}/spdlog)
-set(glm ${VENDOR_PATH}/glm)
 set(imgui ${VENDOR_PATH}/imgui)
 set(lia ${VENDOR_PATH}/lia)
 set(stb_image ${VENDOR_PATH}/stb_image)
@@ -100,7 +99,6 @@ set(STATIC_THIRD_PARTY_LIBRARIES
     glfw
     glad
     spdlog
-    glm
     imgui
     lia
 )
@@ -108,7 +106,6 @@ set(STATIC_THIRD_PARTY_LIBRARIES
 add_subdirectory(${glfw})
 add_subdirectory(${glad})
 add_subdirectory(${spdlog})
-add_subdirectory(${glm})
 add_subdirectory(${imgui})
 add_subdirectory(${lia})
 
@@ -122,7 +119,6 @@ set(ENGINE_INCLUDE_DIRS
     ${glfw}/include
     ${glad}/include
     ${spdlog}/include
-    ${glm}/glm
     ${imgui}
     ${stb_image}
     )
