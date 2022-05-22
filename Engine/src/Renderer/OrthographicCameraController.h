@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderer/OrthographicCamera.h"
+#include "Renderer/Camera.h"
 #include "Events/MouseEvent.h"
 #include "Events/ApplicationEvent.h"
 
@@ -18,26 +18,26 @@ namespace Elven
 
         void OnResize(float width, float height);
 
-        OrthographicCamera& GetCamera() { return m_Camera; }
-        const OrthographicCamera& GetCamera() const { return m_Camera; }
+        Camera& GetCamera() { return m_camera; }
+        const Camera& GetCamera() const { return m_camera; }
         
-        void SetZoomLevel(float zoomLevel) { m_ZoomLevel = zoomLevel; }
-        float GetZoomLevel() const { return m_ZoomLevel; }
+        void SetZoomLevel(float zoomLevel) { m_zoomLevel = zoomLevel; }
+        float GetZoomLevel() const { return m_zoomLevel; }
         
     private:
         bool OnMouseScrolled(Events::MouseScrolledEvent& e);
         bool OnWindowResized(Events::WindowResizeEvent& e);
 
     private:
-        lia::vec3 m_Position;
+        lia::vec3 m_position;
 
-        float m_AspectRatio = 0.0f;
-        float m_ZoomLevel = 1.0f;
-        float m_Rotation = 0.0f;
-        float m_TranslationSpeed = 5.0f;
-        float m_RotationSpeed = 180.0f;
+        float m_aspectRatio = 0.0f;
+        float m_zoomLevel = 1.0f;
+        float m_rotation = 0.0f;
+        float m_translationSpeed = 5.0f;
+        float m_rotationSpeed = 180.0f;
 
-        OrthographicCamera m_Camera;
+        Camera m_camera;
 
         Events::EventFunctionHandler<Events::WindowResizeEvent> m_windowResizeCallback;
         Events::EventFunctionHandler<Events::MouseScrolledEvent> m_mouseScrolledCallback;

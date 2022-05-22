@@ -17,7 +17,7 @@ namespace Elven
         unsigned int m_id { 0 };
         uint32_t m_width { 0 };
         uint32_t m_height { 0 };
-        unsigned int m_internalFormat;
-        unsigned int m_dataFormat;
+        unsigned int m_internalFormat { 0 };
+        unsigned int m_dataFormat { 0 };
     };
 }

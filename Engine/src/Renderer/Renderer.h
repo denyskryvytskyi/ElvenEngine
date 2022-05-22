@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Renderer/RenderCommand.h"
-#include "Renderer/OrthographicCamera.h"
+#include "Renderer/Camera.h"
 #include "Shader.h"
 
 namespace Elven
@@ -12,7 +12,7 @@ namespace Elven
         static void Init();
         static void Shutdown();
 
-        static void BeginScene(OrthographicCamera& camera);
+        static void BeginScene(Camera& camera);
         static void EndScene();
 
         static void Submit(Shader* shader, const VertexArray* vertexArray, const lia::mat4& modelMatrix = lia::mat4(1.0f));

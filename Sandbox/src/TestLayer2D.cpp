@@ -1,4 +1,4 @@
-#include "ExampleLayer.h"
+#include "TestLayer2D.h"
 
 #include <filesystem>
 #include <iostream>
@@ -7,35 +7,36 @@
 
 #include "Elven.h"
 
-ExampleLayer::ExampleLayer()
-    : Layer("ExampleLayer"), m_CameraController(1280.0f / 720.0f)
+TestLayer2D::TestLayer2D()
+    : Layer("TestLayer2D")
+    , m_cameraController(1280.0f / 720.0f)
 {
     m_textureWizard = Elven::Texture2D::Create("wizard.png");
     m_textureWizardFire = Elven::Texture2D::Create("wizard_fire.png");
     m_textureWizardIce = Elven::Texture2D::Create("wizard_ice.png");
 }
 
-ExampleLayer::~ExampleLayer()
+TestLayer2D::~TestLayer2D()
 {
 }
 
-void ExampleLayer::OnAttach()
+void TestLayer2D::OnAttach()
 {
 
 }
 
-void ExampleLayer::OnDetach()
+void TestLayer2D::OnDetach()
 {
 }
 
-void ExampleLayer::OnUpdate(float dt)
+void TestLayer2D::OnUpdate(float dt)
 {
-    m_CameraController.OnUpdate(dt);
+    m_cameraController.OnUpdate(dt);
 
     Elven::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
     Elven::RenderCommand::Clear();
 
-    Elven::Renderer2D::BeginScene(m_CameraController.GetCamera());
+    Elven::Renderer2D::BeginScene(m_cameraController.GetCamera());
 
     Elven::Renderer2D::DrawRotatedQuad({ -0.5f, 0.5f }, { 0.6f, 0.6f }, 45.0f, { 0.6f, 0.5f, 0.4f, 1.0f});
 
@@ -59,6 +60,6 @@ void ExampleLayer::OnUpdate(float dt)
     Elven::Renderer2D::EndScene();
 }
 
-void ExampleLayer::OnImGuiRender()
+void TestLayer2D::OnImGuiRender()
 {
 }

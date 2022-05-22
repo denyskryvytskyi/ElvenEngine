@@ -21,7 +21,7 @@ namespace Elven
         }
     }
 
-    void Renderer::BeginScene(OrthographicCamera& camera)
+    void Renderer::BeginScene(Camera& camera)
     {
         m_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
     }

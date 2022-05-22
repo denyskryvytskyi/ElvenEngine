@@ -2,11 +2,11 @@
 
 #include <Elven.h>
 
-class ExampleLayer : public Elven::Layer
+class TestLayer2D : public Elven::Layer
 {
 public:
-    ExampleLayer();
-    virtual ~ExampleLayer();
+    TestLayer2D();
+    virtual ~TestLayer2D();
 
     virtual void OnAttach() override;
     virtual void OnDetach() override;
@@ -14,7 +14,7 @@ public:
     virtual void OnImGuiRender() override;
 
 private:
-    Elven::OrthographicCameraController m_CameraController;
+    Elven::OrthographicCameraController m_cameraController;
     Elven::SharedPtr<Elven::Texture2D> m_textureWizard;
     Elven::SharedPtr<Elven::Texture2D> m_textureWizardFire;
     Elven::SharedPtr<Elven::Texture2D> m_textureWizardIce;

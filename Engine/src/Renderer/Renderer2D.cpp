@@ -108,7 +108,7 @@ namespace Elven
         delete[] s_data.quadVerticesBegin;
     }
 
-    void Renderer2D::BeginScene(const OrthographicCamera& camera)
+    void Renderer2D::BeginScene(const Camera& camera)
     {
         s_telemetry = { 0 };
 

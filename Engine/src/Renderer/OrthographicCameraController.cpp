@@ -5,8 +5,8 @@
 namespace Elven
 {
     OrthographicCameraController::OrthographicCameraController(float aspectRatio)
-        : m_Camera(-aspectRatio * m_ZoomLevel, aspectRatio* m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel)
-        , m_AspectRatio(aspectRatio)
+        : m_camera(-aspectRatio * m_zoomLevel, aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f)
+        , m_aspectRatio(aspectRatio)
     {
         m_windowResizeCallback = EVENT_CALLBACK(OrthographicCameraController::OnWindowResized);
         m_mouseScrolledCallback = EVENT_CALLBACK(OrthographicCameraController::OnMouseScrolled);
@@ -26,53 +26,53 @@ namespace Elven
     {
         if (Input::IsKeyPressed(Key::A))
         {
-            m_Position.x -= cos(lia::radians(m_Rotation)) * m_TranslationSpeed * dt;
-            m_Position.y -= sin(lia::radians(m_Rotation)) * m_TranslationSpeed * dt;
+            m_position.x -= cos(lia::radians(m_rotation)) * m_translationSpeed * dt;
+            m_position.y -= sin(lia::radians(m_rotation)) * m_translationSpeed * dt;
         }
         else if (Input::IsKeyPressed(Key::D))
         {
-            m_Position.x += cos(lia::radians(m_Rotation)) * m_TranslationSpeed * dt;
-            m_Position.y += sin(lia::radians(m_Rotation)) * m_TranslationSpeed * dt;
+            m_position.x += cos(lia::radians(m_rotation)) * m_translationSpeed * dt;
+            m_position.y += sin(lia::radians(m_rotation)) * m_translationSpeed * dt;
         }
 
         if (Input::IsKeyPressed(Key::W))
         {
-            m_Position.x += -sin(lia::radians(m_Rotation)) * m_TranslationSpeed * dt;
-            m_Position.y += cos(lia::radians(m_Rotation)) * m_TranslationSpeed * dt;
+            m_position.x += -sin(lia::radians(m_rotation)) * m_translationSpeed * dt;
+            m_position.y += cos(lia::radians(m_rotation)) * m_translationSpeed * dt;
         }
         else if (Input::IsKeyPressed(Key::S))
         {
-            m_Position.x -= -sin(lia::radians(m_Rotation)) * m_TranslationSpeed * dt;
-            m_Position.y -= cos(lia::radians(m_Rotation)) * m_TranslationSpeed * dt;
+            m_position.x -= -sin(lia::radians(m_rotation)) * m_translationSpeed * dt;
+            m_position.y -= cos(lia::radians(m_rotation)) * m_translationSpeed * dt;
         }
 
         if (Input::IsKeyPressed(Key::Q))
-            m_Rotation += m_RotationSpeed * dt;
+            m_rotation += m_rotationSpeed * dt;
         if (Input::IsKeyPressed(Key::E))
-            m_Rotation -= m_RotationSpeed * dt;
+            m_rotation -= m_rotationSpeed * dt;
 
-        if (m_Rotation > 180.0f)
-            m_Rotation -= 360.0f;
-        else if (m_Rotation <= -180.0f)
-            m_Rotation += 360.0f;
+        if (m_rotation > 180.0f)
+            m_rotation -= 360.0f;
+        else if (m_rotation <= -180.0f)
+            m_rotation += 360.0f;
 
-        m_Camera.SetRotation(m_Rotation);
-        m_Camera.SetPosition(m_Position);
+        m_camera.SetRotation(m_rotation);
+        m_camera.SetPosition(m_position);
 
-        m_TranslationSpeed = m_ZoomLevel;
+        m_translationSpeed = m_zoomLevel;
     }
 
     void OrthographicCameraController::OnResize(float width, float height)
     {
-        m_AspectRatio = width / height;
-        m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+        m_aspectRatio = width / height;
+        m_camera.SetProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f);
     }
 
     bool OrthographicCameraController::OnMouseScrolled(Events::MouseScrolledEvent& e)
     {
-        m_ZoomLevel -= e.GetYOffset() * 0.25f;
-        m_ZoomLevel = std::max<float>(m_ZoomLevel, 0.25f);
-        m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+        m_zoomLevel -= e.GetYOffset() * 0.25f;
+        m_zoomLevel = std::max<float>(m_zoomLevel, 0.25f);
+        m_camera.SetProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f);
         return false;
     }
 

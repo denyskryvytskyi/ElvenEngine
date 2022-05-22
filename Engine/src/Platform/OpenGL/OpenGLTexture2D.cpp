@@ -44,10 +44,9 @@ namespace Elven
     OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
         : m_width(width)
         , m_height(height)
+        , m_internalFormat(GL_RGBA8)
+        , m_dataFormat(GL_RGBA)
     {
-        m_internalFormat = GL_RGBA8;
-        m_dataFormat = GL_RGBA;
-
         glCreateTextures(GL_TEXTURE_2D, 1, &m_id);
         glTextureStorage2D(m_id, 1, m_internalFormat, m_width, m_height);
 
