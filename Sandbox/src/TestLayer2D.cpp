@@ -38,17 +38,16 @@ void TestLayer2D::OnUpdate(float dt)
 
     Elven::Renderer2D::BeginScene(m_cameraController.GetCamera());
 
-    Elven::Renderer2D::DrawRotatedQuad({ -0.5f, 0.5f }, { 0.6f, 0.6f }, 45.0f, { 0.6f, 0.5f, 0.4f, 1.0f});
+    Elven::Renderer2D::DrawRotatedQuad({ -0.5f, 0.5f, 0.0f}, { 0.6f, 0.6f }, 45.0f, { 0.6f, 0.5f, 0.4f, 1.0f});
 
-    Elven::Renderer2D::DrawQuad({ -1.0f, -0.5f }, { 1.0f, 0.9f }, m_textureWizard);
-    Elven::Renderer2D::DrawRotatedQuad({ -0.1f, -0.5f }, { 1.0f, 0.9f }, m_textureWizardFire, 90.0f);
-    Elven::Renderer2D::DrawQuad({ 1.0f, -0.5f }, { 1.0f, 0.9f }, m_textureWizardIce);
+    Elven::Renderer2D::DrawQuad({ -1.0f, -0.5f, 0.1 }, { 1.0f, 0.9f }, m_textureWizard);
+    Elven::Renderer2D::DrawQuad({ 0.1f, -0.5f, 0.1f }, { 1.0f, 0.9f }, m_textureWizardIce, { 1.0f, 1.0f, 1.0f, 1.0f});
 
     for (size_t y = 0; y < 20; y++)
     {
         for (size_t x = 0; x < 20; x++)
         {
-            lia::vec2 pos(x * 0.12f, y * 0.12f);
+            lia::vec3 pos(x * 0.12f, y * 0.12f, 0.0f);
             lia::vec2 scale = { 0.1f, 0.1f };
             lia::vec4 color = { 0.3f, 0.7f, 0.3f, 1.0f };
 
@@ -57,6 +56,8 @@ void TestLayer2D::OnUpdate(float dt)
             Elven::Renderer2D::DrawRotatedQuad(pos, scale, angle, color);
         }
     }
+    Elven::Renderer2D::DrawRotatedQuad({ 0.5f, 0.5f, 0.1f }, { 1.0f, 0.9f }, 45.0f, m_textureWizardFire);
+
     Elven::Renderer2D::EndScene();
 }
 

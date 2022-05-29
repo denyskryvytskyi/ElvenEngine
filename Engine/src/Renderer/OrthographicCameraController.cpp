@@ -56,7 +56,7 @@ namespace Elven
         else if (m_rotation <= -180.0f)
             m_rotation += 360.0f;
 
-        m_camera.SetRotation(m_rotation);
+        m_camera.SetRotation({ 0.0f, 0.0f, m_rotation });
         m_camera.SetPosition(m_position);
 
         m_translationSpeed = m_zoomLevel;
