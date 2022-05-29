@@ -5,14 +5,17 @@ namespace Elven
     struct WindowProps
     {
         WindowProps(const std::string& title = "Elven Engine", unsigned int width = 1280, unsigned int height = 720)
-            : Title(title), Width(width), Height(height)
+            : Title(title)
+            , Width(width)
+            , Height(height)
         {
         }
 
     public:
         std::string Title;
-        unsigned int Width = 0;
-        unsigned int Height = 0;
+        unsigned int Width { 0 };
+        unsigned int Height { 0 };
+        bool IsFullScreen { false };
     };
 
     class Window

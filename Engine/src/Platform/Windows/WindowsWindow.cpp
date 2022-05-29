@@ -67,7 +67,20 @@ namespace Elven
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 
-        m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+        m_Window = glfwCreateWindow(props.Width, props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+
+        if (props.IsFullScreen)
+        {
+            GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+            const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+            m_Data.Width = mode->width;
+            m_Data.Height = mode->height;
+
+            glfwSetWindowMonitor(m_Window, monitor, 0, 0, m_Data.Width, m_Data.Height, mode->refreshRate);
+
+            Events::QueueEvent(new Events::WindowResizeEvent(m_Data.Width, m_Data.Height));
+        }
 
         m_Context = GraphicsContext::Create(m_Window);
         m_Context->Init();
@@ -81,7 +94,7 @@ namespace Elven
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             data.Width = width;
             data.Height = height;
-            
+
             Events::TriggerEvent(new Events::WindowResizeEvent(width, height));
         });
 
