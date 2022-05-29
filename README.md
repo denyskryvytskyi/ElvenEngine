@@ -42,10 +42,10 @@ Or just call command from the build directory with your version of VS and platfo
 + [x] Logging system (spdlog)
 + [x] Event sytem (event queue based system)
 + [x] Custom math library (separate project [lia](https://github.com/denyskryvytskyi/lia))
-+ [ ] Renderer core (support different graphics API)
++ [x] Renderer core (support different graphics API)
   - [x] Shader Manager (shader files loading)
   - [x] Renderer API (VAO, VBO, Shader, Texture abstractions)
-  - [ ] Camera (orthographic, perspective)
+  - [x] Camera (orthographic, perspective)
   - [x] DSA OpenGL renderer api implementation
 + [ ] 2D Renderer
   - [x] Quad rendering
@@ -55,7 +55,7 @@ Or just call command from the build directory with your version of VS and platfo
   - [ ] Spritesheet animation
   - [ ] Text Rendering
 + [ ] 3D Renderer
-  - [ ] Mesh/Material system
+  - [ ] Mesh/Model system
   - [ ] Primitives: cube, sphere, plane
   - [ ] Model loading (Assimp)
   - [ ] Lighting support
