@@ -47,6 +47,9 @@ namespace Elven
         GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init("#version 330");
+
+        m_isVSync = Application::Get().GetWindow().IsVSync();
+        m_isFullScreen = Application::Get().GetWindow().IsFullScreen();
     }
 
     void ImGuiLayer::OnDetach()
@@ -63,12 +66,12 @@ namespace Elven
 
         // ------- Custom panels -------
         ImGui::Begin("Telemetry");
-        ImGui::SetWindowSize(ImVec2(300.0f, 120.0f));
+        ImGui::SetWindowSize(ImVec2(300.0f, 200.0f));
         ImGui::Text("FPS: %f", Application::GetTelemetry().fps);
 
-        if (ImGui::Checkbox("V-Sync", &m_vSync))
+        if (ImGui::Checkbox("V-Sync", &m_isVSync))
         {
-            Application::Get().GetWindow().SetVSync(m_vSync);
+            Application::Get().GetWindow().SetVSync(m_isVSync);
         }
 
         ImGui::Separator();
@@ -79,6 +82,13 @@ namespace Elven
         ImGui::Separator();
 
         ImGui::Text("Renderer: %s", glGetString(GL_RENDERER));
+
+        ImGui::Separator();
+
+        if (ImGui::Checkbox("Fullsreen mode", &m_isFullScreen))
+        {
+            Application::Get().GetWindow().SetFullScreen(m_isFullScreen);
+        }
 
         ImGui::End();
     }

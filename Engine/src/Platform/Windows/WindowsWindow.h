@@ -4,6 +4,7 @@
 #include "Renderer/GraphicsContext.h"
 
 struct GLFWwindow;
+struct GLFWmonitor;
 
 namespace Elven
 {
@@ -13,8 +14,10 @@ namespace Elven
         struct WindowData
         {
             std::string Title;
-            unsigned int Width, Height;
-            bool VSync;
+            unsigned int Width { 0 };
+            unsigned int Height { 0 };
+            bool VSync { false };
+            bool FullScreen { false };
         };
 
     public:
@@ -23,21 +26,26 @@ namespace Elven
 
         void OnUpdate() override;
 
-        unsigned int GetWidth() const override { return m_Data.Width; }
-        unsigned int GetHeight() const override { return m_Data.Height; }
+        unsigned int GetWidth() const override { return m_data.Width; }
+        unsigned int GetHeight() const override { return m_data.Height; }
 
         void SetVSync(bool enabled) override;
         bool IsVSync() const override;
 
-        void* GetNativeWindow() const override { return m_Window; }
+        void SetFullScreen(bool enabled) override;
+        bool IsFullScreen() const override;
+
+        void* GetNativeWindow() const override { return m_window; }
 
     private:
         virtual void Init(const WindowProps& props);
         virtual void Shutdown();
 
     private:
-        GLFWwindow* m_Window;
-        GraphicsContext* m_Context;
-        WindowData m_Data;
+        GLFWwindow* m_window { nullptr };
+        GLFWmonitor* m_monitor { nullptr };
+        GraphicsContext* m_context { nullptr };
+
+        WindowData m_data;
     };
 }

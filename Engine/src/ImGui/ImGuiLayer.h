@@ -18,7 +18,8 @@ namespace Elven
         void End();
 
     private:
-        float m_Time = 0.0f;
-        bool m_vSync = true;
+        float m_Time { 0.0f };
+        bool m_isVSync { false };
+        bool m_isFullScreen { true };
     };
 }
