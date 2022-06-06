@@ -16,7 +16,8 @@ namespace Elven
     private:
         struct Telemetry
         {
-            float fps{ 0.0f };
+            float frameTime { 0.0f };
+            float fps { 0.0f };
         };
 
     public:

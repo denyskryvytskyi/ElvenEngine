@@ -65,18 +65,16 @@ namespace Elven
         //ImGui::ShowDemoWindow(&showDemo);
 
         // ------- Custom panels -------
-        ImGui::Begin("Telemetry");
+        ImGui::Begin("Menu");
         ImGui::SetWindowSize(ImVec2(300.0f, 200.0f));
-        ImGui::Text("FPS: %f", Application::GetTelemetry().fps);
 
-        if (ImGui::Checkbox("V-Sync", &m_isVSync))
-        {
-            Application::Get().GetWindow().SetVSync(m_isVSync);
-        }
+        ImGui::Text("FPS: %f", Application::GetTelemetry().fps);
+        ImGui::Text("Frame time %.3f ms", Application::GetTelemetry().frameTime);
 
         ImGui::Separator();
 
-        ImGui::Text("2D renderer draw calls: %i", Renderer2D::GetTelemetry().drawCalls);
+        ImGui::Text("2D renderer telemetry:");
+        ImGui::Text("   draw calls: %i", Renderer2D::GetTelemetry().drawCalls);
 
         ImGui::Spacing();
         ImGui::Separator();
@@ -84,6 +82,11 @@ namespace Elven
         ImGui::Text("Renderer: %s", glGetString(GL_RENDERER));
 
         ImGui::Separator();
+
+        if (ImGui::Checkbox("V-Sync", &m_isVSync))
+        {
+            Application::Get().GetWindow().SetVSync(m_isVSync);
+        }
 
         if (ImGui::Checkbox("Fullsreen mode", &m_isFullScreen))
         {

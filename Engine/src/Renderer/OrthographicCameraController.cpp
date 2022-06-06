@@ -21,7 +21,6 @@ namespace Elven
         Events::Unsubscribe<Events::WindowResizeEvent>(m_windowResizeCallback);
     }
 
-    // need add timestep
     void OrthographicCameraController::OnUpdate(float dt)
     {
         if (Input::IsKeyPressed(Key::A))

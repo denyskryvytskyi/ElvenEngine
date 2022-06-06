@@ -61,9 +61,8 @@ namespace Elven
             float elapsedTime = timer.elapsed();
             timer.restart();
 
-            EL_CORE_TRACE("Delta time {0} s", elapsedTime);
+            s_telemetry.frameTime = elapsedTime * 1000.0f;
             s_telemetry.fps = 1.0f / elapsedTime;
-            EL_CORE_TRACE("FPS: {0}", 1.0f / elapsedTime);
 
             // Layers update
             for (Layer* layer : m_layerStack)
