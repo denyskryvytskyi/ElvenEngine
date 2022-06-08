@@ -61,23 +61,16 @@ namespace Elven
         m_translationSpeed = m_zoomLevel;
     }
 
-    void OrthographicCameraController::OnResize(float width, float height)
-    {
-        m_aspectRatio = width / height;
-        m_camera.SetProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f);
-    }
-
-    bool OrthographicCameraController::OnMouseScrolled(Events::MouseScrolledEvent& e)
+    void OrthographicCameraController::OnMouseScrolled(Events::MouseScrolledEvent& e)
     {
         m_zoomLevel -= e.GetYOffset() * 0.25f;
         m_zoomLevel = std::max<float>(m_zoomLevel, 0.25f);
         m_camera.SetProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f);
-        return false;
     }
 
-    bool OrthographicCameraController::OnWindowResized(Events::WindowResizeEvent& e)
+    void OrthographicCameraController::OnWindowResized(Events::WindowResizeEvent& e)
     {
-        OnResize(static_cast<float>(e.GetWidth()), static_cast<float>(e.GetHeight()));
-        return true;
+        m_aspectRatio = static_cast<float>(e.GetWidth()) / static_cast<float>(e.GetHeight());
+        m_camera.SetProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f);
     }
 }

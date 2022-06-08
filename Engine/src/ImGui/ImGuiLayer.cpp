@@ -68,7 +68,7 @@ namespace Elven
         ImGui::Begin("Menu");
         ImGui::SetWindowSize(ImVec2(300.0f, 200.0f));
 
-        ImGui::Text("FPS: %f", Application::GetTelemetry().fps);
+        ImGui::Text("FPS: %.1f", Application::GetTelemetry().fps);
         ImGui::Text("Frame time %.3f ms", Application::GetTelemetry().frameTime);
 
         ImGui::Separator();

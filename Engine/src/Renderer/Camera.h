@@ -26,6 +26,8 @@ namespace Elven
         const lia::mat4& GetViewMatrix() const { return m_viewMatrix; }
         const lia::mat4& GetViewProjectionMatrix() const { return m_viewProjectionMatrix; }
 
+        void LookAt(const lia::vec3 pos, const lia::vec3 front, const lia::vec3 up);
+
     private:
         void RecalculateViewMatrix();
 

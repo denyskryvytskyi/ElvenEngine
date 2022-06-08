@@ -133,15 +133,11 @@ namespace Elven
 
         glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window)
         {
-            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
             Events::QueueEvent(new Events::WindowCloseEvent());
         });
 
         glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mode)
         {
-            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
             switch (action)
             {
             case GLFW_PRESS:
@@ -164,25 +160,21 @@ namespace Elven
 
         glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int keycode)
         {
-            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
             Events::QueueEvent(new Events::KeyTypedEvent(keycode));
         });
 
         glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
         {
-            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
             switch (action)
             {
             case GLFW_PRESS:
             {
-                Events::QueueEvent(new Events::MouseButtonPressedEvent(button));
+                Events::TriggerEvent(new Events::MouseButtonPressedEvent(button));
                 break;
             }
             case GLFW_RELEASE:
             {
-                Events::QueueEvent(new Events::MouseButtonReleasedEvent(button));
+                Events::TriggerEvent(new Events::MouseButtonReleasedEvent(button));
                 break;
             }
             }
@@ -190,16 +182,12 @@ namespace Elven
 
         glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset)
         {
-            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
             Events::TriggerEvent(new Events::MouseScrolledEvent((float)xOffset, (float)yOffset));
         });
 
         glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos)
         {
-            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-            Events::QueueEvent(new Events::MouseMovedEvent((float)xPos, (float)yPos));
+            Events::TriggerEvent(new Events::MouseMovedEvent((float)xPos, (float)yPos));
         });
     }
 

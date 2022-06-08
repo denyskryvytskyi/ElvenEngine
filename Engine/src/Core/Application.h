@@ -35,8 +35,8 @@ namespace Elven
         static Telemetry& GetTelemetry() { return s_telemetry; };
 
     private:
-        bool OnWindowClose(const Events::WindowCloseEvent& e);
-        bool OnWindowResize(const Events::WindowResizeEvent& e);
+        void OnWindowClose(const Events::WindowCloseEvent& e);
+        void OnWindowResize(const Events::WindowResizeEvent& e);
 
     private:
         static Application* s_instance;

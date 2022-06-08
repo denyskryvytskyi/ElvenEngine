@@ -16,8 +16,6 @@ namespace Elven
 
         void OnUpdate(float dt);
 
-        void OnResize(float width, float height);
-
         Camera& GetCamera() { return m_camera; }
         const Camera& GetCamera() const { return m_camera; }
         
@@ -25,8 +23,8 @@ namespace Elven
         float GetZoomLevel() const { return m_zoomLevel; }
         
     private:
-        bool OnMouseScrolled(Events::MouseScrolledEvent& e);
-        bool OnWindowResized(Events::WindowResizeEvent& e);
+        void OnMouseScrolled(Events::MouseScrolledEvent& e);
+        void OnWindowResized(Events::WindowResizeEvent& e);
 
     private:
         lia::vec3 m_position;

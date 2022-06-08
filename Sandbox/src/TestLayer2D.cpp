@@ -40,7 +40,7 @@ void TestLayer2D::OnUpdate(float dt)
 
     Elven::Renderer2D::DrawRotatedQuad({ -0.5f, 0.5f, 0.0f}, { 0.6f, 0.6f }, 45.0f, { 0.6f, 0.5f, 0.4f, 1.0f});
 
-    Elven::Renderer2D::DrawQuad({ -1.0f, -0.5f, 0.1 }, { 1.0f, 0.9f }, m_textureWizard);
+    Elven::Renderer2D::DrawQuad({ -1.0f, -0.5f, 0.1f }, { 1.0f, 0.9f }, m_textureWizard);
     Elven::Renderer2D::DrawQuad({ 0.1f, -0.5f, 0.1f }, { 1.0f, 0.9f }, m_textureWizardIce, { 1.0f, 1.0f, 1.0f, 1.0f});
 
     for (size_t y = 0; y < 20; y++)

@@ -86,23 +86,18 @@ namespace Elven
         }
     }
 
-    bool Application::OnWindowClose(const Events::WindowCloseEvent& e)
+    void Application::OnWindowClose(const Events::WindowCloseEvent& e)
     {
         m_running = false;
-
-        return true;
     }
 
-    bool Application::OnWindowResize(const Events::WindowResizeEvent& e)
+    void Application::OnWindowResize(const Events::WindowResizeEvent& e)
     {
         if (e.GetWidth() == 0 || e.GetHeight() == 0)
         {
             // minimized logic
-            return true;
         }
 
         Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
-
-        return true;
     }
 }

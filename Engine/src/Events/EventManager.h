@@ -2,6 +2,8 @@
 
 #include <functional>
 
+#include "Events/Event.h"
+
 #define EVENT_CALLBACK(fn) std::bind(&fn, this, std::placeholders::_1)
 
 namespace Elven
@@ -50,7 +52,6 @@ namespace Elven
             const char* functionType;
         };
 
-        class Event;
         class EventManager
         {
 

@@ -81,7 +81,7 @@ TestLayer3D::TestLayer3D()
     m_texture->BindToUnit(0);
 
     m_cubes = {
-        lia::vec3(0.0f,  0.0f,  -3.0f),
+        lia::vec3(0.0f,  0.0f,  0.0f),
         lia::vec3(2.0f,  5.0f, -15.0f),
         lia::vec3(-1.5f, -2.2f, -2.5f),
         lia::vec3(-3.8f, -2.0f, -12.3f),
@@ -119,8 +119,7 @@ void TestLayer3D::OnUpdate(float dt)
 
     for (size_t i = 0; i < m_cubes.size(); i++)
     {
-        float time = (float) glfwGetTime();
-        lia::mat4 model = lia::rotate(lia::mat4(1.0f), time * (i + 1) * lia::radians(10.0f), lia::vec3(1.0f, 1.0f, 0.0f));
+        lia::mat4 model = lia::rotate(lia::mat4(1.0f), (float) glfwGetTime() * (i + 1) * lia::radians(10.0f), lia::vec3(1.0f, 1.0f, 0.0f));
 
         model = lia::translate(model, m_cubes[i]);
         Elven::Renderer::Submit(m_shader, m_vao, model);

@@ -10,6 +10,8 @@
 #include "Core/Layer.h"
 #include "Core/Log.h"
 
+#include "Events/EventManager.h"
+
 #include "ImGui/ImGuiLayer.h"
 
 /// Renderer ////////////////////////////////////

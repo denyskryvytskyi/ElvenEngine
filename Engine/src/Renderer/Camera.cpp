@@ -41,6 +41,13 @@ namespace Elven
         }
     }
 
+    void Camera::LookAt(const lia::vec3 pos, const lia::vec3 front, const lia::vec3 up)
+    {
+        m_viewMatrix = lia::lookAt(pos, pos + front, up);
+
+        m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
+    }
+
     void Camera::RecalculateViewMatrix()
     {
         lia::mat4 transform = lia::rotate(lia::mat4(1.0f), lia::radians(m_rotation.x), lia::vec3(1, 0, 0));

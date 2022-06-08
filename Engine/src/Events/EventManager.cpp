@@ -1,4 +1,3 @@
-#include "Events/Event.h"
 #include "Events/EventManager.h"
 
 namespace Elven
