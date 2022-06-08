@@ -70,7 +70,8 @@ Or just call command from the build directory with your version of VS and platfo
 + [ ] Multithreading support
   - [ ] Thread pool
 + [ ] Just cool stuff
-  - [x] Fullscreen switch support 
+  - [x] Fullscreen switch support
+  - [x] Fly or FPS-like 3D camera support (CameraController)
 + [ ] Allocators (separate project):
   - [ ] Stack-based: simple stack, double-ended
   - [ ] Pool allocator
