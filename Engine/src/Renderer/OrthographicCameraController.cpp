@@ -63,14 +63,14 @@ namespace Elven
 
     void OrthographicCameraController::OnMouseScrolled(Events::MouseScrolledEvent& e)
     {
-        m_zoomLevel -= e.GetYOffset() * 0.25f;
+        m_zoomLevel -= e.YOffset * 0.25f;
         m_zoomLevel = std::max<float>(m_zoomLevel, 0.25f);
         m_camera.SetProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f);
     }
 
     void OrthographicCameraController::OnWindowResized(Events::WindowResizeEvent& e)
     {
-        m_aspectRatio = static_cast<float>(e.GetWidth()) / static_cast<float>(e.GetHeight());
+        m_aspectRatio = static_cast<float>(e.Width) / static_cast<float>(e.Height);
         m_camera.SetProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f);
     }
 }

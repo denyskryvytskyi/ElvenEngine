@@ -74,8 +74,8 @@ namespace Elven
 
     void CameraController::OnMouseMoved(const Events::MouseMovedEvent& e)
     {
-        const float xPos = e.GetX();
-        const float yPos = e.GetY();
+        const float xPos = e.MouseX;
+        const float yPos = e.MouseY;
 
         if (!m_mouseLastPosInited)
         {
@@ -113,7 +113,7 @@ namespace Elven
     
     void CameraController::OnMouseScrolled(const Events::MouseScrolledEvent& e)
     {
-        m_fov -= e.GetYOffset();
+        m_fov -= e.YOffset;
 
         if (m_fov < 10.0f)
             m_fov = 10.0f;
@@ -125,7 +125,7 @@ namespace Elven
 
     void CameraController::OnWindowResized(const Events::WindowResizeEvent& e)
     {
-        m_aspectRatio = static_cast<float>(e.GetWidth()) / static_cast<float>(e.GetHeight());
+        m_aspectRatio = static_cast<float>(e.Width) / static_cast<float>(e.Height);
         m_camera.SetProjection(lia::radians(m_fov), m_aspectRatio, m_near, m_far);
     }
 }

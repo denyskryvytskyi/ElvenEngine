@@ -11,15 +11,11 @@ namespace Elven
         public:
             EVENT_TYPE("{498CE06D-7EE3-465F-9EA7-B6D6E8CE963D}")
 
-            int GetKeyCode() const { return m_keyCode; }
-
         protected:
-            KeyEvent(int keyCode) :
-                m_keyCode(keyCode)
-            {}
+            KeyEvent(int keyCode) : KeyCode(keyCode) {}
 
-        protected:
-            int m_keyCode { 0 };
+        public:
+            int KeyCode { 0 };
         };
 
         class KeyPressedEvent : public KeyEvent
@@ -27,21 +23,19 @@ namespace Elven
         public:
             EVENT_TYPE("{FAAB99F1-7E9B-4533-9DE6-A84B49DD3230}")
 
-            KeyPressedEvent(int keyCode, int repeatCount) : KeyEvent(keyCode),
-                m_repeatCount(repeatCount)
+            KeyPressedEvent(int keyCode, int repeatCount) : KeyEvent(keyCode)
+                , RepeatCount(repeatCount)
             {}
-
-            int GetRepeatCount() const { return m_repeatCount; }
 
             std::string ToString() const override
             {
                 std::stringstream ss;
-                ss << "KeyPressedEvent: " << m_keyCode << " (" << m_repeatCount << " repeats)";
+                ss << "KeyPressedEvent: " << KeyCode << " (" << RepeatCount << " repeats)";
                 return ss.str();
             }
 
-        private:
-            int m_repeatCount { 0 };
+        public:
+            int RepeatCount { 0 };
         };
 
         class KeyReleasedEvent : public KeyEvent
@@ -54,7 +48,7 @@ namespace Elven
             std::string ToString() const override
             {
                 std::stringstream ss;
-                ss << "KeyReleasedEvent: " << m_keyCode;
+                ss << "KeyReleasedEvent: " << KeyCode;
                 return ss.str();
             }
         };
@@ -69,7 +63,7 @@ namespace Elven
             std::string ToString() const override
             {
                 std::stringstream ss;
-                ss << "KeyTypedEvent: " << m_keyCode;
+                ss << "KeyTypedEvent: " << KeyCode;
                 return ss.str();
             }
         };

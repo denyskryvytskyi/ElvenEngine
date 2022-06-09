@@ -93,11 +93,11 @@ namespace Elven
 
     void Application::OnWindowResize(const Events::WindowResizeEvent& e)
     {
-        if (e.GetWidth() == 0 || e.GetHeight() == 0)
+        if (e.Width == 0 || e.Height == 0)
         {
             // minimized logic
         }
 
-        Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+        Renderer::OnWindowResize(e.Width, e.Height);
     }
 }
