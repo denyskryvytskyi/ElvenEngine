@@ -12,6 +12,8 @@ namespace Elven
         void SetClearColor(const lia::vec4 & color) override;
         void Clear() override;
 
+        void EnableDepthTesting(bool enabled) override;
+
         void DrawIndexed(const VertexArray* vertexArray, uint32_t indexCount = 0) override;
     };
 }

@@ -37,6 +37,11 @@ namespace Elven
             s_RendererAPI->Clear();
         }
 
+        static void EnableDepthTesting(bool enable)
+        {
+            s_RendererAPI->EnableDepthTesting(enable);
+        }
+
         static void DrawIndexed(const VertexArray* vertexArray, uint32_t indexCount = 0)
         {
             s_RendererAPI->DrawIndexed(vertexArray, indexCount);

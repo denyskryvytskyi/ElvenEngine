@@ -8,7 +8,7 @@ namespace Elven
     void Renderer::Init()
     {
         RenderCommand::Init();
-        Renderer2D::Init();
+        RenderCommand::EnableDepthTesting(true);
     }
 
     void Renderer::Shutdown()

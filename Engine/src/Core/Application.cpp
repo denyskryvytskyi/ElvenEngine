@@ -22,7 +22,8 @@ namespace Elven
         m_imGuiLayer = new ImGuiLayer();
         PushOverlay(m_imGuiLayer);
 
-        Elven::Renderer::Init();
+        // TODO: Make it dependent from user settings to init Renderer or Renderer2D (add option to menu)
+        //Elven::Renderer::Init();
 
         m_windowCloseCallback = EVENT_CALLBACK(Application::OnWindowClose);
         m_windowResizeCallback = EVENT_CALLBACK(Application::OnWindowResize);

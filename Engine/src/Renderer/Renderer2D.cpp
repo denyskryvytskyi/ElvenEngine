@@ -60,6 +60,9 @@ namespace Elven
 
     void Renderer2D::Init()
     {
+        RenderCommand::Init();
+        RenderCommand::EnableDepthTesting(false);
+
         s_data.quadVAO = VertexArray::Create();
 
         s_data.quadVerticesBegin = new QuadVertex[s_data.maxQuadVertices];
@@ -155,12 +158,12 @@ namespace Elven
         StartBatch();
     }
 
-    void Renderer2D::DrawQuad(lia::vec3 pos, lia::vec2 size, lia::vec4 color)
+    void Renderer2D::DrawQuad(lia::vec3 pos, lia::vec2 scale, lia::vec4 color)
     {
-        DrawQuad(pos, size, color, 0);
+        DrawQuad(pos, scale, color, 0);
     }
 
-    void Renderer2D::DrawQuad(lia::vec3 pos, lia::vec2 size, const SharedPtr<Texture2D>& texture, lia::vec4 color)
+    void Renderer2D::DrawQuad(lia::vec3 pos, lia::vec2 scale, const SharedPtr<Texture2D>& texture, lia::vec4 color)
     {
         if (s_data.usedTextureSlots >= s_data.maxTextureSlots)
         {
@@ -169,15 +172,15 @@ namespace Elven
         s_data.textures.push_back(texture);
         s_data.usedTextureSlots++;
 
-        DrawQuad(pos, size, color, s_data.usedTextureSlots);
+        DrawQuad(pos, scale, color, s_data.usedTextureSlots);
     }
 
-    void Renderer2D::DrawRotatedQuad(lia::vec3 pos, lia::vec2 size, float angle, lia::vec4 color)
+    void Renderer2D::DrawRotatedQuad(lia::vec3 pos, lia::vec2 scale, lia::vec3 rotation, lia::vec4 color)
     {
-        DrawRotatedQuad(pos, size, angle, color, 0);
+        DrawRotatedQuad(pos, scale, rotation, color, 0);
     }
 
-    void Renderer2D::DrawRotatedQuad(lia::vec3 pos, lia::vec2 size, float angle, const SharedPtr<Texture2D>& texture, lia::vec4 color)
+    void Renderer2D::DrawRotatedQuad(lia::vec3 pos, lia::vec2 scale, lia::vec3 rotation, const SharedPtr<Texture2D>& texture, lia::vec4 color)
     {
         if (s_data.usedTextureSlots >= s_data.maxTextureSlots)
         {
@@ -186,23 +189,25 @@ namespace Elven
         s_data.textures.push_back(texture);
         s_data.usedTextureSlots++;
 
-        DrawRotatedQuad(pos, size, angle, color, s_data.usedTextureSlots);
+        DrawRotatedQuad(pos, scale, rotation, color, s_data.usedTextureSlots);
     }
 
     /// Draw functions only for internal usage ////////////////////
 
-    void Renderer2D::DrawQuad(lia::vec3 pos, lia::vec2 size, lia::vec4 color, float textureUnit)
+    void Renderer2D::DrawQuad(lia::vec3 pos, lia::vec2 scale, lia::vec4 color, float textureUnit)
     {
-        lia::mat4 model = lia::scale(lia::mat4(), lia::vec3(size.x, size.y, 0.0f));
+        lia::mat4 model = lia::scale(lia::mat4(), lia::vec3(scale.x, scale.y, 0.0f));
         model = lia::translate(model, pos);
 
         DrawQuad(model, color, textureUnit);
     }
 
-    void Renderer2D::DrawRotatedQuad(lia::vec3 pos, lia::vec2 size, float angle, lia::vec4 color, float textureUnit)
+    void Renderer2D::DrawRotatedQuad(lia::vec3 pos, lia::vec2 scale, lia::vec3 rotation, lia::vec4 color, float textureUnit)
     {
-        lia::mat4 model = lia::scale(lia::mat4(), lia::vec3(size.x, size.y, 0.0f));
-        model = lia::rotate(model, lia::radians(angle), { 0.0f, 0.0f, 1.0f });
+        lia::mat4 model = lia::scale(lia::mat4(), lia::vec3(scale.x, scale.y, 0.0f));
+        model = lia::rotateX(model, lia::radians(rotation.x));
+        model = lia::rotateY(model, lia::radians(rotation.y));
+        model = lia::rotateZ(model, lia::radians(rotation.z));
         model = lia::translate(model, pos);
 
         DrawQuad(model, color, textureUnit);
