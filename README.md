@@ -80,7 +80,7 @@ Or just call command from the build directory with your version of VS and platfo
 
 ## Demo
 #### Quad and texture batch rendering
-![](demo/BatchRenderer.png)
+![](demo/BatchRenderer_2.png)
 
 ## Features (Backlog)
 - Renderer
