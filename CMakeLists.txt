@@ -23,11 +23,8 @@ endif()
 
 if(ELVENENGINE_BUILD_RELEASE)
     set(CMAKE_BUILD_TYPE "Release")
-    add_compile_definitions(MXENGINE_SHIPPING)
-endif()
-add_compile_definitions(MXENGINE_CMAKE_BUILD)
-
-if(NOT CMAKE_BUILD_TYPE)
+    add_compile_definitions(EL_RELEASE)
+else()
     set(CMAKE_BUILD_TYPE "Debug")
     add_compile_definitions(EL_DEBUG)
 endif()
