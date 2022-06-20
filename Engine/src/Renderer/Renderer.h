@@ -1,33 +1,31 @@
 #pragma once
 
-#include "Renderer/RenderCommand.h"
 #include "Renderer/Camera.h"
+#include "Renderer/RenderCommand.h"
 #include "Shader.h"
 
-namespace Elven
-{
-    class Renderer
-    {
-    public:
-        static void Init();
-        static void Shutdown();
+namespace Elven {
 
-        static void BeginScene(Camera& camera);
-        static void EndScene();
+class Renderer {
+public:
+    static void Init();
+    static void Shutdown();
 
-        static void Submit(Shader* shader, const VertexArray* vertexArray, const lia::mat4& modelMatrix = lia::mat4(1.0f));
+    static void BeginScene(Camera& camera);
+    static void EndScene();
 
-        static void OnWindowResize(uint32_t width, uint32_t height);
+    static void Submit(Shader* shader, const VertexArray* vertexArray, const lia::mat4& modelMatrix = lia::mat4(1.0f));
 
-        static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
+    static void OnWindowResize(uint32_t width, uint32_t height);
 
-    private:
-        struct SceneData
-        {
-            lia::mat4 ViewProjectionMatrix;
-        };
+    static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 
-        static SceneData* m_SceneData;
+private:
+    struct SceneData {
+        lia::mat4 ViewProjectionMatrix;
     };
 
-}
+    static SceneData* m_SceneData;
+};
+
+} // namespace Elven

@@ -16,15 +16,15 @@
 
 /// Renderer ////////////////////////////////////
 
-#include "Renderer/Renderer.h"
-#include "Renderer/Renderer2D.h"
-#include "Renderer/RenderCommand.h"
 #include "Renderer/CameraController.h"
 #include "Renderer/OrthographicCameraController.h"
+#include "Renderer/RenderCommand.h"
+#include "Renderer/Renderer.h"
+#include "Renderer/Renderer2D.h"
 
 #include "Renderer/Buffer.h"
 #include "Renderer/Shader.h"
-#include "Renderer/VertexArray.h"
 #include "Renderer/Texture2D.h"
+#include "Renderer/VertexArray.h"
 
 ///////////////////////////////////////////////////

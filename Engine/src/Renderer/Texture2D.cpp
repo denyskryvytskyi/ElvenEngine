@@ -1,37 +1,34 @@
 #include "Texture2D.h"
-#include "Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLTexture2D.h"
+#include "Renderer/Renderer.h"
 
 #include "Core/FileSystem.h"
 
-namespace Elven
+namespace Elven {
+SharedPtr<Texture2D> Texture2D::Create(const std::string& filename)
 {
-    SharedPtr<Texture2D> Texture2D::Create(const std::string& filename)
-    {
-        const std::string filepath = FileSystem::GetImagesPath() + filename;
+    const std::string filepath = FileSystem::GetImagesPath() + filename;
 
-        switch (Renderer::GetAPI())
-        {
-        case RendererAPI::API::OpenGL:
-            return CreateSharedPtr<OpenGLTexture2D>(filepath);
-        }
-        
-        EL_CORE_ASSERT(false, "Unknown Renderer API!");
-
-        return nullptr;
+    switch (Renderer::GetAPI()) {
+    case RendererAPI::API::OpenGL:
+        return CreateSharedPtr<OpenGLTexture2D>(filepath);
     }
 
-    SharedPtr<Texture2D> Texture2D::Create(uint32_t width, uint32_t height)
-    {
-        switch (Renderer::GetAPI())
-        {
-        case RendererAPI::API::OpenGL:
-            return CreateSharedPtr<OpenGLTexture2D>(width, height);
-        }
+    EL_CORE_ASSERT(false, "Unknown Renderer API!");
 
-        EL_CORE_ASSERT(false, "Unknown Renderer API!");
-
-        return nullptr;
-    }
-
+    return nullptr;
 }
+
+SharedPtr<Texture2D> Texture2D::Create(uint32_t width, uint32_t height)
+{
+    switch (Renderer::GetAPI()) {
+    case RendererAPI::API::OpenGL:
+        return CreateSharedPtr<OpenGLTexture2D>(width, height);
+    }
+
+    EL_CORE_ASSERT(false, "Unknown Renderer API!");
+
+    return nullptr;
+}
+
+} // namespace Elven

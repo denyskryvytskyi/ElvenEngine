@@ -4,18 +4,17 @@
 
 struct GLFWwindow;
 
-namespace Elven
-{
-    class OpenGLContext : public GraphicsContext
-    {
-    public:
-        OpenGLContext(GLFWwindow* windowHandle);
+namespace Elven {
 
-        void Init() override;
-        void SwapBuffers() override;
+class OpenGLContext : public GraphicsContext {
+public:
+    OpenGLContext(GLFWwindow* windowHandle);
 
-    private:
-        GLFWwindow* m_WindowHandle = nullptr;
-    };
-}
+    void Init() override;
+    void SwapBuffers() override;
 
+private:
+    GLFWwindow* m_WindowHandle { nullptr };
+};
+
+} // namespace Elven

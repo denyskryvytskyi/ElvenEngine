@@ -1,18 +1,19 @@
 #include "Core/Window.h"
 
 #ifdef EL_PLATFORM_WINDOWS
-    #include "Platform/Windows/WindowsWindow.h"
+#    include "Platform/Windows/WindowsWindow.h"
 #endif
 
-namespace Elven
+namespace Elven {
+
+Window* Elven::Window::Create(const WindowProps& props)
 {
-    Window* Elven::Window::Create(const WindowProps& props)
-    {
-        #ifdef EL_PLATFORM_WINDOWS
-            return new WindowsWindow(props);
-        #else
-            EL_CORE_ASSERT(false, "Unknown platform!");
-            return nullptr;
-        #endif
-    }
+#ifdef EL_PLATFORM_WINDOWS
+    return new WindowsWindow(props);
+#else
+    EL_CORE_ASSERT(false, "Unknown platform!");
+    return nullptr;
+#endif
 }
+
+} // namespace Elven

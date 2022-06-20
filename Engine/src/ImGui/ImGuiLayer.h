@@ -2,24 +2,24 @@
 
 #include "Core/Layer.h"
 
-namespace Elven
-{
-    class ImGuiLayer : public Layer
-    {
-    public:
-        ImGuiLayer();
-        ~ImGuiLayer() = default;
+namespace Elven {
 
-        virtual void OnAttach() override;
-        virtual void OnDetach() override;
-        virtual void OnImGuiRender() override;
+class ImGuiLayer : public Layer {
+public:
+    ImGuiLayer();
+    ~ImGuiLayer() = default;
 
-        void Begin();
-        void End();
+    virtual void OnAttach() override;
+    virtual void OnDetach() override;
+    virtual void OnImGuiRender() override;
 
-    private:
-        float m_Time { 0.0f };
-        bool m_isVSync { false };
-        bool m_isFullScreen { true };
-    };
-}
+    void Begin();
+    void End();
+
+private:
+    float m_Time { 0.0f };
+    bool m_isVSync { false };
+    bool m_isFullScreen { true };
+};
+
+} // namespace Elven

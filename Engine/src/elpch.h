@@ -1,18 +1,18 @@
 #pragma once
 
+#include <algorithm>
+#include <functional>
 #include <iostream>
 #include <memory>
 #include <utility>
-#include <algorithm>
-#include <functional>
 
-#include <string>
-#include <sstream>
-#include <fstream>
 #include <array>
-#include <vector>
+#include <fstream>
+#include <sstream>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
 
 #include "Core/Core.h"
 #include "Core/Log.h"
@@ -20,5 +20,5 @@
 #include <lia/lia.h>
 
 #ifdef EL_PLATFORM_WINDOWS
-    #include <Windows.h>
+#    include <Windows.h>
 #endif

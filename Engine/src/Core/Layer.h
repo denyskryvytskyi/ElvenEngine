@@ -2,24 +2,23 @@
 
 #include "Events/Event.h"
 
-namespace Elven
-{
-    class Layer
-    {
-    public:
-        Layer(const std::string& name = "Layer");
-        virtual ~Layer() = default;
+namespace Elven {
 
-        virtual void OnAttach() {}
-        virtual void OnDetach() {}
-        virtual void OnUpdate(float dt) {}
-        virtual void OnImGuiRender() {}
-        virtual void OnEvent(Events::Event& event) {}
+class Layer {
+public:
+    Layer(const std::string& name = "Layer");
+    virtual ~Layer() = default;
 
-        const std::string& GetName() const { return m_DebugName; }
+    virtual void OnAttach() { }
+    virtual void OnDetach() { }
+    virtual void OnUpdate(float dt) { }
+    virtual void OnImGuiRender() { }
+    virtual void OnEvent(Events::Event& event) { }
 
-    protected:
-        std::string m_DebugName;
-    };
-}
+    const std::string& GetName() const { return m_DebugName; }
 
+protected:
+    std::string m_DebugName;
+};
+
+} // namespace Elven

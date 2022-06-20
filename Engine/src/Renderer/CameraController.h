@@ -2,53 +2,53 @@
 
 #include "Camera.h"
 
+#include "Events/ApplicationEvent.h"
 #include "Events/EventManager.h"
 #include "Events/MouseEvent.h"
-#include "Events/ApplicationEvent.h"
 
-namespace Elven
-{
-    class CameraController
-    {
-    public:
-        CameraController(float fov, float aspectRatio, float near_, float far_, bool enableFly = false);
-        ~CameraController();
+namespace Elven {
 
-        void OnUpdate(float dt);
+class CameraController {
+public:
+    CameraController(float fov, float aspectRatio, float near_, float far_, bool enableFly = false);
+    ~CameraController();
 
-        Camera& GetCamera() { return m_camera; }
-        const Camera& GetCamera() const { return m_camera; }
+    void OnUpdate(float dt);
 
-    private:
-        void ProcessInput(float dt);
+    Camera& GetCamera() { return m_camera; }
+    const Camera& GetCamera() const { return m_camera; }
 
-        void OnMouseMoved(const Events::MouseMovedEvent& e);
-        void OnMouseScrolled(const Events::MouseScrolledEvent& e);
-        void OnWindowResized(const Events::WindowResizeEvent& e);
+private:
+    void ProcessInput(float dt);
 
-    private:
-        Camera m_camera;
+    void OnMouseMoved(const Events::MouseMovedEvent& e);
+    void OnMouseScrolled(const Events::MouseScrolledEvent& e);
+    void OnWindowResized(const Events::WindowResizeEvent& e);
 
-        lia::vec3 m_position { 0.0f, 0.0f, 3.0f };
-        lia::vec3 m_front { 0.0f, 0.0f, -1.0f };
-        lia::vec3 m_up { 0.0f, 1.0f, 0.0f };
+private:
+    Camera m_camera;
 
-        lia::vec2 m_mouseLastPos;
+    lia::vec3 m_position { 0.0f, 0.0f, 3.0f };
+    lia::vec3 m_front { 0.0f, 0.0f, -1.0f };
+    lia::vec3 m_up { 0.0f, 1.0f, 0.0f };
 
-        float m_fov { 0.0f };
-        float m_aspectRatio { 0.0f };
-        float m_near { 0.0f };
-        float m_far { 0.0f };
+    lia::vec2 m_mouseLastPos;
 
-        float m_yaw { -90.0f };
-        float m_pitch { 0.0f };
+    float m_fov { 0.0f };
+    float m_aspectRatio { 0.0f };
+    float m_near { 0.0f };
+    float m_far { 0.0f };
 
-        bool m_mouseLastPosInited { false };
-        bool m_isFlyEnabled { false };
-        bool m_updateLookAt { false };
+    float m_yaw { -90.0f };
+    float m_pitch { 0.0f };
 
-        Events::EventFunctionHandler<Events::MouseMovedEvent> m_mouseMovedCallback;
-        Events::EventFunctionHandler<Events::MouseScrolledEvent> m_mouseScrolledCallback;
-        Events::EventFunctionHandler<Events::WindowResizeEvent> m_windowResizeCallback;
-    };
-}
+    bool m_mouseLastPosInited { false };
+    bool m_isFlyEnabled { false };
+    bool m_updateLookAt { false };
+
+    Events::EventFunctionHandler<Events::MouseMovedEvent> m_mouseMovedCallback;
+    Events::EventFunctionHandler<Events::MouseScrolledEvent> m_mouseScrolledCallback;
+    Events::EventFunctionHandler<Events::WindowResizeEvent> m_windowResizeCallback;
+};
+
+} // namespace Elven

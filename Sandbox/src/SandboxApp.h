@@ -1,14 +1,13 @@
 #pragma once
 
-#include <Elven.h>
 #include "TestLayer2D.h"
 #include "TestLayer3D.h"
+#include <Elven.h>
 
-class Sandbox : public Elven::Application
-{
+class Sandbox : public Elven::Application {
 public:
     Sandbox()
     {
-        PushLayer(new TestLayer3D());
+        PushLayer(new TestLayer2D());
     }
 };

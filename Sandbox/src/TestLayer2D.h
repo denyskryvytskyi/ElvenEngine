@@ -2,8 +2,7 @@
 
 #include <Elven.h>
 
-class TestLayer2D : public Elven::Layer
-{
+class TestLayer2D : public Elven::Layer {
 public:
     TestLayer2D();
     virtual ~TestLayer2D();
@@ -14,7 +13,6 @@ public:
     virtual void OnImGuiRender() override;
 
 private:
-
     void TestDrawQuads(bool draw);
 
 private:

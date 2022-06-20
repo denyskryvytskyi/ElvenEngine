@@ -2,27 +2,26 @@
 
 #include "Renderer/VertexArray.h"
 
-namespace Elven
-{
-    class OpenGLVertexArray : public VertexArray
-    {
-    public:
-        OpenGLVertexArray();
-        virtual ~OpenGLVertexArray();
+namespace Elven {
 
-        void AddVertexBuffer(VertexBuffer* vertexBuffer) override;
-        void SetIndexBuffer(IndexBuffer* indexBuffer) override;
+class OpenGLVertexArray : public VertexArray {
+public:
+    OpenGLVertexArray();
+    virtual ~OpenGLVertexArray();
 
-        virtual void Bind() const override;
+    void AddVertexBuffer(VertexBuffer* vertexBuffer) override;
+    void SetIndexBuffer(IndexBuffer* indexBuffer) override;
 
-        virtual uint32_t GetId() const override { return m_id; }
-        virtual uint32_t GetIndexCount() const override { return m_indexBuffer ? m_indexBuffer->GetCount() : 0; }
+    virtual void Bind() const override;
 
-    private:
-        std::vector<VertexBuffer*> m_vertexBuffers;
-        IndexBuffer* m_indexBuffer = nullptr;
-        uint32_t m_vertexBufferIndex = 0;
-        uint32_t m_id = 0;
-    };
-}
+    virtual uint32_t GetId() const override { return m_id; }
+    virtual uint32_t GetIndexCount() const override { return m_indexBuffer ? m_indexBuffer->GetCount() : 0; }
 
+private:
+    std::vector<VertexBuffer*> m_vertexBuffers;
+    IndexBuffer* m_indexBuffer = nullptr;
+    uint32_t m_vertexBufferIndex { 0 };
+    uint32_t m_id { 0 };
+};
+
+} // namespace Elven

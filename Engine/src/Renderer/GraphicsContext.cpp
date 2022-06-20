@@ -3,11 +3,10 @@
 #include "Renderer/GraphicsContext.h"
 #include "Platform/OpenGL/OpenGLContext.h"
 
-namespace Elven
+namespace Elven {
+GraphicsContext* GraphicsContext::Create(void* window)
 {
-    GraphicsContext* GraphicsContext::Create(void* window)
-    {
-        // Opengl maker only for now
-        return new OpenGLContext(static_cast<GLFWwindow*>(window));
-    }
+    // Opengl maker only for now
+    return new OpenGLContext(static_cast<GLFWwindow*>(window));
 }
+} // namespace Elven

@@ -10,65 +10,87 @@ TestLayer3D::TestLayer3D()
 
     // quad vertices
     float vertices[] = {
-    // front             // uv
-    -0.5, -0.5,  0.5,       0.0, 0.0,
-     0.5, -0.5,  0.5,       1.0, 0.0,
-     0.5,  0.5,  0.5,       1.0, 1.0,
-    -0.5,  0.5,  0.5,       0.0, 1.0,
-    // top               // uv
-    -0.5,  0.5,  0.5,       0.0, 0.0,
-     0.5,  0.5,  0.5,       1.0, 0.0,
-     0.5,  0.5, -0.5,       1.0, 1.0,
-    -0.5,  0.5, -0.5,       0.0, 1.0,
-    // back              // uv
-     0.5, -0.5, -0.5,       0.0, 0.0,
-    -0.5, -0.5, -0.5,       1.0, 0.0,
-    -0.5,  0.5, -0.5,       1.0, 1.0,
-     0.5,  0.5, -0.5,       0.0, 1.0,
-    // bottom           // uv
-    -0.5, -0.5, -0.5,      0.0, 0.0,
-    0.5, -0.5, -0.5,       1.0, 0.0,
-    0.5, -0.5,  0.5,       1.0, 1.0,
-    -0.5, -0.5,  0.5,      0.0, 1.0,
-    // left             // uv
-    -0.5, -0.5, -0.5,     0.0, 0.0,
-    -0.5, -0.5,  0.5,     1.0, 0.0,
-    -0.5,  0.5,  0.5,     1.0, 1.0,
-    -0.5,  0.5, -0.5,     0.0, 1.0,
-    // right            // uv
-    0.5, -0.5,  0.5,     0.0, 0.0,
-    0.5, -0.5, -0.5,     1.0, 0.0,
-    0.5,  0.5, -0.5,     1.0, 1.0,
-    0.5,  0.5,  0.5,     0.0, 1.0
+        // front             // uv
+        -0.5, -0.5, 0.5, 0.0, 0.0,
+        0.5, -0.5, 0.5, 1.0, 0.0,
+        0.5, 0.5, 0.5, 1.0, 1.0,
+        -0.5, 0.5, 0.5, 0.0, 1.0,
+        // top               // uv
+        -0.5, 0.5, 0.5, 0.0, 0.0,
+        0.5, 0.5, 0.5, 1.0, 0.0,
+        0.5, 0.5, -0.5, 1.0, 1.0,
+        -0.5, 0.5, -0.5, 0.0, 1.0,
+        // back              // uv
+        0.5, -0.5, -0.5, 0.0, 0.0,
+        -0.5, -0.5, -0.5, 1.0, 0.0,
+        -0.5, 0.5, -0.5, 1.0, 1.0,
+        0.5, 0.5, -0.5, 0.0, 1.0,
+        // bottom           // uv
+        -0.5, -0.5, -0.5, 0.0, 0.0,
+        0.5, -0.5, -0.5, 1.0, 0.0,
+        0.5, -0.5, 0.5, 1.0, 1.0,
+        -0.5, -0.5, 0.5, 0.0, 1.0,
+        // left             // uv
+        -0.5, -0.5, -0.5, 0.0, 0.0,
+        -0.5, -0.5, 0.5, 1.0, 0.0,
+        -0.5, 0.5, 0.5, 1.0, 1.0,
+        -0.5, 0.5, -0.5, 0.0, 1.0,
+        // right            // uv
+        0.5, -0.5, 0.5, 0.0, 0.0,
+        0.5, -0.5, -0.5, 1.0, 0.0,
+        0.5, 0.5, -0.5, 1.0, 1.0,
+        0.5, 0.5, 0.5, 0.0, 1.0
     };
 
     Elven::VertexBuffer* vbo = Elven::VertexBuffer::Create(vertices, sizeof(vertices));
-    vbo->SetLayout({
-        { Elven::BufferAttributeType::Float3 },
-        { Elven::BufferAttributeType::Float2 }
-    });
+    vbo->SetLayout({ { Elven::BufferAttributeType::Float3 },
+                     { Elven::BufferAttributeType::Float2 } });
 
     m_vao->AddVertexBuffer(vbo);
 
     unsigned int indices[] = {
         // front
-        0,  1,  2,
-        2,  3,  0,
+        0,
+        1,
+        2,
+        2,
+        3,
+        0,
         // top
-        4,  5,  6,
-        6,  7,  4,
+        4,
+        5,
+        6,
+        6,
+        7,
+        4,
         // back
-         8,  9, 10,
-        10, 11,  8,
+        8,
+        9,
+        10,
+        10,
+        11,
+        8,
         // bottom
-        12, 13, 14,
-        14, 15, 12,
+        12,
+        13,
+        14,
+        14,
+        15,
+        12,
         // left
-        16, 17, 18,
-        18, 19, 16,
+        16,
+        17,
+        18,
+        18,
+        19,
+        16,
         // right
-        20, 21, 22,
-        22, 23, 20,
+        20,
+        21,
+        22,
+        22,
+        23,
+        20,
     };
 
     Elven::IndexBuffer* ebo = Elven::IndexBuffer::Create(indices, sizeof(indices) / sizeof(unsigned int));
@@ -81,16 +103,16 @@ TestLayer3D::TestLayer3D()
     m_texture->BindToUnit(0);
 
     m_cubes = {
-        lia::vec3(0.0f,  0.0f,  0.0f),
-        lia::vec3(2.0f,  5.0f, -15.0f),
+        lia::vec3(0.0f, 0.0f, 0.0f),
+        lia::vec3(2.0f, 5.0f, -15.0f),
         lia::vec3(-1.5f, -2.2f, -2.5f),
         lia::vec3(-3.8f, -2.0f, -12.3f),
         lia::vec3(2.4f, -0.4f, -3.5f),
-        lia::vec3(-1.7f,  3.0f, -7.5f),
+        lia::vec3(-1.7f, 3.0f, -7.5f),
         lia::vec3(1.3f, -2.0f, -2.5f),
-        lia::vec3(1.5f,  2.0f, -2.5f),
-        lia::vec3(1.5f,  0.2f, -1.5f),
-        lia::vec3(-1.3f,  1.0f, -1.5f)
+        lia::vec3(1.5f, 2.0f, -2.5f),
+        lia::vec3(1.5f, 0.2f, -1.5f),
+        lia::vec3(-1.3f, 1.0f, -1.5f)
     };
 }
 
@@ -119,9 +141,8 @@ void TestLayer3D::OnUpdate(float dt)
 
     Elven::Renderer::BeginScene(m_cameraController.GetCamera());
 
-    for (size_t i = 0; i < m_cubes.size(); i++)
-    {
-        lia::mat4 model = lia::rotate(lia::mat4(1.0f), (float) glfwGetTime() * (i + 1) * lia::radians(10.0f), lia::vec3(1.0f, 1.0f, 0.0f));
+    for (size_t i = 0; i < m_cubes.size(); i++) {
+        lia::mat4 model = lia::rotate(lia::mat4(1.0f), (float)glfwGetTime() * (i + 1) * lia::radians(10.0f), lia::vec3(1.0f, 1.0f, 0.0f));
 
         model = lia::translate(model, m_cubes[i]);
         Elven::Renderer::Submit(m_shader, m_vao, model);
