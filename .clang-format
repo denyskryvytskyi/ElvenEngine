@@ -5,11 +5,20 @@ AlignAfterOpenBracket: Align
 AlignEscapedNewlines: Left
 AlignTrailingComments: true
 BraceWrapping:
-    AfterClass:      false
-    AfterControlStatement: false
-    AfterEnum:       false
-    AfterFunction:   true
-    AfterNamespace:  false
+  AfterClass: false
+  AfterControlStatement: false
+  AfterEnum: false
+  AfterFunction: true
+  AfterNamespace: false
+  AfterObjCDeclaration: false
+  AfterStruct: false
+  AfterUnion: false
+  BeforeCatch: false
+  BeforeElse: false
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyNamespace: true
+  SplitEmptyRecord: true
 BreakBeforeBraces: Custom
 BreakBeforeInheritanceComma: true
 BreakConstructorInitializers: BeforeComma
