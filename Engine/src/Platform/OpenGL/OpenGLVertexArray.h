@@ -7,15 +7,15 @@ namespace Elven {
 class OpenGLVertexArray : public VertexArray {
 public:
     OpenGLVertexArray();
-    virtual ~OpenGLVertexArray();
+    ~OpenGLVertexArray() override;
 
     void AddVertexBuffer(VertexBuffer* vertexBuffer) override;
     void SetIndexBuffer(IndexBuffer* indexBuffer) override;
 
-    virtual void Bind() const override;
+    void Bind() const override;
 
-    virtual uint32_t GetId() const override { return m_id; }
-    virtual uint32_t GetIndexCount() const override { return m_indexBuffer ? m_indexBuffer->GetCount() : 0; }
+    uint32_t GetId() const override { return m_id; }
+    uint32_t GetIndexCount() const override { return m_indexBuffer ? m_indexBuffer->GetCount() : 0; }
 
 private:
     std::vector<VertexBuffer*> m_vertexBuffers;

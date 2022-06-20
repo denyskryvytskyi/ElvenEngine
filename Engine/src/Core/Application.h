@@ -40,8 +40,8 @@ private:
     static Application* s_instance;
     static Telemetry s_telemetry;
 
-    Window* m_window = nullptr;
-    ImGuiLayer* m_imGuiLayer = nullptr;
+    Window* m_window { nullptr };
+    ImGuiLayer* m_imGuiLayer { nullptr };
     LayerStack m_layerStack;
 
     Events::EventFunctionHandler<Events::WindowResizeEvent> m_windowResizeCallback;

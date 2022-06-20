@@ -4,10 +4,10 @@
 
 #include "Events/Event.h"
 
-#define EVENT_CALLBACK(fn) std::bind(&fn, this, std::placeholders::_1)
+#define EVENT_CALLBACK(fn) [this](auto&& event_) { fn(std::forward<decltype(event_)>(event_)); }
 
-namespace Elven {
-namespace Events {
+namespace Elven::Events {
+
 class EventCallbackWrapper {
 public:
     void exec(Event& e)
@@ -27,21 +27,20 @@ using EventFunctionHandler = std::function<void(EventType& e)>;
 template<typename EventType>
 class EventCallbackWrapperT : public EventCallbackWrapper {
 public:
-    EventCallbackWrapperT(EventFunctionHandler<EventType> callback)
+    explicit EventCallbackWrapperT(EventFunctionHandler<EventType> callback)
         : functionHandler(callback)
         , functionType(functionHandler.target_type().name()) {};
 
 private:
-    virtual void call(Event& e) override
+    void call(Event& e) override
     {
         if (e.GetEventType() == EventType::GetStaticEventType()) {
             functionHandler(static_cast<EventType&>(e));
         }
     }
 
-    virtual const char* getType() const override { return functionType; }
+    const char* getType() const override { return functionType; }
 
-private:
     EventFunctionHandler<EventType> functionHandler;
     const char* functionType;
 };
@@ -50,8 +49,8 @@ class EventManager {
 public:
     void Shutdown();
 
-    void Subscribe(const std::string eventId, EventCallbackWrapper* handler);
-    void Unsubscribe(const std::string eventId, const char* handlerName);
+    void Subscribe(const std::string& eventId, EventCallbackWrapper* handler);
+    void Unsubscribe(const std::string& eventId, const char* handlerName);
     void TriggerEvent(Event* event);
     void QueueEvent(Event* event);
     void DispatchEvents();
@@ -87,5 +86,5 @@ static void QueueEvent(Event* queuedEvent)
 {
     gEventManager.QueueEvent(queuedEvent);
 }
-} // namespace Events
-} // namespace Elven
+
+} // namespace Elven::Events

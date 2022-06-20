@@ -9,8 +9,8 @@ public:
     OpenGLTexture2D(const std::string& filepath);
     OpenGLTexture2D(uint32_t width, uint32_t height);
 
-    virtual void BindToUnit(uint32_t unit) override;
-    virtual void SetData(void* data) override;
+    void BindToUnit(uint32_t unit) override;
+    void SetData(void* data) override;
 
 private:
     unsigned int m_id { 0 };

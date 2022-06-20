@@ -4,6 +4,7 @@
 #include "Core/Window.h"
 
 #include "Renderer/Renderer.h"
+#include "Renderer/Renderer2D.h"
 
 #include "ImGui/ImGuiLayer.h"
 
@@ -14,12 +15,12 @@ Application::Telemetry Application::s_telemetry;
 
 Application::Application()
     : m_running(true)
+    , m_imGuiLayer(new ImGuiLayer)
 {
     EL_CORE_ASSERT(!s_instance, "Application already exists!");
     s_instance = this;
 
     m_window = Window::Create();
-    m_imGuiLayer = new ImGuiLayer();
     PushOverlay(m_imGuiLayer);
 
     // TODO: Make it dependent from user settings to init Renderer or Renderer2D (add option to menu)
@@ -40,6 +41,8 @@ Application::~Application()
     Events::Unsubscribe<Events::WindowCloseEvent>(m_windowCloseCallback);
 
     Events::gEventManager.Shutdown();
+    Renderer::Shutdown();
+    Renderer2D::Shutdown();
 }
 
 void Application::PushLayer(Layer* layer)

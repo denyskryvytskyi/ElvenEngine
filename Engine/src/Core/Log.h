@@ -9,8 +9,8 @@ class Log {
 public:
     static void Init();
 
-    static SharedPtr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
-    static SharedPtr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
+    const static SharedPtr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
+    const static SharedPtr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
 
 private:
     static SharedPtr<spdlog::logger> s_CoreLogger;

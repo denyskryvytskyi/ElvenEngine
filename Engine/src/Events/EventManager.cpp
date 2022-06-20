@@ -1,13 +1,12 @@
 #include "Events/EventManager.h"
 
-namespace Elven {
-namespace Events {
+namespace Elven::Events {
 
 EventManager gEventManager;
 
 void EventManager::Shutdown()
 {
-    for (auto event : m_eventsQueue) {
+    for (auto* event : m_eventsQueue) {
         delete event;
     }
 
@@ -21,13 +20,13 @@ void EventManager::Shutdown()
     m_subscribers.clear();
 }
 
-void EventManager::Subscribe(const std::string eventId, EventCallbackWrapper* handler)
+void EventManager::Subscribe(const std::string& eventId, EventCallbackWrapper* handler)
 {
     auto subscribers = m_subscribers.find(eventId);
     if (subscribers != m_subscribers.end()) {
         auto& handlers = subscribers->second;
-        for (auto it = handlers.begin(); it != handlers.end(); ++it) {
-            if ((*it)->getType() == handler->getType()) {
+        for (auto& it : handlers) {
+            if (it->getType() == handler->getType()) {
                 EL_ASSERT(false, "Attempting to double-register callback");
                 return;
             }
@@ -38,7 +37,7 @@ void EventManager::Subscribe(const std::string eventId, EventCallbackWrapper* ha
     }
 }
 
-void EventManager::Unsubscribe(const std::string eventId, const char* handlerName)
+void EventManager::Unsubscribe(const std::string& eventId, const char* handlerName)
 {
     auto& handlers = m_subscribers[eventId];
     for (auto it = handlers.begin(); it != handlers.end(); ++it) {
@@ -52,7 +51,7 @@ void EventManager::Unsubscribe(const std::string eventId, const char* handlerNam
 
 void EventManager::TriggerEvent(Event* event)
 {
-    for (auto handler : m_subscribers[event->GetEventType()]) {
+    for (auto* handler : m_subscribers[event->GetEventType()]) {
         handler->exec(*event);
     }
     event->Handled = true;
@@ -75,5 +74,4 @@ void EventManager::DispatchEvents()
     }
 }
 
-} // namespace Events
-} // namespace Elven
+} // namespace Elven::Events

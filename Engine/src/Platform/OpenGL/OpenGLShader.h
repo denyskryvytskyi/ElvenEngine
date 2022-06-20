@@ -7,7 +7,7 @@ namespace Elven {
 class OpenGLShader : public Shader {
 public:
     OpenGLShader(const std::string& name, const ShaderProgramSource& shaderSrc);
-    ~OpenGLShader();
+    ~OpenGLShader() override;
 
     void Bind() const override;
     void Unbind() const override;

@@ -80,10 +80,10 @@ public:
     }
 
 public:
-    size_t m_offset = 0;
-    uint32_t m_size = 0;
+    size_t m_offset { 0 };
+    uint32_t m_size { 0 };
     BufferAttributeType m_type;
-    bool m_normalized = false;
+    bool m_normalized { false };
 };
 
 class VertexBufferLayout {
@@ -93,7 +93,6 @@ public:
         : m_attributes(attributes)
     {
         size_t offset = 0;
-        m_stride = 0;
         for (auto& attribute : m_attributes) {
             attribute.m_offset = offset;
             offset += attribute.m_size;
@@ -111,7 +110,7 @@ public:
 
 private:
     std::vector<VertexBufferAttribute> m_attributes;
-    uint32_t m_stride = 0;
+    uint32_t m_stride { 0 };
 };
 
 class VertexBuffer {
@@ -130,7 +129,7 @@ public:
 
 class IndexBuffer {
 public:
-    ~IndexBuffer() = default;
+    virtual ~IndexBuffer() = default;
 
     virtual const uint32_t GetId() const = 0;
     virtual uint32_t GetCount() const = 0;

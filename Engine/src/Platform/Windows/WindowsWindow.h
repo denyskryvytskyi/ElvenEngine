@@ -20,7 +20,7 @@ private:
 
 public:
     WindowsWindow(const WindowProps& props);
-    virtual ~WindowsWindow();
+    ~WindowsWindow() override;
 
     void OnUpdate() override;
 
@@ -36,8 +36,8 @@ public:
     void* GetNativeWindow() const override { return m_window; }
 
 private:
-    virtual void Init(const WindowProps& props);
-    virtual void Shutdown();
+    void Init(const WindowProps& props);
+    void Shutdown();
 
 private:
     GLFWwindow* m_window { nullptr };
