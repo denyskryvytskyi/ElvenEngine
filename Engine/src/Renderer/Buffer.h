@@ -123,8 +123,8 @@ public:
     virtual const uint32_t GetId() const = 0;
     virtual const VertexBufferLayout& GetLayout() const = 0;
 
-    static VertexBuffer* Create(uint32_t size);
-    static VertexBuffer* Create(float* vertices, uint32_t size);
+    static SharedPtr<VertexBuffer> Create(uint32_t size);
+    static SharedPtr<VertexBuffer> Create(float* vertices, uint32_t size);
 };
 
 class IndexBuffer {
@@ -134,7 +134,7 @@ public:
     virtual const uint32_t GetId() const = 0;
     virtual uint32_t GetCount() const = 0;
 
-    static IndexBuffer* Create(uint32_t* indices, uint32_t count);
+    static SharedPtr<IndexBuffer> Create(uint32_t* indices, uint32_t count);
 };
 
 } // namespace Elven

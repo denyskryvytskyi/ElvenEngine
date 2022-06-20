@@ -10,90 +10,68 @@ TestLayer3D::TestLayer3D()
 
     // quad vertices
     float vertices[] = {
-        // front             // uv
+        // front         // uv
         -0.5, -0.5, 0.5, 0.0, 0.0,
         0.5, -0.5, 0.5, 1.0, 0.0,
         0.5, 0.5, 0.5, 1.0, 1.0,
         -0.5, 0.5, 0.5, 0.0, 1.0,
-        // top               // uv
+        // top          // uv
         -0.5, 0.5, 0.5, 0.0, 0.0,
         0.5, 0.5, 0.5, 1.0, 0.0,
         0.5, 0.5, -0.5, 1.0, 1.0,
         -0.5, 0.5, -0.5, 0.0, 1.0,
-        // back              // uv
+        // back         // uv
         0.5, -0.5, -0.5, 0.0, 0.0,
         -0.5, -0.5, -0.5, 1.0, 0.0,
         -0.5, 0.5, -0.5, 1.0, 1.0,
         0.5, 0.5, -0.5, 0.0, 1.0,
-        // bottom           // uv
+        // bottom        // uv
         -0.5, -0.5, -0.5, 0.0, 0.0,
         0.5, -0.5, -0.5, 1.0, 0.0,
         0.5, -0.5, 0.5, 1.0, 1.0,
         -0.5, -0.5, 0.5, 0.0, 1.0,
-        // left             // uv
+        // left          // uv
         -0.5, -0.5, -0.5, 0.0, 0.0,
         -0.5, -0.5, 0.5, 1.0, 0.0,
         -0.5, 0.5, 0.5, 1.0, 1.0,
         -0.5, 0.5, -0.5, 0.0, 1.0,
-        // right            // uv
+        // right        // uv
         0.5, -0.5, 0.5, 0.0, 0.0,
         0.5, -0.5, -0.5, 1.0, 0.0,
         0.5, 0.5, -0.5, 1.0, 1.0,
         0.5, 0.5, 0.5, 0.0, 1.0
     };
 
-    Elven::VertexBuffer* vbo = Elven::VertexBuffer::Create(vertices, sizeof(vertices));
+    Elven::SharedPtr<Elven::VertexBuffer> vbo = Elven::VertexBuffer::Create(vertices, sizeof(vertices));
     vbo->SetLayout({ { Elven::BufferAttributeType::Float3 },
                      { Elven::BufferAttributeType::Float2 } });
 
     m_vao->AddVertexBuffer(vbo);
 
+    // clang-format off
     unsigned int indices[] = {
         // front
-        0,
-        1,
-        2,
-        2,
-        3,
-        0,
+        0,  1,  2,
+        2,  3,  0,
         // top
-        4,
-        5,
-        6,
-        6,
-        7,
-        4,
+        4,  5,  6,
+        6,  7,  4,
         // back
-        8,
-        9,
-        10,
-        10,
-        11,
-        8,
+         8,  9, 10,
+        10, 11,  8,
         // bottom
-        12,
-        13,
-        14,
-        14,
-        15,
-        12,
+        12, 13, 14,
+        14, 15, 12,
         // left
-        16,
-        17,
-        18,
-        18,
-        19,
-        16,
+        16, 17, 18,
+        18, 19, 16,
         // right
-        20,
-        21,
-        22,
-        22,
-        23,
-        20,
+        20, 21, 22,
+        22, 23, 20,
     };
+    // clang-format on
 
-    Elven::IndexBuffer* ebo = Elven::IndexBuffer::Create(indices, sizeof(indices) / sizeof(unsigned int));
+    Elven::SharedPtr<Elven::IndexBuffer> ebo = Elven::IndexBuffer::Create(indices, sizeof(indices) / sizeof(unsigned int));
 
     m_vao->SetIndexBuffer(ebo);
 
@@ -118,8 +96,6 @@ TestLayer3D::TestLayer3D()
 
 TestLayer3D::~TestLayer3D()
 {
-    delete m_vao;
-    delete m_shader;
 }
 
 void TestLayer3D::OnAttach()

@@ -47,7 +47,7 @@ private:
     Events::EventFunctionHandler<Events::WindowResizeEvent> m_windowResizeCallback;
     Events::EventFunctionHandler<Events::WindowCloseEvent> m_windowCloseCallback;
 
-    bool m_running = false;
+    bool m_running { false };
 };
 
 // To be defined in CLIENT

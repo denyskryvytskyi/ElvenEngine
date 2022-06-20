@@ -41,14 +41,9 @@ OpenGLVertexArray::OpenGLVertexArray()
 OpenGLVertexArray::~OpenGLVertexArray()
 {
     glDeleteVertexArrays(1, &m_id);
-
-    delete m_indexBuffer;
-    for (size_t i = 0; i < m_vertexBuffers.size(); i++) {
-        delete m_vertexBuffers[i];
-    }
 }
 
-void OpenGLVertexArray::AddVertexBuffer(VertexBuffer* vertexBuffer)
+void OpenGLVertexArray::AddVertexBuffer(const SharedPtr<VertexBuffer>& vertexBuffer)
 {
     const VertexBufferLayout& layout = vertexBuffer->GetLayout();
     glVertexArrayVertexBuffer(m_id, m_vertexBufferIndex, vertexBuffer->GetId(), 0, layout.GetStride());
@@ -66,7 +61,7 @@ void OpenGLVertexArray::AddVertexBuffer(VertexBuffer* vertexBuffer)
     m_vertexBuffers.push_back(vertexBuffer);
 }
 
-void OpenGLVertexArray::SetIndexBuffer(IndexBuffer* indexBuffer_)
+void OpenGLVertexArray::SetIndexBuffer(const SharedPtr<IndexBuffer>& indexBuffer_)
 {
     glVertexArrayElementBuffer(m_id, indexBuffer_->GetId());
     m_indexBuffer = indexBuffer_;

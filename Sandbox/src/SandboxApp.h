@@ -8,6 +8,6 @@ class Sandbox : public Elven::Application {
 public:
     Sandbox()
     {
-        PushLayer(new TestLayer2D());
+        PushLayer(new TestLayer3D());
     }
 };

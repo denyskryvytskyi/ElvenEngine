@@ -64,7 +64,7 @@ void OpenGLRendererAPI::EnableDepthTesting(bool enabled)
     }
 }
 
-void OpenGLRendererAPI::DrawIndexed(const VertexArray* vertexArray, uint32_t indexCount)
+void OpenGLRendererAPI::DrawIndexed(const SharedPtr<VertexArray>& vertexArray, uint32_t indexCount)
 {
     const uint32_t count = indexCount ? indexCount : vertexArray->GetIndexCount();
     vertexArray->Bind();

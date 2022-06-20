@@ -7,14 +7,15 @@
 #include "Core/FileSystem.h"
 
 namespace Elven {
-Shader* Shader::Create(const std::string& name, const ShaderProgramSource& shaderSrc)
+
+SharedPtr<Shader> Shader::Create(const std::string& name, const ShaderProgramSource& shaderSrc)
 {
     switch (Renderer::GetAPI()) {
     case RendererAPI::API::None:
         EL_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
         return nullptr;
     case RendererAPI::API::OpenGL:
-        return new OpenGLShader(name, shaderSrc);
+        return MakeSharedPtr<OpenGLShader>(name, shaderSrc);
     }
 
     EL_CORE_ASSERT(false, "Unknown RendererAPI!");
@@ -23,9 +24,9 @@ Shader* Shader::Create(const std::string& name, const ShaderProgramSource& shade
 
 //////////////////////////////////////////////////////////
 
-std::unordered_map<std::string, Shader*> ShaderManager::m_Shaders;
+std::unordered_map<std::string, SharedPtr<Shader>> ShaderManager::m_shaders;
 
-Shader* ShaderManager::Load(std::string name, const std::string& vShaderFile, const std::string& fShaderFile)
+SharedPtr<Shader> ShaderManager::Load(std::string name, const std::string& vShaderFile, const std::string& fShaderFile)
 {
     ShaderProgramSource shaderProgram;
 
@@ -33,14 +34,14 @@ Shader* ShaderManager::Load(std::string name, const std::string& vShaderFile, co
     shaderProgram.FragmentSource = ReadFile(fShaderFile);
 
     auto shader = Shader::Create(name, shaderProgram);
-    m_Shaders[name] = shader;
+    m_shaders[name] = shader;
 
     return shader;
 }
 
-Shader* ShaderManager::Get(const std::string& name)
+SharedPtr<Shader> ShaderManager::Get(const std::string& name)
 {
-    return m_Shaders[name];
+    return m_shaders[name];
 }
 
 std::string ShaderManager::ReadFile(const std::string& shaderFile)

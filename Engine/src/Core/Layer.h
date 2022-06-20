@@ -15,10 +15,10 @@ public:
     virtual void OnImGuiRender() { }
     virtual void OnEvent(Events::Event& event) { }
 
-    const std::string& GetName() const { return m_DebugName; }
+    const std::string& GetName() const { return m_debugName; }
 
 protected:
-    std::string m_DebugName;
+    std::string m_debugName;
 };
 
 } // namespace Elven

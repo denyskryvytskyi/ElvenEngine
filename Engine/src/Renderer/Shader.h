@@ -25,19 +25,19 @@ public:
 
     virtual const std::string& GetName() const = 0;
 
-    static Shader* Create(const std::string& name, const ShaderProgramSource& shaderSrc);
+    static SharedPtr<Shader> Create(const std::string& name, const ShaderProgramSource& shaderSrc);
 };
 
 class ShaderManager {
 public:
-    static Shader* Load(std::string name, const std::string& vShaderFile, const std::string& fShaderFile);
-    static Shader* Get(const std::string& name);
+    static SharedPtr<Shader> Load(std::string name, const std::string& vShaderFile, const std::string& fShaderFile);
+    static SharedPtr<Shader> Get(const std::string& name);
 
 private:
     static std::string ReadFile(const std::string& shaderFile);
 
 private:
-    static std::unordered_map<std::string, Shader*> m_Shaders;
+    static std::unordered_map<std::string, SharedPtr<Shader>> m_shaders;
 };
 
 } // namespace Elven

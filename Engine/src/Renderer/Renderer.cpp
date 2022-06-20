@@ -28,7 +28,7 @@ void Renderer::EndScene()
 {
 }
 
-void Renderer::Submit(Shader* shader, const VertexArray* vertexArray, const lia::mat4& modelMatrix)
+void Renderer::Submit(const SharedPtr<Shader>& shader, const SharedPtr<VertexArray>& vertexArray, const lia::mat4& modelMatrix)
 {
     shader->Bind();
     shader->SetMatrix4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);

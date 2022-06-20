@@ -2,8 +2,8 @@
 
 #include "Events/Event.h"
 
-namespace Elven {
-namespace Events {
+namespace Elven::Events {
+
 class MouseMovedEvent : public Event {
 public:
     EVENT_TYPE("{F40458FE-A406-4ECF-9EB8-D603716E4E4E}")
@@ -95,5 +95,5 @@ public:
         return ss.str();
     }
 };
-} // namespace Events
-} // namespace Elven
+
+} // namespace Elven::Events

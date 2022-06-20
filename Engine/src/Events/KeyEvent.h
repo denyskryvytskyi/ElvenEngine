@@ -2,8 +2,8 @@
 
 #include "Events/Event.h"
 
-namespace Elven {
-namespace Events {
+namespace Elven::Events {
+
 class KeyEvent : public Event {
 public:
     EVENT_TYPE("{498CE06D-7EE3-465F-9EA7-B6D6E8CE963D}")
@@ -72,5 +72,5 @@ public:
         return ss.str();
     }
 };
-} // namespace Events
-} // namespace Elven
+
+} // namespace Elven::Events

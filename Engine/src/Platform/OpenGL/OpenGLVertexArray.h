@@ -9,8 +9,8 @@ public:
     OpenGLVertexArray();
     ~OpenGLVertexArray() override;
 
-    void AddVertexBuffer(VertexBuffer* vertexBuffer) override;
-    void SetIndexBuffer(IndexBuffer* indexBuffer) override;
+    void AddVertexBuffer(const SharedPtr<VertexBuffer>& vertexBuffer) override;
+    void SetIndexBuffer(const SharedPtr<IndexBuffer>& indexBuffer) override;
 
     void Bind() const override;
 
@@ -18,8 +18,8 @@ public:
     uint32_t GetIndexCount() const override { return m_indexBuffer ? m_indexBuffer->GetCount() : 0; }
 
 private:
-    std::vector<VertexBuffer*> m_vertexBuffers;
-    IndexBuffer* m_indexBuffer = nullptr;
+    std::vector<SharedPtr<VertexBuffer>> m_vertexBuffers;
+    SharedPtr<IndexBuffer> m_indexBuffer;
     uint32_t m_vertexBufferIndex { 0 };
     uint32_t m_id { 0 };
 };

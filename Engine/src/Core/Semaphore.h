@@ -8,36 +8,36 @@ namespace Elven {
 class Semaphore {
 public:
     explicit Semaphore(int initialCount)
-        : mCount(initialCount)
-        , mMutex()
-        , mCv()
+        : m_count(initialCount)
+        , m_mutex()
+        , m_cv()
     {
     }
 
     void Take()
     {
-        std::unique_lock<std::mutex> lock(mMutex);
+        std::unique_lock<std::mutex> lock(m_mutex);
         // put the thread to sleep as long as the count is zero
-        while (mCount == 0) {
-            mCv.wait(lock);
+        while (m_count == 0) {
+            m_cv.wait(lock);
         }
-        --mCount;
+        --m_count;
     }
 
     void Give()
     {
-        std::unique_lock<std::mutex> lock(mMutex);
-        mCount++;
+        std::unique_lock<std::mutex> lock(m_mutex);
+        m_count++;
         // if the count was zero before the increment, wake up a waiting thread
-        if (mCount == 1) {
-            mCv.notify_one();
+        if (m_count == 1) {
+            m_cv.notify_one();
         }
     }
 
 private:
-    int mCount { 0 };
-    std::mutex mMutex;
-    std::condition_variable mCv;
+    int m_count { 0 };
+    std::mutex m_mutex;
+    std::condition_variable m_cv;
 };
 
 } // namespace Elven

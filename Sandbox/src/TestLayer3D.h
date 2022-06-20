@@ -16,8 +16,8 @@ public:
 private:
     Elven::CameraController m_cameraController;
 
-    Elven::VertexArray* m_vao;
-    Elven::Shader* m_shader;
+    Elven::SharedPtr<Elven::VertexArray> m_vao;
+    Elven::SharedPtr<Elven::Shader> m_shader;
 
     Elven::SharedPtr<Elven::Texture2D> m_texture;
 

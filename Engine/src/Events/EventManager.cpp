@@ -17,6 +17,7 @@ void EventManager::Shutdown()
             it = handlers.erase(it);
         }
     }
+
     m_subscribers.clear();
 }
 

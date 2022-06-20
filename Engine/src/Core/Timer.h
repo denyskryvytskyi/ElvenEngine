@@ -15,11 +15,11 @@ public:
     void restart() { begin = clock::now(); }
 
     // get delta time as seconds
-    float elapsed() const { return std::chrono::duration_cast<second>(clock::now() - begin).count(); }
+    float elapsed() const { return std::chrono::duration_cast<seconds>(clock::now() - begin).count(); }
 
 private:
-    typedef std::chrono::high_resolution_clock clock; // QueryPerformanceCounter
-    typedef std::chrono::duration<float, std::ratio<1>> second;
+    using clock = std::chrono::high_resolution_clock; // QueryPerformanceCounter
+    using seconds = std::chrono::duration<float, std::ratio<1>>;
     std::chrono::time_point<clock> begin;
 };
 

@@ -19,7 +19,7 @@ struct QuadVertex {
 
 struct Renderer2DData {
     lia::mat4 viewProjectionMat;
-    Shader* shader;
+    SharedPtr<Shader> shader;
     SharedPtr<Texture2D> whiteTexture;
 
     // quad batching
@@ -29,8 +29,8 @@ struct Renderer2DData {
     static const uint32_t maxTextureSlots = 32;
     static const uint8_t verticesPerQuad = 4;
 
-    VertexArray* quadVAO = nullptr;
-    VertexBuffer* quadVBO = nullptr;
+    SharedPtr<VertexArray> quadVAO;
+    SharedPtr<VertexBuffer> quadVBO;
     QuadVertex* quadVerticesBegin = nullptr;
     QuadVertex* quadVerticesCurrent = nullptr;
     uint32_t quadIndexCount = 0;
@@ -85,7 +85,7 @@ void Renderer2D::Init()
 
         offset += 4;
     }
-    IndexBuffer* quadEBO = IndexBuffer::Create(quadIndices, s_data.maxQuadIndices);
+    SharedPtr<IndexBuffer> quadEBO = IndexBuffer::Create(quadIndices, s_data.maxQuadIndices);
     s_data.quadVAO->SetIndexBuffer(quadEBO);
     delete[] quadIndices;
 
@@ -101,8 +101,6 @@ void Renderer2D::Init()
 
 void Renderer2D::Shutdown()
 {
-    delete s_data.quadVAO;
-    delete s_data.shader;
     delete[] s_data.quadVerticesBegin;
 }
 

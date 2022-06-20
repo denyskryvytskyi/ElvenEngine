@@ -13,7 +13,7 @@ class OpenGLRendererAPI : public RendererAPI {
 
     void EnableDepthTesting(bool enabled) override;
 
-    void DrawIndexed(const VertexArray* vertexArray, uint32_t indexCount = 0) override;
+    void DrawIndexed(const SharedPtr<VertexArray>& vertexArray, uint32_t indexCount = 0) override;
 };
 
 } // namespace Elven

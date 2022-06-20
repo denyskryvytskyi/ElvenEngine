@@ -90,7 +90,7 @@ void WindowsWindow::Init(const WindowProps& props)
     m_data.VSync = props.IsVSync;
     m_data.FullScreen = props.IsFullScreen;
 
-    EL_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
+    EL_CORE_INFO("Creating window {} ({}, {})", props.Title, props.Width, props.Height);
 
     if (s_GLFWwindowCount == 0) {
         int success = glfwInit();
