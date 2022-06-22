@@ -38,7 +38,7 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& filepath)
     glTextureSubImage2D(m_id, 0, 0, 0, width, height, dataFormat, GL_UNSIGNED_BYTE, data);
 }
 
-OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
+OpenGLTexture2D::OpenGLTexture2D(std::uint32_t width, std::uint32_t height)
     : m_width(width)
     , m_height(height)
     , m_internalFormat(GL_RGBA8)
@@ -53,7 +53,7 @@ OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
     glTextureParameteri(m_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-void OpenGLTexture2D::BindToUnit(uint32_t unit)
+void OpenGLTexture2D::BindToUnit(std::uint32_t unit)
 {
     glBindTextureUnit(unit, m_id);
 }

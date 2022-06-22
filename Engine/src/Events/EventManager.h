@@ -49,15 +49,15 @@ class EventManager {
 public:
     void Shutdown();
 
-    void Subscribe(uint32_t eventId, SharedPtr<EventCallbackWrapper>& handler);
-    void Unsubscribe(uint32_t eventId, const char* handlerName);
+    void Subscribe(std::uint32_t eventId, SharedPtr<EventCallbackWrapper>& handler);
+    void Unsubscribe(std::uint32_t eventId, const char* handlerName);
     void TriggerEvent(const Event& event);
     void QueueEvent(Event* event);
     void DispatchEvents();
 
 private:
     std::vector<Event*> m_eventsQueue;
-    std::unordered_map<uint32_t, std::vector<SharedPtr<EventCallbackWrapper>>> m_subscribers;
+    std::unordered_map<std::uint32_t, std::vector<SharedPtr<EventCallbackWrapper>>> m_subscribers;
 };
 
 extern EventManager gEventManager;

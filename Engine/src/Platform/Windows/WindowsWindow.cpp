@@ -17,7 +17,7 @@ static const unsigned int s_defaultRefreshRate = 60;
 static const unsigned int s_defaultWindowPosX = 100;
 static const unsigned int s_defaultWindowPosY = 100;
 
-static uint8_t s_GLFWwindowCount = 0;
+static std::uint8_t s_GLFWwindowCount = 0;
 
 static void GLFWErrorCallback(int error, const char* description)
 {

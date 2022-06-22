@@ -23,17 +23,17 @@ struct Renderer2DData {
     SharedPtr<Texture2D> whiteTexture;
 
     // quad batching
-    static const uint32_t maxQuads = 20000;
-    static const uint32_t maxQuadVertices = maxQuads * 4;
-    static const uint32_t maxQuadIndices = maxQuads * 6;
-    static const uint32_t maxTextureSlots = 32;
-    static const uint8_t verticesPerQuad = 4;
+    static const std::uint32_t maxQuads = 20000;
+    static const std::uint32_t maxQuadVertices = maxQuads * 4;
+    static const std::uint32_t maxQuadIndices = maxQuads * 6;
+    static const std::uint32_t maxTextureSlots = 32;
+    static const std::uint8_t verticesPerQuad = 4;
 
     SharedPtr<VertexArray> quadVAO;
     SharedPtr<VertexBuffer> quadVBO;
     QuadVertex* quadVerticesBegin = nullptr;
     QuadVertex* quadVerticesCurrent = nullptr;
-    uint32_t quadIndexCount = 0;
+    std::uint32_t quadIndexCount = 0;
     std::vector<SharedPtr<Texture2D>> textures;
     float usedTextureSlots = 0.0f;
 
@@ -72,9 +72,9 @@ void Renderer2D::Init()
     });
     s_data.quadVAO->AddVertexBuffer(s_data.quadVBO);
 
-    uint32_t* quadIndices = new uint32_t[s_data.maxQuadIndices];
-    uint32_t offset = 0;
-    for (uint32_t i = 0; i < s_data.maxQuadIndices; i += 6) {
+    std::uint32_t* quadIndices = new std::uint32_t[s_data.maxQuadIndices];
+    std::uint32_t offset = 0;
+    for (std::uint32_t i = 0; i < s_data.maxQuadIndices; i += 6) {
         quadIndices[i] = offset;
         quadIndices[i + 1] = offset + 1;
         quadIndices[i + 2] = offset + 3;
@@ -93,7 +93,7 @@ void Renderer2D::Init()
 
     // textures
     s_data.whiteTexture = Texture2D::Create(1, 1);
-    uint32_t whiteTextureData = 0xffffffff;
+    std::uint32_t whiteTextureData = 0xffffffff;
     s_data.whiteTexture->SetData(&whiteTextureData);
     s_data.whiteTexture->BindToUnit(0);
     s_data.textures.reserve(s_data.maxTextureSlots);
@@ -120,12 +120,12 @@ void Renderer2D::EndScene()
 
 void Renderer2D::Flush()
 {
-    s_data.quadVBO->SetData(s_data.quadVerticesBegin, (uint32_t)((char*)s_data.quadVerticesCurrent - (char*)s_data.quadVerticesBegin));
+    s_data.quadVBO->SetData(s_data.quadVerticesBegin, (std::uint32_t)((char*)s_data.quadVerticesCurrent - (char*)s_data.quadVerticesBegin));
 
     s_data.shader->Bind();
     s_data.shader->SetMatrix4("u_ViewProjection", s_data.viewProjectionMat);
 
-    uint32_t textureUnitIndex = 1;
+    std::uint32_t textureUnitIndex = 1;
     for (auto& texture : s_data.textures) {
         texture->BindToUnit(textureUnitIndex);
         ++textureUnitIndex;
@@ -209,7 +209,7 @@ void Renderer2D::DrawQuad(lia::mat4 model, lia::vec4 color, float textureUnit)
         NextBatch();
     }
 
-    for (uint8_t i = 0; i < s_data.verticesPerQuad; ++i) {
+    for (std::uint8_t i = 0; i < s_data.verticesPerQuad; ++i) {
         s_data.quadVerticesCurrent->position = s_data.quadPositions[i] * model;
         s_data.quadVerticesCurrent->color = color;
         s_data.quadVerticesCurrent->uv = s_data.quadUV[i];

@@ -13,7 +13,7 @@ void EventManager::Shutdown()
     m_subscribers.clear();
 }
 
-void EventManager::Subscribe(uint32_t eventId, SharedPtr<EventCallbackWrapper>& handler)
+void EventManager::Subscribe(std::uint32_t eventId, SharedPtr<EventCallbackWrapper>& handler)
 {
     auto subscribers = m_subscribers.find(eventId);
     if (subscribers != m_subscribers.end()) {
@@ -30,7 +30,7 @@ void EventManager::Subscribe(uint32_t eventId, SharedPtr<EventCallbackWrapper>& 
     }
 }
 
-void EventManager::Unsubscribe(uint32_t eventId, const char* handlerName)
+void EventManager::Unsubscribe(std::uint32_t eventId, const char* handlerName)
 {
     auto& handlers = m_subscribers[eventId];
     for (auto& it = handlers.begin(); it != handlers.end(); ++it) {

@@ -12,7 +12,7 @@ public:
     void Bind() const override;
     void Unbind() const override;
 
-    void SetInteger(const std::string& name, uint32_t value) override;
+    void SetInteger(const std::string& name, std::uint32_t value) override;
     void SetVector2f(const std::string& name, float x, float y) override;
     void SetVector2f(const std::string& name, const lia::vec2& value) override;
     void SetVector3f(const std::string& name, float x, float y, float z) override;
@@ -27,12 +27,12 @@ public:
 
 private:
     void CompileProgram(const ShaderProgramSource& shaderSource);
-    uint32_t CompileShader(uint32_t type, const std::string& source);
+    std::uint32_t CompileShader(std::uint32_t type, const std::string& source);
 
 private:
     std::unordered_map<std::string, int> m_uniformLocationCache;
     std::string m_name;
-    uint32_t m_id { 0 };
+    std::uint32_t m_id { 0 };
 };
 
 } // namespace Elven

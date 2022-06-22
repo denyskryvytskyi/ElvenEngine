@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/KeyCodes.h"
 #include "Events/Event.h"
 
 namespace Elven::Events {
@@ -9,13 +10,13 @@ public:
     EVENT_TYPE("{498CE06D-7EE3-465F-9EA7-B6D6E8CE963D}")
 
 protected:
-    KeyEvent(int keyCode)
-        : KeyCode(keyCode)
+    KeyEvent(KeyCode keyCode)
+        : key(keyCode)
     {
     }
 
 public:
-    int KeyCode { 0 };
+    KeyCode key { 0 };
 };
 
 class KeyPressedEvent : public KeyEvent {
@@ -31,7 +32,7 @@ public:
     std::string ToString() const override
     {
         std::stringstream ss;
-        ss << "KeyPressedEvent: " << KeyCode << " (" << RepeatCount << " repeats)";
+        ss << "KeyPressedEvent: " << key << " (" << RepeatCount << " repeats)";
         return ss.str();
     }
 
@@ -51,7 +52,7 @@ public:
     std::string ToString() const override
     {
         std::stringstream ss;
-        ss << "KeyReleasedEvent: " << KeyCode;
+        ss << "KeyReleasedEvent: " << key;
         return ss.str();
     }
 };
@@ -68,7 +69,7 @@ public:
     std::string ToString() const override
     {
         std::stringstream ss;
-        ss << "KeyTypedEvent: " << KeyCode;
+        ss << "KeyTypedEvent: " << key;
         return ss.str();
     }
 };

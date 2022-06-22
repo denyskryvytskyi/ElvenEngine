@@ -2,7 +2,7 @@
 
 namespace Elven {
 
-using KeyCode = uint16_t;
+using KeyCode = std::uint16_t;
 
 namespace Key {
 

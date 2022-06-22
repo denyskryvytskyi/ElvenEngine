@@ -59,13 +59,13 @@ void TestLayer2D::TestDrawQuads(bool draw)
     if (draw) {
         Elven::Renderer2D::DrawRotatedQuad({ -0.5f, 0.5f, 0.0f }, { 0.6f, 0.6f }, { 0.0f, 0.0f, 45.0f }, { 0.6f, 0.5f, 0.4f, 1.0f });
 
+        const float angleZ = 45.0f;
+
         for (size_t y = 0; y < 20; y++) {
             for (size_t x = 0; x < 20; x++) {
                 lia::vec3 pos(x * 0.12f, y * 0.12f, 0.0f);
                 lia::vec2 scale = { 0.1f, 0.1f };
                 lia::vec4 color = { 0.3f, 0.7f, 0.3f, 1.0f };
-
-                float angleZ = 0.0f;
 
                 Elven::Renderer2D::DrawRotatedQuad(pos, scale, { 0.0f, 0.0f, angleZ }, color);
             }

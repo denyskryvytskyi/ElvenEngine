@@ -14,7 +14,7 @@ public:
     virtual void Bind() const = 0;
     virtual void Unbind() const = 0;
 
-    virtual void SetInteger(const std::string& name, uint32_t value) = 0;
+    virtual void SetInteger(const std::string& name, std::uint32_t value) = 0;
     virtual void SetVector2f(const std::string& name, float x, float y) = 0;
     virtual void SetVector2f(const std::string& name, const lia::vec2& value) = 0;
     virtual void SetVector3f(const std::string& name, float x, float y, float z) = 0;

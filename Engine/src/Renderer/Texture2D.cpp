@@ -19,7 +19,7 @@ SharedPtr<Texture2D> Texture2D::Create(const std::string& filename)
     return nullptr;
 }
 
-SharedPtr<Texture2D> Texture2D::Create(uint32_t width, uint32_t height)
+SharedPtr<Texture2D> Texture2D::Create(std::uint32_t width, std::uint32_t height)
 {
     switch (Renderer::GetAPI()) {
     case RendererAPI::API::OpenGL:

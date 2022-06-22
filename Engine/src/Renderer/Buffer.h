@@ -15,7 +15,7 @@ enum class BufferAttributeType {
     Bool
 };
 
-static uint32_t BufferAttributeTypeSize(BufferAttributeType type)
+static std::uint32_t BufferAttributeTypeSize(BufferAttributeType type)
 {
     switch (type) {
     case BufferAttributeType::Float:
@@ -52,7 +52,7 @@ public:
     {
     }
 
-    uint32_t GetComponentsCount() const
+    std::uint32_t GetComponentsCount() const
     {
         switch (m_type) {
         case BufferAttributeType::Float:
@@ -81,7 +81,7 @@ public:
 
 public:
     size_t m_offset { 0 };
-    uint32_t m_size { 0 };
+    std::uint32_t m_size { 0 };
     BufferAttributeType m_type;
     bool m_normalized { false };
 };
@@ -100,7 +100,7 @@ public:
         }
     }
 
-    uint32_t GetStride() const { return m_stride; }
+    std::uint32_t GetStride() const { return m_stride; }
     const std::vector<VertexBufferAttribute>& GetAttributes() const { return m_attributes; }
 
     std::vector<VertexBufferAttribute>::iterator begin() { return m_attributes.begin(); }
@@ -110,31 +110,31 @@ public:
 
 private:
     std::vector<VertexBufferAttribute> m_attributes;
-    uint32_t m_stride { 0 };
+    std::uint32_t m_stride { 0 };
 };
 
 class VertexBuffer {
 public:
     virtual ~VertexBuffer() = default;
 
-    virtual void SetData(const void* data, uint32_t size) = 0;
+    virtual void SetData(const void* data, std::uint32_t size) = 0;
     virtual void SetLayout(const VertexBufferLayout& layout) = 0;
 
-    virtual const uint32_t GetId() const = 0;
+    virtual const std::uint32_t GetId() const = 0;
     virtual const VertexBufferLayout& GetLayout() const = 0;
 
-    static SharedPtr<VertexBuffer> Create(uint32_t size);
-    static SharedPtr<VertexBuffer> Create(float* vertices, uint32_t size);
+    static SharedPtr<VertexBuffer> Create(std::uint32_t size);
+    static SharedPtr<VertexBuffer> Create(float* vertices, std::uint32_t size);
 };
 
 class IndexBuffer {
 public:
     virtual ~IndexBuffer() = default;
 
-    virtual const uint32_t GetId() const = 0;
-    virtual uint32_t GetCount() const = 0;
+    virtual const std::uint32_t GetId() const = 0;
+    virtual std::uint32_t GetCount() const = 0;
 
-    static SharedPtr<IndexBuffer> Create(uint32_t* indices, uint32_t count);
+    static SharedPtr<IndexBuffer> Create(std::uint32_t* indices, std::uint32_t count);
 };
 
 } // namespace Elven

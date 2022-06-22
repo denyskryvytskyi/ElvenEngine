@@ -4,7 +4,7 @@
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
 namespace Elven {
-SharedPtr<VertexBuffer> VertexBuffer::Create(uint32_t size)
+SharedPtr<VertexBuffer> VertexBuffer::Create(std::uint32_t size)
 {
     switch (Renderer::GetAPI()) {
     case RendererAPI::API::None:
@@ -18,7 +18,7 @@ SharedPtr<VertexBuffer> VertexBuffer::Create(uint32_t size)
     return nullptr;
 }
 
-SharedPtr<VertexBuffer> VertexBuffer::Create(float* vertices, uint32_t size)
+SharedPtr<VertexBuffer> VertexBuffer::Create(float* vertices, std::uint32_t size)
 {
     switch (Renderer::GetAPI()) {
     case RendererAPI::API::None:
@@ -34,7 +34,7 @@ SharedPtr<VertexBuffer> VertexBuffer::Create(float* vertices, uint32_t size)
 
 ///////////////////////////////////////////////////////
 
-SharedPtr<IndexBuffer> IndexBuffer::Create(uint32_t* indices, uint32_t count)
+SharedPtr<IndexBuffer> IndexBuffer::Create(std::uint32_t* indices, std::uint32_t count)
 {
     switch (Renderer::GetAPI()) {
     case RendererAPI::API::None:

@@ -14,14 +14,14 @@ public:
 
     void Bind() const override;
 
-    uint32_t GetId() const override { return m_id; }
-    uint32_t GetIndexCount() const override { return m_indexBuffer ? m_indexBuffer->GetCount() : 0; }
+    std::uint32_t GetId() const override { return m_id; }
+    std::uint32_t GetIndexCount() const override { return m_indexBuffer ? m_indexBuffer->GetCount() : 0; }
 
 private:
     std::vector<SharedPtr<VertexBuffer>> m_vertexBuffers;
     SharedPtr<IndexBuffer> m_indexBuffer;
-    uint32_t m_vertexBufferIndex { 0 };
-    uint32_t m_id { 0 };
+    std::uint32_t m_vertexBufferIndex { 0 };
+    std::uint32_t m_id { 0 };
 };
 
 } // namespace Elven

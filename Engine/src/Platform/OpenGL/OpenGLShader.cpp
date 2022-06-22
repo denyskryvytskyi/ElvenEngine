@@ -25,7 +25,7 @@ void OpenGLShader::Unbind() const
     glUseProgram(0);
 }
 
-void OpenGLShader::SetInteger(const std::string& name, uint32_t value)
+void OpenGLShader::SetInteger(const std::string& name, std::uint32_t value)
 {
     glUniform1i(GetUniformLocation(name), value);
 }
@@ -78,8 +78,8 @@ int OpenGLShader::GetUniformLocation(const std::string& name)
 void OpenGLShader::CompileProgram(const ShaderProgramSource& shaderSource)
 {
     m_id = glCreateProgram();
-    uint32_t vs = CompileShader(GL_VERTEX_SHADER, shaderSource.VertexSource);
-    uint32_t fs = CompileShader(GL_FRAGMENT_SHADER, shaderSource.FragmentSource);
+    std::uint32_t vs = CompileShader(GL_VERTEX_SHADER, shaderSource.VertexSource);
+    std::uint32_t fs = CompileShader(GL_FRAGMENT_SHADER, shaderSource.FragmentSource);
 
     glAttachShader(m_id, vs);
     glAttachShader(m_id, fs);
@@ -103,9 +103,9 @@ void OpenGLShader::CompileProgram(const ShaderProgramSource& shaderSource)
     glDeleteShader(fs);
 }
 
-uint32_t OpenGLShader::CompileShader(uint32_t type, const std::string& source)
+std::uint32_t OpenGLShader::CompileShader(std::uint32_t type, const std::string& source)
 {
-    uint32_t shaderId = glCreateShader(type);
+    std::uint32_t shaderId = glCreateShader(type);
     const char* src = source.c_str();
     glShaderSource(shaderId, 1, &src, nullptr);
     glCompileShader(shaderId);

@@ -37,7 +37,7 @@ void Renderer::Submit(const SharedPtr<Shader>& shader, const SharedPtr<VertexArr
     RenderCommand::DrawIndexed(vertexArray);
 }
 
-void Renderer::OnWindowResize(uint32_t width, uint32_t height)
+void Renderer::OnWindowResize(std::uint32_t width, std::uint32_t height)
 {
     RenderCommand::SetViewport(0, 0, width, height);
 }

@@ -40,7 +40,7 @@ void OpenGLRendererAPI::Init()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void OpenGLRendererAPI::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+void OpenGLRendererAPI::SetViewport(std::uint32_t x, std::uint32_t y, std::uint32_t width, std::uint32_t height)
 {
     glViewport(x, y, width, height);
 }
@@ -64,9 +64,9 @@ void OpenGLRendererAPI::EnableDepthTesting(bool enabled)
     }
 }
 
-void OpenGLRendererAPI::DrawIndexed(const SharedPtr<VertexArray>& vertexArray, uint32_t indexCount)
+void OpenGLRendererAPI::DrawIndexed(const SharedPtr<VertexArray>& vertexArray, std::uint32_t indexCount)
 {
-    const uint32_t count = indexCount ? indexCount : vertexArray->GetIndexCount();
+    const std::uint32_t count = indexCount ? indexCount : vertexArray->GetIndexCount();
     vertexArray->Bind();
     glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 }

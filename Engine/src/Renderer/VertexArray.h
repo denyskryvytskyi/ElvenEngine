@@ -13,8 +13,8 @@ public:
 
     virtual void Bind() const = 0;
 
-    virtual uint32_t GetId() const = 0;
-    virtual uint32_t GetIndexCount() const = 0;
+    virtual std::uint32_t GetId() const = 0;
+    virtual std::uint32_t GetIndexCount() const = 0;
 
     static SharedPtr<VertexArray> Create();
 };

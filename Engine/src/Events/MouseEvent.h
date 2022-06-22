@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/MouseCodes.h"
 #include "Events/Event.h"
 
 namespace Elven::Events {
@@ -53,13 +54,13 @@ public:
     EVENT_TYPE("MouseButtonEvent")
 
 protected:
-    MouseButtonEvent(int button)
+    MouseButtonEvent(MouseCode button)
         : Button(button)
     {
     }
 
 public:
-    int Button { 0 };
+    MouseCode Button { 0 };
 };
 
 class MouseButtonPressedEvent : public MouseButtonEvent {

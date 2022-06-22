@@ -2,7 +2,7 @@
 
 namespace Elven {
 
-using MouseCode = uint16_t;
+using MouseCode = std::uint16_t;
 
 namespace Mouse {
 
