@@ -44,7 +44,7 @@ private:
 
     bool m_mouseLastPosInited { false };
     bool m_isFlyEnabled { false };
-    bool m_updateLookAt { false };
+    bool m_updateLookAt { true };
 
     Events::EventFunctionHandler<Events::MouseMovedEvent> m_mouseMovedCallback;
     Events::EventFunctionHandler<Events::MouseScrolledEvent> m_mouseScrolledCallback;

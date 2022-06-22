@@ -55,14 +55,14 @@ void OrthographicCameraController::OnUpdate(float dt)
     m_translationSpeed = m_zoomLevel;
 }
 
-void OrthographicCameraController::OnMouseScrolled(Events::MouseScrolledEvent& e)
+void OrthographicCameraController::OnMouseScrolled(const Events::MouseScrolledEvent& e)
 {
     m_zoomLevel -= e.YOffset * 0.25f;
     m_zoomLevel = std::max<float>(m_zoomLevel, 0.25f);
     m_camera.SetProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f);
 }
 
-void OrthographicCameraController::OnWindowResized(Events::WindowResizeEvent& e)
+void OrthographicCameraController::OnWindowResized(const Events::WindowResizeEvent& e)
 {
     m_aspectRatio = static_cast<float>(e.Width) / static_cast<float>(e.Height);
     m_camera.SetProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f);

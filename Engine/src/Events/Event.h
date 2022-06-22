@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Core/StringId.h>
 #include <sstream>
 #include <string>
 
@@ -7,15 +8,15 @@ namespace Elven::Events {
 
 class Event {
 public:
-    virtual const std::string GetEventType() const = 0;
-    virtual std::string ToString() const { return GetEventType(); };
+    virtual uint32_t GetEventType() const = 0;
+    virtual std::string ToString() const { return std::to_string(GetEventType()); };
 
     bool Handled = false;
 };
 
-#define EVENT_TYPE(event_type)                                           \
-    static const std::string GetStaticEventType() { return event_type; } \
-    const std::string GetEventType() const override { return GetStaticEventType(); }
+#define EVENT_TYPE(event_type)                                             \
+    static uint32_t GetStaticEventType() { return STRING_ID(event_type); } \
+    uint32_t GetEventType() const override { return GetStaticEventType(); }
 
 inline std::ostream& operator<<(std::ostream& os, const Event& e)
 {

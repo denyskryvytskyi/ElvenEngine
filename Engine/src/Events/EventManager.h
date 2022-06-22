@@ -10,7 +10,7 @@ namespace Elven::Events {
 
 class EventCallbackWrapper {
 public:
-    void exec(Event& e)
+    void exec(const Event& e)
     {
         call(e);
     }
@@ -18,24 +18,24 @@ public:
     virtual const char* getType() const = 0;
 
 private:
-    virtual void call(Event& e) = 0;
+    virtual void call(const Event& e) = 0;
 };
 
 template<typename EventType>
-using EventFunctionHandler = std::function<void(EventType& e)>;
+using EventFunctionHandler = std::function<void(const EventType& e)>;
 
 template<typename EventType>
 class EventCallbackWrapperT : public EventCallbackWrapper {
 public:
-    explicit EventCallbackWrapperT(EventFunctionHandler<EventType> callback)
+    explicit EventCallbackWrapperT(const EventFunctionHandler<EventType>& callback)
         : functionHandler(callback)
         , functionType(functionHandler.target_type().name()) {};
 
 private:
-    void call(Event& e) override
+    void call(const Event& e) override
     {
         if (e.GetEventType() == EventType::GetStaticEventType()) {
-            functionHandler(static_cast<EventType&>(e));
+            functionHandler(static_cast<const EventType&>(e));
         }
     }
 
@@ -49,15 +49,15 @@ class EventManager {
 public:
     void Shutdown();
 
-    void Subscribe(const std::string& eventId, EventCallbackWrapper* handler);
-    void Unsubscribe(const std::string& eventId, const char* handlerName);
-    void TriggerEvent(Event* event);
+    void Subscribe(uint32_t eventId, SharedPtr<EventCallbackWrapper>& handler);
+    void Unsubscribe(uint32_t eventId, const char* handlerName);
+    void TriggerEvent(const Event& event);
     void QueueEvent(Event* event);
     void DispatchEvents();
 
 private:
     std::vector<Event*> m_eventsQueue;
-    std::unordered_map<std::string, std::vector<EventCallbackWrapper*>> m_subscribers;
+    std::unordered_map<uint32_t, std::vector<SharedPtr<EventCallbackWrapper>>> m_subscribers;
 };
 
 extern EventManager gEventManager;
@@ -65,7 +65,7 @@ extern EventManager gEventManager;
 template<typename EventType>
 static void Subscribe(const EventFunctionHandler<EventType>& callback)
 {
-    EventCallbackWrapper* handler = new EventCallbackWrapperT<EventType>(callback);
+    SharedPtr<EventCallbackWrapper> handler = MakeSharedPtr<EventCallbackWrapperT<EventType>>(callback);
 
     gEventManager.Subscribe(EventType::GetStaticEventType(), handler);
 }
@@ -77,7 +77,7 @@ static void Unsubscribe(const EventFunctionHandler<EventType>& callback)
     gEventManager.Unsubscribe(EventType::GetStaticEventType(), handlerName);
 }
 
-static void TriggerEvent(Event* triggeredEvent)
+static void TriggerEvent(const Event& triggeredEvent)
 {
     gEventManager.TriggerEvent(triggeredEvent);
 }

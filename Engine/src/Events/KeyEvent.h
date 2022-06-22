@@ -20,7 +20,7 @@ public:
 
 class KeyPressedEvent : public KeyEvent {
 public:
-    EVENT_TYPE("{FAAB99F1-7E9B-4533-9DE6-A84B49DD3230}")
+    EVENT_TYPE("KeyPressedEvent")
 
     KeyPressedEvent(int keyCode, int repeatCount)
         : KeyEvent(keyCode)
@@ -41,7 +41,7 @@ public:
 
 class KeyReleasedEvent : public KeyEvent {
 public:
-    EVENT_TYPE("{59165F38-446B-47E1-994D-E67BEC9832BD}")
+    EVENT_TYPE("KeyReleasedEvent")
 
     KeyReleasedEvent(int keyCode)
         : KeyEvent(keyCode)
@@ -58,7 +58,7 @@ public:
 
 class KeyTypedEvent : public KeyEvent {
 public:
-    EVENT_TYPE("{5CAFF4C9-2EF6-4A0B-9664-850CA2173AF7}")
+    EVENT_TYPE("KeyTypedEvent")
 
     KeyTypedEvent(int keyCode)
         : KeyEvent(keyCode)

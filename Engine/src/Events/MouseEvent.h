@@ -6,7 +6,7 @@ namespace Elven::Events {
 
 class MouseMovedEvent : public Event {
 public:
-    EVENT_TYPE("{F40458FE-A406-4ECF-9EB8-D603716E4E4E}")
+    EVENT_TYPE("MouseMovedEvent")
 
     MouseMovedEvent(float x, float y)
         : MouseX(x)
@@ -28,7 +28,7 @@ public:
 
 class MouseScrolledEvent : public Event {
 public:
-    EVENT_TYPE("{961D7FE1-F601-47C4-BB5F-0D93F601DD2D}")
+    EVENT_TYPE("MouseScrolledEvent")
 
     MouseScrolledEvent(float xOffset, float yOffset)
         : XOffset(xOffset)
@@ -50,7 +50,7 @@ public:
 
 class MouseButtonEvent : public Event {
 public:
-    EVENT_TYPE("{BC44A1F0-989F-4013-8516-005BA864CB12}")
+    EVENT_TYPE("MouseButtonEvent")
 
 protected:
     MouseButtonEvent(int button)
@@ -64,7 +64,7 @@ public:
 
 class MouseButtonPressedEvent : public MouseButtonEvent {
 public:
-    EVENT_TYPE("{BF946F16-6077-4550-A579-CCF199E83C45}")
+    EVENT_TYPE("MouseButtonPressedEvent")
 
     MouseButtonPressedEvent(int button)
         : MouseButtonEvent(button)
@@ -81,7 +81,7 @@ public:
 
 class MouseButtonReleasedEvent : public MouseButtonEvent {
 public:
-    EVENT_TYPE("{FDD0D4DB-E81F-450F-9472-81A794A5F92E}")
+    EVENT_TYPE("MouseButtonReleasedEvent")
 
     MouseButtonReleasedEvent(int button)
         : MouseButtonEvent(button)

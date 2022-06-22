@@ -22,8 +22,8 @@ public:
     float GetZoomLevel() const { return m_zoomLevel; }
 
 private:
-    void OnMouseScrolled(Events::MouseScrolledEvent& e);
-    void OnWindowResized(Events::WindowResizeEvent& e);
+    void OnMouseScrolled(const Events::MouseScrolledEvent& e);
+    void OnWindowResized(const Events::WindowResizeEvent& e);
 
 private:
     lia::vec3 m_position;

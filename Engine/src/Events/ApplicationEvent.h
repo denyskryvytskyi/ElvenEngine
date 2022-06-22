@@ -6,7 +6,7 @@ namespace Elven::Events {
 
 class WindowResizeEvent : public Event {
 public:
-    EVENT_TYPE("{7CCF9526-19A3-431E-B9CB-B6AA7C775469}")
+    EVENT_TYPE("WindowResizeEvent")
 
     WindowResizeEvent(unsigned int width, unsigned int height)
         : Width(width)
@@ -28,7 +28,7 @@ public:
 
 class WindowCloseEvent : public Event {
 public:
-    EVENT_TYPE("{1FF1FDDE-2983-4F3E-88D6-16D03D6A04A4}")
+    EVENT_TYPE("WindowCloseEvent")
 };
 
 } // namespace Elven::Events

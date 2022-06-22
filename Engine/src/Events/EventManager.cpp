@@ -6,22 +6,14 @@ EventManager gEventManager;
 
 void EventManager::Shutdown()
 {
-    for (auto* event : m_eventsQueue) {
-        delete event;
-    }
-
-    for (auto& eventSubscirbersIt = m_subscribers.begin(); eventSubscirbersIt != m_subscribers.end(); ++eventSubscirbersIt) {
-        auto& handlers = eventSubscirbersIt->second;
-        for (auto& it = handlers.begin(); it != handlers.end();) {
-            delete *it;
-            it = handlers.erase(it);
-        }
+    for (auto* event_ : m_eventsQueue) {
+        delete event_;
     }
 
     m_subscribers.clear();
 }
 
-void EventManager::Subscribe(const std::string& eventId, EventCallbackWrapper* handler)
+void EventManager::Subscribe(uint32_t eventId, SharedPtr<EventCallbackWrapper>& handler)
 {
     auto subscribers = m_subscribers.find(eventId);
     if (subscribers != m_subscribers.end()) {
@@ -32,42 +24,40 @@ void EventManager::Subscribe(const std::string& eventId, EventCallbackWrapper* h
                 return;
             }
         }
-        handlers.emplace_back(handler);
+        handlers.emplace_back(std::move(handler));
     } else {
-        m_subscribers[eventId].emplace_back(handler);
+        m_subscribers[eventId].emplace_back(std::move(handler));
     }
 }
 
-void EventManager::Unsubscribe(const std::string& eventId, const char* handlerName)
+void EventManager::Unsubscribe(uint32_t eventId, const char* handlerName)
 {
     auto& handlers = m_subscribers[eventId];
-    for (auto it = handlers.begin(); it != handlers.end(); ++it) {
+    for (auto& it = handlers.begin(); it != handlers.end(); ++it) {
         if ((*it)->getType() == handlerName) {
-            delete *it;
             it = handlers.erase(it);
             return;
         }
     }
 }
 
-void EventManager::TriggerEvent(Event* event)
+void EventManager::TriggerEvent(const Event& event_)
 {
-    for (auto* handler : m_subscribers[event->GetEventType()]) {
-        handler->exec(*event);
+    for (auto& handler : m_subscribers[event_.GetEventType()]) {
+        handler->exec(event_);
     }
-    event->Handled = true;
 }
 
-void EventManager::QueueEvent(Event* event)
+void EventManager::QueueEvent(Event* event_)
 {
-    m_eventsQueue.emplace_back(event);
+    m_eventsQueue.emplace_back(event_);
 }
 
 void EventManager::DispatchEvents()
 {
-    for (auto eventIt = m_eventsQueue.begin(); eventIt != m_eventsQueue.end();) {
+    for (auto& eventIt = m_eventsQueue.begin(); eventIt != m_eventsQueue.end();) {
         if (!(*eventIt)->Handled) {
-            TriggerEvent(*eventIt);
+            TriggerEvent(**eventIt);
             eventIt = m_eventsQueue.erase(eventIt);
         } else {
             ++eventIt;

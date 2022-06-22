@@ -15,6 +15,7 @@ set(ENGINE_HEADERS
 "src/Core/Timer.h"
 "src/Core/Window.h"
 "src/Core/FileSystem.h"
+"src/Core/StringId.h"
 "src/Events/ApplicationEvent.h"
 "src/Events/Event.h"
 "src/Events/EventManager.h"

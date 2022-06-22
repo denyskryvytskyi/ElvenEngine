@@ -121,7 +121,7 @@ void WindowsWindow::Init(const WindowProps& props)
         data.Width = width;
         data.Height = height;
 
-        Events::TriggerEvent(new Events::WindowResizeEvent(width, height));
+        Events::QueueEvent(new Events::WindowResizeEvent(width, height));
     });
 
     glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window) {
@@ -131,15 +131,15 @@ void WindowsWindow::Init(const WindowProps& props)
     glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mode) {
         switch (action) {
         case GLFW_PRESS: {
-            Events::QueueEvent(new Events::KeyPressedEvent(key, 0));
+            Events::TriggerEvent(Events::KeyPressedEvent(key, 0));
             break;
         }
         case GLFW_RELEASE: {
-            Events::QueueEvent(new Events::KeyReleasedEvent(key));
+            Events::TriggerEvent(Events::KeyReleasedEvent(key));
             break;
         }
         case GLFW_REPEAT: {
-            Events::QueueEvent(new Events::KeyPressedEvent(key, 1));
+            Events::TriggerEvent(Events::KeyPressedEvent(key, 1));
             break;
         }
         }
@@ -152,22 +152,22 @@ void WindowsWindow::Init(const WindowProps& props)
     glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods) {
         switch (action) {
         case GLFW_PRESS: {
-            Events::TriggerEvent(new Events::MouseButtonPressedEvent(button));
+            Events::TriggerEvent(Events::MouseButtonPressedEvent(button));
             break;
         }
         case GLFW_RELEASE: {
-            Events::TriggerEvent(new Events::MouseButtonReleasedEvent(button));
+            Events::TriggerEvent(Events::MouseButtonReleasedEvent(button));
             break;
         }
         }
     });
 
     glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset) {
-        Events::TriggerEvent(new Events::MouseScrolledEvent((float)xOffset, (float)yOffset));
+        Events::TriggerEvent(Events::MouseScrolledEvent((float)xOffset, (float)yOffset));
     });
 
     glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos) {
-        Events::TriggerEvent(new Events::MouseMovedEvent((float)xPos, (float)yPos));
+        Events::TriggerEvent(Events::MouseMovedEvent((float)xPos, (float)yPos));
     });
 }
 

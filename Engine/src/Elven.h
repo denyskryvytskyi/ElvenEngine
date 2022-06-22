@@ -9,6 +9,7 @@
 #include "Core/Application.h"
 #include "Core/Layer.h"
 #include "Core/Log.h"
+#include "Core/StringId.h"
 
 #include "Events/EventManager.h"
 
