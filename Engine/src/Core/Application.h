@@ -40,14 +40,14 @@ private:
     static Application* s_instance;
     static Telemetry s_telemetry;
 
+    bool m_running { false };
+
     Window* m_window { nullptr };
     ImGuiLayer* m_imGuiLayer { nullptr };
     LayerStack m_layerStack;
 
     Events::EventFunctionHandler<Events::WindowResizeEvent> m_windowResizeCallback;
     Events::EventFunctionHandler<Events::WindowCloseEvent> m_windowCloseCallback;
-
-    bool m_running { false };
 };
 
 // To be defined in CLIENT

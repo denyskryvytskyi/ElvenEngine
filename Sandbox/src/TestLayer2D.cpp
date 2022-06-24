@@ -10,11 +10,11 @@
 TestLayer2D::TestLayer2D()
     : Layer("TestLayer2D")
     , m_cameraController(1280.0f / 720.0f)
+    , m_textureWizard(Elven::Texture2D::Create("wizard.png"))
+    , m_textureWizardFire(Elven::Texture2D::Create("wizard_fire.png"))
+    , m_textureWizardIce(Elven::Texture2D::Create("wizard_ice.png"))
+    , m_textureBackground(Elven::Texture2D::Create("game_background_1.png"))
 {
-    m_textureWizard = Elven::Texture2D::Create("wizard.png");
-    m_textureWizardFire = Elven::Texture2D::Create("wizard_fire.png");
-    m_textureWizardIce = Elven::Texture2D::Create("wizard_ice.png");
-    m_textureBackground = Elven::Texture2D::Create("game_background_1.png");
 }
 
 TestLayer2D::~TestLayer2D()

@@ -13,11 +13,10 @@ CameraController::CameraController(float fov, float aspectRatio, float near_, fl
     , m_near(near_)
     , m_far(far_)
     , m_isFlyEnabled(enableFly)
+    , m_mouseMovedCallback(EVENT_CALLBACK(CameraController::OnMouseMoved))
+    , m_mouseScrolledCallback(EVENT_CALLBACK(CameraController::OnMouseScrolled))
+    , m_windowResizeCallback(EVENT_CALLBACK(CameraController::OnWindowResized))
 {
-    m_mouseMovedCallback = EVENT_CALLBACK(CameraController::OnMouseMoved);
-    m_mouseScrolledCallback = EVENT_CALLBACK(CameraController::OnMouseScrolled);
-    m_windowResizeCallback = EVENT_CALLBACK(CameraController::OnWindowResized);
-
     Events::Subscribe<Events::MouseMovedEvent>(m_mouseMovedCallback);
     Events::Subscribe<Events::MouseScrolledEvent>(m_mouseScrolledCallback);
     Events::Subscribe<Events::WindowResizeEvent>(m_windowResizeCallback);

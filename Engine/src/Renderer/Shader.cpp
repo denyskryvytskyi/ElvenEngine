@@ -53,7 +53,9 @@ std::string ShaderManager::ReadFile(const std::string& shaderFile)
         in.seekg(0, in.end);
         result.resize(in.tellg());
         in.seekg(0, in.beg);
-        in.read(&result[0], result.size());
+        if (!result.empty()) {
+            in.read(&result[0], result.size());
+        }
         in.close();
     } else {
         EL_ASSERT(false, "Could not open file!");

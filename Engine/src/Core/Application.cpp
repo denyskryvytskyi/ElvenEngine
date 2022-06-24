@@ -15,19 +15,18 @@ Application::Telemetry Application::s_telemetry;
 
 Application::Application()
     : m_running(true)
+    , m_window(Window::Create())
     , m_imGuiLayer(new ImGuiLayer)
+    , m_windowCloseCallback(EVENT_CALLBACK(Application::OnWindowClose))
+    , m_windowResizeCallback(EVENT_CALLBACK(Application::OnWindowResize))
 {
     EL_CORE_ASSERT(!s_instance, "Application already exists!");
     s_instance = this;
 
-    m_window = Window::Create();
     PushOverlay(m_imGuiLayer);
 
     // TODO: Make it dependent from user settings to init Renderer or Renderer2D (add option to menu)
     // Elven::Renderer::Init();
-
-    m_windowCloseCallback = EVENT_CALLBACK(Application::OnWindowClose);
-    m_windowResizeCallback = EVENT_CALLBACK(Application::OnWindowResize);
 
     Events::Subscribe<Events::WindowCloseEvent>(m_windowCloseCallback);
     Events::Subscribe<Events::WindowResizeEvent>(m_windowResizeCallback);
