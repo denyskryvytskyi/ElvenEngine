@@ -6,6 +6,7 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/Renderer2D.h"
 
+#include "FileSystem.h"
 #include "ImGui/ImGuiLayer.h"
 
 namespace Elven {
@@ -30,6 +31,8 @@ Application::Application()
 
     Events::Subscribe<Events::WindowCloseEvent>(m_windowCloseCallback);
     Events::Subscribe<Events::WindowResizeEvent>(m_windowResizeCallback);
+
+    EL_INFO("Executable path: {0}", FileSystem::GetCurrentPath());
 }
 
 Application::~Application()

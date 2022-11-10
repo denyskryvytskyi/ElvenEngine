@@ -1,6 +1,5 @@
 #include "TestLayer2D.h"
 
-#include <filesystem>
 #include <iostream>
 
 #include <lia/lia.h>
