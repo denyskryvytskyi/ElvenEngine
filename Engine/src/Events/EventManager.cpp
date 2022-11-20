@@ -9,7 +9,7 @@ void EventManager::Shutdown()
     m_subscribers.clear();
 }
 
-void EventManager::Subscribe(std::uint32_t eventId, UniquePtr<EventCallbackBase>& handler)
+void EventManager::Subscribe(std::uint32_t eventId, UniquePtr<EventCallbackBase>&& handler)
 {
     auto subscribers = m_subscribers.find(eventId);
     if (subscribers != m_subscribers.end()) {
@@ -26,11 +26,11 @@ void EventManager::Subscribe(std::uint32_t eventId, UniquePtr<EventCallbackBase>
     }
 }
 
-void EventManager::Unsubscribe(std::uint32_t eventId, const char* handlerName)
+void EventManager::Unsubscribe(std::uint32_t eventId, const std::string& handlerName)
 {
     auto& handlers = m_subscribers[eventId];
     for (auto& it = handlers.begin(); it != handlers.end(); ++it) {
-        if ((*it)->getType() == handlerName) {
+        if (it->get()->getType() == handlerName) {
             it = handlers.erase(it);
             return;
         }
@@ -52,8 +52,8 @@ void EventManager::QueueEvent(UniquePtr<Event>&& event_)
 void EventManager::DispatchEvents()
 {
     for (auto& eventIt = m_eventsQueue.begin(); eventIt != m_eventsQueue.end();) {
-        if (!(*eventIt)->Handled) {
-            TriggerEvent(**eventIt);
+        if (!eventIt->get()->Handled) {
+            TriggerEvent(*eventIt->get());
             eventIt = m_eventsQueue.erase(eventIt);
         } else {
             ++eventIt;

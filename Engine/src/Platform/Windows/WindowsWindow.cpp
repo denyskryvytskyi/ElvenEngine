@@ -122,11 +122,13 @@ void WindowsWindow::Init(const WindowProps& props)
         data.Width = width;
         data.Height = height;
 
-        Events::QueueEvent(std::move(MakeUniquePtr<Events::WindowResizeEvent>(width, height)));
+        UniquePtr<Events::WindowResizeEvent> resizeEvent = MakeUniquePtr<Events::WindowResizeEvent>(width, height);
+        Events::QueueEvent(std::move(resizeEvent));
     });
 
     glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window) {
-        Events::QueueEvent(std::move(MakeUniquePtr<Events::WindowCloseEvent>()));
+        UniquePtr<Events::WindowCloseEvent> closeEvent = MakeUniquePtr<Events::WindowCloseEvent>();
+        Events::QueueEvent(std::move(closeEvent));
     });
 
     glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mode) {
@@ -147,7 +149,8 @@ void WindowsWindow::Init(const WindowProps& props)
     });
 
     glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int keycode) {
-        Events::QueueEvent(std::move(MakeUniquePtr<Events::KeyTypedEvent>(keycode)));
+        UniquePtr<Events::KeyTypedEvent> keyTypeEvent = MakeUniquePtr<Events::KeyTypedEvent>(keycode);
+        Events::QueueEvent(std::move(keyTypeEvent));
     });
 
     glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods) {

@@ -13,7 +13,7 @@ public:
         call(e);
     }
 
-    virtual const char* getType() const = 0;
+    virtual std::string getType() const = 0;
 
 private:
     virtual void call(const Event& e) = 0;
@@ -26,29 +26,29 @@ template<typename EventType>
 class EventCallback : public EventCallbackBase {
 public:
     explicit EventCallback(const EventFunctionHandler<EventType>& callback)
-        : functionHandler(callback)
-        , functionType(functionHandler.target_type().name()) {};
+        : m_functionHandler(callback)
+        , m_functionType(m_functionHandler.target_type().name()) {};
 
 private:
     void call(const Event& e) override
     {
         if (e.GetEventType() == EventType::GetStaticEventType()) {
-            functionHandler(static_cast<const EventType&>(e));
+            m_functionHandler(static_cast<const EventType&>(e));
         }
     }
 
-    const char* getType() const override { return functionType; }
+    std::string getType() const override { return m_functionType; }
 
-    EventFunctionHandler<EventType> functionHandler;
-    const char* functionType;
+    EventFunctionHandler<EventType> m_functionHandler;
+    const std::string m_functionType;
 };
 
 class EventManager {
 public:
     void Shutdown();
 
-    void Subscribe(std::uint32_t eventId, UniquePtr<EventCallbackBase>& handler);
-    void Unsubscribe(std::uint32_t eventId, const char* handlerName);
+    void Subscribe(std::uint32_t eventId, UniquePtr<EventCallbackBase>&& handler);
+    void Unsubscribe(std::uint32_t eventId, const std::string& handlerName);
     void TriggerEvent(const Event& event);
     void QueueEvent(UniquePtr<Event>&& event);
     void DispatchEvents();
@@ -64,14 +64,13 @@ template<typename EventType>
 static void Subscribe(const EventFunctionHandler<EventType>& callback)
 {
     UniquePtr<EventCallbackBase> handler = MakeUniquePtr<EventCallback<EventType>>(callback);
-
-    gEventManager.Subscribe(EventType::GetStaticEventType(), handler);
+    gEventManager.Subscribe(EventType::GetStaticEventType(), std::move(handler));
 }
 
 template<typename EventType>
 static void Unsubscribe(const EventFunctionHandler<EventType>& callback)
 {
-    const char* handlerName = callback.target_type().name();
+    const std::string handlerName = callback.target_type().name();
     gEventManager.Unsubscribe(EventType::GetStaticEventType(), handlerName);
 }
 
