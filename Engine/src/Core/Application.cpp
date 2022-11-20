@@ -16,10 +16,9 @@ Application::Telemetry Application::s_telemetry;
 
 Application::Application()
     : m_running(true)
-    , m_window(Window::Create())
     , m_imGuiLayer(new ImGuiLayer)
-    , m_windowCloseCallback(EVENT_CALLBACK(Application::OnWindowClose))
-    , m_windowResizeCallback(EVENT_CALLBACK(Application::OnWindowResize))
+    , m_windowCloseCallback([this](const Events::WindowCloseEvent& e) { OnWindowClose(e); })
+    , m_windowResizeCallback([this](const Events::WindowResizeEvent& e) { OnWindowResize(e); })
 {
     EL_CORE_ASSERT(!s_instance, "Application already exists!");
     s_instance = this;
@@ -37,8 +36,6 @@ Application::Application()
 
 Application::~Application()
 {
-    delete m_window;
-
     Events::Unsubscribe<Events::WindowResizeEvent>(m_windowResizeCallback);
     Events::Unsubscribe<Events::WindowCloseEvent>(m_windowCloseCallback);
 

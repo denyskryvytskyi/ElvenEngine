@@ -6,10 +6,10 @@
 
 namespace Elven {
 
-Window* Elven::Window::Create(const WindowProps& props)
+UniquePtr<Window> Elven::Window::Create(const WindowProps& props)
 {
 #ifdef EL_PLATFORM_WINDOWS
-    return new WindowsWindow(props);
+    return MakeUniquePtr<WindowsWindow>(props);
 #else
     EL_CORE_ASSERT(false, "Unknown platform!");
     return nullptr;

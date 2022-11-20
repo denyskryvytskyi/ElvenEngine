@@ -73,7 +73,8 @@ void WindowsWindow::SetFullScreen(bool enabled)
             glfwSetWindowPos(m_window, s_defaultWindowPosX, s_defaultWindowPosY);
         }
 
-        Events::QueueEvent(new Events::WindowResizeEvent(m_data.Width, m_data.Height));
+        UniquePtr<Events::WindowResizeEvent> resizeEvent = MakeUniquePtr<Events::WindowResizeEvent>(m_data.Width, m_data.Height);
+        Events::QueueEvent(std::move(resizeEvent));
     }
 }
 
@@ -121,11 +122,11 @@ void WindowsWindow::Init(const WindowProps& props)
         data.Width = width;
         data.Height = height;
 
-        Events::QueueEvent(new Events::WindowResizeEvent(width, height));
+        Events::QueueEvent(std::move(MakeUniquePtr<Events::WindowResizeEvent>(width, height)));
     });
 
     glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window) {
-        Events::QueueEvent(new Events::WindowCloseEvent());
+        Events::QueueEvent(std::move(MakeUniquePtr<Events::WindowCloseEvent>()));
     });
 
     glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mode) {
@@ -146,7 +147,7 @@ void WindowsWindow::Init(const WindowProps& props)
     });
 
     glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int keycode) {
-        Events::QueueEvent(new Events::KeyTypedEvent(keycode));
+        Events::QueueEvent(std::move(MakeUniquePtr<Events::KeyTypedEvent>(keycode)));
     });
 
     glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods) {
@@ -179,8 +180,6 @@ void WindowsWindow::Shutdown()
     if (s_GLFWwindowCount == 0) {
         glfwTerminate();
     }
-
-    delete m_context;
 }
 
 } // namespace Elven

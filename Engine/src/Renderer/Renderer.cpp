@@ -2,7 +2,7 @@
 #include "Renderer/Renderer2D.h"
 
 namespace Elven {
-Renderer::SceneData* Renderer::m_SceneData = new Renderer::SceneData();
+UniquePtr<Renderer::SceneData> Renderer::m_sceneData = MakeUniquePtr<Renderer::SceneData>();
 
 void Renderer::Init()
 {
@@ -13,15 +13,11 @@ void Renderer::Init()
 void Renderer::Shutdown()
 {
     RenderCommand::Shutdown();
-
-    if (m_SceneData) {
-        delete m_SceneData;
-    }
 }
 
 void Renderer::BeginScene(Camera& camera)
 {
-    m_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
+    m_sceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
 }
 
 void Renderer::EndScene()
@@ -31,7 +27,7 @@ void Renderer::EndScene()
 void Renderer::Submit(const SharedPtr<Shader>& shader, const SharedPtr<VertexArray>& vertexArray, const lia::mat4& modelMatrix)
 {
     shader->Bind();
-    shader->SetMatrix4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
+    shader->SetMatrix4("u_ViewProjection", m_sceneData->ViewProjectionMatrix);
     shader->SetMatrix4("u_Model", modelMatrix);
 
     RenderCommand::DrawIndexed(vertexArray);

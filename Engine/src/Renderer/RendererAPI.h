@@ -23,7 +23,7 @@ public:
     virtual void DrawIndexed(const SharedPtr<VertexArray>& vertexArray, std::uint32_t indexCount = 0) = 0;
 
     static API GetAPI() { return s_API; }
-    static RendererAPI* Create();
+    static UniquePtr<RendererAPI> Create();
 
 private:
     static API s_API;

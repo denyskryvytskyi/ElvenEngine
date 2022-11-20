@@ -1,7 +1,5 @@
 #pragma once
 
-#include <lia/lia.h>
-
 #include "Renderer/RendererAPI.h"
 
 namespace Elven {
@@ -15,9 +13,6 @@ public:
 
     static void Shutdown()
     {
-        if (s_RendererAPI) {
-            delete s_RendererAPI;
-        }
     }
 
     static void SetViewport(std::uint32_t x, std::uint32_t y, std::uint32_t width, std::uint32_t height)
@@ -46,7 +41,7 @@ public:
     }
 
 private:
-    static RendererAPI* s_RendererAPI;
+    static UniquePtr<RendererAPI> s_RendererAPI;
 };
 
 } // namespace Elven

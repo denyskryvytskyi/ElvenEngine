@@ -1,12 +1,22 @@
-
-
 #include "Renderer/GraphicsContext.h"
+#include "Renderer/Renderer.h"
+
 #include "Platform/OpenGL/OpenGLContext.h"
 
 namespace Elven {
-GraphicsContext* GraphicsContext::Create(void* window)
+
+UniquePtr<GraphicsContext> GraphicsContext::Create(void* window)
 {
-    // Opengl maker only for now
-    return new OpenGLContext(static_cast<GLFWwindow*>(window));
+    switch (Renderer::GetAPI()) {
+    case RendererAPI::API::None:
+        EL_CORE_ASSERT(false, "RendererAPI::None is currently not supported.");
+        return nullptr;
+    case RendererAPI::API::OpenGL:
+        return MakeUniquePtr<OpenGLContext>(static_cast<GLFWwindow*>(window));
+    }
+
+    EL_CORE_ASSERT(false, "Unknown RendererAPI.");
+    return nullptr;
 }
+
 } // namespace Elven

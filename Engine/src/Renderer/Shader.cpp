@@ -1,10 +1,8 @@
-
 #include "Renderer/Shader.h"
-
-#include "Platform/OpenGL/OpenGLShader.h"
+#include "Core/FileSystem.h"
 #include "Renderer/Renderer.h"
 
-#include "Core/FileSystem.h"
+#include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Elven {
 

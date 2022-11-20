@@ -7,7 +7,7 @@
 
 #include "Core/FileSystem.h"
 
-#include <glad/gl.h>
+// #include <glad/gl.h>
 
 namespace Elven {
 struct QuadVertex {
@@ -31,8 +31,8 @@ struct Renderer2DData {
 
     SharedPtr<VertexArray> quadVAO;
     SharedPtr<VertexBuffer> quadVBO;
-    QuadVertex* quadVerticesBegin = nullptr;
-    QuadVertex* quadVerticesCurrent = nullptr;
+    QuadVertex* quadVerticesBegin { nullptr };
+    QuadVertex* quadVerticesCurrent { nullptr };
     std::uint32_t quadIndexCount = 0;
     std::vector<SharedPtr<Texture2D>> textures;
     float usedTextureSlots = 0.0f;

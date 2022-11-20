@@ -13,9 +13,9 @@ CameraController::CameraController(float fov, float aspectRatio, float near_, fl
     , m_near(near_)
     , m_far(far_)
     , m_isFlyEnabled(enableFly)
-    , m_mouseMovedCallback(EVENT_CALLBACK(CameraController::OnMouseMoved))
-    , m_mouseScrolledCallback(EVENT_CALLBACK(CameraController::OnMouseScrolled))
-    , m_windowResizeCallback(EVENT_CALLBACK(CameraController::OnWindowResized))
+    , m_mouseMovedCallback([this](const Events::MouseMovedEvent& e) { OnMouseMoved(e); })
+    , m_mouseScrolledCallback([this](const Events::MouseScrolledEvent& e) { OnMouseScrolled(e); })
+    , m_windowResizeCallback([this](const Events::WindowResizeEvent& e) { OnWindowResized(e); })
 {
     Events::Subscribe<Events::MouseMovedEvent>(m_mouseMovedCallback);
     Events::Subscribe<Events::MouseScrolledEvent>(m_mouseScrolledCallback);

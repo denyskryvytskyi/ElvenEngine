@@ -21,7 +21,13 @@ private:
 
 } // namespace Elven
 
-// Core log macros
+// Engine logging
+template<typename... Args>
+static void EL_CORE_TRACE(Args&&... args)
+{
+    Elven::Log::GetCoreLogger()->trace(std::forward<Args>(args)...);
+}
+
 template<typename... Args>
 static void EL_CORE_INFO(Args&&... args)
 {
@@ -46,15 +52,33 @@ static void EL_CORE_CRITICAL(Args&&... args)
     Elven::Log::GetCoreLogger()->critical(std::forward<Args>(args)...);
 }
 
-#define EL_CORE_TRACE(...) ::Elven::Log::GetCoreLogger()->trace(__VA_ARGS__)
-//#define EL_CORE_INFO(...) ::Elven::Log::GetCoreLogger()->info(__VA_ARGS__)
-//#define EL_CORE_WARN(...) ::Elven::Log::GetCoreLogger()->warn(__VA_ARGS__)
-//#define EL_CORE_ERROR(...) ::Elven::Log::GetCoreLogger()->error(__VA_ARGS__)
-//#define EL_CORE_CRITICAL(...) ::Elven::Log::GetCoreLogger()->critical(__VA_ARGS__)
+// Client logging
+template<typename... Args>
+static void EL_TRACE(Args&&... args)
+{
+    Elven::Log::GetClientLogger()->trace(std::forward<Args>(args)...);
+}
 
-// Client log macros
-#define EL_TRACE(...) ::Elven::Log::GetClientLogger()->trace(__VA_ARGS__)
-#define EL_INFO(...) ::Elven::Log::GetClientLogger()->info(__VA_ARGS__)
-#define EL_WARN(...) ::Elven::Log::GetClientLogger()->warn(__VA_ARGS__)
-#define EL_ERROR(...) ::Elven::Log::GetClientLogger()->error(__VA_ARGS__)
-#define EL_CRITICAL(...) ::Elven::Log::GetClientLogger()->critical(__VA_ARGS__)
+template<typename... Args>
+static void EL_INFO(Args&&... args)
+{
+    Elven::Log::GetClientLogger()->info(std::forward<Args>(args)...);
+}
+
+template<typename... Args>
+static void EL_WARN(Args&&... args)
+{
+    Elven::Log::GetClientLogger()->warn(std::forward<Args>(args)...);
+}
+
+template<typename... Args>
+static void EL_ERROR(Args&&... args)
+{
+    Elven::Log::GetClientLogger()->error(std::forward<Args>(args)...);
+}
+
+template<typename... Args>
+static void EL_CRITICAL(Args&&... args)
+{
+    Elven::Log::GetClientLogger()->critical(std::forward<Args>(args)...);
+}

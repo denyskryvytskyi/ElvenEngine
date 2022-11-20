@@ -2,8 +2,8 @@
 
 #include "Core/LayerStack.h"
 #include "Events/ApplicationEvent.h"
-
 #include "Events/EventManager.h"
+#include "Window.h"
 
 namespace Elven {
 
@@ -27,7 +27,7 @@ public:
 
     void Run();
 
-    Window& GetWindow() { return *m_window; }
+    UniquePtr<Window>& GetWindow() { return m_window; }
 
     static Application& Get() { return *s_instance; }
     static Telemetry& GetTelemetry() { return s_telemetry; };
@@ -42,7 +42,7 @@ private:
 
     bool m_running { false };
 
-    Window* m_window { nullptr };
+    UniquePtr<Window> m_window { Window::Create() };
     ImGuiLayer* m_imGuiLayer { nullptr };
     LayerStack m_layerStack;
 

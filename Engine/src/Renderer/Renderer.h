@@ -25,7 +25,7 @@ private:
         lia::mat4 ViewProjectionMatrix;
     };
 
-    static SceneData* m_SceneData;
+    static UniquePtr<SceneData> m_sceneData;
 };
 
 } // namespace Elven

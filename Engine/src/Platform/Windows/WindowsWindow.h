@@ -42,7 +42,7 @@ private:
 private:
     GLFWwindow* m_window { nullptr };
     GLFWmonitor* m_monitor { nullptr };
-    GraphicsContext* m_context { nullptr };
+    UniquePtr<GraphicsContext> m_context;
 
     WindowData m_data;
 };

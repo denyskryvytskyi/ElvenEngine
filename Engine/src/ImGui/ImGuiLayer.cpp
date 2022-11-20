@@ -43,12 +43,12 @@ void ImGuiLayer::OnAttach()
     // ImGui::StyleColorsLight();
 
     // Setup Platform/Renderer bindings
-    GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
+    GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow()->GetNativeWindow());
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
-    m_isVSync = Application::Get().GetWindow().IsVSync();
-    m_isFullScreen = Application::Get().GetWindow().IsFullScreen();
+    m_isVSync = Application::Get().GetWindow()->IsVSync();
+    m_isFullScreen = Application::Get().GetWindow()->IsFullScreen();
 }
 
 void ImGuiLayer::OnDetach()
@@ -83,11 +83,11 @@ void ImGuiLayer::OnImGuiRender()
     ImGui::Separator();
 
     if (ImGui::Checkbox("V-Sync", &m_isVSync)) {
-        Application::Get().GetWindow().SetVSync(m_isVSync);
+        Application::Get().GetWindow()->SetVSync(m_isVSync);
     }
 
     if (ImGui::Checkbox("Fullsreen mode", &m_isFullScreen)) {
-        Application::Get().GetWindow().SetFullScreen(m_isFullScreen);
+        Application::Get().GetWindow()->SetFullScreen(m_isFullScreen);
     }
 
     ImGui::End();
@@ -104,7 +104,7 @@ void ImGuiLayer::End()
 {
     ImGuiIO& io = ImGui::GetIO();
     Application& app = Application::Get();
-    io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
+    io.DisplaySize = ImVec2((float)app.GetWindow()->GetWidth(), (float)app.GetWindow()->GetHeight());
 
     // Rendering
     ImGui::Render();

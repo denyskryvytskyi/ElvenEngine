@@ -1,14 +1,12 @@
 #pragma once
 
-#include <functional>
-
 #include "Events/Event.h"
 
-#define EVENT_CALLBACK(fn) [this](auto&& event_) { fn(std::forward<decltype(event_)>(event_)); }
+#include <functional>
 
 namespace Elven::Events {
 
-class EventCallbackWrapper {
+class EventCallbackBase {
 public:
     void exec(const Event& e)
     {
@@ -25,9 +23,9 @@ template<typename EventType>
 using EventFunctionHandler = std::function<void(const EventType& e)>;
 
 template<typename EventType>
-class EventCallbackWrapperT : public EventCallbackWrapper {
+class EventCallback : public EventCallbackBase {
 public:
-    explicit EventCallbackWrapperT(const EventFunctionHandler<EventType>& callback)
+    explicit EventCallback(const EventFunctionHandler<EventType>& callback)
         : functionHandler(callback)
         , functionType(functionHandler.target_type().name()) {};
 
@@ -49,15 +47,15 @@ class EventManager {
 public:
     void Shutdown();
 
-    void Subscribe(std::uint32_t eventId, UniquePtr<EventCallbackWrapper>& handler);
+    void Subscribe(std::uint32_t eventId, UniquePtr<EventCallbackBase>& handler);
     void Unsubscribe(std::uint32_t eventId, const char* handlerName);
     void TriggerEvent(const Event& event);
-    void QueueEvent(Event* event);
+    void QueueEvent(UniquePtr<Event>&& event);
     void DispatchEvents();
 
 private:
-    std::vector<Event*> m_eventsQueue;
-    std::unordered_map<std::uint32_t, std::vector<UniquePtr<EventCallbackWrapper>>> m_subscribers;
+    std::vector<UniquePtr<Event>> m_eventsQueue;
+    std::unordered_map<std::uint32_t, std::vector<UniquePtr<EventCallbackBase>>> m_subscribers;
 };
 
 extern EventManager gEventManager;
@@ -65,7 +63,7 @@ extern EventManager gEventManager;
 template<typename EventType>
 static void Subscribe(const EventFunctionHandler<EventType>& callback)
 {
-    UniquePtr<EventCallbackWrapper> handler = MakeUniquePtr<EventCallbackWrapperT<EventType>>(callback);
+    UniquePtr<EventCallbackBase> handler = MakeUniquePtr<EventCallback<EventType>>(callback);
 
     gEventManager.Subscribe(EventType::GetStaticEventType(), handler);
 }
@@ -82,9 +80,9 @@ static void TriggerEvent(const Event& triggeredEvent)
     gEventManager.TriggerEvent(triggeredEvent);
 }
 
-static void QueueEvent(Event* queuedEvent)
+static void QueueEvent(UniquePtr<Event>&& queuedEvent)
 {
-    gEventManager.QueueEvent(queuedEvent);
+    gEventManager.QueueEvent(std::forward<UniquePtr<Event>>(queuedEvent));
 }
 
 } // namespace Elven::Events

@@ -6,14 +6,10 @@ EventManager gEventManager;
 
 void EventManager::Shutdown()
 {
-    for (auto* event_ : m_eventsQueue) {
-        delete event_;
-    }
-
     m_subscribers.clear();
 }
 
-void EventManager::Subscribe(std::uint32_t eventId, UniquePtr<EventCallbackWrapper>& handler)
+void EventManager::Subscribe(std::uint32_t eventId, UniquePtr<EventCallbackBase>& handler)
 {
     auto subscribers = m_subscribers.find(eventId);
     if (subscribers != m_subscribers.end()) {
@@ -48,9 +44,9 @@ void EventManager::TriggerEvent(const Event& event_)
     }
 }
 
-void EventManager::QueueEvent(Event* event_)
+void EventManager::QueueEvent(UniquePtr<Event>&& event_)
 {
-    m_eventsQueue.emplace_back(event_);
+    m_eventsQueue.emplace_back(std::move(event_));
 }
 
 void EventManager::DispatchEvents()

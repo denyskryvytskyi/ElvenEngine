@@ -54,3 +54,4 @@ bin-int/
 build/**/*
 lib/*
 bin/*
+architecture_schemes/

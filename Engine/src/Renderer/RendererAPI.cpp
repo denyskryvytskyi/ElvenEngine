@@ -1,21 +1,21 @@
-
 #include "Renderer/RendererAPI.h"
+
 #include "Platform/OpenGL/OpenGLRendererAPI.h"
 
 namespace Elven {
 RendererAPI::API RendererAPI::s_API = RendererAPI::API::OpenGL;
 
-RendererAPI* RendererAPI::Create()
+UniquePtr<RendererAPI> RendererAPI::Create()
 {
     switch (s_API) {
     case RendererAPI::API::None:
-        EL_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
+        EL_CORE_ASSERT(false, "RendererAPI::None is currently not supported.");
         return nullptr;
     case RendererAPI::API::OpenGL:
-        return new OpenGLRendererAPI();
+        return MakeUniquePtr<OpenGLRendererAPI>();
     }
 
-    EL_CORE_ASSERT(false, "Unknown RendererAPI!");
+    EL_CORE_ASSERT(false, "Unknown RendererAPI.");
     return nullptr;
 }
 } // namespace Elven

@@ -1,8 +1,8 @@
 #include "Texture2D.h"
-#include "Platform/OpenGL/OpenGLTexture2D.h"
+#include "Core/FileSystem.h"
 #include "Renderer/Renderer.h"
 
-#include "Core/FileSystem.h"
+#include "Platform/OpenGL/OpenGLTexture2D.h"
 
 namespace Elven {
 SharedPtr<Texture2D> Texture2D::Create(const std::string& filename)

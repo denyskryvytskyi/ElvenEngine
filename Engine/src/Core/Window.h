@@ -38,7 +38,7 @@ public:
 
     virtual void* GetNativeWindow() const = 0;
 
-    static Window* Create(const WindowProps& props = WindowProps());
+    static UniquePtr<Window> Create(const WindowProps& props = WindowProps());
 };
 
 } // namespace Elven
