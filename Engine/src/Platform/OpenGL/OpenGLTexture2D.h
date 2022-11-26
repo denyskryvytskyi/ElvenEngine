@@ -6,11 +6,10 @@ namespace Elven {
 
 class OpenGLTexture2D : public Texture2D {
 public:
-    OpenGLTexture2D(const std::string& filepath);
-    OpenGLTexture2D(std::uint32_t width, std::uint32_t height);
+    OpenGLTexture2D(std::uint32_t width, std::uint32_t height, std::uint32_t nrChannels = 3);
 
     void BindToUnit(std::uint32_t unit) override;
-    void SetData(void* data) override;
+    void SetData(void* data, bool generateMipmap = true) override;
 
 private:
     unsigned int m_id { 0 };

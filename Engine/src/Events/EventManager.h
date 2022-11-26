@@ -4,7 +4,7 @@
 
 #include <functional>
 
-namespace Elven::Events {
+namespace Elven::events {
 
 class EventCallbackBase {
 public:
@@ -84,4 +84,4 @@ static void QueueEvent(UniquePtr<Event>&& queuedEvent)
     gEventManager.QueueEvent(std::forward<UniquePtr<Event>>(queuedEvent));
 }
 
-} // namespace Elven::Events
+} // namespace Elven::events

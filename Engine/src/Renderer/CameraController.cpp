@@ -13,20 +13,20 @@ CameraController::CameraController(float fov, float aspectRatio, float near_, fl
     , m_near(near_)
     , m_far(far_)
     , m_isFlyEnabled(enableFly)
-    , m_mouseMovedCallback([this](const Events::MouseMovedEvent& e) { OnMouseMoved(e); })
-    , m_mouseScrolledCallback([this](const Events::MouseScrolledEvent& e) { OnMouseScrolled(e); })
-    , m_windowResizeCallback([this](const Events::WindowResizeEvent& e) { OnWindowResized(e); })
+    , m_mouseMovedCallback([this](const events::MouseMovedEvent& e) { OnMouseMoved(e); })
+    , m_mouseScrolledCallback([this](const events::MouseScrolledEvent& e) { OnMouseScrolled(e); })
+    , m_windowResizeCallback([this](const events::WindowResizeEvent& e) { OnWindowResized(e); })
 {
-    Events::Subscribe<Events::MouseMovedEvent>(m_mouseMovedCallback);
-    Events::Subscribe<Events::MouseScrolledEvent>(m_mouseScrolledCallback);
-    Events::Subscribe<Events::WindowResizeEvent>(m_windowResizeCallback);
+    events::Subscribe<events::MouseMovedEvent>(m_mouseMovedCallback);
+    events::Subscribe<events::MouseScrolledEvent>(m_mouseScrolledCallback);
+    events::Subscribe<events::WindowResizeEvent>(m_windowResizeCallback);
 }
 
 CameraController::~CameraController()
 {
-    Events::Unsubscribe<Events::WindowResizeEvent>(m_windowResizeCallback);
-    Events::Unsubscribe<Events::MouseScrolledEvent>(m_mouseScrolledCallback);
-    Events::Unsubscribe<Events::MouseMovedEvent>(m_mouseMovedCallback);
+    events::Unsubscribe<events::WindowResizeEvent>(m_windowResizeCallback);
+    events::Unsubscribe<events::MouseScrolledEvent>(m_mouseScrolledCallback);
+    events::Unsubscribe<events::MouseMovedEvent>(m_mouseMovedCallback);
 }
 
 void CameraController::OnUpdate(float dt)
@@ -65,10 +65,10 @@ void CameraController::ProcessInput(float dt)
     }
 }
 
-void CameraController::OnMouseMoved(const Events::MouseMovedEvent& e)
+void CameraController::OnMouseMoved(const events::MouseMovedEvent& e)
 {
-    const float xPos = e.MouseX;
-    const float yPos = e.MouseY;
+    const float xPos = e.mouseX;
+    const float yPos = e.mouseY;
 
     if (!m_mouseLastPosInited) {
         m_mouseLastPos.x = xPos;
@@ -103,9 +103,9 @@ void CameraController::OnMouseMoved(const Events::MouseMovedEvent& e)
     m_updateLookAt = true;
 }
 
-void CameraController::OnMouseScrolled(const Events::MouseScrolledEvent& e)
+void CameraController::OnMouseScrolled(const events::MouseScrolledEvent& e)
 {
-    m_fov -= e.YOffset;
+    m_fov -= e.yOffset;
 
     if (m_fov < 10.0f)
         m_fov = 10.0f;
@@ -115,9 +115,9 @@ void CameraController::OnMouseScrolled(const Events::MouseScrolledEvent& e)
     m_camera.SetProjection(lia::radians(m_fov), m_aspectRatio, m_near, m_far);
 }
 
-void CameraController::OnWindowResized(const Events::WindowResizeEvent& e)
+void CameraController::OnWindowResized(const events::WindowResizeEvent& e)
 {
-    m_aspectRatio = static_cast<float>(e.Width) / static_cast<float>(e.Height);
+    m_aspectRatio = static_cast<float>(e.width) / static_cast<float>(e.height);
     m_camera.SetProjection(lia::radians(m_fov), m_aspectRatio, m_near, m_far);
 }
 

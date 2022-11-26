@@ -3,7 +3,7 @@
 namespace Elven {
 
 struct WindowProps {
-    WindowProps(const std::string& title = "Elven Engine", unsigned int width = 1280, unsigned int height = 720, bool isFullScreen = false, bool isVSync = false)
+    WindowProps(const std::string& title = "Elven Engine", unsigned int width = 1280, unsigned int height = 720, bool isFullScreen = false, bool isVSync = true)
         : Title(title)
         , Width(width)
         , Height(height)

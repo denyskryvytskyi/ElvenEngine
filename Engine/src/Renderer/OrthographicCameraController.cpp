@@ -7,17 +7,17 @@ namespace Elven {
 OrthographicCameraController::OrthographicCameraController(float aspectRatio)
     : m_camera(-aspectRatio * m_zoomLevel, aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f)
     , m_aspectRatio(aspectRatio)
-    , m_windowResizeCallback([this](const Events::WindowResizeEvent& e) { OnWindowResized(e); })
-    , m_mouseScrolledCallback([this](const Events::MouseScrolledEvent& e) { OnMouseScrolled(e); })
+    , m_windowResizeCallback([this](const events::WindowResizeEvent& e) { OnWindowResized(e); })
+    , m_mouseScrolledCallback([this](const events::MouseScrolledEvent& e) { OnMouseScrolled(e); })
 {
-    Events::Subscribe<Events::WindowResizeEvent>(m_windowResizeCallback);
-    Events::Subscribe<Events::MouseScrolledEvent>(m_mouseScrolledCallback);
+    events::Subscribe<events::WindowResizeEvent>(m_windowResizeCallback);
+    events::Subscribe<events::MouseScrolledEvent>(m_mouseScrolledCallback);
 }
 
 OrthographicCameraController::~OrthographicCameraController()
 {
-    Events::Unsubscribe<Events::MouseScrolledEvent>(m_mouseScrolledCallback);
-    Events::Unsubscribe<Events::WindowResizeEvent>(m_windowResizeCallback);
+    events::Unsubscribe<events::MouseScrolledEvent>(m_mouseScrolledCallback);
+    events::Unsubscribe<events::WindowResizeEvent>(m_windowResizeCallback);
 }
 
 void OrthographicCameraController::OnUpdate(float dt)
@@ -54,16 +54,16 @@ void OrthographicCameraController::OnUpdate(float dt)
     m_translationSpeed = m_zoomLevel;
 }
 
-void OrthographicCameraController::OnMouseScrolled(const Events::MouseScrolledEvent& e)
+void OrthographicCameraController::OnMouseScrolled(const events::MouseScrolledEvent& e)
 {
-    m_zoomLevel -= e.YOffset * 0.25f;
+    m_zoomLevel -= e.yOffset * 0.25f;
     m_zoomLevel = std::max<float>(m_zoomLevel, 0.25f);
     m_camera.SetProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f);
 }
 
-void OrthographicCameraController::OnWindowResized(const Events::WindowResizeEvent& e)
+void OrthographicCameraController::OnWindowResized(const events::WindowResizeEvent& e)
 {
-    m_aspectRatio = static_cast<float>(e.Width) / static_cast<float>(e.Height);
+    m_aspectRatio = static_cast<float>(e.width) / static_cast<float>(e.height);
     m_camera.SetProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f);
 }
 } // namespace Elven

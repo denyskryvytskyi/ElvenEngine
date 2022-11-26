@@ -2,12 +2,12 @@
 
 #include "Renderer/RenderCommand.h"
 #include "Renderer/Shader.h"
-#include "Renderer/Texture2D.h"
+#include "Renderer/TextureManager.h"
 #include "Renderer/VertexArray.h"
 
 #include "Core/FileSystem.h"
 
-// #include <glad/gl.h>
+#include "Events/TextureEvent.h"
 
 namespace Elven {
 struct QuadVertex {
@@ -17,25 +17,26 @@ struct QuadVertex {
     float textureUnit = 0.0f;
 };
 
+namespace {
+constexpr std::uint32_t MAX_QUADS = 20000;
+constexpr std::uint32_t MAX_QUAD_VERTICES = MAX_QUADS * 4;
+constexpr std::uint32_t MAX_QUAD_INDICES = MAX_QUADS * 6;
+constexpr std::uint32_t MAX_TEXTURE_SLOTS = 32;
+constexpr std::uint8_t VERTICES_PER_QUAD = 4;
+} // namespace
+
 struct Renderer2DData {
     lia::mat4 viewProjectionMat;
     SharedPtr<Shader> shader;
-    SharedPtr<Texture2D> whiteTexture;
 
     // quad batching
-    static const std::uint32_t maxQuads = 20000;
-    static const std::uint32_t maxQuadVertices = maxQuads * 4;
-    static const std::uint32_t maxQuadIndices = maxQuads * 6;
-    static const std::uint32_t maxTextureSlots = 32;
-    static const std::uint8_t verticesPerQuad = 4;
-
     SharedPtr<VertexArray> quadVAO;
     SharedPtr<VertexBuffer> quadVBO;
     QuadVertex* quadVerticesBegin { nullptr };
     QuadVertex* quadVerticesCurrent { nullptr };
     std::uint32_t quadIndexCount = 0;
-    std::vector<SharedPtr<Texture2D>> textures;
-    float usedTextureSlots = 0.0f;
+    std::array<SharedPtr<Texture2D>, MAX_TEXTURE_SLOTS> textures;
+    std::uint32_t usedTextureSlots = 1; // white texture
 
     const lia::vec4 quadPositions[4] = {
         { -0.5f, -0.5f, 0.0f, 1.0f },
@@ -61,9 +62,9 @@ void Renderer2D::Init()
 
     s_data.quadVAO = VertexArray::Create();
 
-    s_data.quadVerticesBegin = new QuadVertex[s_data.maxQuadVertices];
+    s_data.quadVerticesBegin = new QuadVertex[MAX_QUAD_VERTICES];
 
-    s_data.quadVBO = VertexBuffer::Create(s_data.maxQuadVertices * sizeof(QuadVertex));
+    s_data.quadVBO = VertexBuffer::Create(MAX_QUAD_VERTICES * sizeof(QuadVertex));
     s_data.quadVBO->SetLayout({
         { BufferAttributeType::Float4 }, // pos
         { BufferAttributeType::Float4 }, // color
@@ -72,9 +73,9 @@ void Renderer2D::Init()
     });
     s_data.quadVAO->AddVertexBuffer(s_data.quadVBO);
 
-    std::uint32_t* quadIndices = new std::uint32_t[s_data.maxQuadIndices];
+    std::uint32_t* quadIndices = new std::uint32_t[MAX_QUAD_INDICES];
     std::uint32_t offset = 0;
-    for (std::uint32_t i = 0; i < s_data.maxQuadIndices; i += 6) {
+    for (std::uint32_t i = 0; i < MAX_QUAD_INDICES; i += 6) {
         quadIndices[i] = offset;
         quadIndices[i + 1] = offset + 1;
         quadIndices[i + 2] = offset + 3;
@@ -85,18 +86,19 @@ void Renderer2D::Init()
 
         offset += 4;
     }
-    SharedPtr<IndexBuffer> quadEBO = IndexBuffer::Create(quadIndices, s_data.maxQuadIndices);
+    SharedPtr<IndexBuffer> quadEBO = IndexBuffer::Create(quadIndices, MAX_QUAD_INDICES);
     s_data.quadVAO->SetIndexBuffer(quadEBO);
     delete[] quadIndices;
 
     s_data.shader = ShaderManager::Load("texture_shader", "texture_shader.vert", "texture_shader.frag");
 
-    // textures
-    s_data.whiteTexture = Texture2D::Create(1, 1);
+    // Textures
+    SharedPtr<Texture2D> whiteTexture = textures::Load("white", 1, 1);
     std::uint32_t whiteTextureData = 0xffffffff;
-    s_data.whiteTexture->SetData(&whiteTextureData);
-    s_data.whiteTexture->BindToUnit(0);
-    s_data.textures.reserve(s_data.maxTextureSlots);
+    whiteTexture->SetData(&whiteTextureData, false);
+    whiteTexture->BindToUnit(0);
+
+    s_data.textures[0] = std::move(whiteTexture);
 }
 
 void Renderer2D::Shutdown()
@@ -120,15 +122,13 @@ void Renderer2D::EndScene()
 
 void Renderer2D::Flush()
 {
-    s_data.quadVBO->SetData(s_data.quadVerticesBegin, (std::uint32_t)((char*)s_data.quadVerticesCurrent - (char*)s_data.quadVerticesBegin));
+    s_data.quadVBO->SetData(s_data.quadVerticesBegin, (std::uint32_t)((std::uint8_t*)s_data.quadVerticesCurrent - (std::uint8_t*)s_data.quadVerticesBegin));
 
     s_data.shader->Bind();
     s_data.shader->SetMatrix4("u_ViewProjection", s_data.viewProjectionMat);
 
-    std::uint32_t textureUnitIndex = 1;
-    for (auto& texture : s_data.textures) {
-        texture->BindToUnit(textureUnitIndex);
-        ++textureUnitIndex;
+    for (std::uint32_t i = 1; i < s_data.usedTextureSlots; ++i) {
+        s_data.textures[1]->BindToUnit(i);
     }
 
     RenderCommand::DrawIndexed(s_data.quadVAO, s_data.quadIndexCount);
@@ -139,9 +139,8 @@ void Renderer2D::Flush()
 void Renderer2D::StartBatch()
 {
     s_data.quadIndexCount = 0;
-    s_data.usedTextureSlots = 0;
+    s_data.usedTextureSlots = 1;
     s_data.quadVerticesCurrent = s_data.quadVerticesBegin;
-    s_data.textures.clear();
 }
 
 void Renderer2D::NextBatch()
@@ -157,13 +156,29 @@ void Renderer2D::DrawQuad(lia::vec3 pos, lia::vec2 scale, lia::vec4 color)
 
 void Renderer2D::DrawQuad(lia::vec3 pos, lia::vec2 scale, const SharedPtr<Texture2D>& texture, lia::vec4 color)
 {
-    if (s_data.usedTextureSlots >= s_data.maxTextureSlots) {
+    if (s_data.usedTextureSlots >= MAX_TEXTURE_SLOTS) {
         NextBatch();
     }
-    s_data.textures.push_back(texture);
-    s_data.usedTextureSlots++;
 
-    DrawQuad(pos, scale, color, s_data.usedTextureSlots);
+    float textureSlot = 0.0f;
+    // check whether we already register this texture
+    for (size_t i = 0; i < s_data.usedTextureSlots; ++i) {
+        if (s_data.textures[i] == texture) {
+            textureSlot = static_cast<float>(i);
+            break;
+        }
+    }
+
+    // add new texture if it isn't registered
+    if (textureSlot == 0.0f) {
+        if (s_data.usedTextureSlots >= MAX_TEXTURE_SLOTS) {
+            NextBatch();
+        }
+        textureSlot = static_cast<float>(s_data.usedTextureSlots);
+        s_data.textures[s_data.usedTextureSlots++] = texture;
+    }
+
+    DrawQuad(pos, scale, color, textureSlot);
 }
 
 void Renderer2D::DrawRotatedQuad(lia::vec3 pos, lia::vec2 scale, lia::vec3 rotation, lia::vec4 color)
@@ -173,13 +188,29 @@ void Renderer2D::DrawRotatedQuad(lia::vec3 pos, lia::vec2 scale, lia::vec3 rotat
 
 void Renderer2D::DrawRotatedQuad(lia::vec3 pos, lia::vec2 scale, lia::vec3 rotation, const SharedPtr<Texture2D>& texture, lia::vec4 color)
 {
-    if (s_data.usedTextureSlots >= s_data.maxTextureSlots) {
+    if (s_data.usedTextureSlots >= MAX_TEXTURE_SLOTS) {
         NextBatch();
     }
-    s_data.textures.push_back(texture);
-    s_data.usedTextureSlots++;
 
-    DrawRotatedQuad(pos, scale, rotation, color, s_data.usedTextureSlots);
+    float textureSlot = 0.0f;
+    // check whether we already register this texture
+    for (size_t i = 0; i < s_data.usedTextureSlots; ++i) {
+        if (s_data.textures[i] == texture) {
+            textureSlot = static_cast<float>(i);
+            break;
+        }
+    }
+
+    // add new texture if it isn't registered
+    if (textureSlot == 0.0f) {
+        if (s_data.usedTextureSlots >= MAX_TEXTURE_SLOTS) {
+            NextBatch();
+        }
+        textureSlot = static_cast<float>(s_data.usedTextureSlots);
+        s_data.textures[s_data.usedTextureSlots++] = texture;
+    }
+
+    DrawRotatedQuad(pos, scale, rotation, color, textureSlot);
 }
 
 /// Draw functions only for internal usage ////////////////////
@@ -205,11 +236,11 @@ void Renderer2D::DrawRotatedQuad(lia::vec3 pos, lia::vec2 scale, lia::vec3 rotat
 
 void Renderer2D::DrawQuad(lia::mat4 model, lia::vec4 color, float textureUnit)
 {
-    if (s_data.quadIndexCount >= s_data.maxQuadIndices) {
+    if (s_data.quadIndexCount >= MAX_QUAD_INDICES) {
         NextBatch();
     }
 
-    for (std::uint8_t i = 0; i < s_data.verticesPerQuad; ++i) {
+    for (std::uint8_t i = 0; i < VERTICES_PER_QUAD; ++i) {
         s_data.quadVerticesCurrent->position = s_data.quadPositions[i] * model;
         s_data.quadVerticesCurrent->color = color;
         s_data.quadVerticesCurrent->uv = s_data.quadUV[i];

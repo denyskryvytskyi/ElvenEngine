@@ -21,9 +21,9 @@ public:
 private:
     void ProcessInput(float dt);
 
-    void OnMouseMoved(const Events::MouseMovedEvent& e);
-    void OnMouseScrolled(const Events::MouseScrolledEvent& e);
-    void OnWindowResized(const Events::WindowResizeEvent& e);
+    void OnMouseMoved(const events::MouseMovedEvent& e);
+    void OnMouseScrolled(const events::MouseScrolledEvent& e);
+    void OnWindowResized(const events::WindowResizeEvent& e);
 
 private:
     Camera m_camera;
@@ -46,9 +46,9 @@ private:
     bool m_isFlyEnabled { false };
     bool m_updateLookAt { true };
 
-    Events::EventFunctionHandler<Events::MouseMovedEvent> m_mouseMovedCallback;
-    Events::EventFunctionHandler<Events::MouseScrolledEvent> m_mouseScrolledCallback;
-    Events::EventFunctionHandler<Events::WindowResizeEvent> m_windowResizeCallback;
+    events::EventFunctionHandler<events::MouseMovedEvent> m_mouseMovedCallback;
+    events::EventFunctionHandler<events::MouseScrolledEvent> m_mouseScrolledCallback;
+    events::EventFunctionHandler<events::WindowResizeEvent> m_windowResizeCallback;
 };
 
 } // namespace Elven

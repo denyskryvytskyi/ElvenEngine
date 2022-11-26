@@ -1,6 +1,6 @@
 #include "Events/EventManager.h"
 
-namespace Elven::Events {
+namespace Elven::events {
 
 EventManager gEventManager;
 
@@ -61,4 +61,4 @@ void EventManager::DispatchEvents()
     }
 }
 
-} // namespace Elven::Events
+} // namespace Elven::events

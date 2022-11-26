@@ -1,19 +1,21 @@
 #include "TestLayer2D.h"
-
-#include <iostream>
+#include "Elven.h"
 
 #include <lia/lia.h>
-
-#include "Elven.h"
 
 TestLayer2D::TestLayer2D()
     : Layer("TestLayer2D")
     , m_cameraController(1280.0f / 720.0f)
-    , m_textureWizard(Elven::Texture2D::Create("wizard.png"))
-    , m_textureWizardFire(Elven::Texture2D::Create("wizard_fire.png"))
-    , m_textureWizardIce(Elven::Texture2D::Create("wizard_ice.png"))
-    , m_textureBackground(Elven::Texture2D::Create("game_background_1.png"))
 {
+    Elven::textures::Load("wizard", "wizard.png");
+    Elven::textures::Load("wizard_fire", "wizard_fire.png");
+    Elven::textures::Load("wizard_ice", "wizard_ice.png");
+    Elven::textures::Load("game_background_1", "game_background_1.png");
+
+    m_textureWizard = Elven::textures::Get("wizard");
+    m_textureWizardFire = Elven::textures::Get("wizard_fire");
+    m_textureWizardIce = Elven::textures::Get("wizard_ice");
+    m_textureBackground = Elven::textures::Get("game_background_1");
 }
 
 TestLayer2D::~TestLayer2D()

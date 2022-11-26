@@ -73,8 +73,8 @@ void WindowsWindow::SetFullScreen(bool enabled)
             glfwSetWindowPos(m_window, s_defaultWindowPosX, s_defaultWindowPosY);
         }
 
-        UniquePtr<Events::WindowResizeEvent> resizeEvent = MakeUniquePtr<Events::WindowResizeEvent>(m_data.Width, m_data.Height);
-        Events::QueueEvent(std::move(resizeEvent));
+        UniquePtr<events::WindowResizeEvent> resizeEvent = MakeUniquePtr<events::WindowResizeEvent>(m_data.Width, m_data.Height);
+        events::QueueEvent(std::move(resizeEvent));
     }
 }
 
@@ -122,56 +122,56 @@ void WindowsWindow::Init(const WindowProps& props)
         data.Width = width;
         data.Height = height;
 
-        UniquePtr<Events::WindowResizeEvent> resizeEvent = MakeUniquePtr<Events::WindowResizeEvent>(width, height);
-        Events::QueueEvent(std::move(resizeEvent));
+        UniquePtr<events::WindowResizeEvent> resizeEvent = MakeUniquePtr<events::WindowResizeEvent>(width, height);
+        events::QueueEvent(std::move(resizeEvent));
     });
 
     glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window) {
-        UniquePtr<Events::WindowCloseEvent> closeEvent = MakeUniquePtr<Events::WindowCloseEvent>();
-        Events::QueueEvent(std::move(closeEvent));
+        UniquePtr<events::WindowCloseEvent> closeEvent = MakeUniquePtr<events::WindowCloseEvent>();
+        events::QueueEvent(std::move(closeEvent));
     });
 
     glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mode) {
         switch (action) {
         case GLFW_PRESS: {
-            Events::TriggerEvent(Events::KeyPressedEvent(key, 0));
+            events::TriggerEvent(events::KeyPressedEvent(key, 0));
             break;
         }
         case GLFW_RELEASE: {
-            Events::TriggerEvent(Events::KeyReleasedEvent(key));
+            events::TriggerEvent(events::KeyReleasedEvent(key));
             break;
         }
         case GLFW_REPEAT: {
-            Events::TriggerEvent(Events::KeyPressedEvent(key, 1));
+            events::TriggerEvent(events::KeyPressedEvent(key, 1));
             break;
         }
         }
     });
 
     glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int keycode) {
-        UniquePtr<Events::KeyTypedEvent> keyTypeEvent = MakeUniquePtr<Events::KeyTypedEvent>(keycode);
-        Events::QueueEvent(std::move(keyTypeEvent));
+        UniquePtr<events::KeyTypedEvent> keyTypeEvent = MakeUniquePtr<events::KeyTypedEvent>(keycode);
+        events::QueueEvent(std::move(keyTypeEvent));
     });
 
     glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods) {
         switch (action) {
         case GLFW_PRESS: {
-            Events::TriggerEvent(Events::MouseButtonPressedEvent(button));
+            events::TriggerEvent(events::MouseButtonPressedEvent(button));
             break;
         }
         case GLFW_RELEASE: {
-            Events::TriggerEvent(Events::MouseButtonReleasedEvent(button));
+            events::TriggerEvent(events::MouseButtonReleasedEvent(button));
             break;
         }
         }
     });
 
     glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset) {
-        Events::TriggerEvent(Events::MouseScrolledEvent((float)xOffset, (float)yOffset));
+        events::TriggerEvent(events::MouseScrolledEvent((float)xOffset, (float)yOffset));
     });
 
     glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos) {
-        Events::TriggerEvent(Events::MouseMovedEvent((float)xPos, (float)yPos));
+        events::TriggerEvent(events::MouseMovedEvent((float)xPos, (float)yPos));
     });
 }
 

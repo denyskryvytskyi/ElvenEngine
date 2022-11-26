@@ -3,7 +3,7 @@
 #include "Core/KeyCodes.h"
 #include "Events/Event.h"
 
-namespace Elven::Events {
+namespace Elven::events {
 
 class KeyEvent : public Event {
 public:
@@ -25,19 +25,19 @@ public:
 
     KeyPressedEvent(int keyCode, int repeatCount)
         : KeyEvent(keyCode)
-        , RepeatCount(repeatCount)
+        , repeatCount(repeatCount)
     {
     }
 
     std::string ToString() const override
     {
         std::stringstream ss;
-        ss << "KeyPressedEvent: " << key << " (" << RepeatCount << " repeats)";
+        ss << "KeyPressedEvent: " << key << " (" << repeatCount << " repeats)";
         return ss.str();
     }
 
 public:
-    int RepeatCount { 0 };
+    int repeatCount { 0 };
 };
 
 class KeyReleasedEvent : public KeyEvent {
@@ -74,4 +74,4 @@ public:
     }
 };
 
-} // namespace Elven::Events
+} // namespace Elven::events

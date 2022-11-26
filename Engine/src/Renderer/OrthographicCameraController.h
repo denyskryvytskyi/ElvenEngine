@@ -22,8 +22,8 @@ public:
     float GetZoomLevel() const { return m_zoomLevel; }
 
 private:
-    void OnMouseScrolled(const Events::MouseScrolledEvent& e);
-    void OnWindowResized(const Events::WindowResizeEvent& e);
+    void OnMouseScrolled(const events::MouseScrolledEvent& e);
+    void OnWindowResized(const events::WindowResizeEvent& e);
 
 private:
     lia::vec3 m_position;
@@ -36,8 +36,8 @@ private:
 
     Camera m_camera;
 
-    Events::EventFunctionHandler<Events::WindowResizeEvent> m_windowResizeCallback;
-    Events::EventFunctionHandler<Events::MouseScrolledEvent> m_mouseScrolledCallback;
+    events::EventFunctionHandler<events::WindowResizeEvent> m_windowResizeCallback;
+    events::EventFunctionHandler<events::MouseScrolledEvent> m_mouseScrolledCallback;
 };
 
 } // namespace Elven

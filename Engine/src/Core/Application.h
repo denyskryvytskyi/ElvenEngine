@@ -3,6 +3,7 @@
 #include "Core/LayerStack.h"
 #include "Events/ApplicationEvent.h"
 #include "Events/EventManager.h"
+#include "Scene/Scene.h"
 #include "Window.h"
 
 namespace Elven {
@@ -10,6 +11,7 @@ namespace Elven {
 class Window;
 class Layer;
 class ImGuiLayer;
+class Scene;
 
 class Application {
 private:
@@ -33,8 +35,8 @@ public:
     static Telemetry& GetTelemetry() { return s_telemetry; };
 
 private:
-    void OnWindowClose(const Events::WindowCloseEvent& e);
-    void OnWindowResize(const Events::WindowResizeEvent& e);
+    void OnWindowClose(const events::WindowCloseEvent& e);
+    void OnWindowResize(const events::WindowResizeEvent& e);
 
 private:
     static Application* s_instance;
@@ -45,9 +47,10 @@ private:
     UniquePtr<Window> m_window { Window::Create() };
     ImGuiLayer* m_imGuiLayer { nullptr };
     LayerStack m_layerStack;
+    Scene m_scene;
 
-    Events::EventFunctionHandler<Events::WindowResizeEvent> m_windowResizeCallback;
-    Events::EventFunctionHandler<Events::WindowCloseEvent> m_windowCloseCallback;
+    events::EventFunctionHandler<events::WindowResizeEvent> m_windowResizeCallback;
+    events::EventFunctionHandler<events::WindowCloseEvent> m_windowCloseCallback;
 };
 
 // To be defined in CLIENT

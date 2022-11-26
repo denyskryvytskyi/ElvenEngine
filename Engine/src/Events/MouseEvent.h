@@ -3,50 +3,50 @@
 #include "Core/MouseCodes.h"
 #include "Events/Event.h"
 
-namespace Elven::Events {
+namespace Elven::events {
 
 class MouseMovedEvent : public Event {
 public:
     EVENT_TYPE("MouseMovedEvent")
 
     MouseMovedEvent(float x, float y)
-        : MouseX(x)
-        , MouseY(y)
+        : mouseX(x)
+        , mouseY(y)
     {
     }
 
     std::string ToString() const override
     {
         std::stringstream ss;
-        ss << "MouseMovedEvent: " << MouseX << ", " << MouseY;
+        ss << "MouseMovedEvent: " << mouseX << ", " << mouseY;
         return ss.str();
     }
 
 public:
-    float MouseX { 0.0f };
-    float MouseY { 0.0f };
+    float mouseX { 0.0f };
+    float mouseY { 0.0f };
 };
 
 class MouseScrolledEvent : public Event {
 public:
     EVENT_TYPE("MouseScrolledEvent")
 
-    MouseScrolledEvent(float xOffset, float yOffset)
-        : XOffset(xOffset)
-        , YOffset(yOffset)
+    MouseScrolledEvent(float xOffset_, float yOffset_)
+        : xOffset(xOffset_)
+        , yOffset(yOffset_)
     {
     }
 
     std::string ToString() const override
     {
         std::stringstream ss;
-        ss << "MouseScrolledEvent: " << XOffset << ", " << YOffset;
+        ss << "MouseScrolledEvent: " << xOffset << ", " << yOffset;
         return ss.str();
     }
 
 public:
-    float XOffset { 0.0f };
-    float YOffset { 0.0f };
+    float xOffset { 0.0f };
+    float yOffset { 0.0f };
 };
 
 class MouseButtonEvent : public Event {
@@ -54,13 +54,13 @@ public:
     EVENT_TYPE("MouseButtonEvent")
 
 protected:
-    MouseButtonEvent(MouseCode button)
-        : Button(button)
+    MouseButtonEvent(MouseCode button_)
+        : button(button_)
     {
     }
 
 public:
-    MouseCode Button { 0 };
+    MouseCode button { 0 };
 };
 
 class MouseButtonPressedEvent : public MouseButtonEvent {
@@ -75,7 +75,7 @@ public:
     std::string ToString() const override
     {
         std::stringstream ss;
-        ss << "MouseButtonPressedEvent: " << Button;
+        ss << "MouseButtonPressedEvent: " << button;
         return ss.str();
     }
 };
@@ -92,9 +92,9 @@ public:
     std::string ToString() const override
     {
         std::stringstream ss;
-        ss << "MouseButtonReleasedEvent: " << Button;
+        ss << "MouseButtonReleasedEvent: " << button;
         return ss.str();
     }
 };
 
-} // namespace Elven::Events
+} // namespace Elven::events

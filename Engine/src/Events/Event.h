@@ -4,7 +4,7 @@
 #include <sstream>
 #include <string>
 
-namespace Elven::Events {
+namespace Elven::events {
 
 class Event {
 public:
@@ -29,4 +29,4 @@ inline std::ostream& operator<<(std::ostream& os, const Event& e)
     return os << e.ToString();
 }
 
-} // namespace Elven::Events
+} // namespace Elven::events

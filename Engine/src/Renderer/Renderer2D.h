@@ -27,7 +27,7 @@ public:
     static void StartBatch();
     static void NextBatch();
 
-    static void DrawQuad(lia::vec3 pos, lia::vec2 scale, lia::vec4 color);
+    static void DrawQuad(lia::vec3 pos, lia::vec2 scale, lia::vec4 color = lia::vec4(1.0f));
     static void DrawQuad(lia::vec3 pos, lia::vec2 scale, const SharedPtr<Texture2D>& texture, lia::vec4 color = lia::vec4(1.0f));
 
     /**

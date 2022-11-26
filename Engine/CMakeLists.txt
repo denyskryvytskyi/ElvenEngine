@@ -21,6 +21,7 @@ set(ENGINE_HEADERS
 "src/Events/EventManager.h"
 "src/Events/KeyEvent.h"
 "src/Events/MouseEvent.h"
+"src/Events/TextureEvent.h"
 "src/ImGui/imgui_impl_glfw.h"
 "src/ImGui/imgui_impl_opengl3.h"
 "src/ImGui/ImGuiLayer.h"
@@ -36,6 +37,7 @@ set(ENGINE_HEADERS
 "src/Renderer/Shader.h"
 "src/Renderer/VertexArray.h"
 "src/Renderer/Texture2D.h"
+"src/Renderer/TextureManager.h"
 "src/Platform/Windows/WindowsWindow.h"
 "src/Platform/OpenGL/OpenGLBuffer.h"
 "src/Platform/OpenGL/OpenGLContext.h"
@@ -43,6 +45,10 @@ set(ENGINE_HEADERS
 "src/Platform/OpenGL/OpenGLShader.h"
 "src/Platform/OpenGL/OpenGLVertexArray.h"
 "src/Platform/OpenGL/OpenGLTexture2D.h"
+"src/Scene/Scene.h"
+"src/Scene/World.h"
+"src/Scene/Entity.h"
+"src/Scene/Component.h"
 )
 
 set(ENGINE_SOURCES
@@ -65,7 +71,7 @@ set(ENGINE_SOURCES
 "src/Renderer/RendererAPI.cpp"
 "src/Renderer/Shader.cpp"
 "src/Renderer/VertexArray.cpp"
-"src/Renderer/Texture2D.cpp"
+"src/Renderer/TextureManager.cpp"
 "src/ImGui/imgui_impl_glfw.cpp"
 "src/ImGui/imgui_impl_opengl3.cpp"
 "src/ImGui/ImGuiLayer.cpp"
@@ -77,6 +83,7 @@ set(ENGINE_SOURCES
 "src/Platform/OpenGL/OpenGLTexture2D.cpp"
 "src/Platform/Windows/WindowsInput.cpp"
 "src/Platform/Windows/WindowsWindow.cpp"
+"src/Scene/Scene.cpp"
 ${ENGINE_HEADERS}
 )
 
