@@ -34,6 +34,7 @@ Application::Application()
 
     EL_INFO("Executable path: {0}", FileSystem::GetCurrentPath());
 
+    Elven::Renderer::Init();
     m_scene.Init();
 }
 

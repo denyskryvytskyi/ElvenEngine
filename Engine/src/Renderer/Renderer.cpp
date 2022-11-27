@@ -7,6 +7,7 @@ UniquePtr<Renderer::SceneData> Renderer::m_sceneData = MakeUniquePtr<Renderer::S
 void Renderer::Init()
 {
     RenderCommand::Init();
+    Renderer2D::Init();
     RenderCommand::EnableDepthTesting(true);
 }
 

@@ -11,14 +11,4 @@ public:
     virtual void OnDetach() override;
     void OnUpdate(float dt) override;
     virtual void OnImGuiRender() override;
-
-private:
-    void TestDrawQuads(bool draw);
-
-private:
-    Elven::OrthographicCameraController m_cameraController;
-    Elven::SharedPtr<Elven::Texture2D> m_textureWizard;
-    Elven::SharedPtr<Elven::Texture2D> m_textureWizardFire;
-    Elven::SharedPtr<Elven::Texture2D> m_textureWizardIce;
-    Elven::SharedPtr<Elven::Texture2D> m_textureBackground;
 };

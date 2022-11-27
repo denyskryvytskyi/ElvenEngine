@@ -57,9 +57,6 @@ Renderer2D::Telemetry Renderer2D::s_telemetry;
 
 void Renderer2D::Init()
 {
-    RenderCommand::Init();
-    RenderCommand::EnableDepthTesting(false);
-
     s_data.quadVAO = VertexArray::Create();
 
     s_data.quadVerticesBegin = new QuadVertex[MAX_QUAD_VERTICES];
@@ -149,44 +146,12 @@ void Renderer2D::NextBatch()
     StartBatch();
 }
 
-void Renderer2D::DrawQuad(lia::vec3 pos, lia::vec2 scale, lia::vec4 color)
+void Renderer2D::DrawQuad(const lia::vec3& pos, const lia::vec2& scale, float rotation, const lia::vec4& color)
 {
-    DrawQuad(pos, scale, color, 0);
+    DrawQuad(pos, scale, rotation, color, 0);
 }
 
-void Renderer2D::DrawQuad(lia::vec3 pos, lia::vec2 scale, const SharedPtr<Texture2D>& texture, lia::vec4 color)
-{
-    if (s_data.usedTextureSlots >= MAX_TEXTURE_SLOTS) {
-        NextBatch();
-    }
-
-    float textureSlot = 0.0f;
-    // check whether we already register this texture
-    for (size_t i = 0; i < s_data.usedTextureSlots; ++i) {
-        if (s_data.textures[i] == texture) {
-            textureSlot = static_cast<float>(i);
-            break;
-        }
-    }
-
-    // add new texture if it isn't registered
-    if (textureSlot == 0.0f) {
-        if (s_data.usedTextureSlots >= MAX_TEXTURE_SLOTS) {
-            NextBatch();
-        }
-        textureSlot = static_cast<float>(s_data.usedTextureSlots);
-        s_data.textures[s_data.usedTextureSlots++] = texture;
-    }
-
-    DrawQuad(pos, scale, color, textureSlot);
-}
-
-void Renderer2D::DrawRotatedQuad(lia::vec3 pos, lia::vec2 scale, lia::vec3 rotation, lia::vec4 color)
-{
-    DrawRotatedQuad(pos, scale, rotation, color, 0);
-}
-
-void Renderer2D::DrawRotatedQuad(lia::vec3 pos, lia::vec2 scale, lia::vec3 rotation, const SharedPtr<Texture2D>& texture, lia::vec4 color)
+void Renderer2D::DrawQuad(const SharedPtr<Texture2D>& texture, const lia::vec3& pos, const lia::vec2& scale, float rotation, const lia::vec4& color)
 {
     if (s_data.usedTextureSlots >= MAX_TEXTURE_SLOTS) {
         NextBatch();
@@ -210,31 +175,19 @@ void Renderer2D::DrawRotatedQuad(lia::vec3 pos, lia::vec2 scale, lia::vec3 rotat
         s_data.textures[s_data.usedTextureSlots++] = texture;
     }
 
-    DrawRotatedQuad(pos, scale, rotation, color, textureSlot);
+    DrawQuad(pos, scale, rotation, color, textureSlot);
 }
 
-/// Draw functions only for internal usage ////////////////////
-
-void Renderer2D::DrawQuad(lia::vec3 pos, lia::vec2 scale, lia::vec4 color, float textureUnit)
+void Renderer2D::DrawQuad(const lia::vec3& pos, const lia::vec2& scale, float rotation, const lia::vec4& color, float textureUnit)
 {
     lia::mat4 model = lia::scale(lia::mat4(), lia::vec3(scale.x, scale.y, 0.0f));
+    model = lia::rotate(model, lia::radians(rotation), { 0.0f, 0.0f, 1.0f });
     model = lia::translate(model, pos);
 
     DrawQuad(model, color, textureUnit);
 }
 
-void Renderer2D::DrawRotatedQuad(lia::vec3 pos, lia::vec2 scale, lia::vec3 rotation, lia::vec4 color, float textureUnit)
-{
-    lia::mat4 model = lia::scale(lia::mat4(), lia::vec3(scale.x, scale.y, 0.0f));
-    model = lia::rotateX(model, lia::radians(rotation.x));
-    model = lia::rotateY(model, lia::radians(rotation.y));
-    model = lia::rotateZ(model, lia::radians(rotation.z));
-    model = lia::translate(model, pos);
-
-    DrawQuad(model, color, textureUnit);
-}
-
-void Renderer2D::DrawQuad(lia::mat4 model, lia::vec4 color, float textureUnit)
+void Renderer2D::DrawQuad(const lia::mat4& model, const lia::vec4& color, float textureUnit)
 {
     if (s_data.quadIndexCount >= MAX_QUAD_INDICES) {
         NextBatch();

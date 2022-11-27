@@ -32,8 +32,6 @@ Scene::Scene()
 
 void Scene::Init()
 {
-    Elven::Renderer2D::Init();
-
     std::vector<std::pair<std::string, std::string>> texturesLoadList = {
         { "wizard", "wizard.png" },
         { "wizard_fire", "wizard_fire.png" },
@@ -68,9 +66,10 @@ void Scene::OnRender(float dt)
         auto transformComponent = m_world.GetComponent<TransformComponent>(entityInfo.id);
         if (m_world.HasComponent<SpriteComponent>(entityInfo.id)) {
             auto spriteComponent = m_world.GetComponent<SpriteComponent>(entityInfo.id);
-            Elven::Renderer2D::DrawQuad(transformComponent.pos, transformComponent.scale, spriteComponent.m_texture);
+
+            Elven::Renderer2D::DrawQuad(spriteComponent.m_texture, transformComponent.pos, transformComponent.scale, 45.0f);
         } else {
-            Elven::Renderer2D::DrawQuad(transformComponent.pos, transformComponent.scale, { 0.5f, 0.5f, 0.2f, 1.0f });
+            Elven::Renderer2D::DrawQuad(transformComponent.pos, transformComponent.scale, 0.0f, { 0.5f, 0.5f, 0.2f, 1.0f });
         }
     }
 
