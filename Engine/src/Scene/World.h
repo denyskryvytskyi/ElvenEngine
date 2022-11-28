@@ -126,6 +126,27 @@ public:
 
         return std::static_pointer_cast<ComponentArray<ComponentType>>(it->second)->GetComponents();
     }
+    template<typename ComponentType>
+    bool HasComponents() const
+    {
+        const ComponentTypeId componentTypeId = GetComponentTypeId<ComponentType>();
+        auto it = m_componentArrays.find(componentTypeId);
+
+        return it != m_componentArrays.end();
+    }
+
+    template<typename ComponentType>
+    EntityId GetEntity(std::uint32_t componentIndex) const
+    {
+        const ComponentTypeId componentTypeId = GetComponentTypeId<ComponentType>();
+        auto it = m_componentArrays.find(componentTypeId);
+
+        if (it == m_componentArrays.end()) {
+            EL_CORE_ASSERT(false, "Component type isn't registered.")
+        }
+
+        return it->second->GetEntity(componentIndex);
+    }
 
 private:
     std::unordered_map<ComponentTypeId, SharedPtr<ComponentArrayBase>> m_componentArrays;

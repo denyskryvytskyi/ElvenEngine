@@ -62,14 +62,18 @@ void Scene::OnRender(float dt)
 
     Elven::Renderer2D::BeginScene(m_cameraController.GetCamera());
 
-    for (auto entityInfo : m_world.GetEntities()) {
-        auto transformComponent = m_world.GetComponent<TransformComponent>(entityInfo.id);
-        if (m_world.HasComponent<SpriteComponent>(entityInfo.id)) {
-            auto spriteComponent = m_world.GetComponent<SpriteComponent>(entityInfo.id);
+    if (m_world.HasComponents<TransformComponent>()) {
+        auto transformComponents = m_world.GetComponents<TransformComponent>();
+        for (std::uint32_t index = 0; index < transformComponents.size(); ++index) {
+            const ecs::EntityId entityid = m_world.GetEntity<TransformComponent>(index);
 
-            Elven::Renderer2D::DrawQuad(spriteComponent.m_texture, transformComponent.pos, transformComponent.scale, 45.0f);
-        } else {
-            Elven::Renderer2D::DrawQuad(transformComponent.pos, transformComponent.scale, 0.0f, { 0.5f, 0.5f, 0.2f, 1.0f });
+            auto transformComponent = transformComponents[index];
+            if (m_world.HasComponent<SpriteComponent>(entityid)) {
+                auto spriteComponent = m_world.GetComponent<SpriteComponent>(entityid);
+                Elven::Renderer2D::DrawQuad(spriteComponent.m_texture, transformComponent.pos, transformComponent.scale, 45.0f);
+            } else {
+                Elven::Renderer2D::DrawQuad(transformComponent.pos, transformComponent.scale, 0.0f, { 0.5f, 0.5f, 0.2f, 1.0f });
+            }
         }
     }
 

@@ -30,6 +30,7 @@ struct ComponentArrayBase {
     virtual void Clear() = 0;
     virtual void AddComponent(EntityId entityId) = 0;
     virtual void RemoveComponent(EntityId entityId) = 0;
+    virtual EntityId GetEntity(std::uint32_t componentIndex) const = 0;
 };
 
 template<class ComponentType>
@@ -75,6 +76,11 @@ public:
         m_components.pop_back();
         m_componentToEntities.pop_back();
         m_entityToComponentIndex.erase(it);
+    }
+
+    EntityId GetEntity(std::uint32_t componentIndex) const override
+    {
+        return m_componentToEntities[componentIndex];
     }
 
     ComponentType& GetComponent(EntityId entityId)
