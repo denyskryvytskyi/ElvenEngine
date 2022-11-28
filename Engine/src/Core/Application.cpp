@@ -65,8 +65,8 @@ void Application::Run()
 {
     Timer timer;
     while (m_running) {
-        float elapsedTime = timer.elapsed();
-        timer.restart();
+        const float elapsedTime = timer.Elapsed();
+        timer.Restart();
 
         s_telemetry.frameTime = elapsedTime * 1000.0f;
         s_telemetry.fps = 1.0f / elapsedTime;

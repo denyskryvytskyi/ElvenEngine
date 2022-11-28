@@ -7,20 +7,21 @@ namespace Elven {
 class Timer {
 public:
     Timer()
-        : begin(clock::now())
+        : m_start(clock::now())
     {
     }
 
     // restart timer to current time
-    void restart() { begin = clock::now(); }
+    void Restart() { m_start = clock::now(); }
 
     // get delta time as seconds
-    float elapsed() const { return std::chrono::duration_cast<seconds>(clock::now() - begin).count(); }
+    float Elapsed() const { return std::chrono::duration_cast<seconds>(clock::now() - m_start).count(); }
 
 private:
     using clock = std::chrono::high_resolution_clock; // QueryPerformanceCounter
     using seconds = std::chrono::duration<float, std::ratio<1>>;
-    std::chrono::time_point<clock> begin;
+
+    std::chrono::time_point<clock> m_start;
 };
 
 } // namespace Elven

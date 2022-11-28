@@ -24,8 +24,8 @@ ComponentTypeId GetComponentTypeId()
     return id;
 }
 
-struct ComponentArrayBase {
-    virtual ~ComponentArrayBase() = default;
+struct ComponentPoolBase {
+    virtual ~ComponentPoolBase() = default;
 
     virtual void Clear() = 0;
     virtual void AddComponent(EntityId entityId) = 0;
@@ -34,9 +34,9 @@ struct ComponentArrayBase {
 };
 
 template<class ComponentType>
-class ComponentArray final : public ComponentArrayBase {
+class ComponentPool final : public ComponentPoolBase {
 public:
-    ComponentArray()
+    ComponentPool()
     {
         m_components.reserve(MAX_ENTITIES_PER_COMPONENT);
     }
@@ -44,8 +44,8 @@ public:
     void Clear() override
     {
         m_components.clear();
+        m_entities.clear();
         m_entityToComponentIndex.clear();
-        m_componentToEntities.clear();
     }
 
     void AddComponent(EntityId entityId) override
@@ -53,7 +53,7 @@ public:
         if (m_components.size() < MAX_ENTITIES_PER_COMPONENT) {
             m_entityToComponentIndex.insert({ entityId, m_components.size() });
             m_components.emplace_back();
-            m_componentToEntities.emplace_back(entityId);
+            m_entities.emplace_back(entityId);
         } else {
             EL_CORE_CRITICAL("Max components limit reached.");
         }
@@ -68,19 +68,19 @@ public:
             if (componentIndex < m_components.size() - 1) {
                 m_components[componentIndex] = std::move(m_components.back()); // replace dead component with the last one
 
-                EntityId movedComponentEntityId = m_componentToEntities.back();
+                EntityId movedComponentEntityId = m_entities.back();
                 m_entityToComponentIndex[movedComponentEntityId] = componentIndex; // new mapping for moved component
             }
         }
 
         m_components.pop_back();
-        m_componentToEntities.pop_back();
+        m_entities.pop_back();
         m_entityToComponentIndex.erase(it);
     }
 
     EntityId GetEntity(std::uint32_t componentIndex) const override
     {
-        return m_componentToEntities[componentIndex];
+        return m_entities[componentIndex];
     }
 
     ComponentType& GetComponent(EntityId entityId)
@@ -106,7 +106,7 @@ private:
 
     // index - component index that is the same for index from m_components
     // value - entity id associated with this component
-    std::vector<EntityId> m_componentToEntities;
+    std::vector<EntityId> m_entities;
 };
 
 } // namespace Elven::ecs

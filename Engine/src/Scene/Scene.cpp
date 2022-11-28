@@ -38,11 +38,9 @@ void Scene::Init()
         { "wizard_ice", "wizard_ice.png" }
     };
 
-    Timer timer;
     for (size_t i = 0; i < texturesLoadList.size(); i++) {
         textures::Load(std::move(texturesLoadList[i].first), texturesLoadList[i].second);
     }
-    EL_CORE_INFO("Elapsed time {0} ms", timer.elapsed() * 1000);
 }
 
 void Scene::Shutdown()
@@ -83,10 +81,11 @@ void Scene::OnRender(float dt)
 void Scene::OnTextureLoaded(const events::TextureLoadedEvent& e)
 {
     if (e.textureName == "wizard_fire") {
+
         SharedPtr<Texture2D> texture = textures::Get("wizard_fire");
 
         for (size_t i = 0; i < 100; ++i) {
-            for (size_t j = 0; j < 100; ++j) {
+            for (size_t j = 0; j < 200; ++j) {
 
                 ecs::EntityId entityQuad = m_world.CreateEntity();
 
