@@ -11,7 +11,7 @@ public:
     virtual std::uint32_t GetEventType() const = 0;
     virtual std::string ToString() const { return std::to_string(GetEventType()); };
 
-    bool Handled { false };
+    bool isHandled { false };
 };
 
 #define EVENT_TYPE(event_type)                  \

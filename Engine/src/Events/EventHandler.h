@@ -11,15 +11,15 @@ using EventHandler = std::function<void(const EventType& e)>;
 
 class EventHandlerWrapperInterface {
 public:
-    void exec(const Event& e)
+    void Exec(const Event& e)
     {
-        call(e);
+        Call(e);
     }
 
-    virtual std::string getType() const = 0;
+    virtual std::string GetType() const = 0;
 
 private:
-    virtual void call(const Event& e) = 0;
+    virtual void Call(const Event& e) = 0;
 };
 
 template<typename EventType>
@@ -30,14 +30,14 @@ public:
         , m_handlerType(m_handler.target_type().name()) {};
 
 private:
-    void call(const Event& e) override
+    void Call(const Event& e) override
     {
         if (e.GetEventType() == EventType::GetStaticEventType()) {
             m_handler(static_cast<const EventType&>(e));
         }
     }
 
-    std::string getType() const override { return m_handlerType; }
+    std::string GetType() const override { return m_handlerType; }
 
     EventHandler<EventType> m_handler;
     const std::string m_handlerType;

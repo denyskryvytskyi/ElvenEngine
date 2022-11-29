@@ -15,7 +15,7 @@ void EventManager::Subscribe(std::uint32_t eventId, UniquePtr<EventHandlerWrappe
     if (subscribers != m_subscribers.end()) {
         auto& handlers = subscribers->second;
         for (auto& it : handlers) {
-            if (it->getType() == handler->getType()) {
+            if (it->GetType() == handler->GetType()) {
                 EL_ASSERT(false, "Attempting to double-register callback");
                 return;
             }
@@ -30,7 +30,7 @@ void EventManager::Unsubscribe(std::uint32_t eventId, const std::string& handler
 {
     auto& handlers = m_subscribers[eventId];
     for (auto& it = handlers.begin(); it != handlers.end(); ++it) {
-        if (it->get()->getType() == handlerName) {
+        if (it->get()->GetType() == handlerName) {
             it = handlers.erase(it);
             return;
         }
@@ -40,7 +40,7 @@ void EventManager::Unsubscribe(std::uint32_t eventId, const std::string& handler
 void EventManager::TriggerEvent(const Event& event_)
 {
     for (auto& handler : m_subscribers[event_.GetEventType()]) {
-        handler->exec(event_);
+        handler->Exec(event_);
     }
 }
 
@@ -52,7 +52,7 @@ void EventManager::QueueEvent(UniquePtr<Event>&& event_)
 void EventManager::DispatchEvents()
 {
     for (auto& eventIt = m_eventsQueue.begin(); eventIt != m_eventsQueue.end();) {
-        if (!eventIt->get()->Handled) {
+        if (!eventIt->get()->isHandled) {
             TriggerEvent(*eventIt->get());
             eventIt = m_eventsQueue.erase(eventIt);
         } else {

@@ -22,25 +22,25 @@ private:
 extern EventManager gEventManager;
 
 template<typename EventType>
-static void Subscribe(const EventHandler<EventType>& callback)
+inline void Subscribe(const EventHandler<EventType>& callback)
 {
     UniquePtr<EventHandlerWrapperInterface> handler = MakeUniquePtr<EventHandlerWrapper<EventType>>(callback);
     gEventManager.Subscribe(EventType::GetStaticEventType(), std::move(handler));
 }
 
 template<typename EventType>
-static void Unsubscribe(const EventHandler<EventType>& callback)
+inline void Unsubscribe(const EventHandler<EventType>& callback)
 {
     const std::string handlerName = callback.target_type().name();
     gEventManager.Unsubscribe(EventType::GetStaticEventType(), handlerName);
 }
 
-static void TriggerEvent(const Event& triggeredEvent)
+inline void TriggerEvent(const Event& triggeredEvent)
 {
     gEventManager.TriggerEvent(triggeredEvent);
 }
 
-static void QueueEvent(UniquePtr<Event>&& queuedEvent)
+inline void QueueEvent(UniquePtr<Event>&& queuedEvent)
 {
     gEventManager.QueueEvent(std::forward<UniquePtr<Event>>(queuedEvent));
 }
