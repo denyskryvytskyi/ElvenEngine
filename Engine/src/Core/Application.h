@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Core/LayerStack.h"
-#include "Events/ApplicationEvent.h"
-#include "Events/EventManager.h"
-#include "Scene/Scene.h"
+#include "LayerStack.h"
 #include "Window.h"
+
+#include "Events/ApplicationEvent.h"
+#include "Events/EventHandler.h"
+#include "Scene/Scene.h"
 
 namespace Elven {
 
@@ -49,8 +50,8 @@ private:
     LayerStack m_layerStack;
     Scene m_scene;
 
-    events::EventFunctionHandler<events::WindowResizeEvent> m_windowResizeCallback;
-    events::EventFunctionHandler<events::WindowCloseEvent> m_windowCloseCallback;
+    events::EventHandler<events::WindowResizeEvent> m_windowResizeCallback;
+    events::EventHandler<events::WindowCloseEvent> m_windowCloseCallback;
 };
 
 // To be defined in CLIENT

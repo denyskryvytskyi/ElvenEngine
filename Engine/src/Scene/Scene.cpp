@@ -7,19 +7,18 @@
 
 #include "Core/Timer.h"
 
+#include "Events/EventManager.h"
 #include "Events/TextureEvent.h"
 
 namespace Elven {
 
-class TransformComponent {
-public:
+struct TransformComponent {
     lia::vec3 pos { 0.0f, 0.0f, 0.0f };
     lia::vec2 scale { 1.0f, 1.0f };
     lia::vec3 rotation { 0.0f, 0.0f, 0.0f };
 };
 
-class SpriteComponent {
-public:
+struct SpriteComponent {
     Elven::SharedPtr<Elven::Texture2D> m_texture;
 };
 

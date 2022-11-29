@@ -18,6 +18,7 @@ set(ENGINE_HEADERS
 "src/Core/StringId.h"
 "src/Events/ApplicationEvent.h"
 "src/Events/Event.h"
+"src/Events/EventHandler.h"
 "src/Events/EventManager.h"
 "src/Events/KeyEvent.h"
 "src/Events/MouseEvent.h"

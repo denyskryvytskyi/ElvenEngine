@@ -9,7 +9,7 @@ void EventManager::Shutdown()
     m_subscribers.clear();
 }
 
-void EventManager::Subscribe(std::uint32_t eventId, UniquePtr<EventCallbackBase>&& handler)
+void EventManager::Subscribe(std::uint32_t eventId, UniquePtr<EventHandlerWrapperInterface>&& handler)
 {
     auto subscribers = m_subscribers.find(eventId);
     if (subscribers != m_subscribers.end()) {

@@ -3,7 +3,7 @@
 #include "Camera.h"
 
 #include "Events/ApplicationEvent.h"
-#include "Events/EventManager.h"
+#include "Events/EventHandler.h"
 #include "Events/MouseEvent.h"
 
 namespace Elven {
@@ -46,9 +46,9 @@ private:
     bool m_isFlyEnabled { false };
     bool m_updateLookAt { true };
 
-    events::EventFunctionHandler<events::MouseMovedEvent> m_mouseMovedCallback;
-    events::EventFunctionHandler<events::MouseScrolledEvent> m_mouseScrolledCallback;
-    events::EventFunctionHandler<events::WindowResizeEvent> m_windowResizeCallback;
+    events::EventHandler<events::MouseMovedEvent> m_mouseMovedCallback;
+    events::EventHandler<events::MouseScrolledEvent> m_mouseScrolledCallback;
+    events::EventHandler<events::WindowResizeEvent> m_windowResizeCallback;
 };
 
 } // namespace Elven

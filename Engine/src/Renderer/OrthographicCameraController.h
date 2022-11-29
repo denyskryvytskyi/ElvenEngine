@@ -4,7 +4,7 @@
 #include "Events/MouseEvent.h"
 #include "Renderer/Camera.h"
 
-#include "Events/EventManager.h"
+#include "Events/EventHandler.h"
 
 namespace Elven {
 
@@ -36,8 +36,8 @@ private:
 
     Camera m_camera;
 
-    events::EventFunctionHandler<events::WindowResizeEvent> m_windowResizeCallback;
-    events::EventFunctionHandler<events::MouseScrolledEvent> m_mouseScrolledCallback;
+    events::EventHandler<events::WindowResizeEvent> m_windowResizeCallback;
+    events::EventHandler<events::MouseScrolledEvent> m_mouseScrolledCallback;
 };
 
 } // namespace Elven

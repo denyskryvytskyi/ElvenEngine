@@ -1,17 +1,18 @@
 #pragma once
-#include "World.h"
 
-#include "Events/EventManager.h"
+#include "Events/EventHandler.h"
 #include "Renderer/OrthographicCameraController.h"
+#include "Scene/World.h"
 
 namespace Elven {
 
+// forward declarations
 namespace events {
 class TextureLoadedEvent;
 }
 
-struct SceneNode {
-    std::vector<UniquePtr<SceneNode>> m_childs;
+struct SceneNodeComponent {
+    std::vector<UniquePtr<SceneNodeComponent>> m_childs;
     ecs::EntityId m_entityId;
 };
 
@@ -28,11 +29,11 @@ private:
     void OnTextureLoaded(const events::TextureLoadedEvent& e);
 
 private:
-    SceneNode root;
+    SceneNodeComponent root;
     ecs::World m_world;
     Elven::OrthographicCameraController m_cameraController;
 
-    events::EventFunctionHandler<events::TextureLoadedEvent> m_textureLoadedCallback;
+    events::EventHandler<events::TextureLoadedEvent> m_textureLoadedCallback;
 };
 
 } // namespace Elven

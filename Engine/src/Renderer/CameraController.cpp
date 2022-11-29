@@ -1,6 +1,7 @@
 #include "CameraController.h"
 
 #include "Core/Input.h"
+#include "Events/EventManager.h"
 
 namespace Elven {
 
