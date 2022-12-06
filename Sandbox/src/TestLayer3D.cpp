@@ -240,7 +240,6 @@ TestLayer3D::~TestLayer3D()
 
 void TestLayer3D::OnAttach()
 {
-
     // TODO: Remove to application according to user settings
     Elven::Renderer::Init();
 }

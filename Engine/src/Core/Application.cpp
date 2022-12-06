@@ -10,6 +10,8 @@
 #include "Events/EventManager.h"
 #include "ImGui/ImGuiLayer.h"
 
+#include "Scene/SceneManager.h"
+
 namespace Elven {
 
 Application* Application::s_instance = nullptr;
@@ -24,6 +26,11 @@ Application::Application()
     EL_CORE_ASSERT(!s_instance, "Application already exists!");
     s_instance = this;
 
+    // Init managers here
+    Elven::Renderer::Init();
+    gSceneManager.Init();
+    //
+
     PushOverlay(m_imGuiLayer);
 
     // TODO: Make it dependent from user settings to init Renderer or Renderer2D (add option to menu)
@@ -33,9 +40,6 @@ Application::Application()
     events::Subscribe<events::WindowResizeEvent>(m_windowResizeCallback);
 
     EL_INFO("Executable path: {0}", FileSystem::GetCurrentPath());
-
-    Elven::Renderer::Init();
-    m_scene.Init();
 }
 
 Application::~Application()
@@ -43,6 +47,7 @@ Application::~Application()
     events::Unsubscribe<events::WindowResizeEvent>(m_windowResizeCallback);
     events::Unsubscribe<events::WindowCloseEvent>(m_windowCloseCallback);
 
+    gSceneManager.Shutdown();
     gTextureManager.Shutdown();
     events::gEventManager.Shutdown();
     Renderer::Shutdown();
@@ -79,12 +84,12 @@ void Application::Run()
             layer->OnUpdate(elapsedTime);
         }
 
-        m_scene.OnUpdate(elapsedTime);
+        gSceneManager.Update(elapsedTime);
 
         /////////////////////////////////////
 
         /// Rendering Step ///////////////////
-        m_scene.OnRender(elapsedTime);
+        gSceneManager.Render(elapsedTime);
 
         // ImGui layers render
         m_imGuiLayer->Begin();

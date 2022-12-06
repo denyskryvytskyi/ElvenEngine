@@ -46,10 +46,11 @@ set(ENGINE_HEADERS
 "src/Platform/OpenGL/OpenGLShader.h"
 "src/Platform/OpenGL/OpenGLVertexArray.h"
 "src/Platform/OpenGL/OpenGLTexture2D.h"
-"src/Scene/Scene.h"
-"src/Scene/World.h"
 "src/Scene/Entity.h"
 "src/Scene/Component.h"
+"src/Scene/Scene.h"
+"src/Scene/SceneManager.h"
+"src/Scene/Components/ComponentsDef.h"
 )
 
 set(ENGINE_SOURCES
@@ -84,7 +85,10 @@ set(ENGINE_SOURCES
 "src/Platform/OpenGL/OpenGLTexture2D.cpp"
 "src/Platform/Windows/WindowsInput.cpp"
 "src/Platform/Windows/WindowsWindow.cpp"
+"src/Scene/Component.cpp"
 "src/Scene/Scene.cpp"
+"src/Scene/SceneManager.cpp"
+"src/Scene/Components/ComponentsDef.cpp"
 ${ENGINE_HEADERS}
 )
 

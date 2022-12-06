@@ -5,14 +5,12 @@
 
 #include "Events/ApplicationEvent.h"
 #include "Events/EventHandler.h"
-#include "Scene/Scene.h"
 
 namespace Elven {
 
 class Window;
 class Layer;
 class ImGuiLayer;
-class Scene;
 
 class Application {
 private:
@@ -48,7 +46,6 @@ private:
     UniquePtr<Window> m_window { Window::Create() };
     ImGuiLayer* m_imGuiLayer { nullptr };
     LayerStack m_layerStack;
-    Scene m_scene;
 
     events::EventHandler<events::WindowResizeEvent> m_windowResizeCallback;
     events::EventHandler<events::WindowCloseEvent> m_windowCloseCallback;

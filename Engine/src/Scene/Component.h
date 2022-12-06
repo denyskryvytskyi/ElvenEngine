@@ -2,23 +2,34 @@
 
 #include "Entity.h"
 
+#include <bitset>
+
 namespace Elven::ecs {
 
 using ComponentTypeId = std::uint64_t;
 
 constexpr ComponentTypeId INVALID_COMPONENT_TYPE_ID = 0;
-constexpr std::uint32_t MAX_ENTITIES_PER_COMPONENT = 2'000'0000;
+constexpr std::uint32_t MAX_ENTITIES_PER_COMPONENT = 100'000;
+constexpr std::uint32_t MAX_COMPONENTS = 32;
 
-namespace {
-ComponentTypeId componentTypeCounter = 0;
-}
+using ComponentMask = std::bitset<MAX_COMPONENTS>;
+
+class ComponentTypeIdHolder {
+public:
+    static ComponentTypeId s_componentTypeCounter;
+};
 
 template<class ComponentType>
-ComponentTypeId GetComponentTypeId()
+inline ComponentTypeId GetComponentTypeId()
 {
     static ComponentTypeId id = INVALID_COMPONENT_TYPE_ID;
     if (id == INVALID_COMPONENT_TYPE_ID) {
-        id = static_cast<ComponentTypeId>(1) << componentTypeCounter++;
+        if (ComponentTypeIdHolder::s_componentTypeCounter < MAX_COMPONENTS)
+            id = ++ComponentTypeIdHolder::s_componentTypeCounter;
+        else {
+            EL_CORE_ERROR("Maximum component types limet reached = {0}!", MAX_COMPONENTS);
+            EL_ASSERT(false);
+        }
     }
 
     return id;
@@ -28,9 +39,9 @@ struct ComponentPoolBase {
     virtual ~ComponentPoolBase() = default;
 
     virtual void Clear() = 0;
-    virtual void AddComponent(EntityId entityId) = 0;
-    virtual void RemoveComponent(EntityId entityId) = 0;
-    virtual EntityId GetEntity(std::uint32_t componentIndex) const = 0;
+    virtual void AddComponent(Entity entity) = 0;
+    virtual void RemoveComponent(Entity entity) = 0;
+    virtual Entity GetEntity(std::uint32_t componentIndex) const = 0;
 };
 
 template<class ComponentType>
@@ -48,27 +59,27 @@ public:
         m_entityToComponentIndex.clear();
     }
 
-    void AddComponent(EntityId entityId) override
+    void AddComponent(Entity entity) override
     {
         if (m_components.size() < MAX_ENTITIES_PER_COMPONENT) {
-            m_entityToComponentIndex.insert({ entityId, m_components.size() });
+            m_entityToComponentIndex.insert({ entity, m_components.size() });
             m_components.emplace_back();
-            m_entities.emplace_back(entityId);
+            m_entities.emplace_back(entity);
         } else {
             EL_CORE_CRITICAL("Max components limit reached.");
         }
     }
 
-    void RemoveComponent(EntityId entityId) override
+    void RemoveComponent(Entity entity) override
     {
-        auto it = m_entityToComponentIndex.find(entityId);
+        auto it = m_entityToComponentIndex.find(entity);
         if (it != m_entityToComponentIndex.end()) {
             const std::uint64_t componentIndex = it->second;
 
             if (componentIndex < m_components.size() - 1) {
                 m_components[componentIndex] = std::move(m_components.back()); // replace dead component with the last one
 
-                EntityId movedComponentEntityId = m_entities.back();
+                Entity movedComponentEntityId = m_entities.back();
                 m_entityToComponentIndex[movedComponentEntityId] = componentIndex; // new mapping for moved component
             }
         }
@@ -78,17 +89,17 @@ public:
         m_entityToComponentIndex.erase(it);
     }
 
-    EntityId GetEntity(std::uint32_t componentIndex) const override
+    Entity GetEntity(std::uint32_t componentIndex) const override
     {
         return m_entities[componentIndex];
     }
 
-    ComponentType& GetComponent(EntityId entityId)
+    ComponentType& GetComponent(Entity entity)
     {
-        auto it = m_entityToComponentIndex.find(entityId);
+        auto it = m_entityToComponentIndex.find(entity);
 
         if (it == m_entityToComponentIndex.end()) {
-            EL_CORE_CRITICAL("There isn't component with entity id = {0}", entityId);
+            EL_CORE_CRITICAL("There isn't component with entity id = {0}", entity);
             EL_CORE_ASSERT(false);
         }
 
@@ -102,11 +113,11 @@ public:
 
 private:
     std::vector<ComponentType> m_components;
-    std::unordered_map<EntityId, std::uint64_t> m_entityToComponentIndex;
+    std::unordered_map<Entity, std::uint64_t> m_entityToComponentIndex;
 
     // index - component index that is the same for index from m_components
     // value - entity id associated with this component
-    std::vector<EntityId> m_entities;
+    std::vector<Entity> m_entities;
 };
 
 } // namespace Elven::ecs
