@@ -1,9 +1,8 @@
 #pragma once
 
 #include "Component.h"
+#include "ComponentSystem.h"
 #include "Entity.h"
-
-#include "Renderer/OrthographicCameraController.h"
 
 namespace Elven {
 
@@ -51,6 +50,18 @@ public:
     }
 
     template<typename ComponentType>
+    void RegisterComponent()
+    {
+        const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
+        auto componentPoolIt = m_componentPools.find(componentTypeId);
+        if (componentPoolIt == m_componentPools.end()) {
+            m_componentPools.insert({ componentTypeId, MakeSharedPtr<ecs::ComponentPool<ComponentType>>() });
+        } else {
+            EL_CORE_WARN("Component pool already registered, id = {0}", componentTypeId);
+        }
+    }
+
+    template<typename ComponentType>
     void AddComponent(ecs::Entity entity)
     {
         auto entityIt = m_entities.find(entity);
@@ -61,8 +72,7 @@ public:
         if (componentPoolIt != m_componentPools.end()) {
             componentPoolIt->second->AddComponent(entity);
         } else {
-            m_componentPools.insert({ componentTypeId, MakeSharedPtr<ecs::ComponentPool<ComponentType>>() });
-            m_componentPools[componentTypeId]->AddComponent(entity);
+            EL_CORE_ASSERT("Component pool isn't registered");
         }
     };
 
@@ -141,14 +151,18 @@ public:
         return it->second->GetEntity(componentIndex);
     }
 
-    size_t GetSize() const { return m_componentPools.size(); }
+    template<typename SystemType>
+    void RegisterSystem()
+    {
+        m_systems.emplace_back(MakeUniquePtr<SystemType>(this));
+    }
 
 private:
     SceneNodeComponent root;
-    Elven::OrthographicCameraController m_cameraController;
 
-    std::unordered_map<ecs::ComponentTypeId, SharedPtr<ecs::ComponentPoolBase>> m_componentPools;
+    std::unordered_map<ecs::ComponentTypeId, SharedPtr<ecs::ComponentPoolInterface>> m_componentPools;
     std::unordered_map<ecs::Entity, ecs::ComponentMask> m_entities;
+    std::vector<UniquePtr<ecs::ComponentSystemInterface>> m_systems;
 };
 
 } // namespace Elven

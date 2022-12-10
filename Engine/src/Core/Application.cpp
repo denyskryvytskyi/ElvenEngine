@@ -77,13 +77,13 @@ void Application::Run()
         s_telemetry.fps = 1.0f / elapsedTime;
 
         /// Update step ////////////////////
-        gTextureManager.OnUpdate();
 
         // Layers update
         for (Layer* layer : m_layerStack) {
             layer->OnUpdate(elapsedTime);
         }
 
+        gTextureManager.OnUpdate();
         gSceneManager.Update(elapsedTime);
 
         /////////////////////////////////////

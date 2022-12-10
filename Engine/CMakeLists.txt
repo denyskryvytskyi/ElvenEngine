@@ -49,8 +49,10 @@ set(ENGINE_HEADERS
 "src/Scene/Entity.h"
 "src/Scene/Component.h"
 "src/Scene/Scene.h"
+"src/Scene/ComponentSystem.h"
 "src/Scene/SceneManager.h"
 "src/Scene/Components/ComponentsDef.h"
+"src/Scene/Systems/SpriteRendersystem.h"
 )
 
 set(ENGINE_SOURCES
@@ -86,9 +88,11 @@ set(ENGINE_SOURCES
 "src/Platform/Windows/WindowsInput.cpp"
 "src/Platform/Windows/WindowsWindow.cpp"
 "src/Scene/Component.cpp"
+"src/Scene/ComponentSystem.cpp"
 "src/Scene/Scene.cpp"
 "src/Scene/SceneManager.cpp"
 "src/Scene/Components/ComponentsDef.cpp"
+"src/Scene/Systems/SpriteRendersystem.cpp"
 ${ENGINE_HEADERS}
 )
 

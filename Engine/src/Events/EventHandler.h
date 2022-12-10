@@ -11,6 +11,8 @@ using EventHandler = std::function<void(const EventType& e)>;
 
 class EventHandlerWrapperInterface {
 public:
+    virtual ~EventHandlerWrapperInterface() = default;
+
     void Exec(const Event& e)
     {
         Call(e);

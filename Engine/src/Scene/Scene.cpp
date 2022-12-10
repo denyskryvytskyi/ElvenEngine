@@ -7,16 +7,22 @@
 #include "Core/Timer.h"
 
 #include "Components/ComponentsDef.h"
+#include "Systems/SpriteRenderSystem.h"
 
 namespace Elven {
 
 Scene::Scene()
-    : m_cameraController(1280.0f / 720.0f)
 {
 }
 
 void Scene::OnInit()
 {
+    // Engine components register
+    RegisterComponent<TransformComponent>();
+    RegisterComponent<SpriteComponent>();
+
+    // Engine systems register
+    RegisterSystem<SpriteRenderSystem>();
 }
 
 void Scene::OnShutdown()
@@ -27,32 +33,16 @@ void Scene::OnShutdown()
 
 void Scene::OnUpdate(float dt)
 {
-    m_cameraController.OnUpdate(dt);
+    for (auto& system : m_systems) {
+        system->OnUpdate(dt);
+    }
 }
 
 void Scene::OnRender(float dt)
 {
-    Elven::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
-    Elven::RenderCommand::Clear();
-
-    Elven::Renderer2D::BeginScene(m_cameraController.GetCamera());
-
-    if (HasComponentPool<TransformComponent>()) {
-        auto& transformComponents = GetComponents<TransformComponent>();
-        for (std::uint32_t index = 0; index < transformComponents.size(); ++index) {
-            const ecs::Entity entity = GetEntity<TransformComponent>(index);
-
-            auto& transformComponent = transformComponents[index];
-            if (HasComponent<SpriteComponent>(entity)) {
-                auto& spriteComponent = GetComponent<SpriteComponent>(entity);
-                Elven::Renderer2D::DrawQuad(spriteComponent.m_texture, transformComponent.pos, transformComponent.scale, 45.0f);
-            } else {
-                Elven::Renderer2D::DrawQuad(transformComponent.pos, transformComponent.scale, 0.0f, { 0.5f, 0.5f, 0.2f, 1.0f });
-            }
-        }
+    for (auto& system : m_systems) {
+        system->OnRender(dt);
     }
-
-    Elven::Renderer2D::EndScene();
 }
 
 } // namespace Elven
