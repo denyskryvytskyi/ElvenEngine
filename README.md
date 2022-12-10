@@ -83,8 +83,8 @@ Or just call command from the build directory with your version of VS and platfo
   - [ ] Single-Frame and Double-Buffered Memory Allocators
 
 ## Demo
-#### Quad and texture batch rendering
-![](.github/presentation/BatchRenderer_2.png)
+#### Quad and texture batch rendering (example: 20000 wizards)
+![](.github/presentation/BatchRenderer_1.png)
 
 #### 3D rendering
 ![](.github/presentation/3D_demo.png)
