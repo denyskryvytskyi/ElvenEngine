@@ -52,17 +52,20 @@ Or just call command from the build directory with your version of VS and platfo
   - [x] Quad rendering
   - [x] Texture rendering
   - [x] Batch rendering (quad and texture)
-  - [ ] SpriteComponent
+  - [x] SpriteComponent
   - [ ] Spritesheet animation
   - [ ] Text Rendering
++ [x] ECS
+  - [x] Data-oriented cache-friendly components system architecture
+  - [ ] Components serialization
++ [x] Scene
+  - [x] Scene Manager
+  - [ ] Scene serialization
 + [ ] 3D Renderer
   - [ ] Mesh/Model system
   - [ ] Primitives: cube, sphere, plane
   - [ ] Model loading (Assimp)
   - [ ] Lighting support
-+ [ ] ECS
-  - [ ] Scene
-  - [ ] Data-oriented components structure
 + [ ] Visual-editor (based of ImGui)
   - [ ] Scene hierarchy
   - [ ] Inspector: transform component
