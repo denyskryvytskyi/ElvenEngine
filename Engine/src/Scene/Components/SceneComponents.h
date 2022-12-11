@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Scene/Behavior.h"
+
 namespace Elven {
 struct TransformComponent {
     lia::vec3 pos { 0.0f, 0.0f, 0.0f };
@@ -9,7 +11,17 @@ struct TransformComponent {
 
 class Texture2D;
 struct SpriteComponent {
-    Elven::SharedPtr<Elven::Texture2D> m_texture { nullptr };
+    SharedPtr<Texture2D> m_texture { nullptr };
+};
+
+// Custom behavior component, that is unique per component, not per component type as in ComponentSystem
+struct BehaviorComponent {
+    template<typename BehaviorType>
+    void AddBehavior()
+    {
+        m_behavior = MakeUniquePtr<BehaviorType>();
+    }
+    UniquePtr<ecs::IBehavior> m_behavior { nullptr };
 };
 
 } // namespace Elven

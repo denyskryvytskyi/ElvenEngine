@@ -5,7 +5,7 @@
 
 namespace Elven {
 SpriteRenderSystem::SpriteRenderSystem(Scene* scenePtr)
-    : ComponentSystem(scenePtr)
+    : ecs::IComponentSystem(scenePtr)
     , m_cameraController(1280.0f / 720.0f)
 {
 }

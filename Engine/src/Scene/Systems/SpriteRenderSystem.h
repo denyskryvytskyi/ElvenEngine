@@ -8,7 +8,7 @@
 namespace Elven {
 
 class SpriteRenderSystem
-    : public ecs::ComponentSystem<TransformComponent, SpriteComponent> {
+    : public ecs::IComponentSystem {
 public:
     SpriteRenderSystem(Scene* scenePtr);
 

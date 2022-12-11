@@ -48,11 +48,13 @@ set(ENGINE_HEADERS
 "src/Platform/OpenGL/OpenGLTexture2D.h"
 "src/Scene/Entity.h"
 "src/Scene/Component.h"
+"src/Scene/Behavior.h"
 "src/Scene/Scene.h"
 "src/Scene/ComponentSystem.h"
 "src/Scene/SceneManager.h"
 "src/Scene/Components/SceneComponents.h"
-"src/Scene/Systems/SpriteRendersystem.h"
+"src/Scene/Systems/SpriteRenderSystem.h"
+"src/Scene/Systems/BehaviorSystem.h"
 )
 
 set(ENGINE_SOURCES
@@ -92,7 +94,8 @@ set(ENGINE_SOURCES
 "src/Scene/Scene.cpp"
 "src/Scene/SceneManager.cpp"
 "src/Scene/Components/SceneComponents.cpp"
-"src/Scene/Systems/SpriteRendersystem.cpp"
+"src/Scene/Systems/SpriteRenderSystem.cpp"
+"src/Scene/Systems/BehaviorSystem.cpp"
 ${ENGINE_HEADERS}
 )
 

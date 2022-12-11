@@ -7,6 +7,7 @@
 #include "Core/Timer.h"
 
 #include "Components/SceneComponents.h"
+#include "Systems/BehaviorSystem.h"
 #include "Systems/SpriteRenderSystem.h"
 
 namespace Elven {
@@ -20,8 +21,10 @@ void Scene::OnInit()
     // Engine components register
     RegisterComponent<TransformComponent>();
     RegisterComponent<SpriteComponent>();
+    RegisterComponent<BehaviorComponent>();
 
     // Engine systems register
+    RegisterSystem<BehaviorSystem>();
     RegisterSystem<SpriteRenderSystem>();
 }
 

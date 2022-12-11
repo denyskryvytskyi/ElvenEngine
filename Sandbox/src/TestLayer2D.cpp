@@ -3,9 +3,16 @@
 
 #include <Events/EventManager.h>
 #include <Events/TextureEvent.h>
+#include <Scene/Behavior.h>
+#include <Scene/Components/SceneComponents.h>
 #include <Scene/SceneManager.h>
 
-#include "Scene/Components/ComponentsDef.h"
+class TestBehavior : public Elven::ecs::IBehavior {
+    void OnUpdate(float dt) override
+    {
+        EL_CORE_INFO("Behavior component update here...");
+    }
+};
 
 TestLayer2D::TestLayer2D()
     : Layer("TestLayer2D")
@@ -65,6 +72,12 @@ void TestLayer2D::OnTextureLoaded(const Elven::events::TextureLoadedEvent& e)
                 scene.AddComponent<Elven::SpriteComponent>(entityQuad);
                 auto& sprite = scene.GetComponent<Elven::SpriteComponent>(entityQuad);
                 sprite.m_texture = texture;
+
+                if (j == 0 && i == 0) {
+                    scene.AddComponent<Elven::BehaviorComponent>(entityQuad);
+                    auto& behavior = scene.GetComponent<Elven::BehaviorComponent>(entityQuad);
+                    behavior.AddBehavior<TestBehavior>();
+                }
             }
         }
     }
