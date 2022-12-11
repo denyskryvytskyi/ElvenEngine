@@ -75,7 +75,7 @@ Or just call command from the build directory with your version of VS and platfo
   - [ ] Thread pool
 + [ ] Just cool stuff
   - [x] Fullscreen switch support
-  - [x] Fly or FPS-like 3D camera support (CameraController)
+  - [x] Fly(FPS-like) 3D camera support (CameraController)
 + [ ] Allocators (separate project):
   - [ ] Stack-based: simple stack, double-ended
   - [ ] Pool allocator
@@ -94,7 +94,6 @@ Or just call command from the build directory with your version of VS and platfo
     - Deffered Rendering
     - PBR Rendering
     - Vulkan, DirectX 11/12 support
-- Scripting Engine (C++ and lua scripting)
 - 3D Physics (Bullet)
 - Audio engine
 - Linux and Mac support
