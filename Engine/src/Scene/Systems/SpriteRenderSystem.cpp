@@ -23,7 +23,7 @@ void SpriteRenderSystem::OnRender(float dt)
     Elven::Renderer2D::BeginScene(m_cameraController.GetCamera());
 
     auto& transformComponents = m_pScene->GetComponents<TransformComponent>();
-    for (std::uint32_t index = 0; index < transformComponents.size(); ++index) {
+    for (size_t index = 0; index < transformComponents.size(); ++index) {
         const ecs::Entity entity = m_pScene->GetEntity<TransformComponent>(index);
 
         auto& transformComponent = transformComponents[index];

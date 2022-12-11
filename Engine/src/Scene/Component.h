@@ -35,8 +35,8 @@ inline ComponentTypeId GetComponentTypeId()
     return id;
 }
 
-struct ComponentPoolInterface {
-    virtual ~ComponentPoolInterface() = default;
+struct IComponentPool {
+    virtual ~IComponentPool() = default;
 
     virtual void Clear() = 0;
     virtual void AddComponent(Entity entity) = 0;
@@ -45,7 +45,7 @@ struct ComponentPoolInterface {
 };
 
 template<class ComponentType>
-class ComponentPool final : public ComponentPoolInterface {
+class ComponentPool final : public IComponentPool {
 public:
     ComponentPool()
     {

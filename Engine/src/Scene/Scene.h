@@ -160,9 +160,9 @@ public:
 private:
     SceneNodeComponent root;
 
-    std::unordered_map<ecs::ComponentTypeId, SharedPtr<ecs::ComponentPoolInterface>> m_componentPools;
+    std::unordered_map<ecs::ComponentTypeId, SharedPtr<ecs::IComponentPool>> m_componentPools;
     std::unordered_map<ecs::Entity, ecs::ComponentMask> m_entities;
-    std::vector<UniquePtr<ecs::ComponentSystemInterface>> m_systems;
+    std::vector<UniquePtr<ecs::IComponentSystem>> m_systems;
 };
 
 } // namespace Elven

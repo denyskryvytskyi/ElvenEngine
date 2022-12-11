@@ -8,7 +8,7 @@ class EventManager {
 public:
     void Shutdown();
 
-    void Subscribe(std::uint32_t eventId, UniquePtr<EventHandlerWrapperInterface>&& handler);
+    void Subscribe(std::uint32_t eventId, UniquePtr<IEventHandlerWrapper>&& handler);
     void Unsubscribe(std::uint32_t eventId, const std::string& handlerName);
     void TriggerEvent(const Event& event);
     void QueueEvent(UniquePtr<Event>&& event);
@@ -16,7 +16,7 @@ public:
 
 private:
     std::vector<UniquePtr<Event>> m_eventsQueue;
-    std::unordered_map<std::uint32_t, std::vector<UniquePtr<EventHandlerWrapperInterface>>> m_subscribers;
+    std::unordered_map<std::uint32_t, std::vector<UniquePtr<IEventHandlerWrapper>>> m_subscribers;
 };
 
 extern EventManager gEventManager;
@@ -24,7 +24,7 @@ extern EventManager gEventManager;
 template<typename EventType>
 inline void Subscribe(const EventHandler<EventType>& callback)
 {
-    UniquePtr<EventHandlerWrapperInterface> handler = MakeUniquePtr<EventHandlerWrapper<EventType>>(callback);
+    UniquePtr<IEventHandlerWrapper> handler = MakeUniquePtr<EventHandlerWrapper<EventType>>(callback);
     gEventManager.Subscribe(EventType::GetStaticEventType(), std::move(handler));
 }
 

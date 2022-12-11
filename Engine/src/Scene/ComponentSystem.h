@@ -9,16 +9,16 @@ class Scene;
 
 namespace Elven::ecs {
 
-class ComponentSystemInterface {
+class IComponentSystem {
 public:
-    virtual ~ComponentSystemInterface() = default;
+    virtual ~IComponentSystem() = default;
 
     virtual void OnUpdate(float dt) { }
     virtual void OnRender(float dt) { }
 };
 
 template<typename... ComponentTypes>
-class ComponentSystem : public ComponentSystemInterface {
+class ComponentSystem : public IComponentSystem {
 public:
     ComponentSystem(Scene* scenePtr)
         : m_pScene(scenePtr)
