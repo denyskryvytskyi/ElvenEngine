@@ -51,7 +51,7 @@ set(ENGINE_HEADERS
 "src/Scene/Scene.h"
 "src/Scene/ComponentSystem.h"
 "src/Scene/SceneManager.h"
-"src/Scene/Components/ComponentsDef.h"
+"src/Scene/Components/SceneComponents.h"
 "src/Scene/Systems/SpriteRendersystem.h"
 )
 
@@ -91,7 +91,7 @@ set(ENGINE_SOURCES
 "src/Scene/ComponentSystem.cpp"
 "src/Scene/Scene.cpp"
 "src/Scene/SceneManager.cpp"
-"src/Scene/Components/ComponentsDef.cpp"
+"src/Scene/Components/SceneComponents.cpp"
 "src/Scene/Systems/SpriteRendersystem.cpp"
 ${ENGINE_HEADERS}
 )

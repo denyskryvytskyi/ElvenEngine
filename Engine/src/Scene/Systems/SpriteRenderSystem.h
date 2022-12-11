@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Scene/ComponentSystem.h"
-#include "Scene/Components/ComponentsDef.h"
+#include "Scene/Components/SceneComponents.h"
 
 #include "Renderer/OrthographicCameraController.h"
 

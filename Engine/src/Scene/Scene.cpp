@@ -6,7 +6,7 @@
 
 #include "Core/Timer.h"
 
-#include "Components/ComponentsDef.h"
+#include "Components/SceneComponents.h"
 #include "Systems/SpriteRenderSystem.h"
 
 namespace Elven {
