@@ -70,6 +70,17 @@ public:
         }
     }
 
+    void AddComponent(Entity entity, ComponentType&& component)
+    {
+        if (m_components.size() < MAX_ENTITIES_PER_COMPONENT) {
+            m_entityToComponentIndex.insert({ entity, m_components.size() });
+            m_components.emplace_back(std::move(component));
+            m_entities.emplace_back(entity);
+        } else {
+            EL_CORE_CRITICAL("Max components limit reached.");
+        }
+    }
+
     void RemoveComponent(Entity entity) override
     {
         auto it = m_entityToComponentIndex.find(entity);

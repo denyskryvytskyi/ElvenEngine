@@ -11,7 +11,7 @@ namespace Elven {
 class OrthographicCameraController {
 public:
     OrthographicCameraController(float aspectRatio);
-    ~OrthographicCameraController();
+    ~OrthographicCameraController() = default;
 
     void OnUpdate(float dt);
 

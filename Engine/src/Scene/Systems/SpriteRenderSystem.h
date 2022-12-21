@@ -16,7 +16,7 @@ public:
     virtual void OnRender(float dt) override;
 
 private:
-    Elven::OrthographicCameraController m_cameraController;
+    OrthographicCameraController m_cameraController;
 };
 
 } // namespace Elven

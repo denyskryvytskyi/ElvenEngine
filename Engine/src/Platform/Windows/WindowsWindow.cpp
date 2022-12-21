@@ -5,17 +5,18 @@
 #include "Events/KeyEvent.h"
 #include "Events/MouseEvent.h"
 
+#include "Core/SettingsConfig.h"
 #include "Events/EventManager.h"
 
 #include <GLFW/glfw3.h>
 
 namespace Elven {
 
-static const unsigned int s_defaultWindowWidth = 1280;
-static const unsigned int s_defaultWindowHeight = 720;
-static const unsigned int s_defaultRefreshRate = 60;
-static const unsigned int s_defaultWindowPosX = 100;
-static const unsigned int s_defaultWindowPosY = 100;
+namespace {
+constexpr unsigned int s_defaultRefreshRate = 60;
+constexpr unsigned int s_defaultWindowPosX = 100;
+constexpr unsigned int s_defaultWindowPosY = 100;
+} // namespace
 
 static std::uint8_t s_GLFWwindowCount = 0;
 
@@ -67,14 +68,13 @@ void WindowsWindow::SetFullScreen(bool enabled)
             m_data.Height = mode->height;
             glfwSetWindowMonitor(m_window, m_monitor, 0, 0, m_data.Width, m_data.Height, mode->refreshRate);
         } else {
-            m_data.Width = s_defaultWindowWidth;
-            m_data.Height = s_defaultWindowHeight;
+            m_data.Width = gEngineSettings.WindowWidth;
+            m_data.Height = gEngineSettings.WindowHeight;
             glfwSetWindowMonitor(m_window, nullptr, 0, 0, m_data.Width, m_data.Height, s_defaultRefreshRate);
             glfwSetWindowPos(m_window, s_defaultWindowPosX, s_defaultWindowPosY);
         }
 
-        UniquePtr<events::WindowResizeEvent> resizeEvent = MakeUniquePtr<events::WindowResizeEvent>(m_data.Width, m_data.Height);
-        events::QueueEvent(std::move(resizeEvent));
+        events::TriggerEvent(events::WindowResizeEvent(m_data.Width, m_data.Height));
     }
 }
 
@@ -122,8 +122,7 @@ void WindowsWindow::Init(const WindowProps& props)
         data.Width = width;
         data.Height = height;
 
-        UniquePtr<events::WindowResizeEvent> resizeEvent = MakeUniquePtr<events::WindowResizeEvent>(width, height);
-        events::QueueEvent(std::move(resizeEvent));
+        events::TriggerEvent(events::WindowResizeEvent(width, height));
     });
 
     glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window) {

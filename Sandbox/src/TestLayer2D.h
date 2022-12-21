@@ -1,6 +1,7 @@
 #pragma once
 
-#include <Elven.h>
+#include <Core/Layer.h>
+#include <Events/EventHandler.h>
 
 // forward declarations
 namespace Elven::events {

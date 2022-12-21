@@ -24,28 +24,30 @@ public:
     ecs::Entity CreateEntity()
     {
         const ecs::Entity id = ecs::CreateEntity();
-        m_entities.insert({ id, ecs::ComponentMask() });
+        m_entitiesSignatures.insert({ id, ecs::ComponentMask() });
+        m_entities.emplace_back(id);
 
         return id;
     }
 
-    const std::unordered_map<ecs::Entity, ecs::ComponentMask>& GetEntities() const
+    const std::vector<ecs::Entity>& GetEntities() const
     {
         return m_entities;
     }
 
     void DestroyEntity(const ecs::Entity& entity)
     {
-        auto entityIt = m_entities.find(entity);
+        auto entityIt = std::find(m_entities.begin(), m_entities.end(), entity);
 
         if (entityIt != m_entities.end()) {
-            auto componentMask = entityIt->second;
+            auto componentMask = m_entitiesSignatures[entity];
             for (size_t i = 0; i < componentMask.size(); ++i) {
                 if (componentMask.test(i)) {
                     m_componentPools[i]->RemoveComponent(entity);
                 }
             }
-            m_entities.erase(entity);
+            m_entitiesSignatures.erase(entity);
+            m_entities.erase(entityIt);
         }
     }
 
@@ -64,7 +66,7 @@ public:
     template<typename ComponentType>
     void AddComponent(ecs::Entity entity)
     {
-        auto entityIt = m_entities.find(entity);
+        auto entityIt = m_entitiesSignatures.find(entity);
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
         entityIt->second.set(componentTypeId);
 
@@ -77,9 +79,24 @@ public:
     };
 
     template<typename ComponentType>
+    void AddComponent(ecs::Entity entity, ComponentType&& component)
+    {
+        auto entityIt = m_entitiesSignatures.find(entity);
+        const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
+        entityIt->second.set(componentTypeId);
+
+        auto componentPoolIt = m_componentPools.find(componentTypeId);
+        if (componentPoolIt != m_componentPools.end()) {
+            std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(componentPoolIt->second)->AddComponent(entity, std::forward<ComponentType>(component));
+        } else {
+            EL_CORE_ASSERT("Component pool isn't registered");
+        }
+    };
+
+    template<typename ComponentType>
     void RemoveComponent(ecs::Entity entity)
     {
-        auto entityIt = m_entities.find(entity);
+        auto entityIt = m_entitiesSignatures.find(entity);
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
         entityIt->second.set(componentTypeId, false);
 
@@ -94,9 +111,9 @@ public:
     template<typename ComponentType>
     bool HasComponent(ecs::Entity entity)
     {
-        auto entityIt = m_entities.find(entity);
+        auto entityIt = m_entitiesSignatures.find(entity);
 
-        if (entityIt != m_entities.end()) {
+        if (entityIt != m_entitiesSignatures.end()) {
             const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
             return entityIt->second.test(componentTypeId);
         }
@@ -161,8 +178,9 @@ private:
     SceneNodeComponent root;
 
     std::unordered_map<ecs::ComponentTypeId, SharedPtr<ecs::IComponentPool>> m_componentPools;
-    std::unordered_map<ecs::Entity, ecs::ComponentMask> m_entities;
     std::vector<UniquePtr<ecs::IComponentSystem>> m_systems;
+    std::vector<ecs::Entity> m_entities;
+    std::unordered_map<ecs::Entity, ecs::ComponentMask> m_entitiesSignatures;
 };
 
 } // namespace Elven

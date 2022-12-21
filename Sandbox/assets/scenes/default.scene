@@ -1,0 +1,320 @@
+{
+  "entities": [
+    {
+      "SpriteComponent": {
+        "texture_name": "wizard_fire"
+      },
+      "TransformComponent": {
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 0.25,
+          "y": 0.22499999403953552
+        }
+      }
+    },
+    {
+      "SpriteComponent": {
+        "texture_name": "wizard_fire"
+      },
+      "TransformComponent": {
+        "position": {
+          "x": 0.0,
+          "y": 0.30000001192092896,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 0.25,
+          "y": 0.22499999403953552
+        }
+      }
+    },
+    {
+      "SpriteComponent": {
+        "texture_name": "wizard_fire"
+      },
+      "TransformComponent": {
+        "position": {
+          "x": 0.0,
+          "y": 0.6000000238418579,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 0.25,
+          "y": 0.22499999403953552
+        }
+      }
+    },
+    {
+      "SpriteComponent": {
+        "texture_name": "wizard_fire"
+      },
+      "TransformComponent": {
+        "position": {
+          "x": 0.30000001192092896,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 0.25,
+          "y": 0.22499999403953552
+        }
+      }
+    },
+    {
+      "SpriteComponent": {
+        "texture_name": "wizard_fire"
+      },
+      "TransformComponent": {
+        "position": {
+          "x": 0.30000001192092896,
+          "y": 0.30000001192092896,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 0.25,
+          "y": 0.22499999403953552
+        }
+      }
+    },
+    {
+      "SpriteComponent": {
+        "texture_name": "wizard_fire"
+      },
+      "TransformComponent": {
+        "position": {
+          "x": 0.30000001192092896,
+          "y": 0.6000000238418579,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 0.25,
+          "y": 0.22499999403953552
+        }
+      }
+    },
+    {
+      "SpriteComponent": {
+        "texture_name": "wizard_fire"
+      },
+      "TransformComponent": {
+        "position": {
+          "x": 0.6000000238418579,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 0.25,
+          "y": 0.22499999403953552
+        }
+      }
+    },
+    {
+      "SpriteComponent": {
+        "texture_name": "wizard_fire"
+      },
+      "TransformComponent": {
+        "position": {
+          "x": 0.6000000238418579,
+          "y": 0.30000001192092896,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 0.25,
+          "y": 0.22499999403953552
+        }
+      }
+    },
+    {
+      "SpriteComponent": {
+        "texture_name": "wizard_fire"
+      },
+      "TransformComponent": {
+        "position": {
+          "x": 0.6000000238418579,
+          "y": 0.6000000238418579,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 0.25,
+          "y": 0.22499999403953552
+        }
+      }
+    },
+    {
+      "SpriteComponent": {
+        "texture_name": "wizard_fire"
+      },
+      "TransformComponent": {
+        "position": {
+          "x": 0.9000000357627869,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 0.25,
+          "y": 0.22499999403953552
+        }
+      }
+    },
+    {
+      "SpriteComponent": {
+        "texture_name": "wizard_fire"
+      },
+      "TransformComponent": {
+        "position": {
+          "x": 0.9000000357627869,
+          "y": 0.30000001192092896,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 0.25,
+          "y": 0.22499999403953552
+        }
+      }
+    },
+    {
+      "SpriteComponent": {
+        "texture_name": "wizard_fire"
+      },
+      "TransformComponent": {
+        "position": {
+          "x": 0.9000000357627869,
+          "y": 0.6000000238418579,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 0.25,
+          "y": 0.22499999403953552
+        }
+      }
+    },
+    {
+      "SpriteComponent": {
+        "texture_name": "wizard_fire"
+      },
+      "TransformComponent": {
+        "position": {
+          "x": 1.2000000476837158,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 0.25,
+          "y": 0.22499999403953552
+        }
+      }
+    },
+    {
+      "SpriteComponent": {
+        "texture_name": "wizard_fire"
+      },
+      "TransformComponent": {
+        "position": {
+          "x": 1.2000000476837158,
+          "y": 0.30000001192092896,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 0.25,
+          "y": 0.22499999403953552
+        }
+      }
+    },
+    {
+      "SpriteComponent": {
+        "texture_name": "wizard_fire"
+      },
+      "TransformComponent": {
+        "position": {
+          "x": 1.2000000476837158,
+          "y": 0.6000000238418579,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 0.25,
+          "y": 0.22499999403953552
+        }
+      }
+    }
+  ],
+  "name": "default_small"
+}

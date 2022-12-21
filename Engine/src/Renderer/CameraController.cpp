@@ -23,13 +23,6 @@ CameraController::CameraController(float fov, float aspectRatio, float near_, fl
     events::Subscribe<events::WindowResizeEvent>(m_windowResizeCallback);
 }
 
-CameraController::~CameraController()
-{
-    events::Unsubscribe<events::WindowResizeEvent>(m_windowResizeCallback);
-    events::Unsubscribe<events::MouseScrolledEvent>(m_mouseScrolledCallback);
-    events::Unsubscribe<events::MouseMovedEvent>(m_mouseMovedCallback);
-}
-
 void CameraController::OnUpdate(float dt)
 {
     ProcessInput(dt);

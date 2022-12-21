@@ -12,8 +12,8 @@ class WindowsWindow : public Window {
 private:
     struct WindowData {
         std::string Title;
-        unsigned int Width { 0 };
-        unsigned int Height { 0 };
+        std::uint16_t Width { 0 };
+        std::uint16_t Height { 0 };
         bool VSync { false };
         bool FullScreen { false };
     };

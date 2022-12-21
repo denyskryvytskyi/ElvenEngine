@@ -11,7 +11,7 @@ namespace Elven {
 class CameraController {
 public:
     CameraController(float fov, float aspectRatio, float near_, float far_, bool enableFly = false);
-    ~CameraController();
+    ~CameraController() = default;
 
     void OnUpdate(float dt);
 

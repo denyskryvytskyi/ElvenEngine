@@ -2,6 +2,7 @@
 #include "Renderer.h"
 
 #include "Core/FileSystem.h"
+#include "Core/StringId.h"
 #include "Events/EventManager.h"
 #include "Events/TextureEvent.h"
 #include "Platform/OpenGL/OpenGLTexture2D.h"
@@ -32,21 +33,26 @@ static void LoadTextureFromFile(std::vector<TextureManager::LoadedTextureInfo>& 
 }
 } // namespace
 
-void TextureManager::Load(std::string&& textureName, const std::string& filename)
+void TextureManager::Load(const std::string& textureName, const std::string& filename)
 {
     const std::string filepath = FileSystem::GetImagesPath() + filename;
 
     // check whether we already loaded this texture
     auto it = m_textures.find(textureName);
 
-    if (it == m_textures.end()) {
-        m_futures.push_back(std::async(std::launch::async, LoadTextureFromFile, std::ref(m_loadedInfo), textureName, filepath));
-    } else {
-        EL_CORE_INFO("Texture {0} is already loaded.", textureName);
+    auto inProgressTexture = m_textureLoadingInProgress.find(textureName);
+
+    if (inProgressTexture == m_textureLoadingInProgress.end()) {
+        if (it == m_textures.end()) {
+            m_textureLoadingInProgress.insert(textureName);
+            m_futures.push_back(std::async(std::launch::async, LoadTextureFromFile, std::ref(m_loadedInfo), textureName, filepath));
+        } else {
+            EL_CORE_INFO("Texture {0} is already loaded.", textureName);
+        }
     }
 }
 
-SharedPtr<Texture2D> TextureManager::Load(std::string&& textureName, std::uint32_t width, std::uint32_t height)
+SharedPtr<Texture2D> TextureManager::Load(const std::string& textureName, std::uint32_t width, std::uint32_t height)
 {
     // check whether we already loaded this texture
     auto it = m_textures.find(textureName);
@@ -75,6 +81,7 @@ void TextureManager::OnUpdate()
     std::lock_guard<std::mutex> lock(texturesMutex);
     for (auto textureInfo : m_loadedInfo) {
         CreateTexture(textureInfo);
+        m_textureLoadingInProgress.erase(textureInfo.textureName);
     }
     m_loadedInfo.clear();
 }
@@ -106,7 +113,7 @@ void TextureManager::CreateTexture(const LoadedTextureInfo& info)
         m_textures.insert({ info.textureName, std::move(texture) });
 
         UniquePtr<events::TextureLoadedEvent> e = MakeUniquePtr<events::TextureLoadedEvent>(info.textureName);
-        events::QueueEvent(std::move(e));
+        events::QueueEvent(std::move(e), string_id(info.textureName));
 
         break;
     }

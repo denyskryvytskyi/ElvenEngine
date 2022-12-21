@@ -1,5 +1,7 @@
 set(ENGINE_HEADERS
 "vendor/stb_image/stb_image.h"
+"vendor/json/json.hpp"
+"vendor/json/json_fwd.hpp"
 "src/elpch.h"
 "src/Elven.h"
 "src/Core/Application.h"
@@ -16,6 +18,8 @@ set(ENGINE_HEADERS
 "src/Core/Window.h"
 "src/Core/FileSystem.h"
 "src/Core/StringId.h"
+"src/Core/CRC32.h"
+"src/Core/SettingsConfig.h"
 "src/Events/ApplicationEvent.h"
 "src/Events/Event.h"
 "src/Events/EventHandler.h"
@@ -39,6 +43,7 @@ set(ENGINE_HEADERS
 "src/Renderer/VertexArray.h"
 "src/Renderer/Texture2D.h"
 "src/Renderer/TextureManager.h"
+"src/Renderer/Helpers2d.h"
 "src/Platform/Windows/WindowsWindow.h"
 "src/Platform/OpenGL/OpenGLBuffer.h"
 "src/Platform/OpenGL/OpenGLContext.h"
@@ -52,6 +57,7 @@ set(ENGINE_HEADERS
 "src/Scene/Scene.h"
 "src/Scene/ComponentSystem.h"
 "src/Scene/SceneManager.h"
+"src/Scene/SceneSerializer.h"
 "src/Scene/Components/SceneComponents.h"
 "src/Scene/Systems/SpriteRenderSystem.h"
 "src/Scene/Systems/BehaviorSystem.h"
@@ -65,6 +71,7 @@ set(ENGINE_SOURCES
 "src/Core/LayerStack.cpp"
 "src/Core/Log.cpp"
 "src/Core/Window.cpp"
+"src/Core/SettingsConfig.cpp"
 "src/Events/EventManager.cpp"
 "src/Renderer/Buffer.cpp"
 "src/Renderer/GraphicsContext.cpp"
@@ -78,6 +85,7 @@ set(ENGINE_SOURCES
 "src/Renderer/Shader.cpp"
 "src/Renderer/VertexArray.cpp"
 "src/Renderer/TextureManager.cpp"
+"src/Renderer/Helpers2d.cpp"
 "src/ImGui/imgui_impl_glfw.cpp"
 "src/ImGui/imgui_impl_opengl3.cpp"
 "src/ImGui/ImGuiLayer.cpp"
@@ -93,6 +101,7 @@ set(ENGINE_SOURCES
 "src/Scene/ComponentSystem.cpp"
 "src/Scene/Scene.cpp"
 "src/Scene/SceneManager.cpp"
+"src/Scene/SceneSerializer.cpp"
 "src/Scene/Components/SceneComponents.cpp"
 "src/Scene/Systems/SpriteRenderSystem.cpp"
 "src/Scene/Systems/BehaviorSystem.cpp"
@@ -116,6 +125,7 @@ set(spdlog ${VENDOR_PATH}/spdlog)
 set(imgui ${VENDOR_PATH}/imgui)
 set(lia ${VENDOR_PATH}/lia)
 set(stb_image ${VENDOR_PATH}/stb_image)
+set(json ${VENDOR_PATH}/json)
 
 set(STATIC_THIRD_PARTY_LIBRARIES
     glfw
@@ -143,6 +153,7 @@ set(ENGINE_INCLUDE_DIRS
     ${spdlog}/include
     ${imgui}
     ${stb_image}
+    ${json}
     )
 
 # state that anybody linking to us needs to include the current source dir, while we don't

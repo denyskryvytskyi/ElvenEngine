@@ -14,20 +14,31 @@ class TestBehavior : public Elven::ecs::IBehavior {
     }
 };
 
+namespace {
+constexpr bool enableTestComponents = false;
+}
+
 TestLayer2D::TestLayer2D()
     : Layer("TestLayer2D")
     , m_textureLoadedCallback([this](const Elven::events::TextureLoadedEvent& e) { OnTextureLoaded(e); })
 {
-    Elven::events::Subscribe<Elven::events::TextureLoadedEvent>(m_textureLoadedCallback);
 
-    std::vector<std::pair<std::string, std::string>> texturesLoadList = {
-        { "wizard", "wizard.png" },
-        { "wizard_fire", "wizard_fire.png" },
-        { "wizard_ice", "wizard_ice.png" }
-    };
+    if (enableTestComponents) {
+        Elven ::events::HandlerId id = std::hash<std::string> {}("wizard");
+        Elven::events::HandlerId idNew = std::hash<std::string> {}("wizard");
+        Elven::events::Subscribe<Elven::events::TextureLoadedEvent>(m_textureLoadedCallback, id);
+        Elven::events::Subscribe<Elven::events::TextureLoadedEvent>(m_textureLoadedCallback, std::hash<std::string> {}("wizard_fire"));
+        Elven::events::Subscribe<Elven::events::TextureLoadedEvent>(m_textureLoadedCallback, std::hash<std::string> {}("wizard_ice"));
 
-    for (size_t i = 0; i < texturesLoadList.size(); i++) {
-        Elven::textures::Load(std::move(texturesLoadList[i].first), texturesLoadList[i].second);
+        std::vector<std::pair<std::string, std::string>> texturesLoadList = {
+            { "wizard", "wizard.png" },
+            { "wizard_fire", "wizard_fire.png" },
+            { "wizard_ice", "wizard_ice.png" }
+        };
+
+        for (size_t i = 0; i < texturesLoadList.size(); i++) {
+            Elven::textures::Load(std::move(texturesLoadList[i].first), texturesLoadList[i].second);
+        }
     }
 }
 
@@ -60,8 +71,8 @@ void TestLayer2D::OnTextureLoaded(const Elven::events::TextureLoadedEvent& e)
         std::shared_ptr<Elven::Texture2D> texture = nullptr;
         texture = Elven::textures::Get("wizard_fire");
 
-        for (size_t i = 0; i < 100; ++i) {
-            for (size_t j = 0; j < 200; ++j) {
+        for (size_t i = 0; i < 5; ++i) {
+            for (size_t j = 0; j < 5; ++j) {
                 const Elven::ecs::Entity entityQuad = scene.CreateEntity();
 
                 scene.AddComponent<Elven::TransformComponent>(entityQuad);
@@ -71,9 +82,10 @@ void TestLayer2D::OnTextureLoaded(const Elven::events::TextureLoadedEvent& e)
 
                 scene.AddComponent<Elven::SpriteComponent>(entityQuad);
                 auto& sprite = scene.GetComponent<Elven::SpriteComponent>(entityQuad);
-                sprite.m_texture = texture;
+                sprite.textureName = "wizard_fire";
+                sprite.texture = texture;
 
-                if (j == 0 && i == 0) {
+                if (false && j == 0 && i == 0) {
                     scene.AddComponent<Elven::BehaviorComponent>(entityQuad);
                     auto& behavior = scene.GetComponent<Elven::BehaviorComponent>(entityQuad);
                     behavior.AddBehavior<TestBehavior>();

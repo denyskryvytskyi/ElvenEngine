@@ -3,6 +3,7 @@
 #include "Texture2D.h"
 
 #include <future>
+#include <set>
 
 namespace Elven {
 
@@ -18,10 +19,10 @@ public:
 
 public:
     // async load from file
-    void Load(std::string&& textureName, const std::string& filename);
+    void Load(const std::string& textureName, const std::string& filename);
 
     // just create texture for specific texture implementation
-    SharedPtr<Texture2D> Load(std::string&& textureName, std::uint32_t width, std::uint32_t height);
+    SharedPtr<Texture2D> Load(const std::string& textureName, std::uint32_t width, std::uint32_t height);
 
     void OnUpdate();
     void Shutdown();
@@ -34,6 +35,7 @@ private:
 private:
     std::unordered_map<std::string, SharedPtr<Texture2D>> m_textures;
     std::vector<LoadedTextureInfo> m_loadedInfo;
+    std::set<std::string> m_textureLoadingInProgress;
     std::vector<std::future<void>> m_futures;
 };
 
@@ -41,14 +43,14 @@ extern TextureManager gTextureManager;
 
 namespace textures {
 
-inline void Load(std::string&& textureName, const std::string& filename)
+inline void Load(const std::string& textureName, const std::string& filename)
 {
-    gTextureManager.Load(std::forward<std::string>(textureName), filename);
+    gTextureManager.Load(textureName, filename);
 }
 
-inline SharedPtr<Texture2D> Load(std::string&& textureName, std::uint32_t width, std::uint32_t height)
+inline SharedPtr<Texture2D> Load(const std::string& textureName, std::uint32_t width, std::uint32_t height)
 {
-    return gTextureManager.Load(std::forward<std::string>(textureName), width, height);
+    return gTextureManager.Load(textureName, width, height);
 }
 
 inline SharedPtr<Texture2D> Get(const std::string& textureName)

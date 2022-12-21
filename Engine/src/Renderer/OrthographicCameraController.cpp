@@ -15,12 +15,6 @@ OrthographicCameraController::OrthographicCameraController(float aspectRatio)
     events::Subscribe<events::MouseScrolledEvent>(m_mouseScrolledCallback);
 }
 
-OrthographicCameraController::~OrthographicCameraController()
-{
-    events::Unsubscribe<events::MouseScrolledEvent>(m_mouseScrolledCallback);
-    events::Unsubscribe<events::WindowResizeEvent>(m_windowResizeCallback);
-}
-
 void OrthographicCameraController::OnUpdate(float dt)
 {
     if (Input::IsKeyPressed(Key::A)) {

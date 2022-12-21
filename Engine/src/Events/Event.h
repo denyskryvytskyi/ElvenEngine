@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Core/StringId.h>
+#include <Core/CRC32.h>
 #include <sstream>
 #include <string>
 
@@ -17,7 +17,7 @@ public:
 #define EVENT_TYPE(event_type)                  \
     static std::uint32_t GetStaticEventType()   \
     {                                           \
-        return STRING_ID(event_type);           \
+        return CRC32(event_type);               \
     }                                           \
     std::uint32_t GetEventType() const override \
     {                                           \

@@ -43,7 +43,7 @@ private:
 
     bool m_running { false };
 
-    UniquePtr<Window> m_window { Window::Create() };
+    UniquePtr<Window> m_window { nullptr };
     ImGuiLayer* m_imGuiLayer { nullptr };
     LayerStack m_layerStack;
 

@@ -1,5 +1,7 @@
 #pragma once
+
 #include "Scene/Scene.h"
+#include "SceneSerializer.h"
 
 namespace Elven {
 class SceneManager {
@@ -15,6 +17,7 @@ public:
 
 private:
     Scene m_activeScene;
+    SceneSerializer m_serializer;
 };
 
 extern SceneManager gSceneManager;

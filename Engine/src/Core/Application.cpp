@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "FileSystem.h"
 #include "Input.h"
+#include "SettingsConfig.h"
 #include "Timer.h"
 
 #include "Renderer/Renderer.h"
@@ -26,6 +27,13 @@ Application::Application()
     EL_CORE_ASSERT(!s_instance, "Application already exists!");
     s_instance = this;
 
+    EL_CORE_INFO("Executable path: {0}", FileSystem::GetCurrentPath());
+
+    // Init global engine settings
+    gEngineSettings.LoadSettings();
+
+    m_window = Window::Create({ "ElvenEngine", gEngineSettings.WindowWidth, gEngineSettings.WindowHeight });
+
     // Init managers here
     Elven::Renderer::Init();
     gSceneManager.Init();
@@ -33,20 +41,12 @@ Application::Application()
 
     PushOverlay(m_imGuiLayer);
 
-    // TODO: Make it dependent from user settings to init Renderer or Renderer2D (add option to menu)
-    // Elven::Renderer::Init();
-
     events::Subscribe<events::WindowCloseEvent>(m_windowCloseCallback);
     events::Subscribe<events::WindowResizeEvent>(m_windowResizeCallback);
-
-    EL_INFO("Executable path: {0}", FileSystem::GetCurrentPath());
 }
 
 Application::~Application()
 {
-    events::Unsubscribe<events::WindowResizeEvent>(m_windowResizeCallback);
-    events::Unsubscribe<events::WindowCloseEvent>(m_windowCloseCallback);
-
     gSceneManager.Shutdown();
     gTextureManager.Shutdown();
     events::gEventManager.Shutdown();
