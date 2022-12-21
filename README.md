@@ -26,6 +26,8 @@ Or just call command from the build directory with your version of VS and platfo
 
 `cmake -G "Visual Studio Generator 17 2022" -A x64`
 
+After successfull build, you need to copy `Sandbox/assets` folder and `Engine/engine_settings.cfg` file to the folder with executable (build/Sandbox/Debug(Release) by default).
+
 ## Third party libraries
 | Lib |  |
 | ------ | ------ |
@@ -36,6 +38,7 @@ Or just call command from the build directory with your version of VS and platfo
 | [lia](https://github.com/kryvytskyidenys/lia) | my custom math library |
 | [ImGui](https://github.com/kryvytskyidenys/imgui) | library using for GUI (visual-editor) |
 | [stb image](https://github.com/nothings/stb/blob/master/stb_image.h) | image loader |
+| [json](https://github.com/nlohmann/json) | json lib for serialization and data-driven architecture |
 
 
 ## Features (In Progress)
@@ -57,10 +60,12 @@ Or just call command from the build directory with your version of VS and platfo
   - [ ] Text Rendering
 + [x] ECS
   - [x] Data-oriented cache-friendly components system architecture
-  - [ ] Components serialization
+  - [x] Components serialization
 + [x] Scene
   - [x] Scene Manager
-  - [ ] Scene serialization
+  - [x] Scene serialization
++ [x] Data-driven architecture
+  - [x] Load/Save from/to json files
 + [ ] 3D Renderer
   - [ ] Mesh/Model system
   - [ ] Primitives: cube, sphere, plane
