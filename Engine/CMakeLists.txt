@@ -171,3 +171,8 @@ add_compile_definitions(
     _CRT_SECURE_NO_WARNINGS
     GLFW_INCLUDE_NONE
 )
+
+add_custom_command(TARGET ElvenEngine POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine_settings.cfg
+        ${CMAKE_BINARY_DIR}/Sandbox/$<CONFIG>/engine_settings.cfg)

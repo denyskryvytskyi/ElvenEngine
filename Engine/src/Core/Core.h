@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#ifdef EL_DEBUG
+#ifdef DEBUG_MODE
 #    if defined(EL_PLATFORM_WINDOWS)
 #        define EL_DEBUGBREAK() __debugbreak()
 #    elif defined(EL_PLATFORM_LINUX)

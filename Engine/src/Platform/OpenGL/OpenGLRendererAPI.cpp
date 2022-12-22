@@ -28,7 +28,7 @@ void OpenGLMessageCallback(unsigned int source, unsigned int type, unsigned int 
 
 void OpenGLRendererAPI::Init()
 {
-#ifdef EL_DEBUG
+#ifdef DEBUG_MODE
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     glDebugMessageCallback(OpenGLMessageCallback, nullptr);

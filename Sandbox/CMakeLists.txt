@@ -24,4 +24,14 @@ target_include_directories(Sandbox
         )
 
 set_target_properties(Sandbox PROPERTIES 
-                      VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Debug)
+                      VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>)
+
+add_custom_command(TARGET Sandbox POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/assets
+        ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/assets)
+
+target_compile_definitions(Sandbox PRIVATE
+  $<$<CONFIG:Debug>:DEBUG_MODE>
+  $<$<CONFIG:Release>:RELEASE_MODE>
+)

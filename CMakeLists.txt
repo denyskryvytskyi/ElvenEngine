@@ -9,8 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
-option(ELVENENGINE_BUILD_RELEASE "release build for end user" OFF)
-option(ELVENENGINE_BUILD_SANDBOX "build sandbox project" ON)
+option(BUILD_SANDBOX "build sandbox project" ON)
 
 if(WIN32)
     add_compile_definitions(
@@ -21,19 +20,11 @@ else()
     message("This is not supported platform for now!")
 endif()
 
-if(ELVENENGINE_BUILD_RELEASE)
-    set(CMAKE_BUILD_TYPE "Release")
-    add_compile_definitions(EL_RELEASE)
-else()
-    set(CMAKE_BUILD_TYPE "Debug")
-    add_compile_definitions(EL_DEBUG)
-endif()
-
 add_subdirectory(Engine)
 
 set(ElvenEngine_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
-if (ELVENENGINE_BUILD_SANDBOX)
+if (BUILD_SANDBOX)
     add_subdirectory(Sandbox)
     if(CMAKE_GENERATOR MATCHES "Visual Studio")
         set_directory_properties(
