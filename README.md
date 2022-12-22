@@ -26,7 +26,7 @@ Or just call command from the build directory with your version of VS and platfo
 
 `cmake -G "Visual Studio Generator 17 2022" -A x64`
 
-After successfull build, you need to copy `Sandbox/assets` folder and `Engine/engine_settings.cfg` file to the folder with executable (build/Sandbox/Debug(Release) by default).
+There is also script for building solution (if you want to build using cmake), both Debug/Release config (pass it as argument): `build-win.bat`
 
 ## Third party libraries
 | Lib |  |
