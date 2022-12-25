@@ -7,7 +7,6 @@
 #include "Core/Core.h"
 
 #include "Core/Application.h"
-#include "Core/Layer.h"
 #include "Core/Log.h"
 #include "Core/StringId.h"
 
