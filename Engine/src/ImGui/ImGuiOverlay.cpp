@@ -1,4 +1,4 @@
-#include "ImGui/ImGuiLayer.h"
+#include "ImGui/ImGuiOverlay.h"
 
 #include "ImGui/imgui_impl_glfw.h"
 #include "ImGui/imgui_impl_opengl3.h"
@@ -13,12 +13,7 @@
 
 namespace Elven {
 
-ImGuiLayer::ImGuiLayer()
-    : Layer("ImGuiLayer")
-{
-}
-
-void ImGuiLayer::OnAttach()
+void ImGuiOverlay::Init()
 {
     // setup Dear ImGui Context
     IMGUI_CHECKVERSION();
@@ -51,14 +46,14 @@ void ImGuiLayer::OnAttach()
     m_isFullScreen = Application::Get().GetWindow()->IsFullScreen();
 }
 
-void ImGuiLayer::OnDetach()
+void ImGuiOverlay::Shutdown()
 {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
 
-void ImGuiLayer::OnImGuiRender()
+void ImGuiOverlay::ImGuiRender()
 {
     static bool showDemo = false;
     // ImGui::ShowDemoWindow(&showDemo);
@@ -93,14 +88,14 @@ void ImGuiLayer::OnImGuiRender()
     ImGui::End();
 }
 
-void ImGuiLayer::Begin()
+void ImGuiOverlay::Begin()
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 }
 
-void ImGuiLayer::End()
+void ImGuiOverlay::End()
 {
     ImGuiIO& io = ImGui::GetIO();
     Application& app = Application::Get();

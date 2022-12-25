@@ -9,8 +9,6 @@ set(ENGINE_HEADERS
 "src/Core/EntryPoint.h"
 "src/Core/Input.h"
 "src/Core/KeyCodes.h"
-"src/Core/Layer.h"
-"src/Core/LayerStack.h"
 "src/Core/Log.h"
 "src/Core/MouseCodes.h"
 "src/Core/Semaphore.h"
@@ -29,7 +27,7 @@ set(ENGINE_HEADERS
 "src/Events/TextureEvent.h"
 "src/ImGui/imgui_impl_glfw.h"
 "src/ImGui/imgui_impl_opengl3.h"
-"src/ImGui/ImGuiLayer.h"
+"src/ImGui/ImGuiOverlay.h"
 "src/Renderer/Buffer.h"
 "src/Renderer/GraphicsContext.h"
 "src/Renderer/Camera.h"
@@ -67,8 +65,6 @@ set(ENGINE_SOURCES
 "vendor/stb_image/stb_image.cpp"
 "src/Core/Application.cpp"
 "src/Core/EntryPoint.cpp"
-"src/Core/Layer.cpp"
-"src/Core/LayerStack.cpp"
 "src/Core/Log.cpp"
 "src/Core/Window.cpp"
 "src/Core/SettingsConfig.cpp"
@@ -88,7 +84,7 @@ set(ENGINE_SOURCES
 "src/Renderer/Helpers2d.cpp"
 "src/ImGui/imgui_impl_glfw.cpp"
 "src/ImGui/imgui_impl_opengl3.cpp"
-"src/ImGui/ImGuiLayer.cpp"
+"src/ImGui/ImGuiOverlay.cpp"
 "src/Platform/OpenGL/OpenGLBuffer.cpp"
 "src/Platform/OpenGL/OpenGLContext.cpp"
 "src/Platform/OpenGL/OpenGLRendererAPI.cpp"
@@ -171,8 +167,3 @@ add_compile_definitions(
     _CRT_SECURE_NO_WARNINGS
     GLFW_INCLUDE_NONE
 )
-
-add_custom_command(TARGET ElvenEngine POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_CURRENT_SOURCE_DIR}/engine_settings.cfg
-        ${CMAKE_BINARY_DIR}/Sandbox/$<CONFIG>/engine_settings.cfg)

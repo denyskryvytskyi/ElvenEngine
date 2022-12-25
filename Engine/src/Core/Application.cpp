@@ -1,16 +1,16 @@
 #include "Application.h"
+
 #include "FileSystem.h"
 #include "Input.h"
 #include "SettingsConfig.h"
 #include "Timer.h"
+#include "Window.h"
 
 #include "Renderer/Renderer.h"
 #include "Renderer/Renderer2D.h"
 #include "Renderer/TextureManager.h"
 
 #include "Events/EventManager.h"
-#include "ImGui/ImGuiLayer.h"
-
 #include "Scene/SceneManager.h"
 
 namespace Elven {
@@ -20,7 +20,6 @@ Application::Telemetry Application::s_telemetry;
 
 Application::Application()
     : m_running(true)
-    , m_imGuiLayer(new ImGuiLayer)
     , m_windowCloseCallback([this](const events::WindowCloseEvent& e) { OnWindowClose(e); })
     , m_windowResizeCallback([this](const events::WindowResizeEvent& e) { OnWindowResize(e); })
 {
@@ -33,37 +32,31 @@ Application::Application()
     gEngineSettings.LoadSettings();
 
     m_window = Window::Create({ "ElvenEngine", gEngineSettings.WindowWidth, gEngineSettings.WindowHeight });
+    RenderCommand::SetViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
 
     // Init managers here
     Elven::Renderer::Init();
     gSceneManager.Init();
     //
 
-    PushOverlay(m_imGuiLayer);
+    m_imGuiOverlay.Init();
 
     events::Subscribe<events::WindowCloseEvent>(m_windowCloseCallback);
     events::Subscribe<events::WindowResizeEvent>(m_windowResizeCallback);
+
+    OnCreate();
 }
 
 Application::~Application()
 {
+    OnDestroy();
+
+    m_imGuiOverlay.Shutdown();
     gSceneManager.Shutdown();
     gTextureManager.Shutdown();
     events::gEventManager.Shutdown();
     Renderer::Shutdown();
     Renderer2D::Shutdown();
-}
-
-void Application::PushLayer(Layer* layer)
-{
-    m_layerStack.PushLayer(layer);
-    layer->OnAttach();
-}
-
-void Application::PushOverlay(Layer* overlay)
-{
-    m_layerStack.PushOverlay(overlay);
-    overlay->OnAttach();
 }
 
 void Application::Run()
@@ -78,10 +71,7 @@ void Application::Run()
 
         /// Update step ////////////////////
 
-        // Layers update
-        for (Layer* layer : m_layerStack) {
-            layer->OnUpdate(elapsedTime);
-        }
+        OnUpdate(elapsedTime);
 
         gTextureManager.OnUpdate();
         gSceneManager.Update(elapsedTime);
@@ -89,14 +79,16 @@ void Application::Run()
         /////////////////////////////////////
 
         /// Rendering Step ///////////////////
+        Elven::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
+        Elven::RenderCommand::Clear();
+
+        OnRender(elapsedTime);
         gSceneManager.Render(elapsedTime);
 
-        // ImGui layers render
-        m_imGuiLayer->Begin();
-        for (Layer* layer : m_layerStack) {
-            layer->OnImGuiRender();
-        }
-        m_imGuiLayer->End();
+        // ImGui overlay rendering
+        m_imGuiOverlay.Begin();
+        m_imGuiOverlay.ImGuiRender();
+        m_imGuiOverlay.End();
 
         // Window update
         m_window->OnUpdate();

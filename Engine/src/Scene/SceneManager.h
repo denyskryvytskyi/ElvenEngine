@@ -7,6 +7,8 @@ namespace Elven {
 class SceneManager {
 public:
     SceneManager() = default;
+    SceneManager(const SceneManager&) = delete;
+    const SceneManager& operator=(const SceneManager&) = delete;
 
     void Init();
     void Shutdown();

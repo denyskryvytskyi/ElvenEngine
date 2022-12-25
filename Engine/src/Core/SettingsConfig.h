@@ -5,11 +5,12 @@ namespace Elven {
 class SettingsConfig {
 public:
     void LoadSettings();
+    void SaveSettings();
 
 public:
-    uint16_t WindowHeight;
-    uint16_t WindowWidth;
-    std::string DefaultSceneName;
+    uint16_t WindowHeight { 720 };
+    uint16_t WindowWidth { 1280 };
+    std::string DefaultSceneName { "default" };
 };
 
 extern SettingsConfig gEngineSettings;

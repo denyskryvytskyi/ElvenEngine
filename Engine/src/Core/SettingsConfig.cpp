@@ -6,7 +6,7 @@ namespace Elven {
 using json = nlohmann::json;
 
 namespace {
-constexpr std::string_view engineSettingsFile = "engine_settings.cfg";
+constexpr std::string_view engineSettingsFile = "settings.cfg";
 }
 
 SettingsConfig gEngineSettings;
@@ -20,7 +20,8 @@ void SettingsConfig::LoadSettings()
         if (in.is_open()) {
             in >> j;
         } else {
-            EL_CORE_ERROR("Failed to load engine settings {0}", engineSettingsFile);
+            EL_CORE_WARN("Failed to load engine settings config {0}. Will be created new one with default values.", engineSettingsFile);
+            SaveSettings();
             return;
         }
     }
@@ -30,5 +31,16 @@ void SettingsConfig::LoadSettings()
     DefaultSceneName = j.at("default_scene_name");
 
     EL_CORE_INFO("Settings loaded");
+}
+
+void SettingsConfig::SaveSettings()
+{
+    json j;
+    j["window_height"] = WindowHeight;
+    j["window_width"] = WindowWidth;
+    j["default_scene_name"] = DefaultSceneName;
+
+    std::ofstream out(engineSettingsFile.data());
+    out << j;
 }
 } // namespace Elven

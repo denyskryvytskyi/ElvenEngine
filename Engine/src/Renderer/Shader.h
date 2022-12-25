@@ -30,6 +30,9 @@ public:
 
 class ShaderManager {
 public:
+    ShaderManager(const ShaderManager&) = delete;
+    const ShaderManager& operator=(const ShaderManager&) = delete;
+
     static SharedPtr<Shader> Load(std::string name, const std::string& vShaderFile, const std::string& fShaderFile);
     static SharedPtr<Shader> Get(const std::string& name);
 

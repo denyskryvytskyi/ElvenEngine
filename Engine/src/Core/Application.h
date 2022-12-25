@@ -1,17 +1,12 @@
 #pragma once
 
-#include "LayerStack.h"
-#include "Window.h"
-
 #include "Events/ApplicationEvent.h"
 #include "Events/EventHandler.h"
+#include "ImGui/ImGuiOverlay.h"
 
 namespace Elven {
 
 class Window;
-class Layer;
-class ImGuiLayer;
-
 class Application {
 private:
     struct Telemetry {
@@ -22,9 +17,8 @@ private:
 public:
     Application();
     virtual ~Application();
-
-    void PushLayer(Layer* layer);
-    void PushOverlay(Layer* overlay);
+    Application(const Application&) = delete;
+    const Application& operator=(const Application&) = delete;
 
     void Run();
 
@@ -32,6 +26,12 @@ public:
 
     static Application& Get() { return *s_instance; }
     static Telemetry& GetTelemetry() { return s_telemetry; };
+
+protected:
+    virtual void OnCreate() {};
+    virtual void OnUpdate(float dt) {};
+    virtual void OnRender(float dt) {};
+    virtual void OnDestroy() {};
 
 private:
     void OnWindowClose(const events::WindowCloseEvent& e);
@@ -44,8 +44,7 @@ private:
     bool m_running { false };
 
     UniquePtr<Window> m_window { nullptr };
-    ImGuiLayer* m_imGuiLayer { nullptr };
-    LayerStack m_layerStack;
+    ImGuiOverlay m_imGuiOverlay;
 
     events::EventHandler<events::WindowResizeEvent> m_windowResizeCallback;
     events::EventHandler<events::WindowCloseEvent> m_windowCloseCallback;

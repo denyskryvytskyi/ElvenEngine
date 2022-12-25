@@ -13,7 +13,7 @@
 
 #include "Events/EventManager.h"
 
-#include "ImGui/ImGuiLayer.h"
+#include "ImGui/ImGuiOverlay.h"
 
 /// Renderer ////////////////////////////////////
 

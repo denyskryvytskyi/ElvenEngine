@@ -18,6 +18,10 @@ public:
     };
 
 public:
+    TextureManager() = default;
+    TextureManager(const TextureManager&) = delete;
+    const TextureManager& operator=(const TextureManager&) = delete;
+
     // async load from file
     void Load(const std::string& textureName, const std::string& filename);
 

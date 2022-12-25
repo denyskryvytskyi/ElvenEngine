@@ -22,9 +22,6 @@ void SpriteRenderSystem::OnUpdate(float dt)
 
 void SpriteRenderSystem::OnRender(float dt)
 {
-    Elven::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
-    Elven::RenderCommand::Clear();
-
     Elven::Renderer2D::BeginScene(m_cameraController.GetCamera());
 
     auto& transformComponents = m_pScene->GetComponents<TransformComponent>();
@@ -34,7 +31,6 @@ void SpriteRenderSystem::OnRender(float dt)
         auto& transformComponent = transformComponents[index];
         if (m_pScene->HasComponent<SpriteComponent>(entity)) {
             auto& spriteComponent = m_pScene->GetComponent<SpriteComponent>(entity);
-            // Check texture and if it doesn't loaded, send event to load and subscribe to loeaded event
             if (spriteComponent.texture != nullptr) {
                 Elven::Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.pos, transformComponent.scale, 45.0f);
             }

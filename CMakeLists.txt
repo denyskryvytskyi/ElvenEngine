@@ -25,11 +25,12 @@ add_subdirectory(Engine)
 set(ElvenEngine_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 if (BUILD_SANDBOX)
-    add_subdirectory(Sandbox)
+    add_subdirectory(Sandbox2D)
+    add_subdirectory(Sandbox3D)
     if(CMAKE_GENERATOR MATCHES "Visual Studio")
         set_directory_properties(
             PROPERTIES
-            VS_STARTUP_PROJECT "Sandbox"
+            VS_STARTUP_PROJECT "Sandbox2D"
         )
     endif()
 endif()

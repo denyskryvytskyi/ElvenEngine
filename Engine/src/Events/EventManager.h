@@ -9,6 +9,10 @@ using HandlerId = std::uint64_t;
 
 class EventManager {
 public:
+    EventManager() = default;
+    EventManager(const EventManager&) = delete;
+    const EventManager& operator=(const EventManager&) = delete;
+
     void Shutdown();
 
     void Subscribe(EventId eventId, UniquePtr<IEventHandlerWrapper>&& handler, HandlerId handlerId);

@@ -1,16 +1,14 @@
 #pragma once
 
-#include "Core/Layer.h"
-
 namespace Elven {
 
-class ImGuiLayer : public Layer {
+class ImGuiOverlay {
 public:
-    ImGuiLayer();
+    ImGuiOverlay() = default;
 
-    void OnAttach() override;
-    void OnDetach() override;
-    void OnImGuiRender() override;
+    void Init();
+    void Shutdown();
+    void ImGuiRender();
 
     void Begin();
     void End();

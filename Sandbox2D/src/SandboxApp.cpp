@@ -1,11 +1,18 @@
-#include "TestLayer2D.h"
-#include "Elven.h"
+#include <Elven.h>
 
+#include "SandboxApp.h"
+
+#include <Core/EntryPoint.h>
 #include <Events/EventManager.h>
 #include <Events/TextureEvent.h>
 #include <Scene/Behavior.h>
 #include <Scene/Components/SceneComponents.h>
 #include <Scene/SceneManager.h>
+
+Elven::Application* Elven::CreateApplication()
+{
+    return new Sandbox2D();
+}
 
 class TestBehavior : public Elven::ecs::IBehavior {
     void OnUpdate(float dt) override
@@ -18,17 +25,13 @@ namespace {
 constexpr bool enableTestComponents = false;
 }
 
-TestLayer2D::TestLayer2D()
-    : Layer("TestLayer2D")
-    , m_textureLoadedCallback([this](const Elven::events::TextureLoadedEvent& e) { OnTextureLoaded(e); })
+Sandbox2D::Sandbox2D()
+    : m_textureLoadedCallback([this](const Elven::events::TextureLoadedEvent& e) { OnTextureLoaded(e); })
 {
-
     if (enableTestComponents) {
-        Elven ::events::HandlerId id = std::hash<std::string> {}("wizard");
-        Elven::events::HandlerId idNew = std::hash<std::string> {}("wizard");
-        Elven::events::Subscribe<Elven::events::TextureLoadedEvent>(m_textureLoadedCallback, id);
-        Elven::events::Subscribe<Elven::events::TextureLoadedEvent>(m_textureLoadedCallback, std::hash<std::string> {}("wizard_fire"));
-        Elven::events::Subscribe<Elven::events::TextureLoadedEvent>(m_textureLoadedCallback, std::hash<std::string> {}("wizard_ice"));
+        Elven::events::Subscribe<Elven::events::TextureLoadedEvent>(m_textureLoadedCallback, Elven::string_id("wizard"));
+        Elven::events::Subscribe<Elven::events::TextureLoadedEvent>(m_textureLoadedCallback, Elven::string_id("wizard_fire"));
+        Elven::events::Subscribe<Elven::events::TextureLoadedEvent>(m_textureLoadedCallback, Elven::string_id("wizard_ice"));
 
         std::vector<std::pair<std::string, std::string>> texturesLoadList = {
             { "wizard", "wizard.png" },
@@ -37,32 +40,28 @@ TestLayer2D::TestLayer2D()
         };
 
         for (size_t i = 0; i < texturesLoadList.size(); i++) {
-            Elven::textures::Load(std::move(texturesLoadList[i].first), texturesLoadList[i].second);
+            Elven::textures::Load(texturesLoadList[i].first, texturesLoadList[i].second);
         }
     }
 }
 
-TestLayer2D::~TestLayer2D()
+void Sandbox2D::OnCreate()
 {
 }
 
-void TestLayer2D::OnAttach()
+void Sandbox2D::OnUpdate(float dt)
 {
 }
 
-void TestLayer2D::OnDetach()
+void Sandbox2D::OnRender(float dt)
 {
 }
 
-void TestLayer2D::OnUpdate(float dt)
+void Sandbox2D::OnDestroy()
 {
 }
 
-void TestLayer2D::OnImGuiRender()
-{
-}
-
-void TestLayer2D::OnTextureLoaded(const Elven::events::TextureLoadedEvent& e)
+void Sandbox2D::OnTextureLoaded(const Elven::events::TextureLoadedEvent& e)
 {
     if (e.textureName == "wizard_fire") {
 
