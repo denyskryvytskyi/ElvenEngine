@@ -7,7 +7,7 @@
   
 </h1>
 
-Elven Engine is primarily 2D/3D game engine developing from scratch.
+Elven Engine is primarily 2D/3D game engine that is being developed from scratch.
 
 ## Getting Started
 
