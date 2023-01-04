@@ -39,7 +39,6 @@ struct IComponentPool {
     virtual ~IComponentPool() = default;
 
     virtual void Clear() = 0;
-    virtual void AddComponent(Entity entity) = 0;
     virtual void RemoveComponent(Entity entity) = 0;
     virtual Entity GetEntity(std::uint32_t componentIndex) const = 0;
 };
@@ -59,26 +58,32 @@ public:
         m_entityToComponentIndex.clear();
     }
 
-    void AddComponent(Entity entity) override
+    template<typename... Args>
+    ComponentType& AddComponent(Entity entity, Args&&... args)
     {
         if (m_components.size() < MAX_ENTITIES_PER_COMPONENT) {
             m_entityToComponentIndex.insert({ entity, m_components.size() });
-            m_components.emplace_back();
+            m_components.emplace_back(std::forward<Args>(args)...);
             m_entities.emplace_back(entity);
+            return m_components.back();
         } else {
-            EL_CORE_CRITICAL("Max components limit reached.");
+            EL_CORE_ASSERT(false, "There isn't component with such entity");
         }
+
+        return m_components.back();
     }
 
-    void AddComponent(Entity entity, ComponentType&& component)
+    ComponentType& AddComponent(Entity entity, ComponentType&& component)
     {
         if (m_components.size() < MAX_ENTITIES_PER_COMPONENT) {
             m_entityToComponentIndex.insert({ entity, m_components.size() });
             m_components.emplace_back(std::move(component));
             m_entities.emplace_back(entity);
         } else {
-            EL_CORE_CRITICAL("Max components limit reached.");
+            EL_CORE_ASSERT(false, "There isn't component with such entity");
         }
+
+        return m_components.back();
     }
 
     void RemoveComponent(Entity entity) override
@@ -110,11 +115,15 @@ public:
         auto it = m_entityToComponentIndex.find(entity);
 
         if (it == m_entityToComponentIndex.end()) {
-            EL_CORE_CRITICAL("There isn't component with entity id = {0}", entity);
-            EL_CORE_ASSERT(false);
+            EL_CORE_ASSERT(false, "There isn't component with such entity");
         }
 
         return m_components[it->second];
+    }
+
+    std::vector<ComponentType>& GetComponents()
+    {
+        return m_components;
     }
 
     const std::vector<ComponentType>& GetComponents() const

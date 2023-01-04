@@ -4,7 +4,7 @@
 
 namespace Elven::ecs {
 
-using Entity = std::uint64_t;
+using Entity = uint64_t;
 constexpr Entity INVALID_ENTITY_ID = 0;
 
 static std::random_device s_randomDevice;

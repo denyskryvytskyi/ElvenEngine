@@ -93,6 +93,7 @@ set(ENGINE_SOURCES
 "src/Platform/OpenGL/OpenGLTexture2D.cpp"
 "src/Platform/Windows/WindowsInput.cpp"
 "src/Platform/Windows/WindowsWindow.cpp"
+"src/Scene/Behavior.cpp"
 "src/Scene/Component.cpp"
 "src/Scene/ComponentSystem.cpp"
 "src/Scene/Scene.cpp"
@@ -153,7 +154,7 @@ set(ENGINE_INCLUDE_DIRS
     )
 
 # state that anybody linking to us needs to include the current source dir, while we don't
-target_include_directories(ElvenEngine
+target_include_directories(${LIBRARY_NAME}
         PUBLIC ${ENGINE_INCLUDE_DIRS}
         )
 
@@ -161,9 +162,14 @@ target_include_directories(ElvenEngine
 set(ENGINE_PRECOMPILED_HEADERS
     ${ENGINE_SOURCE_DIR}/elpch.h
 )
-target_precompile_headers(ElvenEngine PRIVATE ${ENGINE_PRECOMPILED_HEADERS})
+target_precompile_headers(${LIBRARY_NAME} PRIVATE ${ENGINE_PRECOMPILED_HEADERS})
 
 add_compile_definitions(
     _CRT_SECURE_NO_WARNINGS
     GLFW_INCLUDE_NONE
+)
+
+target_compile_definitions(${LIBRARY_NAME} PRIVATE
+  $<$<CONFIG:Debug>:DEBUG_MODE>
+  $<$<CONFIG:Release>:RELEASE_MODE>
 )

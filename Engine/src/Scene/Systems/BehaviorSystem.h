@@ -10,9 +10,10 @@ class BehaviorSystem final : public ecs::IComponentSystem {
 public:
     BehaviorSystem(Scene* scenePtr);
 
+    void OnShutdown() final override;
     void OnUpdate(float dt) final override;
     void OnRender(float dt) final override;
 
-    // there may be different eventhandlers (mouse/keyboard inputs, on collision etc.)
+    // Here may be different eventhandlers (mouse/keyboard inputs, on collision etc.)
 };
 } // namespace Elven

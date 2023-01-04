@@ -43,8 +43,6 @@ Application::Application()
 
     events::Subscribe<events::WindowCloseEvent>(m_windowCloseCallback);
     events::Subscribe<events::WindowResizeEvent>(m_windowResizeCallback);
-
-    OnCreate();
 }
 
 Application::~Application()
@@ -61,6 +59,8 @@ Application::~Application()
 
 void Application::Run()
 {
+    OnCreate();
+
     Timer timer;
     while (m_running) {
         const float elapsedTime = timer.Elapsed();

@@ -60,7 +60,7 @@ SharedPtr<Texture2D> TextureManager::Load(const std::string& textureName, std::u
     if (it == m_textures.end()) {
         switch (Renderer::GetAPI()) {
         case RendererAPI::API::OpenGL: {
-            SharedPtr<OpenGLTexture2D> texture = MakeSharedPtr<OpenGLTexture2D>(width, height);
+            SharedPtr<Texture2D> texture = MakeSharedPtr<OpenGLTexture2D>(width, height);
             m_textures.insert({ textureName, texture });
             return texture;
         }
@@ -108,11 +108,11 @@ void TextureManager::CreateTexture(const LoadedTextureInfo& info)
     switch (Renderer::GetAPI()) {
     case RendererAPI::API::OpenGL: {
 
-        SharedPtr<OpenGLTexture2D> texture = MakeSharedPtr<OpenGLTexture2D>(info.width, info.height, info.nrChannels);
+        SharedPtr<Texture2D> texture = MakeSharedPtr<OpenGLTexture2D>(info.width, info.height, info.nrChannels);
         texture->SetData(info.data);
         m_textures.insert({ info.textureName, std::move(texture) });
 
-        UniquePtr<events::TextureLoadedEvent> e = MakeUniquePtr<events::TextureLoadedEvent>(info.textureName);
+        UniquePtr<events::Event> e = MakeUniquePtr<events::TextureLoadedEvent>(info.textureName);
         events::QueueEvent(std::move(e), string_id(info.textureName));
 
         break;

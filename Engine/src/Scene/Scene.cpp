@@ -30,6 +30,10 @@ void Scene::OnInit()
 
 void Scene::OnShutdown()
 {
+    for (auto& system : m_systems) {
+        system->OnShutdown();
+    }
+
     m_componentPools.clear();
     m_entities.clear();
     m_systems.clear();

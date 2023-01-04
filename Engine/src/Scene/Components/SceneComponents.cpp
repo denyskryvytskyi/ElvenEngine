@@ -2,6 +2,8 @@
 
 #include "SceneComponents.h"
 
+#include "Scene/Behavior.h"
+
 namespace lia {
 using json = nlohmann::json;
 

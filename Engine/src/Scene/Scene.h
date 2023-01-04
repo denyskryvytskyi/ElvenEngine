@@ -63,34 +63,31 @@ public:
         }
     }
 
-    template<typename ComponentType>
-    void AddComponent(ecs::Entity entity)
+    template<typename ComponentType, typename... Args>
+    ComponentType& AddComponent(ecs::Entity entity, Args&&... args)
     {
         auto entityIt = m_entitiesSignatures.find(entity);
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
         entityIt->second.set(componentTypeId);
 
         auto componentPoolIt = m_componentPools.find(componentTypeId);
-        if (componentPoolIt != m_componentPools.end()) {
-            componentPoolIt->second->AddComponent(entity);
-        } else {
-            EL_CORE_ASSERT("Component pool isn't registered");
-        }
+        EL_CORE_ASSERT(componentPoolIt != m_componentPools.end(), "Component pool isn't registered");
+
+        return std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(componentPoolIt->second)->AddComponent(entity, std::forward<Args>(args)...);
     };
 
     template<typename ComponentType>
-    void AddComponent(ecs::Entity entity, ComponentType&& component)
+    ComponentType& AddComponent(ecs::Entity entity, ComponentType&& component)
     {
         auto entityIt = m_entitiesSignatures.find(entity);
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
         entityIt->second.set(componentTypeId);
 
         auto componentPoolIt = m_componentPools.find(componentTypeId);
-        if (componentPoolIt != m_componentPools.end()) {
-            std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(componentPoolIt->second)->AddComponent(entity, std::forward<ComponentType>(component));
-        } else {
-            EL_CORE_ASSERT("Component pool isn't registered");
-        }
+
+        EL_CORE_ASSERT(componentPoolIt != m_componentPools.end(), "Component pool isn't registered");
+
+        return std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(componentPoolIt->second)->AddComponent(entity, std::forward<ComponentType>(component));
     };
 
     template<typename ComponentType>
@@ -101,11 +98,10 @@ public:
         entityIt->second.set(componentTypeId, false);
 
         auto componentPoolIt = m_componentPools.find(componentTypeId);
-        if (componentPoolIt != m_componentPools.end()) {
-            componentPoolIt->second->RemoveComponent(entity);
-        } else {
-            EL_CORE_ASSERT(false, "Component type isn't registered.")
-        }
+
+        EL_CORE_ASSERT(componentPoolIt != m_componentPools.end(), "Component type isn't registered.")
+
+        componentPoolIt->second->RemoveComponent(entity);
     };
 
     template<typename ComponentType>
@@ -127,25 +123,22 @@ public:
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
         auto it = m_componentPools.find(componentTypeId);
 
-        if (it == m_componentPools.end()) {
-            EL_CORE_ASSERT(false, "Component type isn't registered.");
-        }
+        EL_CORE_ASSERT(it != m_componentPools.end(), "Component type isn't registered.");
 
         return std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(it->second)->GetComponent(entity);
     }
 
     template<typename ComponentType>
-    const std::vector<ComponentType>& GetComponents() const
+    std::vector<ComponentType>& GetComponents() const
     {
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
         auto it = m_componentPools.find(componentTypeId);
 
-        if (it == m_componentPools.end()) {
-            EL_CORE_ASSERT(false, "Component type isn't registered.")
-        }
+        EL_CORE_ASSERT(it != m_componentPools.end(), "Component type isn't registered.")
 
         return std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(it->second)->GetComponents();
     }
+
     template<typename ComponentType>
     bool HasComponentPool() const
     {
@@ -161,9 +154,7 @@ public:
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
         auto it = m_componentPools.find(componentTypeId);
 
-        if (it == m_componentPools.end()) {
-            EL_CORE_ASSERT(false, "Component type isn't registered.")
-        }
+        EL_CORE_ASSERT(it != m_componentPools.end(), "Component type isn't registered.")
 
         return it->second->GetEntity(componentIndex);
     }
@@ -172,6 +163,7 @@ public:
     void RegisterSystem()
     {
         m_systems.emplace_back(MakeUniquePtr<SystemType>(this));
+        m_systems.back()->OnInit();
     }
 
 private:

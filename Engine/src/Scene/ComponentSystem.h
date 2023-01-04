@@ -15,8 +15,11 @@ public:
         : m_pScene(scenePtr)
     {
     }
+
     virtual ~IComponentSystem() = default;
 
+    virtual void OnInit() { }
+    virtual void OnShutdown() { }
     virtual void OnUpdate(float dt) { }
     virtual void OnRender(float dt) { }
 

@@ -18,18 +18,18 @@
 
 #ifdef EL_ASSERTIONS_ENABLED
 
-#    define EL_ASSERT(expr, ...)                            \
-        if (expr) {                                         \
-        } else {                                            \
-            EL_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
-            EL_DEBUGBREAK();                                \
+#    define EL_ASSERT(expr, ...)                               \
+        if (expr) {                                            \
+        } else {                                               \
+            EL_CRITICAL("Assertion Failed: {0}", __VA_ARGS__); \
+            EL_DEBUGBREAK();                                   \
         }
 
-#    define EL_CORE_ASSERT(expr, ...)                            \
-        if (expr) {                                              \
-        } else {                                                 \
-            EL_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
-            EL_DEBUGBREAK();                                     \
+#    define EL_CORE_ASSERT(expr, ...)                               \
+        if (expr) {                                                 \
+        } else {                                                    \
+            EL_CORE_CRITICAL("Assertion Failed: {0}", __VA_ARGS__); \
+            EL_DEBUGBREAK();                                        \
         }
 #else
 #    define EL_ASSERT(expr, ...)

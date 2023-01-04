@@ -14,10 +14,27 @@ Elven::Application* Elven::CreateApplication()
     return new Sandbox2D();
 }
 
+// TODO: Something like RegisterBehavior to enable selection this behavior in editor
 class TestBehavior : public Elven::ecs::IBehavior {
+public:
+    void OnCreate() override
+    {
+        EL_INFO("OnCreate of Behavior component...");
+    }
+
+    void OnDestroy() override
+    {
+        EL_INFO("OnDestroy of Behavior component...");
+    }
+
     void OnUpdate(float dt) override
     {
-        EL_CORE_INFO("Behavior component update here...");
+        EL_INFO("OnUpdate of Behavior component...");
+    }
+
+    void OnRender(float dt) override
+    {
+        EL_INFO("OnRender of Behavior component...");
     }
 };
 
@@ -27,6 +44,10 @@ constexpr bool enableTestComponents = false;
 
 Sandbox2D::Sandbox2D()
     : m_textureLoadedCallback([this](const Elven::events::TextureLoadedEvent& e) { OnTextureLoaded(e); })
+{
+}
+
+void Sandbox2D::OnCreate()
 {
     if (enableTestComponents) {
         Elven::events::Subscribe<Elven::events::TextureLoadedEvent>(m_textureLoadedCallback, Elven::string_id("wizard"));
@@ -43,10 +64,6 @@ Sandbox2D::Sandbox2D()
             Elven::textures::Load(texturesLoadList[i].first, texturesLoadList[i].second);
         }
     }
-}
-
-void Sandbox2D::OnCreate()
-{
 }
 
 void Sandbox2D::OnUpdate(float dt)
@@ -67,27 +84,22 @@ void Sandbox2D::OnTextureLoaded(const Elven::events::TextureLoadedEvent& e)
 
         Elven::Scene& scene = Elven::GetScene();
 
-        std::shared_ptr<Elven::Texture2D> texture = nullptr;
-        texture = Elven::textures::Get("wizard_fire");
+        const Elven::SharedPtr<Elven::Texture2D> texture = Elven::textures::Get("wizard_fire");
 
         for (size_t i = 0; i < 5; ++i) {
             for (size_t j = 0; j < 5; ++j) {
                 const Elven::ecs::Entity entityQuad = scene.CreateEntity();
 
-                scene.AddComponent<Elven::TransformComponent>(entityQuad);
-                auto& q2 = scene.GetComponent<Elven::TransformComponent>(entityQuad);
-                q2.pos = { static_cast<float>(i) * 0.3f, static_cast<float>(j) * 0.3f, 0.0f };
-                q2.scale = { 0.25f, 0.225f };
+                auto& transform = scene.AddComponent<Elven::TransformComponent>(
+                    entityQuad,
+                    lia::vec3(static_cast<float>(i) * 0.3f, static_cast<float>(j) * 0.3f, 0.0f),
+                    lia::vec2(0.25f, 0.225f));
 
-                scene.AddComponent<Elven::SpriteComponent>(entityQuad);
-                auto& sprite = scene.GetComponent<Elven::SpriteComponent>(entityQuad);
-                sprite.textureName = "wizard_fire";
+                auto& sprite = scene.AddComponent<Elven::SpriteComponent>(entityQuad, "wizard_fire");
                 sprite.texture = texture;
 
-                if (false && j == 0 && i == 0) {
-                    scene.AddComponent<Elven::BehaviorComponent>(entityQuad);
-                    auto& behavior = scene.GetComponent<Elven::BehaviorComponent>(entityQuad);
-                    behavior.AddBehavior<TestBehavior>();
+                if (true && j == 0 && i == 0) {
+                    scene.AddComponent<Elven::BehaviorComponent>(entityQuad).Bind<TestBehavior>();
                 }
             }
         }
