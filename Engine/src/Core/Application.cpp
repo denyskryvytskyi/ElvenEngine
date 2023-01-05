@@ -36,6 +36,8 @@ Application::Application()
 
     // Init managers here
     Elven::Renderer::Init();
+    Renderer2D::Init();
+
     gSceneManager.Init();
     //
 
@@ -49,10 +51,10 @@ Application::~Application()
 {
     OnDestroy();
 
+    events::gEventManager.Shutdown();
     m_imGuiOverlay.Shutdown();
     gSceneManager.Shutdown();
     gTextureManager.Shutdown();
-    events::gEventManager.Shutdown();
     Renderer::Shutdown();
     Renderer2D::Shutdown();
 }

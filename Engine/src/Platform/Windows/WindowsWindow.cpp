@@ -16,9 +16,9 @@ namespace {
 constexpr unsigned int s_defaultRefreshRate = 60;
 constexpr unsigned int s_defaultWindowPosX = 100;
 constexpr unsigned int s_defaultWindowPosY = 100;
-} // namespace
 
-static std::uint8_t s_GLFWwindowCount = 0;
+uint16_t s_GLFWwindowCount = 0;
+} // namespace
 
 static void GLFWErrorCallback(int error, const char* description)
 {
@@ -109,6 +109,7 @@ void WindowsWindow::Init(const WindowProps& props)
         m_data.Height = mode->height;
     }
     m_window = glfwCreateWindow(m_data.Width, m_data.Height, m_data.Title.c_str(), m_data.FullScreen ? m_monitor : nullptr, nullptr);
+    ++s_GLFWwindowCount;
 
     m_context = GraphicsContext::Create(m_window);
     m_context->Init();

@@ -10,7 +10,7 @@ namespace Elven::helpers2d {
 void LoadSprite(SpriteComponent& spriteComponent)
 {
     auto texturePtr = textures::Get(spriteComponent.textureName);
-    if (texturePtr != nullptr) {
+    if (texturePtr) {
         spriteComponent.texture = texturePtr;
     } else {
         textures::Load(spriteComponent.textureName, spriteComponent.textureName + ".png");

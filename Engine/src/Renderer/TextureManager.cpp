@@ -35,19 +35,21 @@ static void LoadTextureFromFile(std::vector<TextureManager::LoadedTextureInfo>& 
 
 void TextureManager::Load(const std::string& textureName, const std::string& filename)
 {
-    const std::string filepath = FileSystem::GetImagesPath() + filename;
-
     // check whether we already loaded this texture
     auto it = m_textures.find(textureName);
 
-    auto inProgressTexture = m_textureLoadingInProgress.find(textureName);
+    if (it == m_textures.end()) {
+        // check whether this texture is in loading state
+        auto inProgressTexture = m_textureLoadingInProgress.find(textureName);
 
-    if (inProgressTexture == m_textureLoadingInProgress.end()) {
-        if (it == m_textures.end()) {
-            m_textureLoadingInProgress.insert(textureName);
-            m_futures.push_back(std::async(std::launch::async, LoadTextureFromFile, std::ref(m_loadedInfo), textureName, filepath));
-        } else {
-            EL_CORE_INFO("Texture {0} is already loaded.", textureName);
+        if (inProgressTexture == m_textureLoadingInProgress.end()) {
+            if (it == m_textures.end()) {
+                m_textureLoadingInProgress.insert(textureName);
+                const std::string filepath = FileSystem::GetImagesPath() + filename;
+                m_futures.push_back(std::async(std::launch::async, LoadTextureFromFile, std::ref(m_loadedInfo), textureName, filepath));
+            } else {
+                EL_CORE_INFO("Texture {0} is already loaded.", textureName);
+            }
         }
     }
 }
@@ -83,6 +85,10 @@ void TextureManager::OnUpdate()
         CreateTexture(textureInfo);
         m_textureLoadingInProgress.erase(textureInfo.textureName);
     }
+
+    for (auto& info : m_loadedInfo) {
+        stbi_image_free(info.data);
+    }
     m_loadedInfo.clear();
 }
 
@@ -93,8 +99,12 @@ void TextureManager::Shutdown()
     }
 
     m_futures.clear();
-    m_loadedInfo.clear();
     m_textures.clear();
+
+    for (auto& info : m_loadedInfo) {
+        stbi_image_free(info.data);
+    }
+    m_loadedInfo.clear();
 }
 
 SharedPtr<Texture2D> TextureManager::Get(const std::string& textureName)
@@ -110,11 +120,11 @@ void TextureManager::CreateTexture(const LoadedTextureInfo& info)
 
         SharedPtr<Texture2D> texture = MakeSharedPtr<OpenGLTexture2D>(info.width, info.height, info.nrChannels);
         texture->SetData(info.data);
+
         m_textures.insert({ info.textureName, std::move(texture) });
 
         UniquePtr<events::Event> e = MakeUniquePtr<events::TextureLoadedEvent>(info.textureName);
         events::QueueEvent(std::move(e), string_id(info.textureName));
-
         break;
     }
     default:

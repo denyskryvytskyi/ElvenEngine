@@ -27,8 +27,8 @@ inline ComponentTypeId GetComponentTypeId()
         if (ComponentTypeIdHolder::s_componentTypeCounter < MAX_COMPONENTS)
             id = ++ComponentTypeIdHolder::s_componentTypeCounter;
         else {
-            EL_CORE_ERROR("Maximum component types limet reached = {0}!", MAX_COMPONENTS);
-            EL_ASSERT(false);
+            EL_CORE_ERROR("Maximum component types limit reached = {0}!", MAX_COMPONENTS);
+            EL_CORE_ASSERT(false);
         }
     }
 

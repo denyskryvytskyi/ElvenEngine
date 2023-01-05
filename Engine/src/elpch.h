@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Core.h"
 
 #include <algorithm>
 #include <any>
@@ -24,7 +25,6 @@
 #include <future>
 #include <mutex>
 
-#include "Core/Core.h"
 #include "Core/Log.h"
 
 #include <lia/lia.h>

@@ -7,6 +7,7 @@ namespace Elven {
 class OpenGLTexture2D : public Texture2D {
 public:
     OpenGLTexture2D(std::uint32_t width, std::uint32_t height, std::uint32_t nrChannels = 3);
+    ~OpenGLTexture2D();
 
     void BindToUnit(std::uint32_t unit) override;
     void SetData(void* data, bool generateMipmap = true) override;

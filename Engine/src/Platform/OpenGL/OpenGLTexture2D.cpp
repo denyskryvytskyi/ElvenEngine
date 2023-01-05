@@ -25,6 +25,11 @@ OpenGLTexture2D::OpenGLTexture2D(std::uint32_t width, std::uint32_t height, std:
     glTextureParameteri(m_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
+OpenGLTexture2D::~OpenGLTexture2D()
+{
+    glDeleteTextures(1, &m_id);
+}
+
 void OpenGLTexture2D::BindToUnit(std::uint32_t unit)
 {
     glBindTextureUnit(unit, m_id);

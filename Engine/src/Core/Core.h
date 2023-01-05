@@ -5,6 +5,11 @@
 #ifdef DEBUG_MODE
 #    if defined(EL_PLATFORM_WINDOWS)
 #        define EL_DEBUGBREAK() __debugbreak()
+
+// To detect memory leakes using CRT lib
+#        define _CRTDBG_MAP_ALLOC
+#        include <crtdbg.h>
+#        define DBG_NEW new (_NORMAL_BLOCK, __FILE__, __LINE__)
 #    elif defined(EL_PLATFORM_LINUX)
 #        include <signal.h>
 #        define EL_DEBUGBREAK() raise(SIGTRAP)
@@ -14,6 +19,7 @@
 #    define EL_ASSERTIONS_ENABLED
 #else
 #    define EL_DEBUGBREAK()
+#    define DBG_NEW
 #endif
 
 #ifdef EL_ASSERTIONS_ENABLED

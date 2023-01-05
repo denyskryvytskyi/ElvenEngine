@@ -25,8 +25,6 @@ set(ENGINE_HEADERS
 "src/Events/KeyEvent.h"
 "src/Events/MouseEvent.h"
 "src/Events/TextureEvent.h"
-"src/ImGui/imgui_impl_glfw.h"
-"src/ImGui/imgui_impl_opengl3.h"
 "src/ImGui/ImGuiOverlay.h"
 "src/Renderer/Buffer.h"
 "src/Renderer/GraphicsContext.h"
@@ -63,6 +61,8 @@ set(ENGINE_HEADERS
 
 set(ENGINE_SOURCES
 "vendor/stb_image/stb_image.cpp"
+"vendor/imgui/imgui_impl_glfw.cpp"
+"vendor/imgui/imgui_impl_opengl3.cpp"
 "src/Core/Application.cpp"
 "src/Core/EntryPoint.cpp"
 "src/Core/Log.cpp"
@@ -82,8 +82,6 @@ set(ENGINE_SOURCES
 "src/Renderer/VertexArray.cpp"
 "src/Renderer/TextureManager.cpp"
 "src/Renderer/Helpers2d.cpp"
-"src/ImGui/imgui_impl_glfw.cpp"
-"src/ImGui/imgui_impl_opengl3.cpp"
 "src/ImGui/ImGuiOverlay.cpp"
 "src/Platform/OpenGL/OpenGLBuffer.cpp"
 "src/Platform/OpenGL/OpenGLContext.cpp"
