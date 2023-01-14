@@ -13,7 +13,7 @@
 #include "Events/EventManager.h"
 #include "Scene/SceneManager.h"
 
-namespace Elven {
+namespace elv {
 
 Application* Application::s_instance = nullptr;
 Application::Telemetry Application::s_telemetry;
@@ -35,7 +35,7 @@ Application::Application()
     RenderCommand::SetViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
 
     // Init managers here
-    Elven::Renderer::Init();
+    elv::Renderer::Init();
     Renderer2D::Init();
 
     gSceneManager.Init();
@@ -81,8 +81,8 @@ void Application::Run()
         /////////////////////////////////////
 
         /// Rendering Step ///////////////////
-        Elven::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
-        Elven::RenderCommand::Clear();
+        elv::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
+        elv::RenderCommand::Clear();
 
         OnRender(elapsedTime);
         gSceneManager.Render(elapsedTime);
@@ -116,4 +116,4 @@ void Application::OnWindowResize(const events::WindowResizeEvent& e)
     Renderer::OnWindowResize(e.width, e.height);
 }
 
-} // namespace Elven
+} // namespace elv

@@ -8,9 +8,9 @@ int main(int argc, char** argv)
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #    endif
 
-    Elven::Log::Init();
+    elv::Log::Init();
 
-    auto app = Elven::CreateApplication();
+    auto app = elv::CreateApplication();
     app->Run();
     delete app;
 

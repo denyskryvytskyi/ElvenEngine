@@ -2,7 +2,7 @@
 
 #include "Core/SettingsConfig.h"
 
-namespace Elven {
+namespace elv {
 
 SceneManager gSceneManager;
 
@@ -14,12 +14,16 @@ void SceneManager::Init()
     m_activeScene.OnInit();
 
     m_serializer.Init(&m_activeScene);
-    m_serializer.LoadScene(gEngineSettings.DefaultSceneName);
+    if (gEngineSettings.LoadDefaultScene) {
+        m_serializer.LoadScene(gEngineSettings.DefaultSceneName);
+    }
 }
 
 void SceneManager::Shutdown()
 {
-    m_serializer.SaveScene("new_" + gEngineSettings.DefaultSceneName);
+    if (gEngineSettings.LoadDefaultScene) {
+        m_serializer.SaveScene("new_" + gEngineSettings.DefaultSceneName);
+    }
     m_activeScene.OnShutdown();
 }
 
@@ -32,4 +36,13 @@ void SceneManager::Render(float dt)
 {
     m_activeScene.OnRender(dt);
 }
-} // namespace Elven
+void SceneManager::LoadScene(std::string_view scene_name)
+{
+    m_serializer.LoadScene(scene_name);
+}
+
+void SceneManager::SaveScene(std::string_view scene_name)
+{
+    m_serializer.SaveScene("new_" + gEngineSettings.DefaultSceneName);
+}
+} // namespace elv

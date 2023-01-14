@@ -8,9 +8,9 @@
 
 #include "Components/SceneComponents.h"
 #include "Systems/BehaviorSystem.h"
-#include "Systems/SpriteRenderSystem.h"
+#include "Systems/Render2dSystem.h"
 
-namespace Elven {
+namespace elv {
 
 Scene::Scene()
 {
@@ -22,10 +22,11 @@ void Scene::OnInit()
     RegisterComponent<TransformComponent>();
     RegisterComponent<SpriteComponent>();
     RegisterComponent<BehaviorComponent>();
+    RegisterComponent<QuadComponent>();
 
     // Engine systems register
     RegisterSystem<BehaviorSystem>();
-    RegisterSystem<SpriteRenderSystem>();
+    RegisterSystem<Render2dSystem>();
 }
 
 void Scene::OnShutdown()
@@ -53,4 +54,4 @@ void Scene::OnRender(float dt)
     }
 }
 
-} // namespace Elven
+} // namespace elv

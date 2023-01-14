@@ -3,7 +3,7 @@
 
 #include "Platform/OpenGL/OpenGLVertexArray.h"
 
-namespace Elven {
+namespace elv {
 
 SharedPtr<VertexArray> VertexArray::Create()
 {
@@ -19,4 +19,4 @@ SharedPtr<VertexArray> VertexArray::Create()
     return nullptr;
 }
 
-} // namespace Elven
+} // namespace elv

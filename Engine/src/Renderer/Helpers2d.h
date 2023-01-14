@@ -2,6 +2,6 @@
 
 #include "Scene/Components/SceneComponents.h"
 
-namespace Elven::helpers2d {
+namespace elv::helpers2d {
 void LoadSprite(SpriteComponent& spriteComponent);
-} // namespace Elven::helpers2d
+} // namespace elv::helpers2d

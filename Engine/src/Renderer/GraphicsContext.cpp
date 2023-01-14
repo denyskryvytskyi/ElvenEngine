@@ -3,7 +3,7 @@
 
 #include "Platform/OpenGL/OpenGLContext.h"
 
-namespace Elven {
+namespace elv {
 
 UniquePtr<GraphicsContext> GraphicsContext::Create(void* window)
 {
@@ -19,4 +19,4 @@ UniquePtr<GraphicsContext> GraphicsContext::Create(void* window)
     return nullptr;
 }
 
-} // namespace Elven
+} // namespace elv

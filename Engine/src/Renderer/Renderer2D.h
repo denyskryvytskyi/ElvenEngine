@@ -2,7 +2,7 @@
 
 #include "Renderer/Camera.h"
 
-namespace Elven {
+namespace elv {
 
 class VertexArray;
 class Shader;
@@ -44,4 +44,4 @@ private:
     static Telemetry s_telemetry;
 };
 
-} // namespace Elven
+} // namespace elv

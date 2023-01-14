@@ -5,12 +5,12 @@
 
 #include "Renderer/OrthographicCameraController.h"
 
-namespace Elven {
+namespace elv {
 
-class SpriteRenderSystem
+class Render2dSystem
     : public ecs::IComponentSystem {
 public:
-    SpriteRenderSystem(Scene* scenePtr);
+    Render2dSystem(Scene* scenePtr);
 
     virtual void OnUpdate(float dt) override;
     virtual void OnRender(float dt) override;
@@ -19,4 +19,4 @@ private:
     OrthographicCameraController m_cameraController;
 };
 
-} // namespace Elven
+} // namespace elv

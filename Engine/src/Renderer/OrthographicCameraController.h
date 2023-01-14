@@ -6,7 +6,7 @@
 
 #include "Events/EventHandler.h"
 
-namespace Elven {
+namespace elv {
 
 class OrthographicCameraController {
 public:
@@ -40,4 +40,4 @@ private:
     events::EventHandler<events::MouseScrolledEvent> m_mouseScrolledCallback;
 };
 
-} // namespace Elven
+} // namespace elv

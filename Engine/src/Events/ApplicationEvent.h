@@ -2,7 +2,7 @@
 
 #include "Events/Event.h"
 
-namespace Elven::events {
+namespace elv::events {
 
 class WindowResizeEvent : public Event {
 public:
@@ -31,4 +31,4 @@ public:
     EVENT_TYPE("WindowCloseEvent")
 };
 
-} // namespace Elven::events
+} // namespace elv::events

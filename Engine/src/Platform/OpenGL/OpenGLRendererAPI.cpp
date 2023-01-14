@@ -2,7 +2,7 @@
 
 #include <glad/gl.h>
 
-namespace Elven {
+namespace elv {
 
 void OpenGLMessageCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, const void* userParam)
 {
@@ -71,4 +71,4 @@ void OpenGLRendererAPI::DrawIndexed(const SharedPtr<VertexArray>& vertexArray, s
     glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 }
 
-} // namespace Elven
+} // namespace elv

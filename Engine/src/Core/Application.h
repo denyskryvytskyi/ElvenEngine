@@ -4,7 +4,7 @@
 #include "Events/EventHandler.h"
 #include "ImGui/ImGuiOverlay.h"
 
-namespace Elven {
+namespace elv {
 
 class Window;
 class Application {
@@ -53,4 +53,4 @@ private:
 // To be defined in CLIENT
 Application* CreateApplication();
 
-} // namespace Elven
+} // namespace elv

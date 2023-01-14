@@ -2,7 +2,7 @@
 
 #include <glad/gl.h>
 
-namespace Elven {
+namespace elv {
 
 OpenGLShader::OpenGLShader(const std::string& name, const ShaderProgramSource& shaderSrc)
     : m_name(name)
@@ -130,4 +130,4 @@ std::uint32_t OpenGLShader::CompileShader(std::uint32_t type, const std::string&
     return shaderId;
 }
 
-} // namespace Elven
+} // namespace elv

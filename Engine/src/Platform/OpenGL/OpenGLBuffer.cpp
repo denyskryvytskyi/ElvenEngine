@@ -1,7 +1,7 @@
 #include "Platform/OpenGL/OpenGLBuffer.h"
 #include <glad/gl.h>
 
-namespace Elven {
+namespace elv {
 OpenGLVertexBuffer::OpenGLVertexBuffer(std::uint32_t size)
 {
     glCreateBuffers(1, &m_id);
@@ -37,4 +37,4 @@ OpenGLIndexBuffer::~OpenGLIndexBuffer()
 {
     glDeleteBuffers(1, &m_id);
 }
-} // namespace Elven
+} // namespace elv

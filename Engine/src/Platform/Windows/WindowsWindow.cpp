@@ -10,7 +10,7 @@
 
 #include <GLFW/glfw3.h>
 
-namespace Elven {
+namespace elv {
 
 namespace {
 constexpr unsigned int s_defaultRefreshRate = 60;
@@ -185,4 +185,4 @@ void WindowsWindow::Shutdown()
     }
 }
 
-} // namespace Elven
+} // namespace elv

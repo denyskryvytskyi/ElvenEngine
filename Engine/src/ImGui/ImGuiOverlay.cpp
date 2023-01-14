@@ -11,7 +11,7 @@
 #include "Core/Window.h"
 #include "Renderer/Renderer2D.h"
 
-namespace Elven {
+namespace elv {
 
 void ImGuiOverlay::Init()
 {
@@ -113,4 +113,4 @@ void ImGuiOverlay::End()
     }
 }
 
-} // namespace Elven
+} // namespace elv

@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-namespace Elven {
+namespace elv {
 
 class FileSystem {
 public:
@@ -13,4 +13,4 @@ public:
     static std::string GetCurrentPath() { return std::filesystem::current_path().string(); }
 };
 
-} // namespace Elven
+} // namespace elv

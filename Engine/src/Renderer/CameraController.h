@@ -6,7 +6,7 @@
 #include "Events/EventHandler.h"
 #include "Events/MouseEvent.h"
 
-namespace Elven {
+namespace elv {
 
 class CameraController {
 public:
@@ -51,4 +51,4 @@ private:
     events::EventHandler<events::WindowResizeEvent> m_windowResizeCallback;
 };
 
-} // namespace Elven
+} // namespace elv

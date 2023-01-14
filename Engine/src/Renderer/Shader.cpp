@@ -4,7 +4,7 @@
 
 #include "Platform/OpenGL/OpenGLShader.h"
 
-namespace Elven {
+namespace elv {
 
 SharedPtr<Shader> Shader::Create(const std::string& name, const ShaderProgramSource& shaderSrc)
 {
@@ -61,4 +61,4 @@ std::string ShaderManager::ReadFile(const std::string& shaderFile)
 
     return result;
 }
-} // namespace Elven
+} // namespace elv

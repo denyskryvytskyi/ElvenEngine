@@ -4,7 +4,7 @@
 #include "ComponentSystem.h"
 #include "Entity.h"
 
-namespace Elven {
+namespace elv {
 
 struct SceneNodeComponent {
     std::vector<UniquePtr<SceneNodeComponent>> m_childs;
@@ -175,4 +175,4 @@ private:
     std::unordered_map<ecs::Entity, ecs::ComponentMask> m_entitiesSignatures;
 };
 
-} // namespace Elven
+} // namespace elv

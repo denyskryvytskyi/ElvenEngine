@@ -5,7 +5,7 @@
 #include "Events/TextureEvent.h"
 #include "Renderer/TextureManager.h"
 
-namespace Elven::helpers2d {
+namespace elv::helpers2d {
 
 void LoadSprite(SpriteComponent& spriteComponent)
 {
@@ -23,4 +23,4 @@ void LoadSprite(SpriteComponent& spriteComponent)
                                                       string_id(spriteComponent.textureName));
     }
 }
-} // namespace Elven::helpers2d
+} // namespace elv::helpers2d

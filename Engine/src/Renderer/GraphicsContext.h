@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Elven {
+namespace elv {
 
 class GraphicsContext {
 public:
@@ -11,4 +11,4 @@ public:
     static UniquePtr<GraphicsContext> Create(void* window);
 };
 
-} // namespace Elven
+} // namespace elv

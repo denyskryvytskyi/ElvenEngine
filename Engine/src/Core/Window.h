@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Elven {
+namespace elv {
 
 struct WindowProps {
     WindowProps(const std::string& title = "Elven Engine", unsigned int width = 1280, unsigned int height = 720, bool isFullScreen = false, bool isVSync = false)
@@ -41,4 +41,4 @@ public:
     static UniquePtr<Window> Create(const WindowProps& props = WindowProps());
 };
 
-} // namespace Elven
+} // namespace elv

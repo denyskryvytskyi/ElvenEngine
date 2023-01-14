@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-namespace Elven {
+namespace elv {
 Camera::Camera(float fov, float aspect, float near_, float far_)
     : m_isPerspective(true)
     , m_projectionMatrix(lia::perspective(fov, aspect, near_, far_))
@@ -51,4 +51,4 @@ void Camera::RecalculateViewMatrix()
     m_viewMatrix = lia::inverse(transform);
     m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
 }
-} // namespace Elven
+} // namespace elv

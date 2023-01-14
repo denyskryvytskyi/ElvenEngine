@@ -3,7 +3,7 @@
 #include "Core/MouseCodes.h"
 #include "Events/Event.h"
 
-namespace Elven::events {
+namespace elv::events {
 
 class MouseMovedEvent : public Event {
 public:
@@ -97,4 +97,4 @@ public:
     }
 };
 
-} // namespace Elven::events
+} // namespace elv::events

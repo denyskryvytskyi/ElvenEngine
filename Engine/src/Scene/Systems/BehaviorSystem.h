@@ -1,7 +1,7 @@
 #pragma once
 #include "Scene/ComponentSystem.h"
 
-namespace Elven {
+namespace elv {
 class Scene;
 /* BehaviorSystem responsible for dispatching engine/game events
 (like update, render, input, physics collision detection etc.) to the BehaviorComponent's.
@@ -16,4 +16,4 @@ public:
 
     // Here may be different eventhandlers (mouse/keyboard inputs, on collision etc.)
 };
-} // namespace Elven
+} // namespace elv

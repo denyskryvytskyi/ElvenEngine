@@ -1,6 +1,6 @@
 #include "Events/EventManager.h"
 
-namespace Elven::events {
+namespace elv::events {
 
 EventManager gEventManager;
 
@@ -49,10 +49,10 @@ void EventManager::Unsubscribe(EventId eventId, const std::string& handlerName, 
             auto& handlersMap = subscribers->second;
             auto handlers = handlersMap.find(handlerId);
             if (handlers != handlersMap.end()) {
-                auto& callbakcs = handlers->second;
-                for (auto& it = callbakcs.begin(); it != callbakcs.end(); ++it) {
+                auto& callbacks = handlers->second;
+                for (auto it = callbacks.begin(); it != callbacks.end(); ++it) {
                     if (it->get()->GetType() == handlerName) {
-                        it = callbakcs.erase(it);
+                        it = callbacks.erase(it);
                         return;
                     }
                 }
@@ -62,7 +62,7 @@ void EventManager::Unsubscribe(EventId eventId, const std::string& handlerName, 
         auto handlersIt = m_subscribers.find(eventId);
         if (handlersIt != m_subscribers.end()) {
             auto& handlers = handlersIt->second;
-            for (auto& it = handlers.begin(); it != handlers.end(); ++it) {
+            for (auto it = handlers.begin(); it != handlers.end(); ++it) {
                 if (it->get()->GetType() == handlerName) {
                     it = handlers.erase(it);
                     return;
@@ -94,7 +94,7 @@ void EventManager::QueueEvent(UniquePtr<Event>&& event_, HandlerId handlerId)
 
 void EventManager::DispatchEvents()
 {
-    for (auto& eventIt = m_eventsQueue.begin(); eventIt != m_eventsQueue.end();) {
+    for (auto eventIt = m_eventsQueue.begin(); eventIt != m_eventsQueue.end();) {
         if (!eventIt->first.get()->isHandled) {
             TriggerEvent(*eventIt->first.get(), eventIt->second);
             eventIt = m_eventsQueue.erase(eventIt);
@@ -104,4 +104,4 @@ void EventManager::DispatchEvents()
     }
 }
 
-} // namespace Elven::events
+} // namespace elv::events

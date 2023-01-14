@@ -2,7 +2,7 @@
 
 #include "Renderer/Buffer.h"
 
-namespace Elven {
+namespace elv {
 
 class OpenGLVertexBuffer : public VertexBuffer {
 public:
@@ -34,4 +34,4 @@ private:
     std::uint32_t m_count { 0 };
 };
 
-} // namespace Elven
+} // namespace elv

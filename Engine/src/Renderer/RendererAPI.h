@@ -2,7 +2,7 @@
 
 #include "Renderer/VertexArray.h"
 
-namespace Elven {
+namespace elv {
 
 class RendererAPI {
 public:
@@ -29,4 +29,4 @@ private:
     static API s_API;
 };
 
-} // namespace Elven
+} // namespace elv

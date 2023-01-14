@@ -1,11 +1,11 @@
 #pragma once
 
 // forward declarations
-namespace Elven::events {
+namespace elv::events {
 class TextureLoadedEvent;
 }
 
-class Sandbox2D : public Elven::Application {
+class Sandbox2D : public elv::Application {
 public:
     Sandbox2D();
 
@@ -15,8 +15,8 @@ public:
     void OnDestroy() override;
 
 private:
-    void OnTextureLoaded(const Elven::events::TextureLoadedEvent& e);
+    void OnTextureLoaded(const elv::events::TextureLoadedEvent& e);
 
 private:
-    Elven::events::EventHandler<Elven::events::TextureLoadedEvent> m_textureLoadedCallback;
+    elv::events::EventHandler<elv::events::TextureLoadedEvent> m_textureLoadedCallback;
 };

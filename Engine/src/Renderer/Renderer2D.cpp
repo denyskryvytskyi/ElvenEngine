@@ -9,7 +9,7 @@
 
 #include "Events/TextureEvent.h"
 
-namespace Elven {
+namespace elv {
 struct QuadVertex {
     lia::vec4 position;
     lia::vec4 color;
@@ -204,4 +204,4 @@ void Renderer2D::DrawQuad(const lia::mat4& model, const lia::vec4& color, float 
     s_data.quadIndexCount += 6;
     ++s_telemetry.quadCount;
 }
-} // namespace Elven
+} // namespace elv

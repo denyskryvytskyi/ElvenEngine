@@ -6,7 +6,7 @@
 #    if defined(EL_PLATFORM_WINDOWS)
 #        define EL_DEBUGBREAK() __debugbreak()
 
-// To detect memory leakes using CRT lib
+// To detect memory leaks using CRT lib
 #        define _CRTDBG_MAP_ALLOC
 #        include <crtdbg.h>
 #        define DBG_NEW new (_NORMAL_BLOCK, __FILE__, __LINE__)
@@ -44,7 +44,7 @@
 
 #define BIT(x) (1 << x)
 
-namespace Elven {
+namespace elv {
 template<typename T>
 using UniquePtr = std::unique_ptr<T>;
 template<typename T, typename... Args>
@@ -61,4 +61,4 @@ constexpr SharedPtr<T> MakeSharedPtr(Args&&... args)
     return std::make_shared<T>(std::forward<Args>(args)...);
 }
 
-} // namespace Elven
+} // namespace elv

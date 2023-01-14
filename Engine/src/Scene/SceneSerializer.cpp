@@ -8,7 +8,7 @@
 #include "Core/FileSystem.h"
 #include "Renderer/Helpers2d.h"
 
-namespace Elven {
+namespace elv {
 using json = nlohmann::json;
 
 void SceneSerializer::Init(Scene* scene)
@@ -16,16 +16,16 @@ void SceneSerializer::Init(Scene* scene)
     m_pScene = scene;
 }
 
-void SceneSerializer::LoadScene(const std::string& sceneName)
+void SceneSerializer::LoadScene(std::string_view sceneName)
 {
     EL_CORE_INFO("Scene loading...");
     json j;
     {
-        std::ifstream in(FileSystem::GetScenesPath() + sceneName + ".scene");
+        std::ifstream in(std::format("{}{}{}", FileSystem::GetScenesPath(), sceneName, ".scene"));
         if (in.is_open()) {
             in >> j;
         } else {
-            EL_CORE_ERROR("Failed to load scene. File - {0}.scene", sceneName);
+            EL_CORE_ERROR("Failed to load scene. File - {0}.scene", sceneName.data());
             return;
         }
     }
@@ -37,9 +37,9 @@ void SceneSerializer::LoadScene(const std::string& sceneName)
     EL_CORE_INFO("Scene loaded");
 }
 
-void SceneSerializer::SaveScene(const std::string& sceneName)
+void SceneSerializer::SaveScene(std::string_view sceneName)
 {
-    std::ofstream out(FileSystem::GetScenesPath() + sceneName + ".scene");
+    std::ofstream out(std::format("{}{}{}", FileSystem::GetScenesPath(), sceneName, ".scene"));
     json j;
 
     j["name"] = sceneName;
@@ -77,4 +77,4 @@ void SceneSerializer::SaveEntity(ecs::Entity entity, nlohmann::json& jObj)
     }
 }
 
-} // namespace Elven
+} // namespace elv

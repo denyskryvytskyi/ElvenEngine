@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Elven {
+namespace elv {
 
 class Texture2D {
 public:
@@ -10,4 +10,4 @@ public:
     virtual void SetData(void* data, bool generateMipmap = true) = 0;
 };
 
-} // namespace Elven
+} // namespace elv

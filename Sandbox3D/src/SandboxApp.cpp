@@ -4,15 +4,15 @@
 
 #include <GLFW/glfw3.h>
 
-Elven::Application* Elven::CreateApplication()
+elv::Application* elv::CreateApplication()
 {
     return new Sandbox3D();
 }
 
 Sandbox3D::Sandbox3D()
     : m_cameraController(45.0f, 1280.0f / 720.0f, 0.1f, 100.0f)
-    , m_vao(Elven::VertexArray::Create())
-    , m_textureLoadedCallback([this](const Elven::events::TextureLoadedEvent& e) { OnTextureLoaded(e); })
+    , m_vao(elv::VertexArray::Create())
+    , m_textureLoadedCallback([this](const elv::events::TextureLoadedEvent& e) { OnTextureLoaded(e); })
 {
     // quad vertices
     float vertices[] = {
@@ -48,9 +48,9 @@ Sandbox3D::Sandbox3D()
         0.5, 0.5, 0.5, 0.0, 1.0
     };
 
-    Elven::SharedPtr<Elven::VertexBuffer> vbo = Elven::VertexBuffer::Create(vertices, sizeof(vertices));
-    vbo->SetLayout({ { Elven::BufferAttributeType::Float3 },
-                     { Elven::BufferAttributeType::Float2 } });
+    elv::SharedPtr<elv::VertexBuffer> vbo = elv::VertexBuffer::Create(vertices, sizeof(vertices));
+    vbo->SetLayout({ { elv::BufferAttributeType::Float3 },
+                     { elv::BufferAttributeType::Float2 } });
 
     m_vao->AddVertexBuffer(vbo);
 
@@ -77,15 +77,15 @@ Sandbox3D::Sandbox3D()
      };
     // clang-format on
 
-    Elven::SharedPtr<Elven::IndexBuffer> ebo = Elven::IndexBuffer::Create(indices, sizeof(indices) / sizeof(unsigned int));
+    elv::SharedPtr<elv::IndexBuffer> ebo = elv::IndexBuffer::Create(indices, sizeof(indices) / sizeof(unsigned int));
 
     m_vao->SetIndexBuffer(ebo);
 
-    m_shader = Elven::ShaderManager::Load("shader", "shader.vert", "shader.frag");
+    m_shader = elv::ShaderManager::Load("shader", "shader.vert", "shader.frag");
 
-    const uint64_t hash = Elven::string_id("wall");
-    Elven::events::Subscribe<Elven::events::TextureLoadedEvent>(m_textureLoadedCallback, hash);
-    Elven::textures::Load("wall", "wall.png");
+    const uint64_t hash = elv::string_id("wall");
+    elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hash);
+    elv::textures::Load("wall", "wall.png");
 
     m_cubes = {
         lia::vec3(0.0f, 0.0f, 0.0f),
@@ -116,24 +116,24 @@ void Sandbox3D::OnRender(float dt)
     if (m_texture == nullptr)
         return;
 
-    Elven::Renderer::BeginScene(m_cameraController.GetCamera());
+    elv::Renderer::BeginScene(m_cameraController.GetCamera());
 
     for (size_t i = 0; i < m_cubes.size(); i++) {
         lia::mat4 model = lia::rotate(lia::mat4(1.0f), (float)glfwGetTime() * (i + 1) * lia::radians(10.0f), lia::vec3(1.0f, 1.0f, 0.0f));
 
         model = lia::translate(model, m_cubes[i]);
-        Elven::Renderer::Submit(m_shader, m_vao, model);
+        elv::Renderer::Submit(m_shader, m_vao, model);
     }
 
-    Elven::Renderer::EndScene();
+    elv::Renderer::EndScene();
 }
 
 void Sandbox3D::OnDestroy()
 {
 }
 
-void Sandbox3D::OnTextureLoaded(const Elven::events::TextureLoadedEvent& e)
+void Sandbox3D::OnTextureLoaded(const elv::events::TextureLoadedEvent& e)
 {
-    m_texture = Elven::textures::Get("wall");
+    m_texture = elv::textures::Get("wall");
     m_texture->BindToUnit(0);
 }

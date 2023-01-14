@@ -5,7 +5,7 @@
 #include <future>
 #include <set>
 
-namespace Elven {
+namespace elv {
 
 class TextureManager {
 public:
@@ -63,4 +63,4 @@ inline SharedPtr<Texture2D> Get(const std::string& textureName)
 }
 
 } // namespace textures
-} // namespace Elven
+} // namespace elv

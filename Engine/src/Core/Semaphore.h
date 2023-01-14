@@ -3,7 +3,7 @@
 #include <condition_variable>
 #include <mutex>
 
-namespace Elven {
+namespace elv {
 
 class Semaphore {
 public:
@@ -40,4 +40,4 @@ private:
     std::condition_variable m_cv;
 };
 
-} // namespace Elven
+} // namespace elv

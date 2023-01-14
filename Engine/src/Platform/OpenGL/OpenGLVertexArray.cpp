@@ -3,7 +3,7 @@
 
 #include <glad/gl.h>
 
-namespace Elven {
+namespace elv {
 static GLenum BufferAttributeTypeToOpenGLBaseType(BufferAttributeType type)
 {
     switch (type) {
@@ -71,4 +71,4 @@ void OpenGLVertexArray::Bind() const
 {
     glBindVertexArray(m_id);
 }
-} // namespace Elven
+} // namespace elv

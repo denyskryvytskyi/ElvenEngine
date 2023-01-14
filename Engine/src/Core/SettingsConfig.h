@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Elven {
+namespace elv {
 
 class SettingsConfig {
 public:
@@ -11,8 +11,9 @@ public:
     uint16_t WindowHeight { 720 };
     uint16_t WindowWidth { 1280 };
     std::string DefaultSceneName { "default" };
+    bool LoadDefaultScene { false };
 };
 
 extern SettingsConfig gEngineSettings;
 
-} // namespace Elven
+} // namespace elv

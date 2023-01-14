@@ -3,7 +3,7 @@
 
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
-namespace Elven {
+namespace elv {
 SharedPtr<VertexBuffer> VertexBuffer::Create(std::uint32_t size)
 {
     switch (Renderer::GetAPI()) {
@@ -47,4 +47,4 @@ SharedPtr<IndexBuffer> IndexBuffer::Create(std::uint32_t* indices, std::uint32_t
     EL_CORE_ASSERT(false, "Unknown RendererAPI!");
     return nullptr;
 }
-} // namespace Elven
+} // namespace elv

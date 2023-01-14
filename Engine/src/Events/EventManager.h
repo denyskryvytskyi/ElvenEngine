@@ -2,7 +2,7 @@
 
 #include "EventHandler.h"
 
-namespace Elven::events {
+namespace elv::events {
 
 using EventId = std::uint32_t;
 using HandlerId = std::uint64_t;
@@ -53,4 +53,4 @@ inline void QueueEvent(UniquePtr<Event>&& queuedEvent, HandlerId handlerId = 0)
     gEventManager.QueueEvent(std::forward<UniquePtr<Event>>(queuedEvent), handlerId);
 }
 
-} // namespace Elven::events
+} // namespace elv::events

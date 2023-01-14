@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Elven {
+namespace elv {
 
 enum class BufferAttributeType {
     None,
@@ -137,4 +137,4 @@ public:
     static SharedPtr<IndexBuffer> Create(std::uint32_t* indices, std::uint32_t count);
 };
 
-} // namespace Elven
+} // namespace elv

@@ -2,7 +2,7 @@
 
 #include <random>
 
-namespace Elven::ecs {
+namespace elv::ecs {
 
 using Entity = uint64_t;
 constexpr Entity INVALID_ENTITY_ID = 0;
@@ -16,4 +16,4 @@ inline Entity CreateEntity()
     return s_uniformDistribution(s_engine);
 }
 
-} // namespace Elven::ecs
+} // namespace elv::ecs

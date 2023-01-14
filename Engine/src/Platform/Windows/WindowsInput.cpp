@@ -3,7 +3,7 @@
 #include "Core/Window.h"
 #include <GLFW/glfw3.h>
 
-namespace Elven {
+namespace elv {
 
 bool Input::IsKeyPressed(KeyCode key)
 {
@@ -37,4 +37,4 @@ float Input::GetMouseY()
     return GetMousePosition().second;
 }
 
-} // namespace Elven
+} // namespace elv

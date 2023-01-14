@@ -2,7 +2,7 @@
 
 #include <chrono>
 
-namespace Elven {
+namespace elv {
 
 class Timer {
 public:
@@ -24,4 +24,4 @@ private:
     std::chrono::time_point<clock> m_start;
 };
 
-} // namespace Elven
+} // namespace elv

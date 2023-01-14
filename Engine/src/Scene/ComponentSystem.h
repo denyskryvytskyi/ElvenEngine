@@ -3,11 +3,11 @@
 #include "Component.h"
 #include "Entity.h"
 
-namespace Elven {
+namespace elv {
 class Scene;
 }
 
-namespace Elven::ecs {
+namespace elv::ecs {
 
 class IComponentSystem {
 public:
@@ -27,4 +27,4 @@ protected:
     Scene* m_pScene { nullptr };
 };
 
-} // namespace Elven::ecs
+} // namespace elv::ecs

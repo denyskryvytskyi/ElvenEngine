@@ -9,7 +9,7 @@
 
 #include "stb_image.h"
 
-namespace Elven {
+namespace elv {
 
 TextureManager gTextureManager;
 
@@ -132,4 +132,4 @@ void TextureManager::CreateTexture(const LoadedTextureInfo& info)
     }
 }
 
-} // namespace Elven
+} // namespace elv

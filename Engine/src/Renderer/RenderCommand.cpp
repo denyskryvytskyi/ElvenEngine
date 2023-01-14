@@ -1,5 +1,5 @@
 #include "Renderer/RenderCommand.h"
 
-namespace Elven {
+namespace elv {
 UniquePtr<RendererAPI> RenderCommand::s_RendererAPI = RendererAPI::Create();
 }

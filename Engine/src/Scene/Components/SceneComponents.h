@@ -4,7 +4,7 @@
 
 #include "Scene/Behavior.h"
 
-namespace Elven {
+namespace elv {
 struct TransformComponent {
     TransformComponent() = default;
     TransformComponent(const lia::vec3&& pos_, const lia::vec2&& scale_ = lia::vec2(), const lia::vec3&& rotation_ = lia::vec3())
@@ -19,6 +19,17 @@ struct TransformComponent {
 };
 void to_json(nlohmann::json& j, const TransformComponent& t);
 void from_json(const nlohmann::json& j, TransformComponent& t);
+
+struct QuadComponent {
+    QuadComponent() = default;
+    QuadComponent(const lia::vec4 color_)
+        : color(color_)
+    { }
+
+    lia::vec4 color;
+};
+void to_json(nlohmann::json& j, const QuadComponent& t);
+void from_json(const nlohmann::json& j, QuadComponent& t);
 
 class Texture2D;
 struct SpriteComponent {
@@ -49,4 +60,4 @@ struct BehaviorComponent {
     }
 };
 
-} // namespace Elven
+} // namespace elv

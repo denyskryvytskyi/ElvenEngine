@@ -4,7 +4,7 @@
 
 struct GLFWwindow;
 
-namespace Elven {
+namespace elv {
 
 class OpenGLContext : public GraphicsContext {
 public:
@@ -17,4 +17,4 @@ private:
     GLFWwindow* m_windowHandle { nullptr };
 };
 
-} // namespace Elven
+} // namespace elv

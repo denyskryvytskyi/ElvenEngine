@@ -2,7 +2,7 @@
 
 #include "Renderer/Shader.h"
 
-namespace Elven {
+namespace elv {
 
 class OpenGLShader : public Shader {
 public:
@@ -35,4 +35,4 @@ private:
     std::uint32_t m_id { 0 };
 };
 
-} // namespace Elven
+} // namespace elv

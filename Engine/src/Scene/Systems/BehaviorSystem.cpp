@@ -3,7 +3,7 @@
 #include "Scene/Components/SceneComponents.h"
 #include "Scene/Scene.h"
 
-namespace Elven {
+namespace elv {
 BehaviorSystem::BehaviorSystem(Scene* scenePtr)
     : ecs::IComponentSystem(scenePtr)
 {
@@ -44,4 +44,4 @@ void BehaviorSystem::OnRender(float dt)
         }
     }
 }
-} // namespace Elven
+} // namespace elv

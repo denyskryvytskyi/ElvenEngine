@@ -3,7 +3,7 @@
 #include "Core/KeyCodes.h"
 #include "Events/Event.h"
 
-namespace Elven::events {
+namespace elv::events {
 
 class KeyEvent : public Event {
 public:
@@ -74,4 +74,4 @@ public:
     }
 };
 
-} // namespace Elven::events
+} // namespace elv::events

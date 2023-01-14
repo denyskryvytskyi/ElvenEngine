@@ -4,7 +4,7 @@
 
 #include <functional>
 
-namespace Elven::events {
+namespace elv::events {
 
 template<typename EventType>
 using EventHandler = std::function<void(const EventType& e)>;
@@ -44,4 +44,4 @@ private:
     EventHandler<EventType> m_handler;
     const std::string m_handlerType;
 };
-} // namespace Elven::events
+} // namespace elv::events

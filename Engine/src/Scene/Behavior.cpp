@@ -2,10 +2,10 @@
 #include "Scene.h"
 #include "SceneManager.h"
 
-namespace Elven::ecs {
+namespace elv::ecs {
 IBehavior::IBehavior()
 {
     p_Scene = &GetScene();
 }
 
-} // namespace Elven::ecs
+} // namespace elv::ecs

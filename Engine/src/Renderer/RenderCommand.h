@@ -2,7 +2,7 @@
 
 #include "Renderer/RendererAPI.h"
 
-namespace Elven {
+namespace elv {
 
 class RenderCommand {
 public:
@@ -44,4 +44,4 @@ private:
     static UniquePtr<RendererAPI> s_RendererAPI;
 };
 
-} // namespace Elven
+} // namespace elv

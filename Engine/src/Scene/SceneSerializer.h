@@ -4,14 +4,14 @@
 
 #include "Entity.h"
 
-namespace Elven {
+namespace elv {
 class Scene;
 class SceneSerializer {
 public:
     void Init(Scene* scene);
 
-    void LoadScene(const std::string& sceneName);
-    void SaveScene(const std::string& sceneName);
+    void LoadScene(std::string_view sceneName);
+    void SaveScene(std::string_view sceneName);
 
 private:
     void LoadEntity(ecs::Entity entity, const nlohmann::json& jObj);
@@ -20,4 +20,4 @@ private:
 private:
     Scene* m_pScene { nullptr };
 };
-} // namespace Elven
+} // namespace elv

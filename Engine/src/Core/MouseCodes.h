@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Elven {
+namespace elv {
 
 using MouseCode = std::uint16_t;
 
@@ -24,4 +24,4 @@ enum : MouseCode {
 };
 
 }
-} // namespace Elven
+} // namespace elv

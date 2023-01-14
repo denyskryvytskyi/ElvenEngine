@@ -2,7 +2,7 @@
 
 #include <lia/lia.h>
 
-namespace Elven {
+namespace elv {
 
 class Camera {
 public:
@@ -49,4 +49,4 @@ private:
     lia::vec3 m_rotation;
 };
 
-} // namespace Elven
+} // namespace elv

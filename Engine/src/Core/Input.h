@@ -3,7 +3,7 @@
 #include "Core/KeyCodes.h"
 #include "Core/MouseCodes.h"
 
-namespace Elven {
+namespace elv {
 
 class Input {
 public:
@@ -15,4 +15,4 @@ public:
     static float GetMouseY();
 };
 
-} // namespace Elven
+} // namespace elv

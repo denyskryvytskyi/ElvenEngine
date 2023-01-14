@@ -2,7 +2,7 @@
 
 #include <glad/gl.h>
 
-namespace Elven {
+namespace elv {
 
 OpenGLTexture2D::OpenGLTexture2D(std::uint32_t width, std::uint32_t height, std::uint32_t nrChannels /* = 3 */)
     : m_width(width)
@@ -43,4 +43,4 @@ void OpenGLTexture2D::SetData(void* data, bool generateMipmap /* = true */)
     glTextureSubImage2D(m_id, 0, 0, 0, m_width, m_height, m_dataFormat, GL_UNSIGNED_BYTE, data);
 }
 
-} // namespace Elven
+} // namespace elv

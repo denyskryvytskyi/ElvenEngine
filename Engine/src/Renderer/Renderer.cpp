@@ -1,7 +1,7 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/Renderer2D.h"
 
-namespace Elven {
+namespace elv {
 UniquePtr<Renderer::SceneData> Renderer::m_sceneData = MakeUniquePtr<Renderer::SceneData>();
 
 void Renderer::Init()
@@ -37,4 +37,4 @@ void Renderer::OnWindowResize(std::uint32_t width, std::uint32_t height)
 {
     RenderCommand::SetViewport(0, 0, width, height);
 }
-} // namespace Elven
+} // namespace elv

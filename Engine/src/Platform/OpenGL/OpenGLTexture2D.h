@@ -2,7 +2,7 @@
 
 #include "Renderer/Texture2D.h"
 
-namespace Elven {
+namespace elv {
 
 class OpenGLTexture2D : public Texture2D {
 public:
@@ -20,4 +20,4 @@ private:
     unsigned int m_dataFormat { 0 };
 };
 
-} // namespace Elven
+} // namespace elv

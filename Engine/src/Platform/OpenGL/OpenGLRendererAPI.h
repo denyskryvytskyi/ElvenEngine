@@ -2,7 +2,7 @@
 
 #include "Renderer/RendererAPI.h"
 
-namespace Elven {
+namespace elv {
 
 class OpenGLRendererAPI : public RendererAPI {
     void Init() override;
@@ -16,4 +16,4 @@ class OpenGLRendererAPI : public RendererAPI {
     void DrawIndexed(const SharedPtr<VertexArray>& vertexArray, std::uint32_t indexCount = 0) override;
 };
 
-} // namespace Elven
+} // namespace elv

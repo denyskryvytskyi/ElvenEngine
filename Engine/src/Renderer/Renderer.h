@@ -4,7 +4,7 @@
 #include "Renderer/RenderCommand.h"
 #include "Shader.h"
 
-namespace Elven {
+namespace elv {
 
 class Renderer {
 public:
@@ -28,4 +28,4 @@ private:
     static UniquePtr<SceneData> m_sceneData;
 };
 
-} // namespace Elven
+} // namespace elv

@@ -3,7 +3,7 @@
 #include "Core/Input.h"
 #include "Events/EventManager.h"
 
-namespace Elven {
+namespace elv {
 
 const static float s_cameraMovementSpeed = 5.0f;
 
@@ -115,4 +115,4 @@ void CameraController::OnWindowResized(const events::WindowResizeEvent& e)
     m_camera.SetProjection(lia::radians(m_fov), m_aspectRatio, m_near, m_far);
 }
 
-} // namespace Elven
+} // namespace elv

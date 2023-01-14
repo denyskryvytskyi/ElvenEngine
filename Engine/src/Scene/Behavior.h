@@ -1,11 +1,11 @@
 #pragma once
 #include "Entity.h"
 
-namespace Elven {
+namespace elv {
 class Scene;
 }
 
-namespace Elven::ecs {
+namespace elv::ecs {
 class IBehavior {
 public:
     IBehavior();
@@ -26,4 +26,4 @@ private:
     Entity m_entity { 0 };
     Scene* p_Scene { nullptr };
 };
-} // namespace Elven::ecs
+} // namespace elv::ecs

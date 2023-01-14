@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Elven {
+namespace elv {
 
 using KeyCode = std::uint16_t;
 
@@ -141,4 +141,4 @@ enum : KeyCode {
 };
 
 }
-} // namespace Elven
+} // namespace elv

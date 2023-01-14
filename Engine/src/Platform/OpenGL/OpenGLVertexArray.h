@@ -2,7 +2,7 @@
 
 #include "Renderer/VertexArray.h"
 
-namespace Elven {
+namespace elv {
 
 class OpenGLVertexArray : public VertexArray {
 public:
@@ -24,4 +24,4 @@ private:
     std::uint32_t m_id { 0 };
 };
 
-} // namespace Elven
+} // namespace elv

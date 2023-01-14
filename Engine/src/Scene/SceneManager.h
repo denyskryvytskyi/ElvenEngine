@@ -3,7 +3,7 @@
 #include "Scene/Scene.h"
 #include "SceneSerializer.h"
 
-namespace Elven {
+namespace elv {
 class SceneManager {
 public:
     SceneManager() = default;
@@ -14,6 +14,9 @@ public:
     void Shutdown();
     void Update(float dt);
     void Render(float dt);
+
+    void LoadScene(std::string_view sceneName);
+    void SaveScene(std::string_view sceneName);
 
     Scene& GetScene() { return m_activeScene; }
 
@@ -29,4 +32,14 @@ inline Scene& GetScene()
     return gSceneManager.GetScene();
 }
 
-} // namespace Elven
+inline void LoadScene(std::string_view sceneName)
+{
+    gSceneManager.LoadScene(sceneName);
+}
+
+inline void SaveScene(std::string_view sceneName)
+{
+    gSceneManager.SaveScene(sceneName);
+}
+
+} // namespace elv

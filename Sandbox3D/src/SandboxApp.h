@@ -4,11 +4,11 @@
 #include <Renderer/VertexArray.h>
 
 // forward declarations
-namespace Elven::events {
+namespace elv::events {
 class TextureLoadedEvent;
 }
 
-class Sandbox3D : public Elven::Application {
+class Sandbox3D : public elv::Application {
 public:
     Sandbox3D();
 
@@ -18,17 +18,17 @@ public:
     virtual void OnDestroy();
 
 private:
-    void OnTextureLoaded(const Elven::events::TextureLoadedEvent& e);
+    void OnTextureLoaded(const elv::events::TextureLoadedEvent& e);
 
 private:
-    Elven::CameraController m_cameraController;
+    elv::CameraController m_cameraController;
 
-    Elven::SharedPtr<Elven::VertexArray> m_vao;
-    Elven::SharedPtr<Elven::Shader> m_shader;
+    elv::SharedPtr<elv::VertexArray> m_vao;
+    elv::SharedPtr<elv::Shader> m_shader;
 
-    Elven::SharedPtr<Elven::Texture2D> m_texture;
+    elv::SharedPtr<elv::Texture2D> m_texture;
 
     std::vector<lia::vec3> m_cubes;
 
-    Elven::events::EventHandler<Elven::events::TextureLoadedEvent> m_textureLoadedCallback;
+    elv::events::EventHandler<elv::events::TextureLoadedEvent> m_textureLoadedCallback;
 };

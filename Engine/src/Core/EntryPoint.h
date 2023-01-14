@@ -4,6 +4,6 @@
 
 #ifdef EL_PLATFORM_WINDOWS
 
-extern Elven::Application* Elven::CreateApplication();
+extern elv::Application* elv::CreateApplication();
 
 #endif

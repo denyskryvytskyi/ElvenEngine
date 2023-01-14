@@ -3,19 +3,20 @@
 #include "SandboxApp.h"
 
 #include <Core/EntryPoint.h>
+#include <Core/SettingsConfig.h>
 #include <Events/EventManager.h>
 #include <Events/TextureEvent.h>
 #include <Scene/Behavior.h>
 #include <Scene/Components/SceneComponents.h>
 #include <Scene/SceneManager.h>
 
-Elven::Application* Elven::CreateApplication()
+elv::Application* elv::CreateApplication()
 {
     return new Sandbox2D();
 }
 
 // TODO: Something like RegisterBehavior to enable selection this behavior in editor
-class TestBehavior : public Elven::ecs::IBehavior {
+class TestBehavior : public elv::ecs::IBehavior {
 public:
     void OnCreate() override
     {
@@ -38,21 +39,17 @@ public:
     }
 };
 
-namespace {
-constexpr bool enableTestComponents = false;
-}
-
 Sandbox2D::Sandbox2D()
-    : m_textureLoadedCallback([this](const Elven::events::TextureLoadedEvent& e) { OnTextureLoaded(e); })
+    : m_textureLoadedCallback([this](const elv::events::TextureLoadedEvent& e) { OnTextureLoaded(e); })
 {
 }
 
 void Sandbox2D::OnCreate()
 {
-    if (enableTestComponents) {
-        Elven::events::Subscribe<Elven::events::TextureLoadedEvent>(m_textureLoadedCallback, Elven::string_id("wizard"));
-        Elven::events::Subscribe<Elven::events::TextureLoadedEvent>(m_textureLoadedCallback, Elven::string_id("wizard_fire"));
-        Elven::events::Subscribe<Elven::events::TextureLoadedEvent>(m_textureLoadedCallback, Elven::string_id("wizard_ice"));
+    if (!elv::gEngineSettings.LoadDefaultScene) {
+        elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, elv::string_id("wizard"));
+        elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, elv::string_id("wizard_fire"));
+        elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, elv::string_id("wizard_ice"));
 
         std::vector<std::pair<std::string, std::string>> texturesLoadList = {
             { "wizard", "wizard.png" },
@@ -61,7 +58,7 @@ void Sandbox2D::OnCreate()
         };
 
         for (size_t i = 0; i < texturesLoadList.size(); i++) {
-            Elven::textures::Load(texturesLoadList[i].first, texturesLoadList[i].second);
+            elv::textures::Load(texturesLoadList[i].first, texturesLoadList[i].second);
         }
     }
 }
@@ -78,28 +75,28 @@ void Sandbox2D::OnDestroy()
 {
 }
 
-void Sandbox2D::OnTextureLoaded(const Elven::events::TextureLoadedEvent& e)
+void Sandbox2D::OnTextureLoaded(const elv::events::TextureLoadedEvent& e)
 {
     if (e.textureName == "wizard_fire") {
 
-        Elven::Scene& scene = Elven::GetScene();
+        elv::Scene& scene = elv::GetScene();
 
-        const Elven::SharedPtr<Elven::Texture2D> texture = Elven::textures::Get("wizard_fire");
+        const elv::SharedPtr<elv::Texture2D> texture = elv::textures::Get("wizard_fire");
 
-        for (size_t i = 0; i < 5; ++i) {
-            for (size_t j = 0; j < 5; ++j) {
-                const Elven::ecs::Entity entityQuad = scene.CreateEntity();
+        for (size_t i = 0; i < 25; ++i) {
+            for (size_t j = 0; j < 25; ++j) {
+                const elv::ecs::Entity entityQuad = scene.CreateEntity();
 
-                auto& transform = scene.AddComponent<Elven::TransformComponent>(
+                auto& transform = scene.AddComponent<elv::TransformComponent>(
                     entityQuad,
                     lia::vec3(static_cast<float>(i) * 0.3f, static_cast<float>(j) * 0.3f, 0.0f),
                     lia::vec2(0.25f, 0.225f));
 
-                auto& sprite = scene.AddComponent<Elven::SpriteComponent>(entityQuad, "wizard_fire");
+                auto& sprite = scene.AddComponent<elv::SpriteComponent>(entityQuad, "wizard_fire");
                 sprite.texture = texture;
 
                 if (true && j == 0 && i == 0) {
-                    scene.AddComponent<Elven::BehaviorComponent>(entityQuad).Bind<TestBehavior>();
+                    scene.AddComponent<elv::BehaviorComponent>(entityQuad).Bind<TestBehavior>();
                 }
             }
         }

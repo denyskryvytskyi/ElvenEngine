@@ -3,7 +3,7 @@
 #include "Core/Input.h"
 #include "Events/EventManager.h"
 
-namespace Elven {
+namespace elv {
 
 OrthographicCameraController::OrthographicCameraController(float aspectRatio)
     : m_camera(-aspectRatio * m_zoomLevel, aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f)
@@ -61,4 +61,4 @@ void OrthographicCameraController::OnWindowResized(const events::WindowResizeEve
     m_aspectRatio = static_cast<float>(e.width) / static_cast<float>(e.height);
     m_camera.SetProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f);
 }
-} // namespace Elven
+} // namespace elv

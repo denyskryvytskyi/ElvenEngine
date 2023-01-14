@@ -1,8 +1,8 @@
 #include <json.hpp>
-#include <type_traits>
 
 #include "SettingsConfig.h"
-namespace Elven {
+
+namespace elv {
 using json = nlohmann::json;
 
 namespace {
@@ -26,9 +26,10 @@ void SettingsConfig::LoadSettings()
         }
     }
 
-    WindowHeight = j.at("window_height");
-    WindowWidth = j.at("window_width");
-    DefaultSceneName = j.at("default_scene_name");
+    j.at("window_height").get_to(WindowHeight);
+    j.at("window_width").get_to(WindowWidth);
+    j.at("default_scene_name").get_to(DefaultSceneName);
+    j.at("load_default_scene").get_to(LoadDefaultScene);
 
     EL_CORE_INFO("Settings loaded");
 }
@@ -39,8 +40,9 @@ void SettingsConfig::SaveSettings()
     j["window_height"] = WindowHeight;
     j["window_width"] = WindowWidth;
     j["default_scene_name"] = DefaultSceneName;
+    j["load_default_scene"] = LoadDefaultScene;
 
     std::ofstream out(engineSettingsFile.data());
-    out << j;
+    out << std::setfill(' ') << std::setw(2) << j;
 }
-} // namespace Elven
+} // namespace elv

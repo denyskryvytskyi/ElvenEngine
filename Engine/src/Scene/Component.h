@@ -4,7 +4,7 @@
 
 #include <bitset>
 
-namespace Elven::ecs {
+namespace elv::ecs {
 
 using ComponentTypeId = std::uint64_t;
 
@@ -28,7 +28,7 @@ inline ComponentTypeId GetComponentTypeId()
             id = ++ComponentTypeIdHolder::s_componentTypeCounter;
         else {
             EL_CORE_ERROR("Maximum component types limit reached = {0}!", MAX_COMPONENTS);
-            EL_CORE_ASSERT(false);
+            EL_CORE_ASSERT(false, "Maximum component types limit reached");
         }
     }
 
@@ -140,4 +140,4 @@ private:
     std::vector<Entity> m_entities;
 };
 
-} // namespace Elven::ecs
+} // namespace elv::ecs

@@ -2,7 +2,7 @@
 
 #include "Platform/OpenGL/OpenGLRendererAPI.h"
 
-namespace Elven {
+namespace elv {
 RendererAPI::API RendererAPI::s_API = RendererAPI::API::OpenGL;
 
 UniquePtr<RendererAPI> RendererAPI::Create()
@@ -18,4 +18,4 @@ UniquePtr<RendererAPI> RendererAPI::Create()
     EL_CORE_ASSERT(false, "Unknown RendererAPI.");
     return nullptr;
 }
-} // namespace Elven
+} // namespace elv

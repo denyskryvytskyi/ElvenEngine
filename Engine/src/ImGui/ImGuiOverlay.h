@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Elven {
+namespace elv {
 
 class ImGuiOverlay {
 public:
@@ -18,4 +18,4 @@ private:
     bool m_isFullScreen { false };
 };
 
-} // namespace Elven
+} // namespace elv

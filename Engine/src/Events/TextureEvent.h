@@ -1,7 +1,7 @@
 #pragma once
 #include "Events/Event.h"
 
-namespace Elven::events {
+namespace elv::events {
 
 class TextureLoadedEvent : public Event {
 public:
@@ -21,4 +21,4 @@ public:
     std::string textureName;
 };
 
-} // namespace Elven::events
+} // namespace elv::events

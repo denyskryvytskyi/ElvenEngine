@@ -4,9 +4,9 @@
 #    include "Platform/Windows/WindowsWindow.h"
 #endif
 
-namespace Elven {
+namespace elv {
 
-UniquePtr<Window> Elven::Window::Create(const WindowProps& props)
+UniquePtr<Window> elv::Window::Create(const WindowProps& props)
 {
 #ifdef EL_PLATFORM_WINDOWS
     return MakeUniquePtr<WindowsWindow>(props);
@@ -16,4 +16,4 @@ UniquePtr<Window> Elven::Window::Create(const WindowProps& props)
 #endif
 }
 
-} // namespace Elven
+} // namespace elv

@@ -55,7 +55,7 @@ set(ENGINE_HEADERS
 "src/Scene/SceneManager.h"
 "src/Scene/SceneSerializer.h"
 "src/Scene/Components/SceneComponents.h"
-"src/Scene/Systems/SpriteRenderSystem.h"
+"src/Scene/Systems/Render2dSystem.h"
 "src/Scene/Systems/BehaviorSystem.h"
 )
 
@@ -98,7 +98,7 @@ set(ENGINE_SOURCES
 "src/Scene/SceneManager.cpp"
 "src/Scene/SceneSerializer.cpp"
 "src/Scene/Components/SceneComponents.cpp"
-"src/Scene/Systems/SpriteRenderSystem.cpp"
+"src/Scene/Systems/Render2dSystem.cpp"
 "src/Scene/Systems/BehaviorSystem.cpp"
 ${ENGINE_HEADERS}
 )

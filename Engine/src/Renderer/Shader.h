@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Elven {
+namespace elv {
 
 struct ShaderProgramSource {
     std::string VertexSource;
@@ -43,4 +43,4 @@ private:
     static std::unordered_map<std::string, SharedPtr<Shader>> m_shaders;
 };
 
-} // namespace Elven
+} // namespace elv

@@ -6,7 +6,7 @@
 struct GLFWwindow;
 struct GLFWmonitor;
 
-namespace Elven {
+namespace elv {
 
 class WindowsWindow : public Window {
 private:
@@ -47,4 +47,4 @@ private:
     WindowData m_data;
 };
 
-} // namespace Elven
+} // namespace elv

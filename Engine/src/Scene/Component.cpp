@@ -1,5 +1,5 @@
 #include "Component.h"
 
-namespace Elven::ecs {
+namespace elv::ecs {
 ComponentTypeId ComponentTypeIdHolder::s_componentTypeCounter { 0 };
 }

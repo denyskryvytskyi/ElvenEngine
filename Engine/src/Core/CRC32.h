@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Elven {
+namespace elv {
 
 // CRC32 Table (zlib polynomial)
 static constexpr unsigned int crc_table[256] = {
@@ -69,4 +69,4 @@ struct MM<size, size, dummy> {
 // This don't take into account the nul char
 #define CRC32(x) (MM<sizeof(x) - 1>::crc32(x))
 
-} // namespace Elven
+} // namespace elv

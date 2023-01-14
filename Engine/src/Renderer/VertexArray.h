@@ -2,7 +2,7 @@
 
 #include "Renderer/Buffer.h"
 
-namespace Elven {
+namespace elv {
 
 class VertexArray {
 public:
@@ -19,4 +19,4 @@ public:
     static SharedPtr<VertexArray> Create();
 };
 
-} // namespace Elven
+} // namespace elv
