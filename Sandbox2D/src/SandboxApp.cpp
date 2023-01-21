@@ -15,7 +15,6 @@ elv::Application* elv::CreateApplication()
     return new Sandbox2D();
 }
 
-// TODO: Something like RegisterBehavior to enable selection this behavior in editor
 class TestBehavior : public elv::ecs::IBehavior {
 public:
     void OnCreate() override
@@ -61,6 +60,30 @@ void Sandbox2D::OnCreate()
             elv::textures::Load(texturesLoadList[i].first, texturesLoadList[i].second);
         }
     }
+
+    return;
+
+    // another test scene
+    elv::Scene& scene = elv::GetScene();
+
+    const elv::ecs::Entity back_entity = scene.CreateEntity();
+    auto& back_sprite = scene.AddComponent<elv::SpriteComponent>(back_entity);
+    back_sprite.SetTexture("battleground2", "Battleground2.png");
+    auto& back_transform = scene.AddComponent<elv::TransformComponent>(back_entity);
+    back_transform.scale = { 38.4f, 21.6f };
+
+    const elv::ecs::Entity skeleton_entity = scene.CreateEntity();
+    auto& skeleton_sprite = scene.AddComponent<elv::SpriteComponent>(skeleton_entity);
+    skeleton_sprite.SetTexture("protect", "Protect.png");
+    auto& skeleton_transform = scene.AddComponent<elv::TransformComponent>(skeleton_entity);
+    skeleton_transform.scale = { 5.0f, 5.0f };
+
+    const elv::ecs::Entity magic_entity = scene.CreateEntity();
+    auto& magic_sprite = scene.AddComponent<elv::SpriteComponent>(magic_entity);
+    magic_sprite.SetTexture("magic_sphere", "Magic_sphere.png");
+    auto& magic_transform = scene.AddComponent<elv::TransformComponent>(magic_entity);
+    magic_transform.scale = { 80.0f, 5.0f };
+    magic_transform.pos = { 0.0, -2.0f, 0.0f };
 }
 
 void Sandbox2D::OnUpdate(float dt)
@@ -89,10 +112,10 @@ void Sandbox2D::OnTextureLoaded(const elv::events::TextureLoadedEvent& e)
 
                 auto& transform = scene.AddComponent<elv::TransformComponent>(
                     entityQuad,
-                    lia::vec3(static_cast<float>(i) * 0.3f, static_cast<float>(j) * 0.3f, 0.0f),
-                    lia::vec2(0.25f, 0.225f));
+                    lia::vec3(static_cast<float>(i) * 1.3f, static_cast<float>(j) * 1.3f, 0.0f),
+                    lia::vec2(1.0f, 1.0f));
 
-                auto& sprite = scene.AddComponent<elv::SpriteComponent>(entityQuad, "wizard_fire");
+                auto& sprite = scene.AddComponent<elv::SpriteComponent>(entityQuad, "wizard_fire", "wizard_fire.png");
                 sprite.texture = texture;
 
                 if (true && j == 0 && i == 0) {

@@ -34,11 +34,28 @@ void from_json(const nlohmann::json& j, QuadComponent& t);
 class Texture2D;
 struct SpriteComponent {
     SpriteComponent() = default;
-    SpriteComponent(std::string_view textureName_)
-        : textureName(textureName_)
-    { }
+    SpriteComponent(std::string_view texture_name, std::string_view texture_path)
+        : textureName(texture_name)
+        , texturePath(texture_path)
+    {
+        LoadTexture();
+    }
 
+    // Also calls LoadTexture
+    void SetTexture(std::string_view texture_name, std::string_view texture_path)
+    {
+        textureName = texture_name;
+        texturePath = texture_path;
+        LoadTexture();
+    }
+
+    // Load texture if it has textureName and texturePath
+    // Actually is used only in case of scene deserialization
+    void LoadTexture();
+
+public:
     std::string textureName;
+    std::string texturePath;
     SharedPtr<Texture2D> texture { nullptr };
 };
 

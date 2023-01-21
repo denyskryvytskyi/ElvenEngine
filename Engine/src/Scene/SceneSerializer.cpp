@@ -6,7 +6,6 @@
 
 #include "Components/SceneComponents.h"
 #include "Core/FileSystem.h"
-#include "Renderer/Helpers2d.h"
 
 namespace elv {
 using json = nlohmann::json;
@@ -62,7 +61,7 @@ void SceneSerializer::LoadEntity(ecs::Entity entity, const nlohmann::json& jObj)
     m_pScene->AddComponent(entity, std::move(sprite));
 
     SpriteComponent& spriteComponentRef = m_pScene->GetComponent<SpriteComponent>(entity);
-    helpers2d::LoadSprite(spriteComponentRef);
+    spriteComponentRef.LoadTexture();
 }
 
 void SceneSerializer::SaveEntity(ecs::Entity entity, nlohmann::json& jObj)

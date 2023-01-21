@@ -5,8 +5,10 @@
 
 namespace elv {
 
+constexpr int cameraSize = 10;
+
 OrthographicCameraController::OrthographicCameraController(float aspectRatio)
-    : m_camera(-aspectRatio * m_zoomLevel, aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f)
+    : m_camera(-m_aspectRatio * m_zoomLevel * cameraSize, m_aspectRatio * m_zoomLevel * cameraSize, -m_zoomLevel * cameraSize, m_zoomLevel * cameraSize, -1.0f, 1.0f)
     , m_aspectRatio(aspectRatio)
     , m_windowResizeCallback([this](const events::WindowResizeEvent& e) { OnWindowResized(e); })
     , m_mouseScrolledCallback([this](const events::MouseScrolledEvent& e) { OnMouseScrolled(e); })
@@ -53,12 +55,12 @@ void OrthographicCameraController::OnMouseScrolled(const events::MouseScrolledEv
 {
     m_zoomLevel -= e.yOffset * 0.25f;
     m_zoomLevel = std::max<float>(m_zoomLevel, 0.25f);
-    m_camera.SetProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f);
+    m_camera.SetProjection(-m_aspectRatio * m_zoomLevel * cameraSize, m_aspectRatio * m_zoomLevel * cameraSize, -m_zoomLevel * cameraSize, m_zoomLevel * cameraSize, -1.0f, 1.0f);
 }
 
 void OrthographicCameraController::OnWindowResized(const events::WindowResizeEvent& e)
 {
     m_aspectRatio = static_cast<float>(e.width) / static_cast<float>(e.height);
-    m_camera.SetProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, -1.0f, 1.0f);
+    m_camera.SetProjection(-m_aspectRatio * m_zoomLevel * 10, m_aspectRatio * m_zoomLevel * 10, -m_zoomLevel * cameraSize, m_zoomLevel * cameraSize, -1.0f, 1.0f);
 }
 } // namespace elv

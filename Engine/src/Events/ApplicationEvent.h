@@ -2,6 +2,8 @@
 
 #include "Events/Event.h"
 
+#include <format>
+
 namespace elv::events {
 
 class WindowResizeEvent : public Event {
@@ -16,9 +18,7 @@ public:
 
     std::string ToString() const override
     {
-        std::stringstream ss;
-        ss << "WindowResizeEvent: " << width << ", " << height;
-        return ss.str();
+        return std::format("WindowResizeEvent: {}, {}", width, height);
     }
 
 public:

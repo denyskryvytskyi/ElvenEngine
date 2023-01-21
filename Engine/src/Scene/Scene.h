@@ -23,7 +23,7 @@ public:
     //------------- ECS INTERFACE -------------------
     ecs::Entity CreateEntity()
     {
-        const ecs::Entity id = ecs::CreateEntity();
+        const ecs::Entity id = ecs::GenerateEntityId();
         m_entitiesSignatures.insert({ id, ecs::ComponentMask() });
         m_entities.emplace_back(id);
 

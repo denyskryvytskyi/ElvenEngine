@@ -5,73 +5,60 @@
 
 namespace elv::events {
 
-class KeyEvent : public Event {
-public:
-    EVENT_TYPE("{498CE06D-7EE3-465F-9EA7-B6D6E8CE963D}")
-
-protected:
-    KeyEvent(KeyCode keyCode)
-        : key(keyCode)
-    {
-    }
-
-public:
-    KeyCode key { 0 };
-};
-
-class KeyPressedEvent : public KeyEvent {
+class KeyPressedEvent : public Event {
 public:
     EVENT_TYPE("KeyPressedEvent")
 
     KeyPressedEvent(int keyCode, int repeatCount)
-        : KeyEvent(keyCode)
+        : key(keyCode)
         , repeatCount(repeatCount)
     {
     }
 
     std::string ToString() const override
     {
-        std::stringstream ss;
-        ss << "KeyPressedEvent: " << key << " (" << repeatCount << " repeats)";
-        return ss.str();
+        return std::format("KeyPressedEvent: {} ({} repeats)", key, repeatCount);
     }
 
 public:
+    KeyCode key { 0 };
     int repeatCount { 0 };
 };
 
-class KeyReleasedEvent : public KeyEvent {
+class KeyReleasedEvent : public Event {
 public:
     EVENT_TYPE("KeyReleasedEvent")
 
     KeyReleasedEvent(int keyCode)
-        : KeyEvent(keyCode)
+        : key(keyCode)
     {
     }
 
     std::string ToString() const override
     {
-        std::stringstream ss;
-        ss << "KeyReleasedEvent: " << key;
-        return ss.str();
+        return std::format("KeyReleasedEvent: {}", key);
     }
+
+public:
+    KeyCode key { 0 };
 };
 
-class KeyTypedEvent : public KeyEvent {
+class KeyTypedEvent : public Event {
 public:
     EVENT_TYPE("KeyTypedEvent")
 
     KeyTypedEvent(int keyCode)
-        : KeyEvent(keyCode)
+        : key(keyCode)
     {
     }
 
     std::string ToString() const override
     {
-        std::stringstream ss;
-        ss << "KeyTypedEvent: " << key;
-        return ss.str();
+        return std::format("KeyTypedEvent: {}", key);
     }
+
+public:
+    KeyCode key { 0 };
 };
 
 } // namespace elv::events

@@ -16,13 +16,13 @@ TextureManager gTextureManager;
 namespace {
 std::mutex texturesMutex;
 
-static void LoadTextureFromFile(std::vector<TextureManager::LoadedTextureInfo>& texturesInfo, const std::string& textureName, const std::string& filepath)
+static void LoadTextureFromFile(std::vector<TextureManager::LoadedTextureInfo>& texturesInfo, std::string_view textureName, std::string_view filepath)
 {
     stbi_set_flip_vertically_on_load(true);
 
     TextureManager::LoadedTextureInfo info;
     info.textureName = textureName;
-    info.data = stbi_load(filepath.c_str(), &info.width, &info.height, &info.nrChannels, 0);
+    info.data = stbi_load(filepath.data(), &info.width, &info.height, &info.nrChannels, 0);
 
     if (info.data == nullptr) {
         EL_CORE_ASSERT(false, "Failed to load texture!");
@@ -33,7 +33,7 @@ static void LoadTextureFromFile(std::vector<TextureManager::LoadedTextureInfo>& 
 }
 } // namespace
 
-void TextureManager::Load(const std::string& textureName, const std::string& filename)
+void TextureManager::Load(std::string_view textureName, std::string_view filename)
 {
     // check whether we already loaded this texture
     auto it = m_textures.find(textureName);
@@ -45,7 +45,7 @@ void TextureManager::Load(const std::string& textureName, const std::string& fil
         if (inProgressTexture == m_textureLoadingInProgress.end()) {
             if (it == m_textures.end()) {
                 m_textureLoadingInProgress.insert(textureName);
-                const std::string filepath = FileSystem::GetImagesPath() + filename;
+                const std::string filepath = std::format("{}{}", FileSystem::GetImagesPath(), filename);
                 m_futures.push_back(std::async(std::launch::async, LoadTextureFromFile, std::ref(m_loadedInfo), textureName, filepath));
             } else {
                 EL_CORE_INFO("Texture {0} is already loaded.", textureName);
@@ -54,7 +54,7 @@ void TextureManager::Load(const std::string& textureName, const std::string& fil
     }
 }
 
-SharedPtr<Texture2D> TextureManager::Load(const std::string& textureName, std::uint32_t width, std::uint32_t height)
+SharedPtr<Texture2D> TextureManager::Load(std::string_view textureName, std::uint32_t width, std::uint32_t height)
 {
     // check whether we already loaded this texture
     auto it = m_textures.find(textureName);
@@ -107,7 +107,7 @@ void TextureManager::Shutdown()
     m_loadedInfo.clear();
 }
 
-SharedPtr<Texture2D> TextureManager::Get(const std::string& textureName)
+SharedPtr<Texture2D> TextureManager::Get(std::string_view textureName)
 {
     auto it = m_textures.find(textureName);
     return it != m_textures.end() ? it->second : nullptr;
@@ -123,8 +123,7 @@ void TextureManager::CreateTexture(const LoadedTextureInfo& info)
 
         m_textures.insert({ info.textureName, std::move(texture) });
 
-        UniquePtr<events::Event> e = MakeUniquePtr<events::TextureLoadedEvent>(info.textureName);
-        events::QueueEvent(std::move(e), string_id(info.textureName));
+        events::TriggerEvent(events::TextureLoadedEvent { info.textureName }, string_id(info.textureName));
         break;
     }
     default:

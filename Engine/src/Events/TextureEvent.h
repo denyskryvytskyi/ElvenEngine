@@ -5,20 +5,18 @@ namespace elv::events {
 
 class TextureLoadedEvent : public Event {
 public:
-    TextureLoadedEvent(const std::string& textureName_)
-        : textureName(textureName_) {};
+    TextureLoadedEvent(std::string_view texture_name)
+        : textureName(texture_name) {};
 
     EVENT_TYPE("TextureLoadedEvent")
 
     std::string ToString() const override
     {
-        std::stringstream ss;
-        ss << "TextureLoadedEvent: " << textureName << ", " << textureName;
-        return ss.str();
+        return std::format("TextureLoadedEvent: {}", textureName);
     }
 
 public:
-    std::string textureName;
+    std::string_view textureName;
 };
 
 } // namespace elv::events

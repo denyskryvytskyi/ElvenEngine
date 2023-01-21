@@ -36,8 +36,8 @@ public:
     static Telemetry GetTelemetry() { return s_telemetry; }
 
 private:
-    static void DrawQuad(const lia::vec3& pos, const lia::vec2& scale, float rotation, const lia::vec4& color, float textureUnit);
-    static void DrawQuad(const lia::mat4& model, const lia::vec4& color, float textureUnit = 0.0f);
+    static void DrawQuad(const lia::vec3& pos, const lia::vec2& scale, float rotation, const lia::vec4& color, int textureUnit);
+    static void DrawQuad(const lia::mat4& model, const lia::vec4& color, int textureUnit = 0);
 
 private:
     static Renderer2DData s_data;

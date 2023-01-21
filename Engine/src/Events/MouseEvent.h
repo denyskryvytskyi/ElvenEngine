@@ -17,9 +17,7 @@ public:
 
     std::string ToString() const override
     {
-        std::stringstream ss;
-        ss << "MouseMovedEvent: " << mouseX << ", " << mouseY;
-        return ss.str();
+        return std::format("MouseMovedEvent: {}, {}", mouseX, mouseY);
     }
 
 public:
@@ -39,9 +37,7 @@ public:
 
     std::string ToString() const override
     {
-        std::stringstream ss;
-        ss << "MouseScrolledEvent: " << xOffset << ", " << yOffset;
-        return ss.str();
+        return std::format("MouseScrolledEvent: {}, {}", xOffset, yOffset);
     }
 
 public:
@@ -49,52 +45,40 @@ public:
     float yOffset { 0.0f };
 };
 
-class MouseButtonEvent : public Event {
+class MouseButtonPressedEvent : public Event {
 public:
-    EVENT_TYPE("MouseButtonEvent")
+    EVENT_TYPE("MouseButtonPressedEvent")
 
-protected:
-    MouseButtonEvent(MouseCode button_)
-        : button(button_)
+    MouseButtonPressedEvent(int button)
+        : button(button)
     {
+    }
+
+    std::string ToString() const override
+    {
+        return std::format("MouseButtonPressedEvent: {}", button);
     }
 
 public:
     MouseCode button { 0 };
 };
 
-class MouseButtonPressedEvent : public MouseButtonEvent {
-public:
-    EVENT_TYPE("MouseButtonPressedEvent")
-
-    MouseButtonPressedEvent(int button)
-        : MouseButtonEvent(button)
-    {
-    }
-
-    std::string ToString() const override
-    {
-        std::stringstream ss;
-        ss << "MouseButtonPressedEvent: " << button;
-        return ss.str();
-    }
-};
-
-class MouseButtonReleasedEvent : public MouseButtonEvent {
+class MouseButtonReleasedEvent : public Event {
 public:
     EVENT_TYPE("MouseButtonReleasedEvent")
 
     MouseButtonReleasedEvent(int button)
-        : MouseButtonEvent(button)
+        : button(button)
     {
     }
 
     std::string ToString() const override
     {
-        std::stringstream ss;
-        ss << "MouseButtonReleasedEvent: " << button;
-        return ss.str();
+        return std::format("MouseButtonReleasedEvent: {}", button);
     }
+
+public:
+    MouseCode button { 0 };
 };
 
 } // namespace elv::events
