@@ -16,7 +16,7 @@ TextureManager gTextureManager;
 namespace {
 std::mutex texturesMutex;
 
-static void LoadTextureFromFile(std::vector<TextureManager::LoadedTextureInfo>& texturesInfo, std::string_view textureName, std::string_view filepath)
+static void LoadTextureFromFile(std::vector<TextureManager::LoadedTextureInfo>& texturesInfo, const std::string& textureName, const std::string& filepath)
 {
     stbi_set_flip_vertically_on_load(true);
 
@@ -33,7 +33,7 @@ static void LoadTextureFromFile(std::vector<TextureManager::LoadedTextureInfo>& 
 }
 } // namespace
 
-void TextureManager::Load(std::string_view textureName, std::string_view filename)
+void TextureManager::Load(const std::string& textureName, std::string_view filename)
 {
     // check whether we already loaded this texture
     auto it = m_textures.find(textureName);
@@ -54,7 +54,7 @@ void TextureManager::Load(std::string_view textureName, std::string_view filenam
     }
 }
 
-SharedPtr<Texture2D> TextureManager::Load(std::string_view textureName, std::uint32_t width, std::uint32_t height)
+SharedPtr<Texture2D> TextureManager::Load(const std::string& textureName, std::uint32_t width, std::uint32_t height)
 {
     // check whether we already loaded this texture
     auto it = m_textures.find(textureName);
@@ -117,7 +117,6 @@ void TextureManager::CreateTexture(const LoadedTextureInfo& info)
 {
     switch (Renderer::GetAPI()) {
     case RendererAPI::API::OpenGL: {
-
         SharedPtr<Texture2D> texture = MakeSharedPtr<OpenGLTexture2D>(info.width, info.height, info.nrChannels);
         texture->SetData(info.data);
 

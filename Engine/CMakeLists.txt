@@ -1,7 +1,4 @@
 set(ENGINE_HEADERS
-"vendor/stb_image/stb_image.h"
-"vendor/json/json.hpp"
-"vendor/json/json_fwd.hpp"
 "src/elpch.h"
 "src/Elven.h"
 "src/Core/Application.h"
@@ -59,9 +56,6 @@ set(ENGINE_HEADERS
 )
 
 set(ENGINE_SOURCES
-"vendor/stb_image/stb_image.cpp"
-"vendor/imgui/imgui_impl_glfw.cpp"
-"vendor/imgui/imgui_impl_opengl3.cpp"
 "src/Core/Application.cpp"
 "src/Core/EntryPoint.cpp"
 "src/Core/Log.cpp"
@@ -103,15 +97,15 @@ ${ENGINE_HEADERS}
 
 set(LIBRARY_NAME ElvenEngine)
 
-# path to dependencies
-set(VENDOR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
-
 # create static library
 add_library(${LIBRARY_NAME} STATIC ${ENGINE_SOURCES})
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ENGINE_SOURCES})
 
-# 3rd party libs list
+# path to dependencies
+set(VENDOR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
+
+# third-party libs paths
 set(glfw ${VENDOR_PATH}/GLFW)
 set(glad ${VENDOR_PATH}/GLAD)
 set(spdlog ${VENDOR_PATH}/spdlog)
@@ -120,39 +114,45 @@ set(lia ${VENDOR_PATH}/lia)
 set(stb_image ${VENDOR_PATH}/stb_image)
 set(json ${VENDOR_PATH}/json)
 
-set(STATIC_THIRD_PARTY_LIBRARIES
-    glfw
-    glad
-    spdlog
-    imgui
-    lia
-)
-
-add_subdirectory(${glfw})
-add_subdirectory(${glad})
-add_subdirectory(${spdlog})
-add_subdirectory(${imgui})
-add_subdirectory(${lia})
-
-# link dependencies
-target_link_libraries(${LIBRARY_NAME} ${STATIC_THIRD_PARTY_LIBRARIES})
-
+# include dirs
 set(ENGINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 set(ENGINE_INCLUDE_DIRS
-    ${ENGINE_SOURCE_DIR}
-    ${glfw}/include
-    ${glad}/include
-    ${spdlog}/include
-    ${imgui}
-    ${stb_image}
-    ${json}
-    )
+${ENGINE_SOURCE_DIR}
+${glad}/include
+${glfw}/include
+${lia}/lia
+${imgui}/include
+${spdlog}/include
+${stb_image}/include
+${json}/include
+)
 
-# state that anybody linking to us needs to include the current source dir, while we don't
 target_include_directories(${LIBRARY_NAME}
-        PUBLIC ${ENGINE_INCLUDE_DIRS}
-        )
+    PUBLIC ${ENGINE_INCLUDE_DIRS}
+)
+
+# link dependencies
+set(THIRD_PARTY_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR}/vendor)
+
+add_subdirectory(${VENDOR_PATH}/GLFW ${THIRD_PARTY_BUILD_DIR}/GLFW)
+add_subdirectory(${VENDOR_PATH}/GLAD ${THIRD_PARTY_BUILD_DIR}/glad)
+add_subdirectory(${VENDOR_PATH}/spdlog ${THIRD_PARTY_BUILD_DIR}/spdlog)
+add_subdirectory(${VENDOR_PATH}/imgui ${THIRD_PARTY_BUILD_DIR}/imgui)
+add_subdirectory(${VENDOR_PATH}/lia ${THIRD_PARTY_BUILD_DIR}/lia)
+add_subdirectory(${VENDOR_PATH}/stb ${THIRD_PARTY_BUILD_DIR}/stb)
+
+set(STATIC_THIRD_PARTY_LIBRARIES
+glfw
+glad
+imgui
+lia
+spdlog
+stb
+)
+
+link_directories(${THIRD_PARTY_BUILD_DIR})
+target_link_libraries(${LIBRARY_NAME} ${STATIC_THIRD_PARTY_LIBRARIES})
 
 # pch header file path
 set(ENGINE_PRECOMPILED_HEADERS
@@ -160,6 +160,7 @@ set(ENGINE_PRECOMPILED_HEADERS
 )
 target_precompile_headers(${LIBRARY_NAME} PRIVATE ${ENGINE_PRECOMPILED_HEADERS})
 
+# compile definitions
 add_compile_definitions(
     _CRT_SECURE_NO_WARNINGS
     GLFW_INCLUDE_NONE

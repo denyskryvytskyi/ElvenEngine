@@ -4,8 +4,8 @@
 
 namespace elv {
 
-inline uint64_t string_id(std::string_view str)
+inline uint64_t string_id(const std::string& str)
 {
-    return std::hash<std::string_view>()(str);
+    return std::hash<std::string>()(str);
 }
 } // namespace elv
