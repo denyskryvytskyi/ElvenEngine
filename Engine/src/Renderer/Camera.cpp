@@ -1,6 +1,11 @@
 #include "Camera.h"
 
 namespace elv {
+Camera::Camera(bool isPerspective)
+    : m_isPerspective(isPerspective)
+{
+}
+
 Camera::Camera(float fov, float aspect, float near_, float far_)
     : m_isPerspective(true)
     , m_projectionMatrix(lia::perspective(fov, aspect, near_, far_))
@@ -10,6 +15,7 @@ Camera::Camera(float fov, float aspect, float near_, float far_)
 
 Camera::Camera(float left, float right, float bottom, float top, float near_, float far_)
     : m_projectionMatrix(lia::orthographic(left, right, bottom, top, near_, far_))
+    , m_orthographicBounds(left, right, bottom, top)
 {
     m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
 }
@@ -28,6 +34,7 @@ void Camera::SetProjection(float left, float right, float bottom, float top, flo
 {
     if (!m_isPerspective) {
         m_projectionMatrix = lia::orthographic(left, right, bottom, top, near_, far_);
+        m_orthographicBounds = { left, right, bottom, top };
         m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
     } else {
         EL_CORE_WARN("Wrong projection type! Use perspective arguments instead.");

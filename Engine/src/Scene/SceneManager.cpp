@@ -14,15 +14,15 @@ void SceneManager::Init()
     m_activeScene.OnInit();
 
     m_serializer.Init(&m_activeScene);
-    if (gEngineSettings.LoadDefaultScene) {
-        m_serializer.LoadScene(gEngineSettings.DefaultSceneName);
+    if (gEngineSettings.loadDefaultScene) {
+        m_serializer.LoadScene(gEngineSettings.defaultSceneName);
     }
 }
 
 void SceneManager::Shutdown()
 {
-    if (gEngineSettings.LoadDefaultScene) {
-        m_serializer.SaveScene("new_" + gEngineSettings.DefaultSceneName);
+    if (gEngineSettings.loadDefaultScene) {
+        m_serializer.SaveScene("new_" + gEngineSettings.defaultSceneName);
     }
     m_activeScene.OnShutdown();
 }
@@ -43,6 +43,6 @@ void SceneManager::LoadScene(std::string_view scene_name)
 
 void SceneManager::SaveScene(std::string_view scene_name)
 {
-    m_serializer.SaveScene("new_" + gEngineSettings.DefaultSceneName);
+    m_serializer.SaveScene("new_" + gEngineSettings.defaultSceneName);
 }
 } // namespace elv

@@ -2,13 +2,8 @@
 
 #include "SandboxApp.h"
 
-#include <Core/EntryPoint.h>
 #include <Core/SettingsConfig.h>
-#include <Events/EventManager.h>
 #include <Events/TextureEvent.h>
-#include <Scene/Behavior.h>
-#include <Scene/Components/SceneComponents.h>
-#include <Scene/SceneManager.h>
 
 elv::Application* elv::CreateApplication()
 {
@@ -40,12 +35,13 @@ public:
 
 Sandbox2D::Sandbox2D()
     : m_textureLoadedCallback([this](const elv::events::TextureLoadedEvent& e) { OnTextureLoaded(e); })
+    , m_cameraController(static_cast<float>(elv::gEngineSettings.windowWidth) / static_cast<float>(elv::gEngineSettings.windowHeight))
 {
 }
 
 void Sandbox2D::OnCreate()
 {
-    if (!elv::gEngineSettings.LoadDefaultScene) {
+    if (!elv::gEngineSettings.loadDefaultScene) {
         elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, elv::string_id("wizard"));
         elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, elv::string_id("wizard_fire"));
         elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, elv::string_id("wizard_ice"));
@@ -70,7 +66,7 @@ void Sandbox2D::OnCreate()
     auto& back_sprite = scene.AddComponent<elv::SpriteComponent>(back_entity);
     back_sprite.SetTexture("battleground2", "Battleground2.png");
     auto& back_transform = scene.AddComponent<elv::TransformComponent>(back_entity);
-    back_transform.scale = { 38.4f, 21.6f };
+    back_transform.scale = { 384.0f, 216.0f };
 
     const elv::ecs::Entity skeleton_entity = scene.CreateEntity();
     auto& skeleton_sprite = scene.AddComponent<elv::SpriteComponent>(skeleton_entity);
@@ -88,6 +84,7 @@ void Sandbox2D::OnCreate()
 
 void Sandbox2D::OnUpdate(float dt)
 {
+    m_cameraController.OnUpdate(dt);
 }
 
 void Sandbox2D::OnRender(float dt)
@@ -112,8 +109,8 @@ void Sandbox2D::OnTextureLoaded(const elv::events::TextureLoadedEvent& e)
 
                 auto& transform = scene.AddComponent<elv::TransformComponent>(
                     entityQuad,
-                    lia::vec3(static_cast<float>(i) * 1.3f, static_cast<float>(j) * 1.3f, 0.0f),
-                    lia::vec2(1.0f, 1.0f));
+                    lia::vec3(static_cast<float>(i) * 13.0f, static_cast<float>(j) * 13.0f, 0.0f),
+                    lia::vec2(10.0f, 10.0f));
 
                 auto& sprite = scene.AddComponent<elv::SpriteComponent>(entityQuad, "wizard_fire", "wizard_fire.png");
                 sprite.texture = texture;

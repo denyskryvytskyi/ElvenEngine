@@ -23,6 +23,7 @@ void Scene::OnInit()
     RegisterComponent<SpriteComponent>();
     RegisterComponent<BehaviorComponent>();
     RegisterComponent<QuadComponent>();
+    RegisterComponent<CameraComponent>();
 
     // Engine systems register
     RegisterSystem<BehaviorSystem>();

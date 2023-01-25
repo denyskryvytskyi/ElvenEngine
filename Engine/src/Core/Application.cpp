@@ -11,6 +11,8 @@
 #include "Renderer/TextureManager.h"
 
 #include "Events/EventManager.h"
+
+#include "Scene/Components/SceneComponents.h"
 #include "Scene/SceneManager.h"
 
 namespace elv {
@@ -31,8 +33,12 @@ Application::Application()
     // Init global engine settings
     gEngineSettings.LoadSettings();
 
-    m_window = Window::Create({ "ElvenEngine", gEngineSettings.WindowWidth, gEngineSettings.WindowHeight });
+    m_window = Window::Create({ "ElvenEngine", gEngineSettings.windowWidth, gEngineSettings.windowHeight });
     RenderCommand::SetViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
+
+    // Create cameras entity before other inits, because this entity could be used by them
+    auto& scene = gSceneManager.GetScene();
+    m_orthoCameraEntity = scene.CreateEntity();
 
     // Init managers here
     elv::Renderer::Init();
@@ -41,18 +47,28 @@ Application::Application()
     gSceneManager.Init();
     //
 
+#if EDITOR_MODE
     m_imGuiOverlay.Init();
+#endif
 
     events::Subscribe<events::WindowCloseEvent>(m_windowCloseCallback);
     events::Subscribe<events::WindowResizeEvent>(m_windowResizeCallback);
+
+    // Add real cameras
+    auto& cameraComponent = scene.AddComponent<CameraComponent>(m_orthoCameraEntity, false);
+    const float aspectRatio = static_cast<float>(gEngineSettings.windowWidth) / static_cast<float>(gEngineSettings.windowHeight);
+    cameraComponent.camera.SetProjection(-aspectRatio * gEngineSettings.orthographicCameraSize, aspectRatio * gEngineSettings.orthographicCameraSize, -gEngineSettings.orthographicCameraSize, gEngineSettings.orthographicCameraSize, -1.0f, 1.0f);
 }
 
 Application::~Application()
 {
     OnDestroy();
 
-    events::gEventManager.Shutdown();
+#if EDITOR_MODE
     m_imGuiOverlay.Shutdown();
+#endif
+
+    events::gEventManager.Shutdown();
     gSceneManager.Shutdown();
     gTextureManager.Shutdown();
     Renderer::Shutdown();
@@ -87,10 +103,12 @@ void Application::Run()
         OnRender(elapsedTime);
         gSceneManager.Render(elapsedTime);
 
+#if EDITOR_MODE
         // ImGui overlay rendering
         m_imGuiOverlay.Begin();
         m_imGuiOverlay.ImGuiRender();
         m_imGuiOverlay.End();
+#endif
 
         // Window update
         m_window->OnUpdate();

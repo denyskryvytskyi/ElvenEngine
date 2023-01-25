@@ -16,10 +16,12 @@ public:
 
     // get delta time as seconds
     float Elapsed() const { return std::chrono::duration_cast<seconds>(clock::now() - m_start).count(); }
+    float ElapsedMs() const { return std::chrono::duration_cast<milliseconds>(clock::now() - m_start).count(); }
 
 private:
     using clock = std::chrono::high_resolution_clock; // QueryPerformanceCounter
     using seconds = std::chrono::duration<float, std::ratio<1>>;
+    using milliseconds = std::chrono::duration<float, std::milli>;
 
     std::chrono::time_point<clock> m_start;
 };

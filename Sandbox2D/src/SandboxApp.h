@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Renderer/OrthographicCameraController.h>
+
 // forward declarations
 namespace elv::events {
 class TextureLoadedEvent;
@@ -19,4 +21,5 @@ private:
 
 private:
     elv::events::EventHandler<elv::events::TextureLoadedEvent> m_textureLoadedCallback;
+    elv::OrthographicCameraController m_cameraController;
 };

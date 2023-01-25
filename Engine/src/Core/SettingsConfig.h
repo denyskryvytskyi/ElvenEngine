@@ -8,10 +8,13 @@ public:
     void SaveSettings();
 
 public:
-    uint16_t WindowHeight { 720 };
-    uint16_t WindowWidth { 1280 };
-    std::string DefaultSceneName { "default" };
-    bool LoadDefaultScene { false };
+    uint16_t windowHeight { 720 };
+    uint16_t windowWidth { 1280 };
+    std::string defaultSceneName { "default" };
+    bool loadDefaultScene { false };
+
+    // orthographic camera
+    float orthographicCameraSize { 100 };
 };
 
 extern SettingsConfig gEngineSettings;

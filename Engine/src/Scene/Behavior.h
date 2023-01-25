@@ -1,6 +1,6 @@
 #pragma once
 #include "Entity.h"
-
+#include "Scene.h"
 namespace elv {
 class Scene;
 }
@@ -22,8 +22,14 @@ public:
         m_entity = entity;
     }
 
-private:
+    template<class ComponentType>
+    ComponentType& GetComponent()
+    {
+        return p_Scene->GetComponent<ComponentType>(m_entity);
+    }
+
+protected:
     Entity m_entity { 0 };
-    Scene* p_Scene { nullptr };
+    elv::Scene* p_Scene { nullptr };
 };
 } // namespace elv::ecs

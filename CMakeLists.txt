@@ -8,8 +8,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
+set(GLOBAL PROPERTY USE_FOLDERS ON)
 
-option(BUILD_SANDBOX "build sandbox project" ON)
+option(BUILD_SANDBOX "build sandbox projects" ON)
+option(BUILD_GAMES "build games" OFF)
+option(EDITOR_MODE "Enable ImGUI editor overlay" OFF)
 
 if(WIN32)
     add_compile_definitions(
@@ -18,6 +21,10 @@ if(WIN32)
     )
 else()
     message("This is not supported platform for now!")
+endif()
+
+if (EDITOR_MODE)
+    add_compile_definitions(EDITOR_MODE)
 endif()
 
 add_subdirectory(Engine)
@@ -33,4 +40,8 @@ if (BUILD_SANDBOX)
             VS_STARTUP_PROJECT "Sandbox2D"
         )
     endif()
+endif()
+
+if (BUILD_GAMES)
+    add_subdirectory(Games)
 endif()

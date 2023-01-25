@@ -5,7 +5,7 @@
 
 namespace elv {
 
-bool Input::IsKeyPressed(KeyCode key)
+bool Input::IsKeyPressed(Keycode key)
 {
     auto* window = static_cast<GLFWwindow*>(Application::Get().GetWindow()->GetNativeWindow());
     auto state = glfwGetKey(window, key);

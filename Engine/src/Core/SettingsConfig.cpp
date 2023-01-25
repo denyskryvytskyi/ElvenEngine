@@ -26,10 +26,16 @@ void SettingsConfig::LoadSettings()
         }
     }
 
-    j.at("window_height").get_to(WindowHeight);
-    j.at("window_width").get_to(WindowWidth);
-    j.at("default_scene_name").get_to(DefaultSceneName);
-    j.at("load_default_scene").get_to(LoadDefaultScene);
+    try {
+
+        j.at("window_height").get_to(windowHeight);
+        j.at("window_width").get_to(windowWidth);
+        j.at("default_scene_name").get_to(defaultSceneName);
+        j.at("load_default_scene").get_to(loadDefaultScene);
+        j.at("orthographic_camera_size").get_to(orthographicCameraSize);
+    } catch (nlohmann::json_abi_v3_11_2::detail::out_of_range e) {
+        EL_ERROR("Load settings config error: {}", e.what());
+    }
 
     EL_CORE_INFO("Settings loaded");
 }
@@ -37,10 +43,11 @@ void SettingsConfig::LoadSettings()
 void SettingsConfig::SaveSettings()
 {
     json j;
-    j["window_height"] = WindowHeight;
-    j["window_width"] = WindowWidth;
-    j["default_scene_name"] = DefaultSceneName;
-    j["load_default_scene"] = LoadDefaultScene;
+    j["window_height"] = windowHeight;
+    j["window_width"] = windowWidth;
+    j["default_scene_name"] = defaultSceneName;
+    j["load_default_scene"] = loadDefaultScene;
+    j["orthographic_camera_size"] = orthographicCameraSize;
 
     std::ofstream out(engineSettingsFile.data());
     out << std::setfill(' ') << std::setw(2) << j;

@@ -68,8 +68,8 @@ void WindowsWindow::SetFullScreen(bool enabled)
             m_data.Height = mode->height;
             glfwSetWindowMonitor(m_window, m_monitor, 0, 0, m_data.Width, m_data.Height, mode->refreshRate);
         } else {
-            m_data.Width = gEngineSettings.WindowWidth;
-            m_data.Height = gEngineSettings.WindowHeight;
+            m_data.Width = gEngineSettings.windowWidth;
+            m_data.Height = gEngineSettings.windowHeight;
             glfwSetWindowMonitor(m_window, nullptr, 0, 0, m_data.Width, m_data.Height, s_defaultRefreshRate);
             glfwSetWindowPos(m_window, s_defaultWindowPosX, s_defaultWindowPosY);
         }

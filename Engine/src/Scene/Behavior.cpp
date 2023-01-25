@@ -1,5 +1,4 @@
 #include "Behavior.h"
-#include "Scene.h"
 #include "SceneManager.h"
 
 namespace elv::ecs {

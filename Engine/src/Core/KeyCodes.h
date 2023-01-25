@@ -1,12 +1,11 @@
 #pragma once
 
 namespace elv {
+using Keycode = uint16_t;
 
-using KeyCode = std::uint16_t;
+namespace key {
 
-namespace Key {
-
-enum : KeyCode {
+enum : Keycode {
     // From glfw3.h
     Space = 32,
     Apostrophe = 39, /* ' */
@@ -140,5 +139,5 @@ enum : KeyCode {
     Menu = 348
 };
 
-}
+} // namespace key
 } // namespace elv

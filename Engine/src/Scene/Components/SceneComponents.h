@@ -4,6 +4,8 @@
 
 #include "Scene/Behavior.h"
 
+#include "Renderer/Camera.h"
+
 namespace elv {
 struct TransformComponent {
     TransformComponent() = default;
@@ -34,6 +36,13 @@ void from_json(const nlohmann::json& j, QuadComponent& t);
 class Texture2D;
 struct SpriteComponent {
     SpriteComponent() = default;
+
+    /**
+     * Set and load texture for the sprite
+     *
+     * @param texture_name Texture name to store in manager
+     * @param texture_path Relative path to the texture file
+     */
     SpriteComponent(std::string_view texture_name, std::string_view texture_path)
         : textureName(texture_name)
         , texturePath(texture_path)
@@ -41,7 +50,12 @@ struct SpriteComponent {
         LoadTexture();
     }
 
-    // Also calls LoadTexture
+    /**
+     * Set and load texture for the sprite
+     *
+     * @param texture_name Texture name to store in manager
+     * @param texture_path Relative path to the texture file
+     */
     void SetTexture(std::string_view texture_name, std::string_view texture_path)
     {
         textureName = texture_name;
@@ -75,6 +89,22 @@ struct BehaviorComponent {
         InstantiateBehavior = []() { return static_cast<ecs::IBehavior*>(new BehaviorType()); };
         DestroyBehavior = [](BehaviorComponent& component) { delete component.behavior; component.behavior = nullptr; };
     }
+};
+
+struct CameraComponent {
+    CameraComponent(bool isPerspective)
+        : camera(isPerspective)
+    { }
+
+    CameraComponent(float fov, float aspect, float near_, float far_)
+        : camera(fov, aspect, near_, far_)
+    { }
+
+    CameraComponent(float left, float right, float bottom, float top, float near_, float far_)
+        : camera(left, right, bottom, top, near_, far_)
+    { }
+
+    Camera camera;
 };
 
 } // namespace elv

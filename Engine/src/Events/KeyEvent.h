@@ -21,7 +21,7 @@ public:
     }
 
 public:
-    KeyCode key { 0 };
+    Keycode key { 0 };
     int repeatCount { 0 };
 };
 
@@ -40,7 +40,7 @@ public:
     }
 
 public:
-    KeyCode key { 0 };
+    Keycode key { 0 };
 };
 
 class KeyTypedEvent : public Event {
@@ -58,7 +58,7 @@ public:
     }
 
 public:
-    KeyCode key { 0 };
+    Keycode key { 0 };
 };
 
 } // namespace elv::events

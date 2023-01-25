@@ -98,11 +98,14 @@ public:
                 Entity movedComponentEntityId = m_entities.back();
                 m_entityToComponentIndex[movedComponentEntityId] = componentIndex; // new mapping for moved component
             }
+
+            m_entityToComponentIndex.erase(it);
         }
 
-        m_components.pop_back();
-        m_entities.pop_back();
-        m_entityToComponentIndex.erase(it);
+        if (!m_components.empty()) {
+            m_components.pop_back();
+            m_entities.pop_back();
+        }
     }
 
     Entity GetEntity(std::uint32_t componentIndex) const override

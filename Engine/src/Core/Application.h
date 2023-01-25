@@ -2,7 +2,11 @@
 
 #include "Events/ApplicationEvent.h"
 #include "Events/EventHandler.h"
-#include "ImGui/ImGuiOverlay.h"
+#include "Scene/Entity.h"
+
+#if EDITOR_MODE
+#    include "ImGui/ImGuiOverlay.h"
+#endif
 
 namespace elv {
 
@@ -27,6 +31,8 @@ public:
     static Application& Get() { return *s_instance; }
     static Telemetry& GetTelemetry() { return s_telemetry; };
 
+    ecs::Entity GetOrthographicCameraEntity() const { return m_orthoCameraEntity; }
+
 protected:
     virtual void OnCreate() {};
     virtual void OnUpdate(float dt) {};
@@ -37,6 +43,9 @@ private:
     void OnWindowClose(const events::WindowCloseEvent& e);
     void OnWindowResize(const events::WindowResizeEvent& e);
 
+protected:
+    ecs::Entity m_orthoCameraEntity { ecs::INVALID_ENTITY_ID };
+
 private:
     static Application* s_instance;
     static Telemetry s_telemetry;
@@ -44,7 +53,10 @@ private:
     bool m_running { false };
 
     UniquePtr<Window> m_window { nullptr };
+
+#if EDITOR_MODE
     ImGuiOverlay m_imGuiOverlay;
+#endif
 
     events::EventHandler<events::WindowResizeEvent> m_windowResizeCallback;
     events::EventHandler<events::WindowCloseEvent> m_windowCloseCallback;

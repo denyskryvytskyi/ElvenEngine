@@ -1,5 +1,6 @@
 #include "Render2dSystem.h"
 
+#include "Core/Application.h"
 #include "Core/SettingsConfig.h"
 #include "Events/EventManager.h"
 #include "Events/TextureEvent.h"
@@ -11,18 +12,17 @@
 namespace elv {
 Render2dSystem::Render2dSystem(Scene* scenePtr)
     : ecs::IComponentSystem(scenePtr)
-    , m_cameraController(static_cast<float>(gEngineSettings.WindowWidth) / static_cast<float>(gEngineSettings.WindowHeight))
 {
+    m_orthoCameraEntity = Application::Get().GetOrthographicCameraEntity();
 }
 
 void Render2dSystem::OnUpdate(float dt)
 {
-    m_cameraController.OnUpdate(dt);
 }
 
 void Render2dSystem::OnRender(float dt)
 {
-    Renderer2D::BeginScene(m_cameraController.GetCamera());
+    Renderer2D::BeginScene(m_pScene->GetComponent<CameraComponent>(m_orthoCameraEntity).camera);
 
     // Sprites
     auto& spriteComponents = m_pScene->GetComponents<SpriteComponent>();

@@ -16,7 +16,7 @@ public:
     virtual void OnRender(float dt) override;
 
 private:
-    OrthographicCameraController m_cameraController;
+    ecs::Entity m_orthoCameraEntity { ecs::INVALID_ENTITY_ID };
 };
 
 } // namespace elv

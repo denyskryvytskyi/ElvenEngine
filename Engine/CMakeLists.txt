@@ -22,7 +22,6 @@ set(ENGINE_HEADERS
 "src/Events/KeyEvent.h"
 "src/Events/MouseEvent.h"
 "src/Events/TextureEvent.h"
-"src/ImGui/ImGuiOverlay.h"
 "src/Renderer/Buffer.h"
 "src/Renderer/GraphicsContext.h"
 "src/Renderer/Camera.h"
@@ -55,6 +54,15 @@ set(ENGINE_HEADERS
 "src/Scene/Systems/BehaviorSystem.h"
 )
 
+#editor stuff
+if (EDITOR_MODE)
+    set(ENGINE_HEADERS
+    ${ENGINE_HEADERS}
+    "src/ImGui/ImGuiOverlay.h"
+    )
+endif()
+
+# src
 set(ENGINE_SOURCES
 "src/Core/Application.cpp"
 "src/Core/EntryPoint.cpp"
@@ -74,7 +82,6 @@ set(ENGINE_SOURCES
 "src/Renderer/Shader.cpp"
 "src/Renderer/VertexArray.cpp"
 "src/Renderer/TextureManager.cpp"
-"src/ImGui/ImGuiOverlay.cpp"
 "src/Platform/OpenGL/OpenGLBuffer.cpp"
 "src/Platform/OpenGL/OpenGLContext.cpp"
 "src/Platform/OpenGL/OpenGLRendererAPI.cpp"
@@ -95,9 +102,15 @@ set(ENGINE_SOURCES
 ${ENGINE_HEADERS}
 )
 
-set(LIBRARY_NAME ElvenEngine)
+if (EDITOR_MODE)
+    set(ENGINE_SOURCES
+    ${ENGINE_SOURCES}
+    "src/ImGui/ImGuiOverlay.cpp"
+    )
+endif()
 
 # create static library
+set(LIBRARY_NAME ElvenEngine)
 add_library(${LIBRARY_NAME} STATIC ${ENGINE_SOURCES})
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ENGINE_SOURCES})
@@ -109,10 +122,12 @@ set(VENDOR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
 set(glfw ${VENDOR_PATH}/GLFW)
 set(glad ${VENDOR_PATH}/GLAD)
 set(spdlog ${VENDOR_PATH}/spdlog)
-set(imgui ${VENDOR_PATH}/imgui)
 set(lia ${VENDOR_PATH}/lia)
 set(stb_image ${VENDOR_PATH}/stb_image)
 set(json ${VENDOR_PATH}/json)
+if (EDITOR_MODE)
+    set(imgui ${VENDOR_PATH}/imgui)
+endif()
 
 # include dirs
 set(ENGINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -122,36 +137,53 @@ ${ENGINE_SOURCE_DIR}
 ${glad}/include
 ${glfw}/include
 ${lia}/lia
-${imgui}/include
 ${spdlog}/include
 ${stb_image}/include
 ${json}/include
 )
+
+if (EDITOR_MODE)
+    set(ENGINE_INCLUDE_DIRS
+    ${ENGINE_INCLUDE_DIRS}
+    ${imgui}/include
+    )
+endif()
 
 target_include_directories(${LIBRARY_NAME}
     PUBLIC ${ENGINE_INCLUDE_DIRS}
 )
 
 # link dependencies
-set(THIRD_PARTY_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR}/vendor)
-
-add_subdirectory(${VENDOR_PATH}/GLFW ${THIRD_PARTY_BUILD_DIR}/GLFW)
-add_subdirectory(${VENDOR_PATH}/GLAD ${THIRD_PARTY_BUILD_DIR}/glad)
-add_subdirectory(${VENDOR_PATH}/spdlog ${THIRD_PARTY_BUILD_DIR}/spdlog)
-add_subdirectory(${VENDOR_PATH}/imgui ${THIRD_PARTY_BUILD_DIR}/imgui)
-add_subdirectory(${VENDOR_PATH}/lia ${THIRD_PARTY_BUILD_DIR}/lia)
-add_subdirectory(${VENDOR_PATH}/stb ${THIRD_PARTY_BUILD_DIR}/stb)
+add_subdirectory(${VENDOR_PATH}/GLFW)
+set_target_properties(glfw PROPERTIES FOLDER "Libs")
+add_subdirectory(${VENDOR_PATH}/GLAD)
+set_target_properties(glad PROPERTIES FOLDER "Libs")
+add_subdirectory(${VENDOR_PATH}/spdlog)
+set_target_properties(spdlog PROPERTIES FOLDER "Libs")
+add_subdirectory(${VENDOR_PATH}/lia)
+set_target_properties(lia PROPERTIES FOLDER "Libs")
+add_subdirectory(${VENDOR_PATH}/stb)
+set_target_properties(stb PROPERTIES FOLDER "Libs")
+if (EDITOR_MODE)
+    add_subdirectory(${VENDOR_PATH}/imgui)
+    set_target_properties(imgui PROPERTIES FOLDER "Libs")
+endif()
 
 set(STATIC_THIRD_PARTY_LIBRARIES
 glfw
 glad
-imgui
 lia
 spdlog
 stb
 )
 
-link_directories(${THIRD_PARTY_BUILD_DIR})
+if (EDITOR_MODE)
+    set(STATIC_THIRD_PARTY_LIBRARIES
+    ${STATIC_THIRD_PARTY_LIBRARIES}
+    imgui
+    )
+endif()
+
 target_link_libraries(${LIBRARY_NAME} ${STATIC_THIRD_PARTY_LIBRARIES})
 
 # pch header file path

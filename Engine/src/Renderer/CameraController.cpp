@@ -38,22 +38,22 @@ void CameraController::OnUpdate(float dt)
 
 void CameraController::ProcessInput(float dt)
 {
-    if (Input::IsKeyPressed(Key::W)) {
+    if (Input::IsKeyPressed(key::W)) {
         m_position += m_front * s_cameraMovementSpeed * dt;
         m_updateLookAt = true;
     }
 
-    if (Input::IsKeyPressed(Key::S)) {
+    if (Input::IsKeyPressed(key::S)) {
         m_position -= m_front * s_cameraMovementSpeed * dt;
         m_updateLookAt = true;
     }
 
-    if (Input::IsKeyPressed(Key::A)) {
+    if (Input::IsKeyPressed(key::A)) {
         m_position -= lia::normalize(lia::cross(m_front, m_up)) * s_cameraMovementSpeed * dt;
         m_updateLookAt = true;
     }
 
-    if (Input::IsKeyPressed(Key::D)) {
+    if (Input::IsKeyPressed(key::D)) {
         m_position += lia::normalize(lia::cross(m_front, m_up)) * s_cameraMovementSpeed * dt;
         m_updateLookAt = true;
     }

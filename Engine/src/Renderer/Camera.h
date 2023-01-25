@@ -4,8 +4,25 @@
 
 namespace elv {
 
+struct OrthoCameraBounds {
+    OrthoCameraBounds() = default;
+    OrthoCameraBounds(float left, float right, float bottom, float top)
+        : left(left)
+        , right(right)
+        , bottom(bottom)
+        , top(top)
+    { }
+
+    float left;
+    float right;
+    float bottom;
+    float top;
+};
+
 class Camera {
 public:
+    Camera(bool isPerspective);
+
     Camera(float fov, float aspect, float near_, float far_);
     Camera(float left, float right, float bottom, float top, float near_, float far_);
 
@@ -35,6 +52,8 @@ public:
 
     void LookAt(const lia::vec3 pos, const lia::vec3 front, const lia::vec3 up);
 
+    OrthoCameraBounds GetOrthographicsBounds() const { return m_orthographicBounds; }
+
 private:
     void RecalculateViewMatrix();
 
@@ -44,6 +63,8 @@ private:
     lia::mat4 m_viewMatrix { 1.0f };
     lia::mat4 m_projectionMatrix;
     lia::mat4 m_viewProjectionMatrix;
+
+    OrthoCameraBounds m_orthographicBounds;
 
     lia::vec3 m_position;
     lia::vec3 m_rotation;
