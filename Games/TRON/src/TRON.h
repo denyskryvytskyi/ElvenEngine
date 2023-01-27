@@ -8,7 +8,8 @@ private:
     enum class GameState {
         Menu,
         Play,
-        GameOver
+        GameOver,
+        RestartMenu
     };
 
 public:
@@ -18,9 +19,10 @@ public:
     void OnMenuState();
     void OnPlayState();
     void OnGameOverState();
+    void OnRestartMenuState();
 
 private:
     elv::ecs::Entity m_players[2];
-    elv::ecs::Entity m_winnerEntity;
+    std::string_view m_winnerName;
     GameState m_gameState { GameState::Menu };
 };

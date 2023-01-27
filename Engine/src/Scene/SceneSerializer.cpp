@@ -38,7 +38,7 @@ void SceneSerializer::LoadScene(std::string_view sceneName)
 
 void SceneSerializer::SaveScene(std::string_view sceneName)
 {
-    std::ofstream out(std::format("{}{}{}", FileSystem::GetScenesPath(), sceneName, ".scene"));
+    std::ofstream out(std::format("{}{}{}{}", FileSystem::GetScenesPath(), "new_", sceneName, ".scene"));
     json j;
 
     j["name"] = sceneName;

@@ -146,12 +146,12 @@ void Renderer2D::NextBatch()
     StartBatch();
 }
 
-void Renderer2D::DrawQuad(const lia::vec3& pos, const lia::vec2& scale, float rotation, const lia::vec4& color)
+void Renderer2D::DrawQuad(const lia::vec3& pos, const lia::vec3& scale, float rotation, const lia::vec4& color)
 {
     DrawQuad(pos, scale, rotation, color, 0);
 }
 
-void Renderer2D::DrawQuad(const SharedPtr<Texture2D>& texture, const lia::vec3& pos, const lia::vec2& scale, float rotation, const lia::vec4& color)
+void Renderer2D::DrawQuad(const SharedPtr<Texture2D>& texture, const lia::vec3& pos, const lia::vec3& scale, float rotation, const lia::vec4& color)
 {
     if (s_data.usedTextureSlots >= MAX_TEXTURE_SLOTS) {
         NextBatch();
@@ -179,7 +179,7 @@ void Renderer2D::DrawQuad(const SharedPtr<Texture2D>& texture, const lia::vec3& 
     DrawQuad(pos, scale, rotation, color, textureSlot);
 }
 
-void Renderer2D::DrawQuad(const lia::vec3& pos, const lia::vec2& scale, float rotation, const lia::vec4& color, int textureUnit)
+void Renderer2D::DrawQuad(const lia::vec3& pos, const lia::vec3& scale, float rotation, const lia::vec4& color, int textureUnit)
 {
     lia::mat4 model = lia::scale(lia::mat4(), lia::vec3(scale.x, scale.y, 0.0f));
     model = lia::rotate(model, lia::radians(rotation), { 0.0f, 0.0f, 1.0f });

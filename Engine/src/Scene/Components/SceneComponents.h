@@ -9,14 +9,14 @@
 namespace elv {
 struct TransformComponent {
     TransformComponent() = default;
-    TransformComponent(const lia::vec3&& pos_, const lia::vec2&& scale_ = lia::vec2(), const lia::vec3&& rotation_ = lia::vec3())
+    TransformComponent(const lia::vec3&& pos_, const lia::vec3&& scale_ = lia::vec3(), const lia::vec3&& rotation_ = lia::vec3())
         : pos(pos_)
         , scale(scale_)
         , rotation(rotation_)
     { }
 
     lia::vec3 pos { 0.0f, 0.0f, 0.0f };
-    lia::vec2 scale { 1.0f, 1.0f };
+    lia::vec3 scale { 1.0f, 1.0f, 1.0f };
     lia::vec3 rotation { 0.0f, 0.0f, 0.0f };
 };
 void to_json(nlohmann::json& j, const TransformComponent& t);
