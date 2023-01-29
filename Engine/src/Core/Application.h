@@ -39,6 +39,8 @@ protected:
     virtual void OnRender(float dt) {};
     virtual void OnDestroy() {};
 
+    virtual void OnWindowResizeApp() {};
+
 private:
     void OnWindowClose(const events::WindowCloseEvent& e);
     void OnWindowResize(const events::WindowResizeEvent& e);

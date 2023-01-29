@@ -40,6 +40,11 @@ public:
         s_RendererAPI->DrawIndexed(vertexArray, indexCount);
     }
 
+    static void DisableByteAlignment()
+    {
+        s_RendererAPI->DisableByteAlignment();
+    }
+
 private:
     static UniquePtr<RendererAPI> s_RendererAPI;
 };

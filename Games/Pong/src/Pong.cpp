@@ -91,6 +91,19 @@ void Pong::OnUpdate(float dt)
     }
 }
 
+void Pong::OnWindowResizeApp()
+{
+    elv::Scene& scene = elv::GetScene();
+    auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
+
+    // fix paddles positions
+    auto& player1Transform = scene.GetComponent<elv::TransformComponent>(m_players[0]);
+    player1Transform.pos.x = cameraBounds.left + paddleOffset;
+
+    auto& player2Transform = scene.GetComponent<elv::TransformComponent>(m_players[1]);
+    player2Transform.pos.x = cameraBounds.right - paddleOffset;
+}
+
 void Pong::OnMenuState()
 {
     if (elv::Input::IsKeyPressed(elv::key::P)) {

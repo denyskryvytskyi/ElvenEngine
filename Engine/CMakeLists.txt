@@ -35,6 +35,7 @@ set(ENGINE_HEADERS
 "src/Renderer/VertexArray.h"
 "src/Renderer/Texture2D.h"
 "src/Renderer/TextureManager.h"
+"src/Renderer/TextRenderer.h"
 "src/Platform/Windows/WindowsWindow.h"
 "src/Platform/OpenGL/OpenGLBuffer.h"
 "src/Platform/OpenGL/OpenGLContext.h"
@@ -82,6 +83,7 @@ set(ENGINE_SOURCES
 "src/Renderer/Shader.cpp"
 "src/Renderer/VertexArray.cpp"
 "src/Renderer/TextureManager.cpp"
+"src/Renderer/TextRenderer.cpp"
 "src/Platform/OpenGL/OpenGLBuffer.cpp"
 "src/Platform/OpenGL/OpenGLContext.cpp"
 "src/Platform/OpenGL/OpenGLRendererAPI.cpp"
@@ -125,6 +127,7 @@ set(spdlog ${VENDOR_PATH}/spdlog)
 set(lia ${VENDOR_PATH}/lia)
 set(stb_image ${VENDOR_PATH}/stb_image)
 set(json ${VENDOR_PATH}/json)
+set(freetype ${VENDOR_PATH}/freetype)
 if (EDITOR_MODE)
     set(imgui ${VENDOR_PATH}/imgui)
 endif()
@@ -140,6 +143,7 @@ ${lia}/lia
 ${spdlog}/include
 ${stb_image}/include
 ${json}/include
+${freetype}/include
 )
 
 if (EDITOR_MODE)
@@ -184,7 +188,9 @@ if (EDITOR_MODE)
     )
 endif()
 
-target_link_libraries(${LIBRARY_NAME} ${STATIC_THIRD_PARTY_LIBRARIES})
+target_link_libraries(${LIBRARY_NAME} ${STATIC_THIRD_PARTY_LIBRARIES}
+        debug  ${freetype}/lib/freetyped.lib
+        optimized ${freetype}/lib/freetype.lib)
 
 # pch header file path
 set(ENGINE_PRECOMPILED_HEADERS

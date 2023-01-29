@@ -199,7 +199,7 @@ void Renderer2D::DrawQuad(const lia::mat4& model, const lia::vec4& color, int te
         s_data.quadVerticesCurrent->color = color;
         s_data.quadVerticesCurrent->uv = s_data.quadUV[i];
         s_data.quadVerticesCurrent->textureUnit = textureUnit;
-        s_data.quadVerticesCurrent++;
+        ++s_data.quadVerticesCurrent;
     }
 
     s_data.quadIndexCount += 6;

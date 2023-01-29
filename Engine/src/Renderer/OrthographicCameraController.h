@@ -24,6 +24,8 @@ public:
         return m_bounds;
     }
 
+    static bool IsCustomCameraController() { return isCustomCameraController; }
+
 private:
     void OnMouseScrolled(const events::MouseScrolledEvent& e);
     void OnWindowResized(const events::WindowResizeEvent& e);
@@ -39,6 +41,8 @@ private:
     float m_translationSpeed { 20.0f };
     float m_zoomSpeed { 0.25f };
     float m_rotationSpeed { 180.0f };
+
+    static bool isCustomCameraController;
 
     ecs::Entity m_orthoCameraEntity { ecs::INVALID_ENTITY_ID };
 

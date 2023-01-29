@@ -6,8 +6,10 @@
 #include "Timer.h"
 #include "Window.h"
 
+#include "Renderer/OrthographicCameraController.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/Renderer2D.h"
+#include "Renderer/TextRenderer.h"
 #include "Renderer/TextureManager.h"
 
 #include "Events/EventManager.h"
@@ -40,12 +42,11 @@ Application::Application()
     auto& scene = gSceneManager.GetScene();
     m_orthoCameraEntity = scene.CreateEntity();
 
-    // Init managers here
+    // Init renderers
     elv::Renderer::Init();
     Renderer2D::Init();
-
+    TextRenderer::Init();
     gSceneManager.Init();
-    //
 
 #if EDITOR_MODE
     m_imGuiOverlay.Init();
@@ -54,10 +55,10 @@ Application::Application()
     events::Subscribe<events::WindowCloseEvent>(m_windowCloseCallback);
     events::Subscribe<events::WindowResizeEvent>(m_windowResizeCallback);
 
-    // Add real cameras
     auto& cameraComponent = scene.AddComponent<CameraComponent>(m_orthoCameraEntity, false);
     const float aspectRatio = static_cast<float>(gEngineSettings.windowWidth) / static_cast<float>(gEngineSettings.windowHeight);
     cameraComponent.camera.SetProjection(-aspectRatio * gEngineSettings.orthographicCameraSize, aspectRatio * gEngineSettings.orthographicCameraSize, -gEngineSettings.orthographicCameraSize, gEngineSettings.orthographicCameraSize, -1.0f, 1.0f);
+    // cameraComponent.camera.SetProjection(-gEngineSettings.orthographicCameraSize, gEngineSettings.orthographicCameraSize, -gEngineSettings.orthographicCameraSize * 0.5f, gEngineSettings.orthographicCameraSize * 0.5f, -1.0f, 1.0f);
 }
 
 Application::~Application()
@@ -132,6 +133,19 @@ void Application::OnWindowResize(const events::WindowResizeEvent& e)
     }
 
     Renderer::OnWindowResize(e.width, e.height);
+
+    if (!OrthographicCameraController::IsCustomCameraController()) {
+        auto& cameraComponent = GetScene().GetComponent<CameraComponent>(m_orthoCameraEntity);
+        const float aspectRatio = static_cast<float>(e.width) / static_cast<float>(e.height);
+
+        auto& camera = GetScene().GetComponent<CameraComponent>(m_orthoCameraEntity).camera;
+        camera.SetProjection(-aspectRatio * gEngineSettings.orthographicCameraSize,
+                             aspectRatio * gEngineSettings.orthographicCameraSize,
+                             -gEngineSettings.orthographicCameraSize,
+                             gEngineSettings.orthographicCameraSize, -1.0f, 1.0f);
+    }
+
+    OnWindowResizeApp();
 }
 
 } // namespace elv

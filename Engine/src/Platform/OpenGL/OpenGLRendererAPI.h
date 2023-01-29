@@ -13,6 +13,8 @@ class OpenGLRendererAPI : public RendererAPI {
 
     void EnableDepthTesting(bool enabled) override;
 
+    void DisableByteAlignment() override;
+
     void DrawIndexed(const SharedPtr<VertexArray>& vertexArray, std::uint32_t indexCount = 0) override;
 };
 

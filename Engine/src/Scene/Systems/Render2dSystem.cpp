@@ -6,6 +6,7 @@
 #include "Events/TextureEvent.h"
 #include "Renderer/RenderCommand.h"
 #include "Renderer/Renderer2D.h"
+#include "Renderer/TextRenderer.h"
 #include "Renderer/TextureManager.h"
 #include "Scene/Scene.h"
 
@@ -16,13 +17,19 @@ Render2dSystem::Render2dSystem(Scene* scenePtr)
     m_orthoCameraEntity = Application::Get().GetOrthographicCameraEntity();
 }
 
+void Render2dSystem::OnInit()
+{
+    elv::TextRenderer::Load("assets/fonts/arial.ttf");
+}
+
 void Render2dSystem::OnUpdate(float dt)
 {
 }
 
 void Render2dSystem::OnRender(float dt)
 {
-    Renderer2D::BeginScene(m_pScene->GetComponent<CameraComponent>(m_orthoCameraEntity).camera);
+    auto& camera = m_pScene->GetComponent<CameraComponent>(m_orthoCameraEntity).camera;
+    Renderer2D::BeginScene(camera);
 
     // Sprites
     auto& spriteComponents = m_pScene->GetComponents<SpriteComponent>();
@@ -47,8 +54,11 @@ void Render2dSystem::OnRender(float dt)
         elv::Renderer2D::DrawQuad(transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, quadComponent.color);
     }
     //
-
     Renderer2D::EndScene();
-}
 
+    // Text
+    TextRenderer::PreRender(camera);
+    elv::TextRenderer::RenderText("Hello there! +-(!@#$%^&s*(-_dslgnp! I Did it :)", { 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f });
+    //
+}
 } // namespace elv

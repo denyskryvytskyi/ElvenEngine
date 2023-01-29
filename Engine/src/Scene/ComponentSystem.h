@@ -14,6 +14,7 @@ public:
     IComponentSystem(Scene* scenePtr)
         : m_pScene(scenePtr)
     {
+        OnInit();
     }
 
     virtual ~IComponentSystem() = default;

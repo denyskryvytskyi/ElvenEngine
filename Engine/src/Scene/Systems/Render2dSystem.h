@@ -12,8 +12,9 @@ class Render2dSystem
 public:
     Render2dSystem(Scene* scenePtr);
 
-    virtual void OnUpdate(float dt) override;
-    virtual void OnRender(float dt) override;
+    void OnInit() override;
+    void OnUpdate(float dt) override;
+    void OnRender(float dt) override;
 
 private:
     ecs::Entity m_orthoCameraEntity { ecs::INVALID_ENTITY_ID };

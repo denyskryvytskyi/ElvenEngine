@@ -64,6 +64,11 @@ void OpenGLRendererAPI::EnableDepthTesting(bool enabled)
     }
 }
 
+void OpenGLRendererAPI::DisableByteAlignment()
+{
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+}
+
 void OpenGLRendererAPI::DrawIndexed(const SharedPtr<VertexArray>& vertexArray, std::uint32_t indexCount)
 {
     const std::uint32_t count = indexCount ? indexCount : vertexArray->GetIndexCount();

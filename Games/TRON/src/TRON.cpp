@@ -16,8 +16,7 @@ const lia::vec4 lightCycleColor { 0.8f, 0.8f, 0.8f, 1.0f };
 const lia::vec4 player1LineColor { 0.0f, 0.2f, 0.8f, 1.0f };
 const lia::vec4 player2LineColor { 0.7f, 0.5f, 0.0f, 1.0f };
 
-const lia::vec3 player1StartPos { -110.0f, 0.0f, 0.0f };
-const lia::vec3 player2StartPos { 110.0f, 0.0f, 0.0f };
+constexpr float paddleStartPosOffset = 20.0f;
 
 std::vector<elv::ecs::Entity> m_lineSegments;
 } // namespace
@@ -124,6 +123,7 @@ void TRON::OnMenuState()
 {
     if (elv::Input::IsKeyPressed(elv::key::P)) {
         auto& scene = elv::GetScene();
+        auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
 
         // player 1
         auto player1 = scene.CreateEntity();
@@ -132,7 +132,7 @@ void TRON::OnMenuState()
         scene.AddComponent<elv::BehaviorComponent>(player1).Bind<LightCycleBehavior>();
 
         auto& transformPlayer1 = scene.AddComponent<elv::TransformComponent>(player1);
-        transformPlayer1.pos = player1StartPos;
+        transformPlayer1.pos = { cameraBounds.left + 20.0f, 0.0f, 0.0f };
         transformPlayer1.scale = { segmentSize, segmentSize, 1.0f };
 
         auto& quadPlayer1 = scene.AddComponent<elv::QuadComponent>(player1);
@@ -146,7 +146,7 @@ void TRON::OnMenuState()
         scene.AddComponent<elv::BehaviorComponent>(player2).Bind<LightCycleBehavior>();
         auto& transformPlayer2 = scene.AddComponent<elv::TransformComponent>(player2);
 
-        transformPlayer2.pos = player2StartPos;
+        transformPlayer2.pos = { cameraBounds.right - 20.0f, 0.0f, 0.0f };
         transformPlayer2.scale = { segmentSize, segmentSize, 1.0f };
 
         auto& quad_player2 = scene.AddComponent<elv::QuadComponent>(player2);
@@ -243,11 +243,13 @@ void TRON::OnRestartMenuState()
             scene.AddComponent<elv::BehaviorComponent>(player).Bind<LightCycleBehavior>();
         }
 
+        auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
+
         auto& player1Transform = scene.GetComponent<elv::TransformComponent>(m_players[0]);
-        player1Transform.pos = player1StartPos;
+        player1Transform.pos.x = cameraBounds.left + paddleStartPosOffset;
 
         auto& player2Transform = scene.GetComponent<elv::TransformComponent>(m_players[1]);
-        player2Transform.pos = player2StartPos;
+        player2Transform.pos.x = cameraBounds.right - paddleStartPosOffset;
 
         m_gameState = GameState::Play;
     }

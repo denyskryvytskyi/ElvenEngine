@@ -11,6 +11,8 @@ namespace elv {
 
 constexpr float defaultTranslationSpeed = 20.0f;
 
+bool OrthographicCameraController::isCustomCameraController = false;
+
 OrthographicCameraController::OrthographicCameraController(float aspectRatio)
     : m_aspectRatio(aspectRatio)
     , m_orthoCameraEntity(Application::Get().GetOrthographicCameraEntity())
@@ -19,6 +21,8 @@ OrthographicCameraController::OrthographicCameraController(float aspectRatio)
 {
     events::Subscribe<events::WindowResizeEvent>(m_windowResizeCallback);
     events::Subscribe<events::MouseScrolledEvent>(m_mouseScrolledCallback);
+
+    isCustomCameraController = true;
 }
 
 void OrthographicCameraController::OnUpdate(float dt)

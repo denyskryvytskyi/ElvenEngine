@@ -15,6 +15,7 @@ private:
 public:
     void OnCreate() override;
     void OnUpdate(float dt) override;
+    void OnWindowResizeApp() override;
 
     void OnMenuState();
     void OnPlayState();

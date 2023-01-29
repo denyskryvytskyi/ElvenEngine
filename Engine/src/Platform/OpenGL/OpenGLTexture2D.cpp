@@ -11,16 +11,19 @@ OpenGLTexture2D::OpenGLTexture2D(std::uint32_t width, std::uint32_t height, std:
     if (nrChannels == 4) {
         m_internalFormat = GL_RGBA8;
         m_dataFormat = GL_RGBA;
-    } else {
+    } else if (nrChannels == 3) {
         m_internalFormat = GL_RGB8;
         m_dataFormat = GL_RGB;
+    } else { // for text textures
+        m_internalFormat = GL_R8;
+        m_dataFormat = GL_RED;
     }
 
     glCreateTextures(GL_TEXTURE_2D, 1, &m_id);
     glTextureStorage2D(m_id, 1, m_internalFormat, m_width, m_height);
 
-    glTextureParameteri(m_id, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTextureParameteri(m_id, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTextureParameteri(m_id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTextureParameteri(m_id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTextureParameteri(m_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTextureParameteri(m_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }

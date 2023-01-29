@@ -19,6 +19,7 @@ public:
     virtual void SetClearColor(const lia::vec4& color) = 0;
     virtual void Clear() = 0;
     virtual void EnableDepthTesting(bool enabled) = 0;
+    virtual void DisableByteAlignment() = 0;
 
     virtual void DrawIndexed(const SharedPtr<VertexArray>& vertexArray, std::uint32_t indexCount = 0) = 0;
 

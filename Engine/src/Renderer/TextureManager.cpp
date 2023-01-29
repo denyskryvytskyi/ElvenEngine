@@ -54,7 +54,7 @@ void TextureManager::Load(const std::string& textureName, std::string_view filen
     }
 }
 
-SharedPtr<Texture2D> TextureManager::Load(const std::string& textureName, std::uint32_t width, std::uint32_t height)
+SharedPtr<Texture2D> TextureManager::Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels)
 {
     // check whether we already loaded this texture
     auto it = m_textures.find(textureName);
@@ -62,7 +62,7 @@ SharedPtr<Texture2D> TextureManager::Load(const std::string& textureName, std::u
     if (it == m_textures.end()) {
         switch (Renderer::GetAPI()) {
         case RendererAPI::API::OpenGL: {
-            SharedPtr<Texture2D> texture = MakeSharedPtr<OpenGLTexture2D>(width, height);
+            SharedPtr<Texture2D> texture = MakeSharedPtr<OpenGLTexture2D>(width, height, nrChannels);
             m_textures.insert({ textureName, texture });
             return texture;
         }
@@ -109,7 +109,7 @@ void TextureManager::Shutdown()
 
 SharedPtr<Texture2D> TextureManager::Get(std::string_view textureName)
 {
-    auto it = m_textures.find(textureName);
+    auto it = m_textures.find(textureName.data());
     return it != m_textures.end() ? it->second : nullptr;
 }
 

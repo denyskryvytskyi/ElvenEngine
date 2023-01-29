@@ -13,9 +13,9 @@ public:
     void SetData(void* data, bool generateMipmap = true) override;
 
 private:
-    unsigned int m_id { 0 };
-    std::uint32_t m_width { 0 };
-    std::uint32_t m_height { 0 };
+    uint32_t m_id { 0 };
+    uint32_t m_width { 0 };
+    uint32_t m_height { 0 };
     unsigned int m_internalFormat { 0 };
     unsigned int m_dataFormat { 0 };
 };
