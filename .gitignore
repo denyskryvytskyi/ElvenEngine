@@ -32,7 +32,7 @@ bin-int/
 *.lai
 *.la
 *.a
-*.lib
+#*.lib
 
 # Executables
 *.exe
@@ -52,7 +52,7 @@ bin-int/
 
 ## Local 
 build/**/*
-lib/*
+#lib/*
 bin/*
 architecture_schemes/
 Tasks.txt
