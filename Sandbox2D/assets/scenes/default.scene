@@ -2,11 +2,11 @@
   "entities": [
     {},
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 0.0,
           "y": 0.0,
@@ -25,11 +25,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 0.0,
           "y": 13.0,
@@ -48,11 +48,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 0.0,
           "y": 26.0,
@@ -71,11 +71,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 0.0,
           "y": 39.0,
@@ -94,11 +94,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 0.0,
           "y": 52.0,
@@ -117,11 +117,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 0.0,
           "y": 65.0,
@@ -140,11 +140,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 0.0,
           "y": 78.0,
@@ -163,11 +163,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 0.0,
           "y": 91.0,
@@ -186,11 +186,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 0.0,
           "y": 104.0,
@@ -209,11 +209,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 0.0,
           "y": 117.0,
@@ -232,11 +232,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 13.0,
           "y": 0.0,
@@ -255,11 +255,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 13.0,
           "y": 13.0,
@@ -278,11 +278,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 13.0,
           "y": 26.0,
@@ -301,11 +301,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 13.0,
           "y": 39.0,
@@ -324,11 +324,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 13.0,
           "y": 52.0,
@@ -347,11 +347,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 13.0,
           "y": 65.0,
@@ -370,11 +370,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 13.0,
           "y": 78.0,
@@ -393,11 +393,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 13.0,
           "y": 91.0,
@@ -416,11 +416,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 13.0,
           "y": 104.0,
@@ -439,11 +439,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 13.0,
           "y": 117.0,
@@ -462,11 +462,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 26.0,
           "y": 0.0,
@@ -485,11 +485,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 26.0,
           "y": 13.0,
@@ -508,11 +508,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 26.0,
           "y": 26.0,
@@ -531,11 +531,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 26.0,
           "y": 39.0,
@@ -554,11 +554,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 26.0,
           "y": 52.0,
@@ -577,11 +577,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 26.0,
           "y": 65.0,
@@ -600,11 +600,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 26.0,
           "y": 78.0,
@@ -623,11 +623,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 26.0,
           "y": 91.0,
@@ -646,11 +646,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 26.0,
           "y": 104.0,
@@ -669,11 +669,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 26.0,
           "y": 117.0,
@@ -692,11 +692,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 39.0,
           "y": 0.0,
@@ -715,11 +715,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 39.0,
           "y": 13.0,
@@ -738,11 +738,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 39.0,
           "y": 26.0,
@@ -761,11 +761,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 39.0,
           "y": 39.0,
@@ -784,11 +784,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 39.0,
           "y": 52.0,
@@ -807,11 +807,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 39.0,
           "y": 65.0,
@@ -830,11 +830,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 39.0,
           "y": 78.0,
@@ -853,11 +853,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 39.0,
           "y": 91.0,
@@ -876,11 +876,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 39.0,
           "y": 104.0,
@@ -899,11 +899,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 39.0,
           "y": 117.0,
@@ -922,11 +922,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 52.0,
           "y": 0.0,
@@ -945,11 +945,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 52.0,
           "y": 13.0,
@@ -968,11 +968,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 52.0,
           "y": 26.0,
@@ -991,11 +991,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 52.0,
           "y": 39.0,
@@ -1014,11 +1014,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 52.0,
           "y": 52.0,
@@ -1037,11 +1037,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 52.0,
           "y": 65.0,
@@ -1060,11 +1060,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 52.0,
           "y": 78.0,
@@ -1083,11 +1083,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 52.0,
           "y": 91.0,
@@ -1106,11 +1106,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 52.0,
           "y": 104.0,
@@ -1129,11 +1129,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 52.0,
           "y": 117.0,
@@ -1152,11 +1152,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 65.0,
           "y": 0.0,
@@ -1175,11 +1175,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 65.0,
           "y": 13.0,
@@ -1198,11 +1198,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 65.0,
           "y": 26.0,
@@ -1221,11 +1221,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 65.0,
           "y": 39.0,
@@ -1244,11 +1244,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 65.0,
           "y": 52.0,
@@ -1267,11 +1267,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 65.0,
           "y": 65.0,
@@ -1290,11 +1290,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 65.0,
           "y": 78.0,
@@ -1313,11 +1313,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 65.0,
           "y": 91.0,
@@ -1336,11 +1336,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 65.0,
           "y": 104.0,
@@ -1359,11 +1359,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 65.0,
           "y": 117.0,
@@ -1382,11 +1382,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 78.0,
           "y": 0.0,
@@ -1405,11 +1405,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 78.0,
           "y": 13.0,
@@ -1428,11 +1428,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 78.0,
           "y": 26.0,
@@ -1451,11 +1451,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 78.0,
           "y": 39.0,
@@ -1474,11 +1474,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 78.0,
           "y": 52.0,
@@ -1497,11 +1497,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 78.0,
           "y": 65.0,
@@ -1520,11 +1520,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 78.0,
           "y": 78.0,
@@ -1543,11 +1543,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 78.0,
           "y": 91.0,
@@ -1566,11 +1566,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 78.0,
           "y": 104.0,
@@ -1589,11 +1589,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 78.0,
           "y": 117.0,
@@ -1612,11 +1612,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 91.0,
           "y": 0.0,
@@ -1635,11 +1635,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 91.0,
           "y": 13.0,
@@ -1658,11 +1658,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 91.0,
           "y": 26.0,
@@ -1681,11 +1681,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 91.0,
           "y": 39.0,
@@ -1704,11 +1704,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 91.0,
           "y": 52.0,
@@ -1727,11 +1727,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 91.0,
           "y": 65.0,
@@ -1750,11 +1750,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 91.0,
           "y": 78.0,
@@ -1773,11 +1773,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 91.0,
           "y": 91.0,
@@ -1796,11 +1796,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 91.0,
           "y": 104.0,
@@ -1819,11 +1819,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 91.0,
           "y": 117.0,
@@ -1842,11 +1842,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 104.0,
           "y": 0.0,
@@ -1865,11 +1865,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 104.0,
           "y": 13.0,
@@ -1888,11 +1888,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 104.0,
           "y": 26.0,
@@ -1911,11 +1911,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 104.0,
           "y": 39.0,
@@ -1934,11 +1934,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 104.0,
           "y": 52.0,
@@ -1957,11 +1957,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 104.0,
           "y": 65.0,
@@ -1980,11 +1980,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 104.0,
           "y": 78.0,
@@ -2003,11 +2003,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 104.0,
           "y": 91.0,
@@ -2026,11 +2026,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 104.0,
           "y": 104.0,
@@ -2049,11 +2049,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 104.0,
           "y": 117.0,
@@ -2072,11 +2072,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 117.0,
           "y": 0.0,
@@ -2095,11 +2095,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 117.0,
           "y": 13.0,
@@ -2118,11 +2118,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 117.0,
           "y": 26.0,
@@ -2141,11 +2141,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 117.0,
           "y": 39.0,
@@ -2164,11 +2164,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 117.0,
           "y": 52.0,
@@ -2187,11 +2187,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 117.0,
           "y": 65.0,
@@ -2210,11 +2210,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 117.0,
           "y": 78.0,
@@ -2233,11 +2233,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 117.0,
           "y": 91.0,
@@ -2256,11 +2256,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 117.0,
           "y": 104.0,
@@ -2279,11 +2279,11 @@
       }
     },
     {
-      "SpriteComponent": {
+      "Sprite": {
         "texture_name": "wizard_fire",
         "texture_path": "wizard_fire.png"
       },
-      "TransformComponent": {
+      "Transform": {
         "position": {
           "x": 117.0,
           "y": 117.0,
@@ -2302,5 +2302,5 @@
       }
     }
   ],
-  "name": "new_default"
+  "name": "default"
 }

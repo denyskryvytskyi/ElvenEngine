@@ -114,4 +114,29 @@ void SpriteComponent::LoadTexture()
         EL_CORE_WARN("Texture loading is failed. Please call SetTexture function first or set members using ctor.")
     }
 }
+
+void to_json(nlohmann::json& j, const RectTransformComponent& t)
+{
+    j["pos"] = t.pos;
+    j["scale"] = t.scale;
+}
+void from_json(const nlohmann::json& j, RectTransformComponent& t)
+{
+    j.at("position").get_to(t.pos);
+    j.at("scale").get_to(t.scale);
+}
+
+void to_json(nlohmann::json& j, const TextComponent& t)
+{
+    j["text"] = t.text;
+    j["color"] = t.color;
+    j["is_visible"] = t.isVisible;
+}
+void from_json(const nlohmann::json& j, TextComponent& t)
+{
+    j.at("text").get_to(t.text);
+    j.at("color").get_to(t.color);
+    j.at("is_visible").get_to(t.isVisible);
+}
+
 } // namespace elv

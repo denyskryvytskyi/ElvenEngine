@@ -55,24 +55,41 @@ void SceneSerializer::SaveScene(std::string_view sceneName)
 
 void SceneSerializer::LoadEntity(ecs::Entity entity, const nlohmann::json& jObj)
 {
-    auto transform = jObj.at("TransformComponent").get<TransformComponent>();
-    auto sprite = jObj.at("SpriteComponent").get<SpriteComponent>();
+    auto transform = jObj.at("Transform").get<TransformComponent>();
     m_pScene->AddComponent(entity, std::move(transform));
-    m_pScene->AddComponent(entity, std::move(sprite));
 
+    //
+    auto sprite = jObj.at("Sprite").get<SpriteComponent>();
+    m_pScene->AddComponent(entity, std::move(sprite));
     SpriteComponent& spriteComponentRef = m_pScene->GetComponent<SpriteComponent>(entity);
     spriteComponentRef.LoadTexture();
+
+    //
+    auto rectTransform = jObj.at("RectTransform").get<RectTransformComponent>();
+    m_pScene->AddComponent(entity, std::move(rectTransform));
+
+    //
+    auto text = jObj.at("TExt").get<TextComponent>();
+    m_pScene->AddComponent(entity, std::move(text));
 }
 
 void SceneSerializer::SaveEntity(ecs::Entity entity, nlohmann::json& jObj)
 {
     if (m_pScene->HasComponent<TransformComponent>(entity)) {
 
-        jObj["TransformComponent"] = m_pScene->GetComponent<TransformComponent>(entity);
+        jObj["Transform"] = m_pScene->GetComponent<TransformComponent>(entity);
     }
     if (m_pScene->HasComponent<SpriteComponent>(entity)) {
 
-        jObj["SpriteComponent"] = m_pScene->GetComponent<SpriteComponent>(entity);
+        jObj["Sprite"] = m_pScene->GetComponent<SpriteComponent>(entity);
+    }
+    if (m_pScene->HasComponent<RectTransformComponent>(entity)) {
+
+        jObj["RectTransform"] = m_pScene->GetComponent<RectTransformComponent>(entity);
+    }
+    if (m_pScene->HasComponent<TextComponent>(entity)) {
+
+        jObj["Text"] = m_pScene->GetComponent<TextComponent>(entity);
     }
 }
 

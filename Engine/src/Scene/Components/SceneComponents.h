@@ -126,6 +126,9 @@ public:
     lia::vec2 scale { 1.0f };
 };
 
+void to_json(nlohmann::json& j, const RectTransformComponent& t);
+void from_json(const nlohmann::json& j, RectTransformComponent& t);
+
 struct TextComponent {
     TextComponent() = default;
     TextComponent(std::string_view text_, const lia::vec4& color_ = { 1.0f })
@@ -138,4 +141,7 @@ public:
     lia::vec4 color { 1.0f };
     bool isVisible { true };
 };
+
+void to_json(nlohmann::json& j, const TextComponent& t);
+void from_json(const nlohmann::json& j, TextComponent& t);
 } // namespace elv
