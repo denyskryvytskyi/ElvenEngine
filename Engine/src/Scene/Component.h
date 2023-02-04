@@ -67,7 +67,7 @@ public:
             m_entities.emplace_back(entity);
             return m_components.back();
         } else {
-            EL_CORE_ASSERT(false, "There isn't component with such entity");
+            EL_CORE_ASSERT(false, "Entities limit reached for this component type");
         }
 
         return m_components.back();
@@ -80,7 +80,7 @@ public:
             m_components.emplace_back(std::move(component));
             m_entities.emplace_back(entity);
         } else {
-            EL_CORE_ASSERT(false, "There isn't component with such entity");
+            EL_CORE_ASSERT(false, "Entities limit reached for this component type");
         }
 
         return m_components.back();
@@ -93,9 +93,11 @@ public:
             const std::uint64_t componentIndex = it->second;
 
             if (componentIndex < m_components.size() - 1) {
-                m_components[componentIndex] = std::move(m_components.back()); // replace dead component with the last one
+                // replace dead component with the last one
+                m_components[componentIndex] = std::move(m_components.back());
+                m_entities[componentIndex] = std::move(m_entities.back());
 
-                Entity movedComponentEntityId = m_entities.back();
+                const Entity movedComponentEntityId = m_entities.back();
                 m_entityToComponentIndex[movedComponentEntityId] = componentIndex; // new mapping for moved component
             }
 
@@ -116,10 +118,7 @@ public:
     ComponentType& GetComponent(Entity entity)
     {
         auto it = m_entityToComponentIndex.find(entity);
-
-        if (it == m_entityToComponentIndex.end()) {
-            EL_CORE_ASSERT(false, "There isn't component with such entity");
-        }
+        EL_CORE_ASSERT(it != m_entityToComponentIndex.end(), "There isn't component with such entity");
 
         return m_components[it->second];
     }

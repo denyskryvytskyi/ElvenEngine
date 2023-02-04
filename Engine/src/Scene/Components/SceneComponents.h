@@ -9,15 +9,16 @@
 namespace elv {
 struct TransformComponent {
     TransformComponent() = default;
-    TransformComponent(const lia::vec3&& pos_, const lia::vec3&& scale_ = lia::vec3(), const lia::vec3&& rotation_ = lia::vec3())
+    TransformComponent(const lia::vec3& pos_, const lia::vec3& scale_ = { 1.0f }, const lia::vec3& rotation_ = { 0.0f })
         : pos(pos_)
         , scale(scale_)
         , rotation(rotation_)
     { }
 
-    lia::vec3 pos { 0.0f, 0.0f, 0.0f };
-    lia::vec3 scale { 1.0f, 1.0f, 1.0f };
-    lia::vec3 rotation { 0.0f, 0.0f, 0.0f };
+public:
+    lia::vec3 pos;
+    lia::vec3 scale { 1.0f };
+    lia::vec3 rotation;
 };
 void to_json(nlohmann::json& j, const TransformComponent& t);
 void from_json(const nlohmann::json& j, TransformComponent& t);
@@ -28,7 +29,7 @@ struct QuadComponent {
         : color(color_)
     { }
 
-    lia::vec4 color;
+    lia::vec4 color { 1.0f };
 };
 void to_json(nlohmann::json& j, const QuadComponent& t);
 void from_json(const nlohmann::json& j, QuadComponent& t);
@@ -77,18 +78,18 @@ void to_json(nlohmann::json& j, const SpriteComponent& t);
 void from_json(const nlohmann::json& j, SpriteComponent& t);
 
 struct BehaviorComponent {
-
-    ecs::IBehavior* behavior { nullptr };
-
-    ecs::IBehavior* (*InstantiateBehavior)();
-    void (*DestroyBehavior)(BehaviorComponent&);
-
     template<class BehaviorType>
     void Bind()
     {
         InstantiateBehavior = []() { return static_cast<ecs::IBehavior*>(new BehaviorType()); };
         DestroyBehavior = [](BehaviorComponent& component) { delete component.behavior; component.behavior = nullptr; };
     }
+
+public:
+    ecs::IBehavior* behavior { nullptr };
+
+    ecs::IBehavior* (*InstantiateBehavior)();
+    void (*DestroyBehavior)(BehaviorComponent&);
 };
 
 struct CameraComponent {
@@ -104,7 +105,37 @@ struct CameraComponent {
         : camera(left, right, bottom, top, near_, far_)
     { }
 
+public:
     Camera camera;
 };
 
+/**
+ * Transform component for UI
+ * Position is 2d coordinates maps to camera bounds.
+ * [0;0] is a left top position of the screen and [100;100] is the right bottom position
+ */
+struct RectTransformComponent {
+    RectTransformComponent() = default;
+    RectTransformComponent(const lia::vec2& pos_, const lia::vec2& scale_ = lia::vec2(1.0f))
+        : pos(pos_)
+        , scale(scale_)
+    { }
+
+public:
+    lia::vec2 pos;
+    lia::vec2 scale { 1.0f };
+};
+
+struct TextComponent {
+    TextComponent() = default;
+    TextComponent(std::string_view text_, const lia::vec4& color_ = { 1.0f })
+        : text(text_)
+        , color(color_)
+    { }
+
+public:
+    std::string text;
+    lia::vec4 color { 1.0f };
+    bool isVisible { true };
+};
 } // namespace elv

@@ -104,6 +104,24 @@ void TRON::OnCreate()
     auto& transformComponent = scene.AddComponent<elv::TransformComponent>(back_entity);
     transformComponent.scale = { 700.0f, 700.0f, 1.0f };
     scene.AddComponent<elv::SpriteComponent>(back_entity, "background", "background.png");
+
+    // text
+    m_startMenuText1Entity = scene.CreateEntity();
+    scene.AddComponent<elv::RectTransformComponent>(m_startMenuText1Entity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
+    scene.AddComponent<elv::TextComponent>(m_startMenuText1Entity, "Grid initialization...");
+    m_startMenuText2Entity = scene.CreateEntity();
+    scene.AddComponent<elv::RectTransformComponent>(m_startMenuText2Entity, lia::vec2(37.0f, 40.0f), lia::vec2(0.6f, 0.6f));
+    scene.AddComponent<elv::TextComponent>(m_startMenuText2Entity, "Press P to start the line");
+
+    m_gameOverTextEntity = scene.CreateEntity();
+    scene.AddComponent<elv::RectTransformComponent>(m_gameOverTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
+    auto& gameOverText = scene.AddComponent<elv::TextComponent>(m_gameOverTextEntity);
+    gameOverText.isVisible = false;
+
+    m_restartMenuTextEntity = scene.CreateEntity();
+    scene.AddComponent<elv::RectTransformComponent>(m_restartMenuTextEntity, lia::vec2(37.0f, 40.0f), lia::vec2(0.6f, 0.6f));
+    auto& restartText = scene.AddComponent<elv::TextComponent>(m_restartMenuTextEntity, "Press R to restart the line");
+    restartText.isVisible = false;
 }
 
 void TRON::OnUpdate(float dt)
@@ -123,30 +141,38 @@ void TRON::OnMenuState()
 {
     if (elv::Input::IsKeyPressed(elv::key::P)) {
         auto& scene = elv::GetScene();
+
+        // hide start menu
+        scene.DestroyEntity(m_startMenuText1Entity);
+        scene.DestroyEntity(m_startMenuText2Entity);
+
         auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
 
         // player 1
         auto player1 = scene.CreateEntity();
-        m_players[0] = player1;
+        m_players[0].entity = player1;
 
         scene.AddComponent<elv::BehaviorComponent>(player1).Bind<LightCycleBehavior>();
 
         auto& transformPlayer1 = scene.AddComponent<elv::TransformComponent>(player1);
-        transformPlayer1.pos = { cameraBounds.left + 20.0f, 0.0f, 0.0f };
+        transformPlayer1.pos = { cameraBounds.left + paddleStartPosOffset, 0.0f, 0.0f };
         transformPlayer1.scale = { segmentSize, segmentSize, 1.0f };
 
         auto& quadPlayer1 = scene.AddComponent<elv::QuadComponent>(player1);
         quadPlayer1.color = lightCycleColor;
         scene.AddComponent<LightCycleComponent>(player1);
 
+        scene.AddComponent<elv::RectTransformComponent>(player1, lia::vec2(0.0f));
+        scene.AddComponent<elv::TextComponent>(player1, "0", player1LineColor);
+
         // player 2
         auto player2 = scene.CreateEntity();
-        m_players[1] = player2;
+        m_players[1].entity = player2;
 
         scene.AddComponent<elv::BehaviorComponent>(player2).Bind<LightCycleBehavior>();
         auto& transformPlayer2 = scene.AddComponent<elv::TransformComponent>(player2);
 
-        transformPlayer2.pos = { cameraBounds.right - 20.0f, 0.0f, 0.0f };
+        transformPlayer2.pos = { cameraBounds.right - paddleStartPosOffset, 0.0f, 0.0f };
         transformPlayer2.scale = { segmentSize, segmentSize, 1.0f };
 
         auto& quad_player2 = scene.AddComponent<elv::QuadComponent>(player2);
@@ -160,6 +186,9 @@ void TRON::OnMenuState()
         lightcycleComponent.leftKey = elv::key::Left;
         lightcycleComponent.rightKey = elv::key::Right;
 
+        scene.AddComponent<elv::RectTransformComponent>(player2, lia::vec2(95.0f, 0.0f));
+        scene.AddComponent<elv::TextComponent>(player2, "0", player2LineColor);
+
         //
         m_gameState = GameState::Play;
     }
@@ -170,35 +199,34 @@ void TRON::OnPlayState()
     auto& scene = elv::GetScene();
 
     bool isGameOver = false;
-    // Check collisions
+    // check collisions
     for (size_t i = 0; i < 2; i++) {
-        auto playerEntity = m_players[i];
-        auto& playerTransform = scene.GetComponent<elv::TransformComponent>(playerEntity);
+        auto& playerTransform = scene.GetComponent<elv::TransformComponent>(m_players[i].entity);
 
-        // Check collion with boundaries
+        // check collion with boundaries
         auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
         if (playerTransform.pos.x <= cameraBounds.left || playerTransform.pos.x >= cameraBounds.right
             || playerTransform.pos.y >= cameraBounds.top || playerTransform.pos.y <= cameraBounds.bottom) {
-            if (isGameOver) { // there isn't a winner
-                m_winnerName = "";
-                break;
+            if (isGameOver) { // draw
+                m_winnerId = -1;
             } else {
                 isGameOver = true;
-                m_winnerName = i == 0 ? "Player 2" : "PLayer 1";
+                m_winnerId = i == 0 ? 1 : 0;
             }
+            break;
         }
 
-        // Check collision with lines
+        // check collision with lines
         for (auto segmentEntity : m_lineSegments) {
             auto& segmentTransform = scene.GetComponent<elv::TransformComponent>(segmentEntity);
             if (CheckCollision(playerTransform, segmentTransform)) {
-                if (isGameOver) { // there isn't a winner
-                    m_winnerName = "";
-                    break;
+                if (isGameOver) { // draw
+                    m_winnerId = -1;
                 } else {
                     isGameOver = true;
-                    m_winnerName = i == 0 ? "Player 2" : "PLayer 1";
+                    m_winnerId = i == 0 ? 1 : 0;
                 }
+                break;
             }
         }
     }
@@ -212,17 +240,23 @@ void TRON::OnGameOverState()
 {
     auto& scene = elv::GetScene();
 
-    // Remove redundant components from players
+    // remove redundant components from players
     for (auto player : m_players) {
-        scene.RemoveComponent<elv::BehaviorComponent>(player);
+        scene.RemoveComponent<elv::BehaviorComponent>(player.entity);
     }
 
-    if (m_winnerName.empty()) {
-        EL_INFO("DRAW");
+    std::string result;
+    if (m_winnerId != -1) {
+        ++m_players[m_winnerId].score;
+        scene.GetComponent<elv::TextComponent>(m_players[m_winnerId].entity).text = std::format("{}", m_players[m_winnerId].score);
+        result = std::format("Player {} win", m_winnerId + 1);
     } else {
-        EL_INFO("Player {0} win!", m_winnerName);
+        result = "End of line...";
     }
-    EL_INFO("Press R to restart or E to exit.");
+
+    scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).text = std::move(result);
+    scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).isVisible = true;
+    scene.GetComponent<elv::TextComponent>(m_restartMenuTextEntity).isVisible = true;
 
     m_gameState = GameState::RestartMenu;
 }
@@ -230,7 +264,13 @@ void TRON::OnGameOverState()
 void TRON::OnRestartMenuState()
 {
     if (elv::Input::IsKeyPressed(elv::key::R)) {
+        m_winnerId = -1; // reset winner
+
         auto& scene = elv::GetScene();
+
+        // hide text
+        scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).isVisible = false;
+        scene.GetComponent<elv::TextComponent>(m_restartMenuTextEntity).isVisible = false;
 
         // destroy lines
         for (auto segmentEntity : m_lineSegments) {
@@ -238,18 +278,20 @@ void TRON::OnRestartMenuState()
         }
         m_lineSegments.clear();
 
-        // Reset players
+        // reset players
         for (auto player : m_players) {
-            scene.AddComponent<elv::BehaviorComponent>(player).Bind<LightCycleBehavior>();
+            scene.AddComponent<elv::BehaviorComponent>(player.entity).Bind<LightCycleBehavior>();
         }
 
         auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
 
-        auto& player1Transform = scene.GetComponent<elv::TransformComponent>(m_players[0]);
+        auto& player1Transform = scene.GetComponent<elv::TransformComponent>(m_players[0].entity);
         player1Transform.pos.x = cameraBounds.left + paddleStartPosOffset;
+        player1Transform.pos.y = { 0.0f };
 
-        auto& player2Transform = scene.GetComponent<elv::TransformComponent>(m_players[1]);
+        auto& player2Transform = scene.GetComponent<elv::TransformComponent>(m_players[1].entity);
         player2Transform.pos.x = cameraBounds.right - paddleStartPosOffset;
+        player2Transform.pos.y = { 0.0f };
 
         m_gameState = GameState::Play;
     }

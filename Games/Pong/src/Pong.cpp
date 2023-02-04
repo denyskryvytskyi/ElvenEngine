@@ -13,12 +13,12 @@ const lia::vec3 paddleScale = { 10.0f, 40.0f, 1.0f };
 constexpr float paddleSizeXhalf = 5.0f;
 constexpr float paddleSizeYhalf = 20.0f;
 constexpr float paddleOffset = 10.0f;
+const lia::vec4 paddle1Color = { 0.9f, 0.7f, 0.0f, 1.0f };
+const lia::vec4 paddle2Color = { 0.3f, 0.1f, 0.9f, 1.0f };
 
 constexpr float ballSpeed = 100.0f;
 const lia::vec3 ballScale = { 7.0f, 7.0f, 1.0f };
-
-const lia::vec4 objColor = { 0.8f, 0.8f, 0.8f, 1.0f };
-
+const lia::vec4 ballColor = { 0.8f, 0.8f, 0.8f, 1.0f };
 } // namespace
 
 struct PaddleComponent {
@@ -76,6 +76,20 @@ void Pong::OnCreate()
     elv::Scene& scene = elv::GetScene();
     scene.RegisterComponent<PaddleComponent>();
     scene.RegisterComponent<BallComponent>();
+
+    m_startMenuTextEntity = scene.CreateEntity();
+    scene.AddComponent<elv::RectTransformComponent>(m_startMenuTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
+    scene.AddComponent<elv::TextComponent>(m_startMenuTextEntity, "Press P to start the game");
+
+    m_gameOverTextEntity = scene.CreateEntity();
+    scene.AddComponent<elv::RectTransformComponent>(m_gameOverTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
+    auto& gameOverText = scene.AddComponent<elv::TextComponent>(m_gameOverTextEntity);
+    gameOverText.isVisible = false;
+
+    m_restartMenuTextEntity = scene.CreateEntity();
+    scene.AddComponent<elv::RectTransformComponent>(m_restartMenuTextEntity, lia::vec2(37.0f, 40.0f), lia::vec2(0.6f, 0.6f));
+    auto& restartText = scene.AddComponent<elv::TextComponent>(m_restartMenuTextEntity, "Press R to start next round");
+    restartText.isVisible = false;
 }
 
 void Pong::OnUpdate(float dt)
@@ -93,15 +107,18 @@ void Pong::OnUpdate(float dt)
 
 void Pong::OnWindowResizeApp()
 {
-    elv::Scene& scene = elv::GetScene();
-    auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
+    if (m_gameState != GameState::Menu) {
 
-    // fix paddles positions
-    auto& player1Transform = scene.GetComponent<elv::TransformComponent>(m_players[0]);
-    player1Transform.pos.x = cameraBounds.left + paddleOffset;
+        elv::Scene& scene = elv::GetScene();
+        auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
 
-    auto& player2Transform = scene.GetComponent<elv::TransformComponent>(m_players[1]);
-    player2Transform.pos.x = cameraBounds.right - paddleOffset;
+        // fix paddles positions
+        auto& player1Transform = scene.GetComponent<elv::TransformComponent>(m_players[0].entity);
+        player1Transform.pos.x = cameraBounds.left + paddleOffset;
+
+        auto& player2Transform = scene.GetComponent<elv::TransformComponent>(m_players[1].entity);
+        player2Transform.pos.x = cameraBounds.right - paddleOffset;
+    }
 }
 
 void Pong::OnMenuState()
@@ -109,11 +126,14 @@ void Pong::OnMenuState()
     if (elv::Input::IsKeyPressed(elv::key::P)) {
         auto& scene = elv::GetScene();
 
+        // hide start menu
+        scene.DestroyEntity(m_startMenuTextEntity);
+
         auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
 
         // paddle 1
         auto player1 = scene.CreateEntity();
-        m_players[0] = player1;
+        m_players[0].entity = player1;
 
         scene.AddComponent<elv::BehaviorComponent>(player1).Bind<PaddleBehavior>();
 
@@ -121,17 +141,20 @@ void Pong::OnMenuState()
         transformPlayer1.pos = { cameraBounds.left + paddleOffset, 0.0f, 0.0f };
         transformPlayer1.scale = paddleScale;
 
-        auto& quad_player1 = scene.AddComponent<elv::QuadComponent>(player1);
-        quad_player1.color = objColor;
+        auto& quadPlayer1 = scene.AddComponent<elv::QuadComponent>(player1);
+        quadPlayer1.color = paddle1Color;
 
-        auto& paddle1 = scene.AddComponent<PaddleComponent>(player1);
+        auto& paddlePlayer1 = scene.AddComponent<PaddleComponent>(player1);
 
-        paddle1.topBoundPos = cameraBounds.top - paddleSizeYhalf;
-        paddle1.bottomBoundPos = cameraBounds.bottom + paddleSizeYhalf;
+        paddlePlayer1.topBoundPos = cameraBounds.top - paddleSizeYhalf;
+        paddlePlayer1.bottomBoundPos = cameraBounds.bottom + paddleSizeYhalf;
+
+        scene.AddComponent<elv::RectTransformComponent>(player1, lia::vec2(0.0f));
+        scene.AddComponent<elv::TextComponent>(player1, "0", paddle1Color);
 
         // paddle 2
         auto player2 = scene.CreateEntity();
-        m_players[1] = player2;
+        m_players[1].entity = player2;
 
         scene.AddComponent<elv::BehaviorComponent>(player2).Bind<PaddleBehavior>();
 
@@ -140,13 +163,16 @@ void Pong::OnMenuState()
         transform_player2.scale = paddleScale;
 
         auto& quad_player2 = scene.AddComponent<elv::QuadComponent>(player2);
-        quad_player2.color = objColor;
+        quad_player2.color = paddle2Color;
 
         auto& paddle2 = scene.AddComponent<PaddleComponent>(player2);
         paddle2.upKey = elv::key::Up;
         paddle2.downKey = elv::key::Down;
         paddle2.topBoundPos = cameraBounds.top - paddleSizeYhalf;
         paddle2.bottomBoundPos = cameraBounds.bottom + paddleSizeYhalf;
+
+        scene.AddComponent<elv::RectTransformComponent>(player2, lia::vec2(95.0f, 0.0f));
+        scene.AddComponent<elv::TextComponent>(player2, "0", paddle2Color);
 
         // ball
         m_ball = scene.CreateEntity();
@@ -158,7 +184,7 @@ void Pong::OnMenuState()
         ballTransform.scale = ballScale;
 
         auto& ballQuad = scene.AddComponent<elv::QuadComponent>(m_ball);
-        ballQuad.color = objColor;
+        ballQuad.color = ballColor;
 
         m_gameState = GameState::Play;
     }
@@ -172,13 +198,21 @@ void Pong::OnPlayState()
 
     auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
 
-    // Check collision with left/right borders
+    // Check collision with left/right borders to find winner
+    int16_t winnerId = -1;
     const float ballSizeHalf = ballTransform.scale.x * 0.5f;
     if (ballTransform.pos.x + ballSizeHalf >= cameraBounds.right) {
-        EL_INFO("PLAYER 1 WIN!");
-        m_gameState = GameState::GameOver;
+        winnerId = 0;
     } else if (ballTransform.pos.x - ballSizeHalf <= cameraBounds.left) {
-        EL_INFO("PLAYER 2 WIN!");
+        winnerId = 1;
+    }
+
+    if (winnerId != -1) {
+        ++m_players[winnerId].score;
+        scene.GetComponent<elv::TextComponent>(m_players[winnerId].entity).text = std::format("{}", m_players[winnerId].score);
+        scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).text = std::format("Player {} win", winnerId + 1);
+        scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).isVisible = true;
+        scene.GetComponent<elv::TextComponent>(m_restartMenuTextEntity).isVisible = true;
         m_gameState = GameState::GameOver;
     }
 
@@ -190,7 +224,7 @@ void Pong::OnPlayState()
     }
 
     // Check collision with paddle 1
-    auto& paddle1 = scene.GetComponent<elv::TransformComponent>(m_players[0]);
+    auto& paddle1 = scene.GetComponent<elv::TransformComponent>(m_players[0].entity);
 
     if (ballTransform.pos.x - ballSizeHalf <= paddle1.pos.x + paddleSizeXhalf
         && ballTransform.pos.y + ballSizeHalf > paddle1.pos.y - paddleSizeYhalf
@@ -204,7 +238,7 @@ void Pong::OnPlayState()
     }
 
     // Check collision with paddle 2
-    auto& paddle2 = scene.GetComponent<elv::TransformComponent>(m_players[1]);
+    auto& paddle2 = scene.GetComponent<elv::TransformComponent>(m_players[1].entity);
     if (ballTransform.pos.x + ballSizeHalf >= paddle2.pos.x - paddleSizeXhalf
         && ballTransform.pos.y + ballSizeHalf > paddle2.pos.y - paddleSizeYhalf
         && ballTransform.pos.y - ballSizeHalf < paddle2.pos.y + paddleSizeYhalf) {
@@ -223,17 +257,13 @@ void Pong::OnGameOverState()
 
     // Remove redundant components from players and reset transforms
     for (auto player : m_players) {
-        scene.RemoveComponent<elv::BehaviorComponent>(player);
-        auto& playerTransform = scene.GetComponent<elv::TransformComponent>(player);
+        scene.RemoveComponent<elv::BehaviorComponent>(player.entity);
+        auto& playerTransform = scene.GetComponent<elv::TransformComponent>(player.entity);
         playerTransform.pos.y = 0.0f;
     }
     scene.RemoveComponent<elv::BehaviorComponent>(m_ball);
     auto& ballTransform = scene.GetComponent<elv::TransformComponent>(m_ball);
     ballTransform.pos = { 0.0f, 0.0f, 0.0f };
-
-    EL_INFO("GAME OVER");
-    EL_INFO("Player {0} win!", m_winnerEntity);
-    EL_INFO("Press R to restart or E to exit.");
 
     m_gameState = GameState::RestartMenu;
 }
@@ -243,8 +273,13 @@ void Pong::OnRestartMenuState()
     if (elv::Input::IsKeyPressed(elv::key::R)) {
         auto& scene = elv::GetScene();
 
+        // hide text
+        scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).isVisible = false;
+        scene.GetComponent<elv::TextComponent>(m_restartMenuTextEntity).isVisible = false;
+
+        //
         for (auto player : m_players) {
-            scene.AddComponent<elv::BehaviorComponent>(player).Bind<PaddleBehavior>();
+            scene.AddComponent<elv::BehaviorComponent>(player.entity).Bind<PaddleBehavior>();
         }
         scene.AddComponent<elv::BehaviorComponent>(m_ball).Bind<BallBehavior>();
 

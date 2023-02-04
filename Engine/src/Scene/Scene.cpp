@@ -24,6 +24,8 @@ void Scene::OnInit()
     RegisterComponent<BehaviorComponent>();
     RegisterComponent<QuadComponent>();
     RegisterComponent<CameraComponent>();
+    RegisterComponent<TextComponent>();
+    RegisterComponent<RectTransformComponent>();
 
     // Engine systems register
     RegisterSystem<BehaviorSystem>();

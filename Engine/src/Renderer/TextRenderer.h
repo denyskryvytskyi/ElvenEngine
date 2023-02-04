@@ -17,7 +17,7 @@ public:
     /**
      * Render the text using the precompiles list of glyphs
      *
-     * @param pos Fixed position (RectTransform) on the screen according to camera bounds ([0;0] is a left bottom point of the screen and [100;100] is the right top point)
+     * @param pos Fixed position (RectTransform) on the screen according to camera bounds ([0;0] is a left top position of the screen and [100;100] is the right bottom position)
      *
      */
     static void RenderText(std::string_view text, const lia::vec2& pos, const lia::vec2& scale, lia::vec4 color = lia::vec4(1.0f));

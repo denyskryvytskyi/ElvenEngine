@@ -108,6 +108,7 @@ void Renderer2D::BeginScene(const Camera& camera)
     s_telemetry = { 0 };
 
     s_data.viewProjectionMat = camera.GetViewProjectionMatrix();
+    s_data.textures[0]->BindToUnit(0); // rebind white texture to unit 0
 
     StartBatch();
 }

@@ -58,7 +58,16 @@ void Render2dSystem::OnRender(float dt)
 
     // Text
     TextRenderer::PreRender(camera);
-    elv::TextRenderer::RenderText("Hello there! +-(!@#$%^&s*(-_dslgnp! I Did it :)", { 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f });
+    auto& textComponents = m_pScene->GetComponents<TextComponent>();
+    for (uint32_t i = 0; i < textComponents.size(); ++i) {
+        const ecs::Entity entity = m_pScene->GetEntity<TextComponent>(i);
+
+        auto& textComponent = textComponents[i];
+        if (textComponent.isVisible) {
+            auto& rectTransform = m_pScene->GetComponent<RectTransformComponent>(entity);
+            elv::TextRenderer::RenderText(textComponent.text, rectTransform.pos, rectTransform.scale, textComponent.color);
+        }
+    }
     //
 }
 } // namespace elv
