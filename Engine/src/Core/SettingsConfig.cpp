@@ -32,6 +32,7 @@ void SettingsConfig::LoadSettings()
         j.at("window_width").get_to(windowWidth);
         j.at("default_scene_name").get_to(defaultSceneName);
         j.at("load_default_scene").get_to(loadDefaultScene);
+        j.at("enable_editor").get_to(enableEditor);
         j.at("orthographic_camera_size").get_to(orthographicCameraSize);
     } catch (nlohmann::json_abi_v3_11_2::detail::out_of_range e) {
         EL_ERROR("Load settings config error: {}", e.what());
@@ -47,6 +48,7 @@ void SettingsConfig::SaveSettings()
     j["window_width"] = windowWidth;
     j["default_scene_name"] = defaultSceneName;
     j["load_default_scene"] = loadDefaultScene;
+    j["enable_editor"] = enableEditor;
     j["orthographic_camera_size"] = orthographicCameraSize;
 
     std::ofstream out(engineSettingsFile.data());

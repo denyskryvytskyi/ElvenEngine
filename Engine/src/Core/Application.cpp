@@ -89,10 +89,10 @@ void Application::Run()
 
         /// Update step ////////////////////
 
-        OnUpdate(elapsedTime);
-
         gTextureManager.OnUpdate();
         gSceneManager.Update(elapsedTime);
+
+        OnUpdate(elapsedTime);
 
         /////////////////////////////////////
 
@@ -104,10 +104,12 @@ void Application::Run()
         gSceneManager.Render(elapsedTime);
 
 #if EDITOR_MODE
-        // ImGui overlay rendering
-        m_imGuiOverlay.Begin();
-        m_imGuiOverlay.ImGuiRender();
-        m_imGuiOverlay.End();
+        if (gEngineSettings.enableEditor) {
+            // ImGui overlay rendering
+            m_imGuiOverlay.Begin();
+            m_imGuiOverlay.ImGuiRender();
+            m_imGuiOverlay.End();
+        }
 #endif
 
         // Window update

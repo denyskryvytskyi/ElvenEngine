@@ -7,7 +7,7 @@
 #include "Events/TextureEvent.h"
 #include "Platform/OpenGL/OpenGLTexture2D.h"
 
-#include "stb_image.h"
+#include <stb/stb_image.h>
 
 namespace elv {
 
@@ -25,7 +25,8 @@ static void LoadTextureFromFile(std::vector<TextureManager::LoadedTextureInfo>& 
     info.data = stbi_load(filepath.data(), &info.width, &info.height, &info.nrChannels, 0);
 
     if (info.data == nullptr) {
-        EL_CORE_ASSERT(false, "Failed to load texture!");
+        EL_CORE_CRITICAL("Failed to load texture: {0}", textureName);
+        return;
     }
 
     std::lock_guard<std::mutex> lock(texturesMutex);

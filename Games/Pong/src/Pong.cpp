@@ -8,15 +8,16 @@ elv::Application* elv::CreateApplication()
 }
 
 namespace {
-constexpr float paddleSpeed = 100.0f;
+constexpr float paddleSpeed = 150.0f;
 const lia::vec3 paddleScale = { 10.0f, 40.0f, 1.0f };
 constexpr float paddleSizeXhalf = 5.0f;
 constexpr float paddleSizeYhalf = 20.0f;
 constexpr float paddleOffset = 10.0f;
 const lia::vec4 paddle1Color = { 0.9f, 0.7f, 0.0f, 1.0f };
-const lia::vec4 paddle2Color = { 0.3f, 0.1f, 0.9f, 1.0f };
+const lia::vec4 paddle2Color = { 0.3f, 0.3f, 0.8f, 1.0f };
 
 constexpr float ballSpeed = 100.0f;
+constexpr float ballSpeedIncr = 15.0f;
 const lia::vec3 ballScale = { 7.0f, 7.0f, 1.0f };
 const lia::vec4 ballColor = { 0.8f, 0.8f, 0.8f, 1.0f };
 } // namespace
@@ -52,6 +53,7 @@ private:
 
 struct BallComponent {
     lia::vec3 velocity { 0.0f, 0.0f, 0.0f };
+    float speed = ballSpeed;
 };
 
 class BallBehavior : public elv::ecs::IBehavior {
@@ -67,7 +69,7 @@ class BallBehavior : public elv::ecs::IBehavior {
         elv::TransformComponent& tr = GetComponent<elv::TransformComponent>();
         BallComponent& ball = GetComponent<BallComponent>();
 
-        tr.pos += ball.velocity * ballSpeed * dt;
+        tr.pos += ball.velocity * ball.speed * dt;
     }
 };
 
@@ -214,13 +216,24 @@ void Pong::OnPlayState()
         scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).isVisible = true;
         scene.GetComponent<elv::TextComponent>(m_restartMenuTextEntity).isVisible = true;
         m_gameState = GameState::GameOver;
+        return;
     }
 
     // Check collion with top/bottom borders
-    else if (ballTransform.pos.y + ballSizeHalf >= cameraBounds.top || ballTransform.pos.y - ballSizeHalf <= cameraBounds.bottom) {
+    const bool isCollisionTop = ballTransform.pos.y + ballSizeHalf >= cameraBounds.top;
+    const bool isCollisionBottom = ballTransform.pos.y - ballSizeHalf <= cameraBounds.bottom;
+    if (isCollisionTop || isCollisionBottom) {
         // reverse Y velocity
         auto& ballComponent = scene.GetComponent<BallComponent>(m_ball);
         ballComponent.velocity.y = -ballComponent.velocity.y;
+        // penetration fix
+        if (isCollisionTop) {
+            const float penetration = ballSizeHalf - std::abs(cameraBounds.top - ballTransform.pos.y);
+            ballTransform.pos.y -= penetration;
+        } else {
+            const float penetration = ballSizeHalf - std::abs(cameraBounds.bottom - ballTransform.pos.y);
+            ballTransform.pos.y += penetration;
+        }
     }
 
     // Check collision with paddle 1
@@ -233,8 +246,12 @@ void Pong::OnPlayState()
         auto& ballComponent = scene.GetComponent<BallComponent>(m_ball);
         ballComponent.velocity.x = -ballComponent.velocity.x;
         // penetration fix
-        const float penetration = std::abs(ballSizeHalf - (ballTransform.pos.x - (paddle1.pos.x + paddleSizeXhalf)));
+        const float penetration = ballSizeHalf - std::abs((ballTransform.pos.x - (paddle1.pos.x + paddleSizeXhalf)));
         ballTransform.pos.x += penetration;
+
+        // change ball color to paddle one
+        scene.GetComponent<elv::QuadComponent>(m_ball).color = paddle1Color;
+        scene.GetComponent<BallComponent>(m_ball).speed += ballSpeedIncr;
     }
 
     // Check collision with paddle 2
@@ -246,8 +263,12 @@ void Pong::OnPlayState()
         auto& ballComponent = scene.GetComponent<BallComponent>(m_ball);
         ballComponent.velocity.x = -ballComponent.velocity.x;
         // penetration fix
-        const float penetration = std::abs(ballSizeHalf - ((paddle2.pos.x - paddleSizeXhalf) - ballTransform.pos.x));
+        const float penetration = ballSizeHalf - std::abs(((paddle2.pos.x - paddleSizeXhalf) - ballTransform.pos.x));
         ballTransform.pos.x -= penetration;
+
+        // change ball color to paddle one
+        scene.GetComponent<elv::QuadComponent>(m_ball).color = paddle2Color;
+        scene.GetComponent<BallComponent>(m_ball).speed += ballSpeedIncr;
     }
 }
 
@@ -264,6 +285,7 @@ void Pong::OnGameOverState()
     scene.RemoveComponent<elv::BehaviorComponent>(m_ball);
     auto& ballTransform = scene.GetComponent<elv::TransformComponent>(m_ball);
     ballTransform.pos = { 0.0f, 0.0f, 0.0f };
+    scene.GetComponent<elv::QuadComponent>(m_ball).color = ballColor;
 
     m_gameState = GameState::RestartMenu;
 }
@@ -282,6 +304,7 @@ void Pong::OnRestartMenuState()
             scene.AddComponent<elv::BehaviorComponent>(player.entity).Bind<PaddleBehavior>();
         }
         scene.AddComponent<elv::BehaviorComponent>(m_ball).Bind<BallBehavior>();
+        scene.GetComponent<BallComponent>(m_ball).speed = ballSpeed;
 
         m_gameState = GameState::Play;
     }

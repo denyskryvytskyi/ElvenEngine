@@ -88,7 +88,7 @@ private:
 
 private:
     lia::vec3 m_velocity { 1.0f, 0.0f, 0.0f };
-    float m_speedMs { 10.0f }; // ms to generate next segment
+    float m_speedMs { 16.0f }; // ms to generate next segment
     elv::Timer timer;
 
     LightCycleComponent m_lightcycle;

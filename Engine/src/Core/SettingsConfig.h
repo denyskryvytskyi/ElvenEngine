@@ -12,6 +12,7 @@ public:
     uint16_t windowWidth { 1280 };
     std::string defaultSceneName { "default" };
     bool loadDefaultScene { false };
+    bool enableEditor { false };
 
     // orthographic camera
     float orthographicCameraSize { 100 };

@@ -8,11 +8,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
-set(GLOBAL PROPERTY USE_FOLDERS ON)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 option(BUILD_SANDBOX "build sandbox projects" ON)
-option(BUILD_GAMES "build games" OFF)
-option(EDITOR_MODE "Enable ImGUI editor overlay" OFF)
+option(BUILD_GAMES "build games" ON)
+option(EDITOR_MODE "Enable ImGUI editor overlay" ON)
 
 if(WIN32)
     add_compile_definitions(

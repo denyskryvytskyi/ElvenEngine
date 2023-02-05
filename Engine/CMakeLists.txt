@@ -120,36 +120,24 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ENGINE_SOURCES})
 # path to dependencies
 set(VENDOR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
 
-# third-party libs paths
-set(glfw ${VENDOR_PATH}/GLFW)
-set(glad ${VENDOR_PATH}/GLAD)
-set(spdlog ${VENDOR_PATH}/spdlog)
-set(lia ${VENDOR_PATH}/lia)
-set(stb_image ${VENDOR_PATH}/stb_image)
-set(json ${VENDOR_PATH}/json)
-set(freetype ${VENDOR_PATH}/freetype)
-if (EDITOR_MODE)
-    set(imgui ${VENDOR_PATH}/imgui)
-endif()
-
 # include dirs
 set(ENGINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 set(ENGINE_INCLUDE_DIRS
 ${ENGINE_SOURCE_DIR}
-${glad}/include
-${glfw}/include
-${lia}/lia
-${spdlog}/include
-${stb_image}/include
-${json}/include
-${freetype}/include
+${VENDOR_PATH}/GLAD/include
+${VENDOR_PATH}/GLFW/include
+${VENDOR_PATH}/lia
+${VENDOR_PATH}/spdlog/include
+${VENDOR_PATH}/stb/include
+${VENDOR_PATH}/json/include
+${VENDOR_PATH}/freetype/include
 )
 
 if (EDITOR_MODE)
     set(ENGINE_INCLUDE_DIRS
-    ${ENGINE_INCLUDE_DIRS}
-    ${imgui}/include
+        ${ENGINE_INCLUDE_DIRS}
+        ${VENDOR_PATH}/imgui/include
     )
 endif()
 
@@ -157,40 +145,44 @@ target_include_directories(${LIBRARY_NAME}
     PUBLIC ${ENGINE_INCLUDE_DIRS}
 )
 
-# link dependencies
-add_subdirectory(${VENDOR_PATH}/GLFW)
-set_target_properties(glfw PROPERTIES FOLDER "Libs")
-add_subdirectory(${VENDOR_PATH}/GLAD)
-set_target_properties(glad PROPERTIES FOLDER "Libs")
-add_subdirectory(${VENDOR_PATH}/spdlog)
-set_target_properties(spdlog PROPERTIES FOLDER "Libs")
-add_subdirectory(${VENDOR_PATH}/lia)
-set_target_properties(lia PROPERTIES FOLDER "Libs")
-add_subdirectory(${VENDOR_PATH}/stb)
-set_target_properties(stb PROPERTIES FOLDER "Libs")
 if (EDITOR_MODE)
     add_subdirectory(${VENDOR_PATH}/imgui)
     set_target_properties(imgui PROPERTIES FOLDER "Libs")
 endif()
 
-set(STATIC_THIRD_PARTY_LIBRARIES
-glfw
-glad
-lia
-spdlog
-stb
-)
-
 if (EDITOR_MODE)
     set(STATIC_THIRD_PARTY_LIBRARIES
-    ${STATIC_THIRD_PARTY_LIBRARIES}
-    imgui
+        imgui
     )
 endif()
 
-target_link_libraries(${LIBRARY_NAME} ${STATIC_THIRD_PARTY_LIBRARIES}
-        debug  ${freetype}/lib/freetyped.lib
-        optimized ${freetype}/lib/freetype.lib)
+set(VENDOR_PATH_DEBUG ${CMAKE_SOURCE_DIR}/build_vendor/lib/Debug/)
+set(VENDOR_PATH_RELEASE ${CMAKE_SOURCE_DIR}/build_vendor/lib/Release/)
+
+find_library(glfw_d NAMES glfw3 PATHS ${CMAKE_SOURCE_DIR}/build_vendor/lib/Debug/)
+find_library(glad_d NAMES glad PATHS ${CMAKE_SOURCE_DIR}/build_vendor/lib/Debug/)
+find_library(spdlog_d NAMES spdlogd PATHS ${CMAKE_SOURCE_DIR}/build_vendor/lib/Debug/)
+find_library(lia_d NAMES lia PATHS ${CMAKE_SOURCE_DIR}/build_vendor/lib/Debug/)
+find_library(stb_d NAMES stb PATHS ${CMAKE_SOURCE_DIR}/build_vendor/lib/Debug/)
+find_library(freetype_d NAMES freetyped PATHS ${CMAKE_SOURCE_DIR}/build_vendor/lib/Debug/)
+
+find_library(glad NAMES glad PATHS ${CMAKE_SOURCE_DIR}/build_vendor/lib/Release/)
+find_library(glfw NAMES glfw3 PATHS ${CMAKE_SOURCE_DIR}/build_vendor/lib/Release/)
+find_library(spdlog NAMES spdlog PATHS ${CMAKE_SOURCE_DIR}/build_vendor/lib/Release/)
+find_library(lia NAMES lia PATHS ${CMAKE_SOURCE_DIR}/build_vendor/lib/Release/)
+find_library(stb NAMES stb PATHS ${CMAKE_SOURCE_DIR}/build_vendor/lib/Release/)
+find_library(freetype NAMES freetype PATHS ${CMAKE_SOURCE_DIR}/build_vendor/lib/Release/)
+
+set(VENDOR
+debug ${glfw_d} optimized ${glfw}
+debug ${glad_d} optimized ${glad}
+debug ${spdlog_d} optimized ${spdlog}
+debug ${lia_d} optimized ${lia}
+debug ${stb_d} optimized ${stb}
+debug ${freetype_d} optimized ${freetype}
+)
+
+target_link_libraries(${LIBRARY_NAME} ${STATIC_THIRD_PARTY_LIBRARIES} ${VENDOR})
 
 # pch header file path
 set(ENGINE_PRECOMPILED_HEADERS

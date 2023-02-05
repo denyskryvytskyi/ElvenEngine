@@ -41,7 +41,7 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnCreate()
 {
-    if (!elv::gEngineSettings.loadDefaultScene) {
+    if (false && !elv::gEngineSettings.loadDefaultScene) {
         elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, elv::string_id("wizard"));
         elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, elv::string_id("wizard_fire"));
         elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, elv::string_id("wizard_ice"));
@@ -57,29 +57,29 @@ void Sandbox2D::OnCreate()
         }
     }
 
-    return;
-    //  another test scene
+    // return;
+    //   another test scene
     elv::Scene& scene = elv::GetScene();
 
     const elv::ecs::Entity back_entity = scene.CreateEntity();
     auto& back_sprite = scene.AddComponent<elv::SpriteComponent>(back_entity);
-    back_sprite.SetTexture("battleground2", "Battleground2.png");
+    back_sprite.SetTexture("battleground", "Battleground.png");
     auto& back_transform = scene.AddComponent<elv::TransformComponent>(back_entity);
     back_transform.scale = { 384.0f, 216.0f, 1.0f };
 
     const elv::ecs::Entity skeleton_entity = scene.CreateEntity();
     auto& skeleton_sprite = scene.AddComponent<elv::SpriteComponent>(skeleton_entity);
-    skeleton_sprite.SetTexture("protect", "Protect.png");
+    skeleton_sprite.SetTexture("skeleton", "Attack_3.png");
     auto& skeleton_transform = scene.AddComponent<elv::TransformComponent>(skeleton_entity);
-    skeleton_transform.scale = { 100.0f, 100.0f, 1.0f };
-    skeleton_transform.pos = { 0.0f, -25.0f, 0.0f };
+    skeleton_transform.scale = { 400.0f, 100.0f, 1.0f };
+    skeleton_transform.pos = { 50.0f, -25.0f, 0.0f };
 
     const elv::ecs::Entity magic_entity = scene.CreateEntity();
     auto& magic_sprite = scene.AddComponent<elv::SpriteComponent>(magic_entity);
-    magic_sprite.SetTexture("magic_sphere", "Magic_sphere.png");
+    magic_sprite.SetTexture("wizard", "Attack_1.png");
     auto& magic_transform = scene.AddComponent<elv::TransformComponent>(magic_entity);
-    magic_transform.scale = { 1600.0f, 100.0f, 1.0f };
-    magic_transform.pos = { 0.0, -25.0f, 0.0f };
+    magic_transform.scale = { 700.0f, 100.0f, 1.0f };
+    magic_transform.pos = { -50.0f, -25.0f, 0.0f };
 }
 
 void Sandbox2D::OnUpdate(float dt)
@@ -103,8 +103,8 @@ void Sandbox2D::OnTextureLoaded(const elv::events::TextureLoadedEvent& e)
 
         const elv::SharedPtr<elv::Texture2D> texture = elv::textures::Get("wizard_fire");
 
-        for (size_t i = 0; i < 100; ++i) {
-            for (size_t j = 0; j < 100; ++j) {
+        for (size_t i = 0; i < 10; ++i) {
+            for (size_t j = 0; j < 10; ++j) {
                 const elv::ecs::Entity entityQuad = scene.CreateEntity();
 
                 auto& transform = scene.AddComponent<elv::TransformComponent>(

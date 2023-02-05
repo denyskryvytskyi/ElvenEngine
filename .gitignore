@@ -1,6 +1,7 @@
 # Directories
 **/bin/
 bin-int/
+build_vendor/
 
 # Elven engine files
 *.log
