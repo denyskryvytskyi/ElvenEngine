@@ -26,18 +26,8 @@ jobs:
 
     - name: Build vendor
       run: cmake --build ${{github.workspace}}\build_vendor --config ${{ matrix.type }}
-      
-    - name: Check vendor
-      run:  |
-        cd ${{github.workspace}}\build_vendor
-        dir
-        cd lib/${{ matrix.type }}
-        dir
-      
-    # engine and projects      
-    - name: Go to root
-      run: cd ${{github.workspace}}
-      
+
+    # engine and projects
     - name: Configure engine and projects
       run: cmake -B ${{github.workspace}}/build
 

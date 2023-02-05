@@ -15,6 +15,4 @@ add_subdirectory(GLAD)
 add_subdirectory(GLFW)
 add_subdirectory(spdlog)
 add_subdirectory(stb)
-
-
 add_subdirectory(freetype)
