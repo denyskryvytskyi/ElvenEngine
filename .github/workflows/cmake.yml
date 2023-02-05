@@ -21,13 +21,19 @@ jobs:
           submodules: true
 
     # third-party
+    - name: Go to vendor root
+      run: cd ${{github.workspace}}\Engine\vendor
+      
     - name: Configure vendor
-      run: cmake -B ${{github.workspace}}/build_vendor -A x64 -DCMAKE_BUILD_TYPE=${{ matrix.type }} -DFT_DISABLE_ZLIB=ON -DFT_DISABLE_BZIP2=ON -DFT_DISABLE_PNG=ON -DFT_DISABLE_HARFBUZZ=ON -DFT_DISABLE_BROTLI=ON
+      run: cmake -B ${{github.workspace}}\build_vendor -A x64 -DCMAKE_BUILD_TYPE=${{ matrix.type }} -DFT_DISABLE_ZLIB=ON -DFT_DISABLE_BZIP2=ON -DFT_DISABLE_PNG=ON -DFT_DISABLE_HARFBUZZ=ON -DFT_DISABLE_BROTLI=ON
 
     - name: Build vendor
-      run: call cmake --build ${{github.workspace}}/build_vendor --config ${{ matrix.type }}
+      run: call cmake --build ${{github.workspace}}\build_vendor --config ${{ matrix.type }}
 
     # engine and projects
+    - name: Go to the project root
+      run: cd ${{github.workspace}}
+      
     - name: Configure engine and projects
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{ matrix.type }}
 
