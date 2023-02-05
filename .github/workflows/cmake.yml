@@ -29,10 +29,12 @@ jobs:
       
     - name: Check vendor
       run: cd ${{github.workspace}}\build_vendor
-       dir 
-       cd lib
-       dir
-         
+    - name: Check vendor 2
+      run: dir
+    - name: Check vendor 3
+      run: cd lib/Debug
+    - name: Check vendor 4
+      run: dir
 
     # engine and projects      
     - name: Go to root
