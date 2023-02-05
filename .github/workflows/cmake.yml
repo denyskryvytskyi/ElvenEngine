@@ -31,7 +31,7 @@ jobs:
       run:  |
         cd ${{github.workspace}}\build_vendor
         dir
-        cd lib/Debug
+        cd lib/${{ matrix.type }}
         dir
       
     # engine and projects      
