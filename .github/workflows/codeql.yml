@@ -39,6 +39,12 @@ jobs:
         cmake --build ${{github.workspace}}\build_vendor --config Debug
         cmake --build ${{github.workspace}}\build_vendor --config Release
 
+    # CodeQL init
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+        
     # build engine and projects
     - name: Configure engine and projects
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
@@ -46,7 +52,7 @@ jobs:
     - name: Build engine and projects
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    # codeql
+    # CodeQL analyze
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
       with:
