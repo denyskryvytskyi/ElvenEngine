@@ -28,14 +28,12 @@ jobs:
       run: cmake --build ${{github.workspace}}\build_vendor --config ${{ matrix.type }}
       
     - name: Check vendor
-      run: cd ${{github.workspace}}\build_vendor
-    - name: Check vendor 2
-      run: dir
-    - name: Check vendor 3
-      run: cd lib/Debug
-    - name: Check vendor 4
-      run: dir
-
+      run:  |
+        cd ${{github.workspace}}\build_vendor
+        dir
+        cd lib/Debug
+        dir
+      
     # engine and projects      
     - name: Go to root
       run: cd ${{github.workspace}}
