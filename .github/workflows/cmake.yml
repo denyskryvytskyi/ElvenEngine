@@ -25,6 +25,7 @@ jobs:
 
   # build engine and projects
   build:
+    needs: build-vendor
     name: Build ${{ matrix.type }} version for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
