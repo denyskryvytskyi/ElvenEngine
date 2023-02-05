@@ -156,8 +156,8 @@ if (EDITOR_MODE)
     )
 endif()
 
-set(VENDOR_PATH_DEBUG ${PROJECT_SOURCE_DIR}/build_vendor/lib/Debug/)
-set(VENDOR_PATH_RELEASE ${PROJECT_SOURCE_DIR}/build_vendor/lib/Release/)
+set(VENDOR_PATH_DEBUG ${PROJECT_SOURCE_DIR}/build_vendor/lib/Debug/ NO_DEFAULT_PATH)
+set(VENDOR_PATH_RELEASE ${PROJECT_SOURCE_DIR}/build_vendor/lib/Release/ NO_DEFAULT_PATH)
 
 message(${VENDOR_PATH_DEBUG})
 message(${VENDOR_PATH_RELEASE})
