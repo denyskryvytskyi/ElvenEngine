@@ -30,7 +30,9 @@ jobs:
       run: cmake -S  ${{github.workspace}}\Engine\vendor -B ${{github.workspace}}\build_vendor -A x64 -DFT_DISABLE_ZLIB=ON -DFT_DISABLE_BZIP2=ON -DFT_DISABLE_PNG=ON -DFT_DISABLE_HARFBUZZ=ON -DFT_DISABLE_BROTLI=ON
 
     - name: Build vendor
-      run: cmake --build ${{github.workspace}}\build_vendor --config ${{ matrix.type }}
+      run: |
+        cmake --build ${{github.workspace}}\build_vendor --config Debug
+        cmake --build ${{github.workspace}}\build_vendor --config Release
 
   analyze:
     needs: build-vendor
