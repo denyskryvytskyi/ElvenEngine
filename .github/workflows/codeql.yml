@@ -38,10 +38,10 @@ jobs:
 
     # third-party
     - name: Configure vendor
-      run: cmake -B ${{github.workspace}}/build_vendor -A x64 -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DFT_DISABLE_ZLIB=ON -DFT_DISABLE_BZIP2=ON -DFT_DISABLE_PNG=ON -DFT_DISABLE_HARFBUZZ=ON -DFT_DISABLE_BROTLI=ON
+      run: cmake -S ${{github.workspace}}\Engine\vendor -B ${{github.workspace}}/build_vendor -A x64 -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DFT_DISABLE_ZLIB=ON -DFT_DISABLE_BZIP2=ON -DFT_DISABLE_PNG=ON -DFT_DISABLE_HARFBUZZ=ON -DFT_DISABLE_BROTLI=ON
 
     - name: Build vendor
-      run: call cmake --build ${{github.workspace}}/build_vendor --config ${{env.BUILD_TYPE}}
+      run: cmake --build ${{github.workspace}}/build_vendor --config ${{env.BUILD_TYPE}}
 
     # engine and projects
     - name: Configure engine and projects
