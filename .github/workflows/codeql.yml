@@ -12,28 +12,6 @@ env:
   BUILD_TYPE: Debug
 
 jobs:
-  # build vendor libraries
-  build-vendor:
-    name: Build ${{ matrix.type }} version for ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        type: ['Debug', 'Release']
-        os: [windows-latest]
-
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        submodules: true
-
-    - name: Configure vendor
-      run: cmake -S  ${{github.workspace}}\Engine\vendor -B ${{github.workspace}}\build_vendor -A x64 -DFT_DISABLE_ZLIB=ON -DFT_DISABLE_BZIP2=ON -DFT_DISABLE_PNG=ON -DFT_DISABLE_HARFBUZZ=ON -DFT_DISABLE_BROTLI=ON
-
-    - name: Build vendor
-      run: |
-        cmake --build ${{github.workspace}}\build_vendor --config Debug
-        cmake --build ${{github.workspace}}\build_vendor --config Release
-
   analyze:
     needs: build-vendor
     name: Analyze
@@ -50,6 +28,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+          submodules: true
+
+    # third-party
+    - name: Configure vendor
+      run: cmake -S  ${{github.workspace}}\Engine\vendor -B ${{github.workspace}}\build_vendor -A x64 -DFT_DISABLE_ZLIB=ON -DFT_DISABLE_BZIP2=ON -DFT_DISABLE_PNG=ON -DFT_DISABLE_HARFBUZZ=ON -DFT_DISABLE_BROTLI=ON
+
+    - name: Build vendor
+      run: |
+        cmake --build ${{github.workspace}}\build_vendor --config Debug
+        cmake --build ${{github.workspace}}\build_vendor --config Release
 
     # build engine and projects
     - name: Configure engine and projects
