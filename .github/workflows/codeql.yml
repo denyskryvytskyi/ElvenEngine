@@ -13,7 +13,6 @@ env:
 
 jobs:
   analyze:
-    needs: build-vendor
     name: Analyze
     runs-on: windows-latest
     permissions:
