@@ -47,6 +47,8 @@ jobs:
         language: [ 'cpp' ]
 
     steps:
+    - uses: actions/checkout@v3
+
     # build engine and projects
     - name: Configure engine and projects
       run: cmake -B ${{github.workspace}}/build
