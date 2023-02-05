@@ -11,9 +11,9 @@ jobs:
     name: Build ${{ matrix.type }} version for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
-    matrix:
-      type: ['Debug', 'Release']
-      os: [windows-latest]
+      matrix:
+        type: ['Debug', 'Release']
+        os: [windows-latest]
 
     steps:
     - uses: actions/checkout@v3
