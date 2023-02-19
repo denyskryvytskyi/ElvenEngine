@@ -22,9 +22,7 @@ jobs:
 
     # third-party
     - name: Configure vendor
-      run: |
-        cmake -S  ${{github.workspace}}\Engine\vendor -B ${{github.workspace}}\build_vendor -A x64 -DFT_DISABLE_ZLIB=ON -DFT_DISABLE_BZIP2=ON -DFT_DISABLE_PNG=ON -DFT_DISABLE_HARFBUZZ=ON -DFT_DISABLE_BROTLI=ON
-        xcopy ${{github.workspace}}\Engine\vendor\irrklang\bin\win\ ${{github.workspace}}\build_vendor\irrklang\win\
+      run: cmake -S  ${{github.workspace}}\Engine\vendor -B ${{github.workspace}}\build_vendor -A x64 -DFT_DISABLE_ZLIB=ON -DFT_DISABLE_BZIP2=ON -DFT_DISABLE_PNG=ON -DFT_DISABLE_HARFBUZZ=ON -DFT_DISABLE_BROTLI=ON
 
     - name: Build vendor
       run: |

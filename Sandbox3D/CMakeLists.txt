@@ -32,19 +32,19 @@ target_compile_definitions(${APP_NAME} PRIVATE
 )
 
 if(WIN32)
-  set(IRRKLANG_BIN_PATH ${PROJECT_SOURCE_DIR}/build_vendor/irrklang/win/)
+  set(IRRKLANG_BIN_PATH ${PROJECT_SOURCE_DIR}/Engine/vendor/irrklang/bin/win/)
 
   add_custom_command(TARGET ${APP_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
-    ${IRRKLANG_BIN_PATH}/irrKlang.dll
+    ${IRRKLANG_BIN_PATH}irrKlang.dll
     ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/irrKlang.dll
 
     COMMAND ${CMAKE_COMMAND} -E copy
-    ${IRRKLANG_BIN_PATH}/ikpMP3.dll
+    ${IRRKLANG_BIN_PATH}ikpMP3.dll
     ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/ikpMP3.dll
 
     COMMAND ${CMAKE_COMMAND} -E copy
-    ${IRRKLANG_BIN_PATH}/ikpFlac.dll
+    ${IRRKLANG_BIN_PATH}ikpFlac.dll
     ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/ikpFlac.dll)
 else()
   message("This is not supported platform for now!")
