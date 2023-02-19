@@ -1,6 +1,5 @@
 # Directories
-**/bin/
-bin-int/
+build/
 build_vendor/
 
 # Elven engine files
@@ -22,8 +21,10 @@ build_vendor/
 
 # Compiled Dynamic libraries
 *.so
+!/Engine/vendor/irrklang/bin/linux/*.so
 *.dylib
 *.dll
+!/Engine/vendor/irrklang/bin/win/*.dll
 
 # Fortran module files
 *.mod
