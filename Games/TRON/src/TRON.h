@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Core/Application.h>
+#include <Events/KeyEvent.h>
 #include <Scene/Entity.h>
 
 class TRON : public elv::Application {
@@ -13,18 +14,21 @@ private:
     enum class GameState {
         Menu,
         Play,
-        GameOver,
-        RestartMenu
+        Pause,
+        GameOver
     };
 
 public:
     void OnCreate() override;
     void OnUpdate(float dt) override;
 
-    void OnMenuState();
-    void OnPlayState();
-    void OnGameOverState();
-    void OnRestartMenuState();
+    void OnPlay();
+    void OnGameOver();
+    void OnPause();
+    void OnStartGame();
+    void OnRestart();
+
+    void OnKeyPressedEvent(const elv::events::KeyPressedEvent& e);
 
 private:
     Player m_players[2];
@@ -34,6 +38,9 @@ private:
     // text
     elv::ecs::Entity m_startMenuText1Entity { elv::ecs::INVALID_ENTITY_ID };
     elv::ecs::Entity m_startMenuText2Entity { elv::ecs::INVALID_ENTITY_ID };
+    elv::ecs::Entity m_startMenuText3Entity { elv::ecs::INVALID_ENTITY_ID };
     elv::ecs::Entity m_gameOverTextEntity { elv::ecs::INVALID_ENTITY_ID };
     elv::ecs::Entity m_restartMenuTextEntity { elv::ecs::INVALID_ENTITY_ID };
+    elv::ecs::Entity m_pauseMenuTextEntity { elv::ecs::INVALID_ENTITY_ID };
+    elv::ecs::Entity m_quitMenuTextEntity { elv::ecs::INVALID_ENTITY_ID };
 };

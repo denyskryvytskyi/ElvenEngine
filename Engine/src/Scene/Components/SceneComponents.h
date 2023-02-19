@@ -81,15 +81,23 @@ struct BehaviorComponent {
     template<class BehaviorType>
     void Bind()
     {
-        InstantiateBehavior = []() { return static_cast<ecs::IBehavior*>(new BehaviorType()); };
-        DestroyBehavior = [](BehaviorComponent& component) { delete component.behavior; component.behavior = nullptr; };
+        instantiateBehavior = []() { return MakeUniquePtr<BehaviorType>(); };
+    }
+
+    void Enable()
+    {
+        isEnabled = true;
+    }
+
+    void Disable()
+    {
+        isEnabled = false;
     }
 
 public:
-    ecs::IBehavior* behavior { nullptr };
-
-    ecs::IBehavior* (*InstantiateBehavior)();
-    void (*DestroyBehavior)(BehaviorComponent&);
+    std::unique_ptr<ecs::IBehavior> behavior;
+    std::function<std::unique_ptr<ecs::IBehavior>()> instantiateBehavior;
+    bool isEnabled { true };
 };
 
 struct CameraComponent {
@@ -135,6 +143,16 @@ struct TextComponent {
         : text(text_)
         , color(color_)
     { }
+
+    void Show()
+    {
+        isVisible = true;
+    }
+
+    void Hide()
+    {
+        isVisible = false;
+    }
 
 public:
     std::string text;

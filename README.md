@@ -55,6 +55,9 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
   - [x] Scene serialization
 + [x] Data-driven architecture
   - [x] Load/Save engine settings from/to json files
++ [x] Sound engine
+  - [x] Support formats: mp3, wav, ogg, flac etc.
+  - [x] Add/Play/Pause/Stop functionality
 + [x] Just cool stuff
   - [x] Orthographic camera controller (OrthographicCameraController), that can be used if needed
   - [x] Fly(FPS-like) 3D camera support (CameraController)
@@ -81,7 +84,7 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
 <img src=".github/demo/fantasy.png" width="80%">
 
 #### Quad and texture batch rendering (20000 wizards)
-<img src=".github/demo/BatchRenderer.png" width="80%">
+<img src=".github/demo/BatchRenderer_1.png" width="80%">
 
 #### 3D rendering
 <img src=".github/demo/3D_demo.png" width="80%">
@@ -97,3 +100,4 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
 | [ImGui](https://github.com/kryvytskyidenys/imgui) | library using for GUI (visual-editor) |
 | [stb image](https://github.com/nothings/stb/blob/master/stb_image.h) | image loader |
 | [json](https://github.com/nlohmann/json) | json lib for serialization and data-driven architecture |
+| [irrKlang](https://www.ambiera.com/irrklang/) | sound library |

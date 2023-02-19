@@ -182,7 +182,9 @@ void TextRenderer::RenderText(std::string_view text, const lia::vec2& pos, const
         const float h = glyph.size.y * scale.y;
 
         const float xpos = currentGlyphPosX + glyph.offset.x * scale.x;
-        const float ypos = convertedPos.y - (s_data.topGlyphOffsetY + glyph.size.y - glyph.offset.y) * scale.y;
+
+        float ypos = convertedPos.y - (s_data.topGlyphOffsetY + glyph.size.y - glyph.offset.y) * scale.y;
+        ypos = std::max(s_data.cameraBounds.bottom, ypos);
 
         const float vertices[4][4] = {
             { xpos, ypos + h, 0.0f, 0.0f },

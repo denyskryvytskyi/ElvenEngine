@@ -17,6 +17,8 @@
 #include "Scene/Components/SceneComponents.h"
 #include "Scene/SceneManager.h"
 
+#include <Resources/AudioManager.h>
+
 namespace elv {
 
 Application* Application::s_instance = nullptr;
@@ -35,7 +37,7 @@ Application::Application()
     // Init global engine settings
     gEngineSettings.LoadSettings();
 
-    m_window = Window::Create({ "ElvenEngine", gEngineSettings.windowWidth, gEngineSettings.windowHeight });
+    m_window = Window::Create({ "ElvenEngine", gEngineSettings.windowWidth, gEngineSettings.windowHeight, gEngineSettings.enableFullscreen, gEngineSettings.enableVSync });
     RenderCommand::SetViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
 
     // Create cameras entity before other inits, because this entity could be used by them
@@ -47,6 +49,7 @@ Application::Application()
     Renderer2D::Init();
     TextRenderer::Init();
     gSceneManager.Init();
+    gAudioManager.Init();
 
 #if EDITOR_MODE
     m_imGuiOverlay.Init();
@@ -58,6 +61,13 @@ Application::Application()
     auto& cameraComponent = scene.AddComponent<CameraComponent>(m_orthoCameraEntity, false);
     const float aspectRatio = static_cast<float>(gEngineSettings.windowWidth) / static_cast<float>(gEngineSettings.windowHeight);
     cameraComponent.camera.SetProjection(-aspectRatio * gEngineSettings.orthographicCameraSize, aspectRatio * gEngineSettings.orthographicCameraSize, -gEngineSettings.orthographicCameraSize, gEngineSettings.orthographicCameraSize, -1.0f, 1.0f);
+
+    // fps counter
+    if (gEngineSettings.enableFpsCounter) {
+        m_fpsCounterEntityId = scene.CreateEntity();
+        scene.AddComponent<elv::RectTransformComponent>(m_fpsCounterEntityId, lia::vec2(0.0f, 100.0f), lia::vec2(0.6f, 0.6f));
+        scene.AddComponent<elv::TextComponent>(m_fpsCounterEntityId, "0");
+    }
 }
 
 Application::~Application()
@@ -68,6 +78,7 @@ Application::~Application()
     m_imGuiOverlay.Shutdown();
 #endif
 
+    gAudioManager.Shutdown();
     events::gEventManager.Shutdown();
     gSceneManager.Shutdown();
     gTextureManager.Shutdown();
@@ -86,6 +97,10 @@ void Application::Run()
 
         s_telemetry.frameTime = elapsedTime * 1000.0f;
         s_telemetry.fps = 1.0f / elapsedTime;
+
+        if (gEngineSettings.enableFpsCounter) {
+            GetScene().GetComponent<elv::TextComponent>(m_fpsCounterEntityId).text = std::to_string(static_cast<int>(std::floor(s_telemetry.fps)));
+        }
 
         /// Update step ////////////////////
 

@@ -16,7 +16,6 @@ void BehaviorSystem::OnShutdown()
         auto& component = behaviorComponents[i];
         if (component.behavior) {
             component.behavior->OnDestroy();
-            component.DestroyBehavior(component);
         }
     }
 }
@@ -27,10 +26,12 @@ void BehaviorSystem::OnUpdate(float dt)
     for (uint32_t i = 0; i < behaviorComponents.size(); ++i) {
         auto& component = behaviorComponents[i];
         if (component.behavior) {
-            component.behavior->OnUpdate(dt);
+            if (component.isEnabled) {
+                component.behavior->OnUpdate(dt);
+            }
         } else {
             const ecs::Entity entity = m_pScene->GetEntity<BehaviorComponent>(i);
-            component.behavior = component.InstantiateBehavior();
+            component.behavior = component.instantiateBehavior();
             component.behavior->SetEntity(entity);
             component.behavior->OnCreate();
         }

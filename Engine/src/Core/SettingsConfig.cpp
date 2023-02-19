@@ -34,8 +34,11 @@ void SettingsConfig::LoadSettings()
         j.at("load_default_scene").get_to(loadDefaultScene);
         j.at("enable_editor").get_to(enableEditor);
         j.at("orthographic_camera_size").get_to(orthographicCameraSize);
+        j.at("enable_fullscreen").get_to(enableFullscreen);
+        j.at("enable_vsync").get_to(enableVSync);
+        j.at("enable_fps_counter").get_to(enableFpsCounter);
     } catch (nlohmann::json_abi_v3_11_2::detail::out_of_range e) {
-        EL_ERROR("Load settings config error: {}", e.what());
+        EL_CORE_WARN("Failed to load setting: {}", e.what());
     }
 
     EL_CORE_INFO("Settings loaded");
@@ -50,6 +53,9 @@ void SettingsConfig::SaveSettings()
     j["load_default_scene"] = loadDefaultScene;
     j["enable_editor"] = enableEditor;
     j["orthographic_camera_size"] = orthographicCameraSize;
+    j["enable_fullscreen"] = enableFullscreen;
+    j["enable_vsync"] = enableVSync;
+    j["enable_fps_counter"] = enableFpsCounter;
 
     std::ofstream out(engineSettingsFile.data());
     out << std::setfill(' ') << std::setw(2) << j;

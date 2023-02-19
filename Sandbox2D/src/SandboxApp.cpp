@@ -4,6 +4,7 @@
 
 #include <Core/SettingsConfig.h>
 #include <Events/TextureEvent.h>
+#include <Resources/AudioManager.h>
 
 elv::Application* elv::CreateApplication()
 {
@@ -41,6 +42,10 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnCreate()
 {
+    elv::gAudioManager.AddSound("back", "back.ogg");
+    elv::gAudioManager.SetVolume("back", 0.8f);
+    elv::gAudioManager.Play("back");
+
     if (false && !elv::gEngineSettings.loadDefaultScene) {
         elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, elv::string_id("wizard"));
         elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, elv::string_id("wizard_fire"));

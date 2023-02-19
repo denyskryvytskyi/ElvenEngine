@@ -13,6 +13,9 @@ public:
     std::string defaultSceneName { "default" };
     bool loadDefaultScene { false };
     bool enableEditor { false };
+    bool enableFullscreen { false };
+    bool enableVSync { false };
+    bool enableFpsCounter { false };
 
     // orthographic camera
     float orthographicCameraSize { 100 };

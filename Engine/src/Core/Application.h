@@ -47,14 +47,14 @@ private:
 
 protected:
     ecs::Entity m_orthoCameraEntity { ecs::INVALID_ENTITY_ID };
+    bool m_running { false };
 
 private:
     static Application* s_instance;
     static Telemetry s_telemetry;
 
-    bool m_running { false };
-
     UniquePtr<Window> m_window { nullptr };
+    ecs::Entity m_fpsCounterEntityId { 0 };
 
 #if EDITOR_MODE
     ImGuiOverlay m_imGuiOverlay;

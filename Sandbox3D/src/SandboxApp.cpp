@@ -135,5 +135,5 @@ void Sandbox3D::OnDestroy()
 void Sandbox3D::OnTextureLoaded(const elv::events::TextureLoadedEvent& e)
 {
     m_texture = elv::textures::Get("wall");
-    m_texture->BindToUnit(0);
+    m_texture->BindToUnit(1);
 }

@@ -47,7 +47,7 @@ jobs:
         
     # build engine and projects
     - name: Configure engine and projects
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B ${{github.workspace}}/build
 
     - name: Build engine and projects
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}

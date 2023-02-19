@@ -1,6 +1,8 @@
 #include <Elven.h>
 
 #include "Pong.h"
+#include <Events/KeyEvent.h>
+#include <Resources/AudioManager.h>
 
 elv::Application* elv::CreateApplication()
 {
@@ -75,6 +77,13 @@ class BallBehavior : public elv::ecs::IBehavior {
 
 void Pong::OnCreate()
 {
+    elv::gAudioManager.AddSound("back", "back.mp3");
+    elv::gAudioManager.SetVolume("back", 0.5f);
+    elv::gAudioManager.Play("back");
+
+    elv::gAudioManager.AddSound("hit_paddle", "hit_paddle.wav");
+    elv::gAudioManager.AddSound("hit_wall", "hit_wall.wav");
+
     elv::Scene& scene = elv::GetScene();
     scene.RegisterComponent<PaddleComponent>();
     scene.RegisterComponent<BallComponent>();
@@ -83,27 +92,34 @@ void Pong::OnCreate()
     scene.AddComponent<elv::RectTransformComponent>(m_startMenuTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
     scene.AddComponent<elv::TextComponent>(m_startMenuTextEntity, "Press P to start the game");
 
+    m_quitMenuTextEntity = scene.CreateEntity();
+    scene.AddComponent<elv::RectTransformComponent>(m_quitMenuTextEntity, lia::vec2(37.0f, 40.0f), lia::vec2(0.6f, 0.6f));
+    auto& quitText = scene.AddComponent<elv::TextComponent>(m_quitMenuTextEntity, "Press Q to exit");
+
     m_gameOverTextEntity = scene.CreateEntity();
     scene.AddComponent<elv::RectTransformComponent>(m_gameOverTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
     auto& gameOverText = scene.AddComponent<elv::TextComponent>(m_gameOverTextEntity);
-    gameOverText.isVisible = false;
+    gameOverText.Hide();
 
     m_restartMenuTextEntity = scene.CreateEntity();
     scene.AddComponent<elv::RectTransformComponent>(m_restartMenuTextEntity, lia::vec2(37.0f, 40.0f), lia::vec2(0.6f, 0.6f));
     auto& restartText = scene.AddComponent<elv::TextComponent>(m_restartMenuTextEntity, "Press R to start next round");
-    restartText.isVisible = false;
+    restartText.Hide();
+
+    m_pauseMenuTextEntity = scene.CreateEntity();
+    scene.AddComponent<elv::RectTransformComponent>(m_pauseMenuTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
+    auto& pauseText = scene.AddComponent<elv::TextComponent>(m_pauseMenuTextEntity, "Press Space to resume the game");
+    pauseText.Hide();
+
+    // event handlers
+    elv::events::EventHandler<elv::events::KeyPressedEvent> keyPressedHandler([this](const elv::events::KeyPressedEvent& e) { OnKeyPressedEvent(e); });
+    elv::events::Subscribe<elv::events::KeyPressedEvent>(keyPressedHandler);
 }
 
 void Pong::OnUpdate(float dt)
 {
-    if (m_gameState == GameState::Menu) {
-        OnMenuState();
-    } else if (m_gameState == GameState::Play) {
-        OnPlayState();
-    } else if (m_gameState == GameState::GameOver) {
-        OnGameOverState();
-    } else if (m_gameState == GameState::RestartMenu) {
-        OnRestartMenuState();
+    if (m_gameState == GameState::Play) {
+        OnPlay();
     }
 }
 
@@ -123,13 +139,15 @@ void Pong::OnWindowResizeApp()
     }
 }
 
-void Pong::OnMenuState()
+void Pong::OnMenu()
 {
-    if (elv::Input::IsKeyPressed(elv::key::P)) {
+    if (m_gameState == GameState::Menu) {
+
         auto& scene = elv::GetScene();
 
         // hide start menu
         scene.DestroyEntity(m_startMenuTextEntity);
+        scene.DestroyEntity(m_quitMenuTextEntity);
 
         auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
 
@@ -192,7 +210,7 @@ void Pong::OnMenuState()
     }
 }
 
-void Pong::OnPlayState()
+void Pong::OnPlay()
 {
     auto& scene = elv::GetScene();
 
@@ -213,9 +231,9 @@ void Pong::OnPlayState()
         ++m_players[winnerId].score;
         scene.GetComponent<elv::TextComponent>(m_players[winnerId].entity).text = std::format("{}", m_players[winnerId].score);
         scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).text = std::format("Player {} win", winnerId + 1);
-        scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).isVisible = true;
-        scene.GetComponent<elv::TextComponent>(m_restartMenuTextEntity).isVisible = true;
-        m_gameState = GameState::GameOver;
+        scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).Show();
+        scene.GetComponent<elv::TextComponent>(m_restartMenuTextEntity).Show();
+        OnGameOver();
         return;
     }
 
@@ -234,6 +252,9 @@ void Pong::OnPlayState()
             const float penetration = ballSizeHalf - std::abs(cameraBounds.bottom - ballTransform.pos.y);
             ballTransform.pos.y += penetration;
         }
+
+        // hit sound
+        elv::gAudioManager.Play("hit_wall");
     }
 
     // Check collision with paddle 1
@@ -252,6 +273,9 @@ void Pong::OnPlayState()
         // change ball color to paddle one
         scene.GetComponent<elv::QuadComponent>(m_ball).color = paddle1Color;
         scene.GetComponent<BallComponent>(m_ball).speed += ballSpeedIncr;
+
+        // hit sound
+        elv::gAudioManager.Play("hit_paddle");
     }
 
     // Check collision with paddle 2
@@ -269,10 +293,13 @@ void Pong::OnPlayState()
         // change ball color to paddle one
         scene.GetComponent<elv::QuadComponent>(m_ball).color = paddle2Color;
         scene.GetComponent<BallComponent>(m_ball).speed += ballSpeedIncr;
+
+        // hit sound
+        elv::gAudioManager.Play("hit_paddle");
     }
 }
 
-void Pong::OnGameOverState()
+void Pong::OnGameOver()
 {
     auto& scene = elv::GetScene();
 
@@ -287,17 +314,17 @@ void Pong::OnGameOverState()
     ballTransform.pos = { 0.0f, 0.0f, 0.0f };
     scene.GetComponent<elv::QuadComponent>(m_ball).color = ballColor;
 
-    m_gameState = GameState::RestartMenu;
+    m_gameState = GameState::GameOver;
 }
 
-void Pong::OnRestartMenuState()
+void Pong::OnRestart()
 {
-    if (elv::Input::IsKeyPressed(elv::key::R)) {
+    if (m_gameState == GameState::GameOver) {
         auto& scene = elv::GetScene();
 
         // hide text
-        scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).isVisible = false;
-        scene.GetComponent<elv::TextComponent>(m_restartMenuTextEntity).isVisible = false;
+        scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).Hide();
+        scene.GetComponent<elv::TextComponent>(m_restartMenuTextEntity).Hide();
 
         //
         for (auto player : m_players) {
@@ -307,5 +334,44 @@ void Pong::OnRestartMenuState()
         scene.GetComponent<BallComponent>(m_ball).speed = ballSpeed;
 
         m_gameState = GameState::Play;
+    }
+}
+
+void Pong::OnPause()
+{
+    auto& scene = elv::GetScene();
+
+    if (m_gameState == GameState::Play) {
+        for (auto player : m_players) {
+            scene.GetComponent<elv::BehaviorComponent>(player.entity).Disable();
+        }
+        scene.GetComponent<elv::BehaviorComponent>(m_ball).Disable();
+        scene.GetComponent<elv::TextComponent>(m_pauseMenuTextEntity).Show();
+        m_gameState = GameState::Pause;
+    } else if (m_gameState == GameState::Pause) {
+        for (auto player : m_players) {
+            scene.GetComponent<elv::BehaviorComponent>(player.entity).Enable();
+        }
+        scene.GetComponent<elv::BehaviorComponent>(m_ball).Enable();
+        scene.GetComponent<elv::TextComponent>(m_pauseMenuTextEntity).Hide();
+        m_gameState = GameState::Play;
+    }
+}
+
+void Pong::OnKeyPressedEvent(const elv::events::KeyPressedEvent& e)
+{
+    switch (e.key) {
+    case elv::key::Space:
+        OnPause();
+        break;
+    case elv::key::P:
+        OnMenu();
+        break;
+    case elv::key::R:
+        OnRestart();
+        break;
+    case elv::key::Q:
+        m_running = false;
+        break;
     }
 }

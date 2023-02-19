@@ -1,6 +1,7 @@
 #include <Elven.h>
 
 #include "TRON.h"
+#include <Resources/AudioManager.h>
 
 elv::Application* elv::CreateApplication()
 {
@@ -96,6 +97,10 @@ private:
 
 void TRON::OnCreate()
 {
+    elv::gAudioManager.AddSound("back", "back.mp3");
+    elv::gAudioManager.SetVolume("back", 0.5f);
+    elv::gAudioManager.Play("back", true);
+
     elv::Scene& scene = elv::GetScene();
     scene.RegisterComponent<LightCycleComponent>();
 
@@ -112,39 +117,133 @@ void TRON::OnCreate()
     m_startMenuText2Entity = scene.CreateEntity();
     scene.AddComponent<elv::RectTransformComponent>(m_startMenuText2Entity, lia::vec2(37.0f, 40.0f), lia::vec2(0.6f, 0.6f));
     scene.AddComponent<elv::TextComponent>(m_startMenuText2Entity, "Press P to start the line");
+    m_startMenuText3Entity = scene.CreateEntity();
+    scene.AddComponent<elv::RectTransformComponent>(m_startMenuText3Entity, lia::vec2(37.0f, 50.0f), lia::vec2(0.6f, 0.6f));
+    scene.AddComponent<elv::TextComponent>(m_startMenuText3Entity, "Press Q to leave the line");
 
     m_gameOverTextEntity = scene.CreateEntity();
     scene.AddComponent<elv::RectTransformComponent>(m_gameOverTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
     auto& gameOverText = scene.AddComponent<elv::TextComponent>(m_gameOverTextEntity);
-    gameOverText.isVisible = false;
+    gameOverText.Hide();
 
     m_restartMenuTextEntity = scene.CreateEntity();
     scene.AddComponent<elv::RectTransformComponent>(m_restartMenuTextEntity, lia::vec2(37.0f, 40.0f), lia::vec2(0.6f, 0.6f));
     auto& restartText = scene.AddComponent<elv::TextComponent>(m_restartMenuTextEntity, "Press R to restart the line");
-    restartText.isVisible = false;
+    restartText.Hide();
+
+    m_pauseMenuTextEntity = scene.CreateEntity();
+    scene.AddComponent<elv::RectTransformComponent>(m_pauseMenuTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
+    auto& pauseText = scene.AddComponent<elv::TextComponent>(m_pauseMenuTextEntity, "Press Space to resume the line");
+    pauseText.Hide();
+
+    // event handlers
+    elv::events::EventHandler<elv::events::KeyPressedEvent> keyPressedHandler([this](const elv::events::KeyPressedEvent& e) { OnKeyPressedEvent(e); });
+    elv::events::Subscribe<elv::events::KeyPressedEvent>(keyPressedHandler);
 }
 
 void TRON::OnUpdate(float dt)
 {
-    if (m_gameState == GameState::Menu) {
-        OnMenuState();
-    } else if (m_gameState == GameState::Play) {
-        OnPlayState();
-    } else if (m_gameState == GameState::GameOver) {
-        OnGameOverState();
-    } else if (m_gameState == GameState::RestartMenu) {
-        OnRestartMenuState();
+    if (m_gameState == GameState::Play) {
+        OnPlay();
     }
 }
 
-void TRON::OnMenuState()
+void TRON::OnPlay()
 {
-    if (elv::Input::IsKeyPressed(elv::key::P)) {
+    auto& scene = elv::GetScene();
+
+    bool isGameOver = false;
+    // check collisions
+    for (size_t i = 0; i < 2; i++) {
+        auto& playerTransform = scene.GetComponent<elv::TransformComponent>(m_players[i].entity);
+
+        // check collion with boundaries
+        auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
+        if (playerTransform.pos.x <= cameraBounds.left || playerTransform.pos.x >= cameraBounds.right
+            || playerTransform.pos.y >= cameraBounds.top || playerTransform.pos.y <= cameraBounds.bottom) {
+            if (isGameOver) { // draw
+                m_winnerId = -1;
+            } else {
+                isGameOver = true;
+                m_winnerId = i == 0 ? 1 : 0;
+            }
+            break;
+        }
+
+        // check collision with lines
+        for (auto segmentEntity : m_lineSegments) {
+            auto& segmentTransform = scene.GetComponent<elv::TransformComponent>(segmentEntity);
+            if (CheckCollision(playerTransform, segmentTransform)) {
+                if (isGameOver) { // draw
+                    m_winnerId = -1;
+                } else {
+                    isGameOver = true;
+                    m_winnerId = i == 0 ? 1 : 0;
+                }
+                break;
+            }
+        }
+    }
+
+    if (isGameOver) {
+        OnGameOver();
+    }
+}
+
+void TRON::OnGameOver()
+{
+    auto& scene = elv::GetScene();
+
+    // remove redundant components from players
+    for (auto player : m_players) {
+        scene.RemoveComponent<elv::BehaviorComponent>(player.entity);
+    }
+
+    std::string result;
+    if (m_winnerId != -1) {
+        ++m_players[m_winnerId].score;
+        scene.GetComponent<elv::TextComponent>(m_players[m_winnerId].entity).text = std::format("{}", m_players[m_winnerId].score);
+        result = std::format("Player {} win", m_winnerId + 1);
+    } else {
+        result = "End of line...";
+    }
+
+    scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).text = std::move(result);
+    scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).Show();
+    scene.GetComponent<elv::TextComponent>(m_restartMenuTextEntity).Show();
+
+    m_gameState = GameState::GameOver;
+}
+
+void TRON::OnPause()
+{
+    auto& scene = elv::GetScene();
+
+    if (m_gameState == GameState::Play) {
+        for (auto player : m_players) {
+            scene.GetComponent<elv::BehaviorComponent>(player.entity).Disable();
+        }
+        m_gameState = GameState::Pause;
+        scene.GetComponent<elv::TextComponent>(m_pauseMenuTextEntity).Show();
+    } else if (m_gameState == GameState::Pause) {
+        for (auto player : m_players) {
+            scene.GetComponent<elv::BehaviorComponent>(player.entity).Enable();
+        }
+        m_gameState = GameState::Play;
+        scene.GetComponent<elv::TextComponent>(m_pauseMenuTextEntity).Hide();
+    }
+}
+
+void TRON::OnStartGame()
+{
+    if (m_gameState == GameState::Menu) {
+
         auto& scene = elv::GetScene();
 
         // hide start menu
         scene.DestroyEntity(m_startMenuText1Entity);
         scene.DestroyEntity(m_startMenuText2Entity);
+        scene.DestroyEntity(m_startMenuText3Entity);
 
         auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
 
@@ -194,83 +293,17 @@ void TRON::OnMenuState()
     }
 }
 
-void TRON::OnPlayState()
+void TRON::OnRestart()
 {
-    auto& scene = elv::GetScene();
+    if (m_gameState == GameState::GameOver) {
 
-    bool isGameOver = false;
-    // check collisions
-    for (size_t i = 0; i < 2; i++) {
-        auto& playerTransform = scene.GetComponent<elv::TransformComponent>(m_players[i].entity);
-
-        // check collion with boundaries
-        auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
-        if (playerTransform.pos.x <= cameraBounds.left || playerTransform.pos.x >= cameraBounds.right
-            || playerTransform.pos.y >= cameraBounds.top || playerTransform.pos.y <= cameraBounds.bottom) {
-            if (isGameOver) { // draw
-                m_winnerId = -1;
-            } else {
-                isGameOver = true;
-                m_winnerId = i == 0 ? 1 : 0;
-            }
-            break;
-        }
-
-        // check collision with lines
-        for (auto segmentEntity : m_lineSegments) {
-            auto& segmentTransform = scene.GetComponent<elv::TransformComponent>(segmentEntity);
-            if (CheckCollision(playerTransform, segmentTransform)) {
-                if (isGameOver) { // draw
-                    m_winnerId = -1;
-                } else {
-                    isGameOver = true;
-                    m_winnerId = i == 0 ? 1 : 0;
-                }
-                break;
-            }
-        }
-    }
-
-    if (isGameOver) {
-        m_gameState = GameState::GameOver;
-    }
-}
-
-void TRON::OnGameOverState()
-{
-    auto& scene = elv::GetScene();
-
-    // remove redundant components from players
-    for (auto player : m_players) {
-        scene.RemoveComponent<elv::BehaviorComponent>(player.entity);
-    }
-
-    std::string result;
-    if (m_winnerId != -1) {
-        ++m_players[m_winnerId].score;
-        scene.GetComponent<elv::TextComponent>(m_players[m_winnerId].entity).text = std::format("{}", m_players[m_winnerId].score);
-        result = std::format("Player {} win", m_winnerId + 1);
-    } else {
-        result = "End of line...";
-    }
-
-    scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).text = std::move(result);
-    scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).isVisible = true;
-    scene.GetComponent<elv::TextComponent>(m_restartMenuTextEntity).isVisible = true;
-
-    m_gameState = GameState::RestartMenu;
-}
-
-void TRON::OnRestartMenuState()
-{
-    if (elv::Input::IsKeyPressed(elv::key::R)) {
         m_winnerId = -1; // reset winner
 
         auto& scene = elv::GetScene();
 
         // hide text
-        scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).isVisible = false;
-        scene.GetComponent<elv::TextComponent>(m_restartMenuTextEntity).isVisible = false;
+        scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).Hide();
+        scene.GetComponent<elv::TextComponent>(m_restartMenuTextEntity).Hide();
 
         // destroy lines
         for (auto segmentEntity : m_lineSegments) {
@@ -294,5 +327,23 @@ void TRON::OnRestartMenuState()
         player2Transform.pos.y = { 0.0f };
 
         m_gameState = GameState::Play;
+    }
+}
+
+void TRON::OnKeyPressedEvent(const elv::events::KeyPressedEvent& e)
+{
+    switch (e.key) {
+    case elv::key::Space:
+        OnPause();
+        break;
+    case elv::key::P:
+        OnStartGame();
+        break;
+    case elv::key::R:
+        OnRestart();
+        break;
+    case elv::key::Q:
+        m_running = false;
+        break;
     }
 }

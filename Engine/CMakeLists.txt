@@ -53,6 +53,7 @@ set(ENGINE_HEADERS
 "src/Scene/Components/SceneComponents.h"
 "src/Scene/Systems/Render2dSystem.h"
 "src/Scene/Systems/BehaviorSystem.h"
+"src/Resources/AudioManager.h"
 )
 
 #editor stuff
@@ -101,6 +102,7 @@ set(ENGINE_SOURCES
 "src/Scene/Components/SceneComponents.cpp"
 "src/Scene/Systems/Render2dSystem.cpp"
 "src/Scene/Systems/BehaviorSystem.cpp"
+"src/Resources/AudioManager.cpp"
 ${ENGINE_HEADERS}
 )
 
@@ -132,6 +134,7 @@ ${VENDOR_PATH}/spdlog/include
 ${VENDOR_PATH}/stb/include
 ${VENDOR_PATH}/json/include
 ${VENDOR_PATH}/freetype/include
+${VENDOR_PATH}/irrklang/include
 )
 
 if (EDITOR_MODE)
@@ -172,6 +175,7 @@ find_library(spdlog NAMES spdlog PATHS ${VENDOR_PATH_RELEASE})
 find_library(lia NAMES lia PATHS ${VENDOR_PATH_RELEASE})
 find_library(stb NAMES stb PATHS ${VENDOR_PATH_RELEASE})
 find_library(freetype NAMES freetype PATHS ${VENDOR_PATH_RELEASE})
+find_library(irrklang NAMES irrKlang.lib PATHS ${VENDOR_PATH}/irrklang/lib)
 
 set(VENDOR
 debug ${glfw_d} optimized ${glfw}
@@ -180,6 +184,7 @@ debug ${spdlog_d} optimized ${spdlog}
 debug ${lia_d} optimized ${lia}
 debug ${stb_d} optimized ${stb}
 debug ${freetype_d} optimized ${freetype}
+debug ${irrklang} optimized ${irrklang}
 )
 
 target_link_libraries(${LIBRARY_NAME} ${STATIC_THIRD_PARTY_LIBRARIES} ${VENDOR})

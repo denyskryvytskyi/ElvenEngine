@@ -38,6 +38,10 @@ void Scene::OnShutdown()
         system->OnShutdown();
     }
 
+    for (auto& pool : m_componentPools) {
+        pool.second->Clear();
+    }
+
     m_componentPools.clear();
     m_entities.clear();
     m_systems.clear();
