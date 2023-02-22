@@ -1,11 +1,11 @@
 #include "TextureManager.h"
-#include "Renderer.h"
 
 #include "Core/FileSystem.h"
 #include "Core/StringId.h"
 #include "Events/EventManager.h"
 #include "Events/TextureEvent.h"
 #include "Platform/OpenGL/OpenGLTexture2D.h"
+#include "Renderer/Renderer.h"
 
 #include <stb/stb_image.h>
 
@@ -81,16 +81,18 @@ SharedPtr<Texture2D> TextureManager::Load(const std::string& textureName, std::u
 void TextureManager::OnUpdate()
 {
     // create texture with already loaded data
-    std::lock_guard<std::mutex> lock(texturesMutex);
-    for (auto textureInfo : m_loadedInfo) {
-        CreateTexture(textureInfo);
-        m_textureLoadingInProgress.erase(textureInfo.textureName);
-    }
+    if (texturesMutex.try_lock()) {
+        for (auto textureInfo : m_loadedInfo) {
+            CreateTexture(textureInfo);
+            m_textureLoadingInProgress.erase(textureInfo.textureName);
+        }
 
-    for (auto& info : m_loadedInfo) {
-        stbi_image_free(info.data);
+        for (auto& info : m_loadedInfo) {
+            stbi_image_free(info.data);
+        }
+        m_loadedInfo.clear();
+        texturesMutex.unlock();
     }
-    m_loadedInfo.clear();
 }
 
 void TextureManager::Shutdown()

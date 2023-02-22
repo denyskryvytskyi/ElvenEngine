@@ -149,6 +149,17 @@ public:
     }
 
     template<typename ComponentType>
+    SharedPtr<ecs::ComponentPool<ComponentType>> GetComponentPool()
+    {
+        const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
+        auto it = m_componentPools.find(componentTypeId);
+
+        EL_CORE_ASSERT(it != m_componentPools.end(), "Failed to get component pool!");
+
+        return it != m_componentPools.end() ? std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(it->second) : nullptr;
+    }
+
+    template<typename ComponentType>
     ecs::Entity GetEntity(std::uint32_t componentIndex) const
     {
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();

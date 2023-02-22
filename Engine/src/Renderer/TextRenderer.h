@@ -8,9 +8,6 @@ class TextRenderer {
 public:
     static void Init();
 
-    // Precompile a list of glyphs from the font
-    static void Load(std::string_view font);
-
     // Setting up projection matrix for the shader
     static void PreRender(const Camera& camera);
 

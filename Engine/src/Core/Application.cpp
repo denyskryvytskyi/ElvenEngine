@@ -10,7 +10,8 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/Renderer2D.h"
 #include "Renderer/TextRenderer.h"
-#include "Renderer/TextureManager.h"
+
+#include "Resources/TextureManager.h"
 
 #include "Events/EventManager.h"
 

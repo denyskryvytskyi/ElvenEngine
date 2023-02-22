@@ -9,9 +9,14 @@ BehaviorSystem::BehaviorSystem(Scene* scenePtr)
 {
 }
 
+void BehaviorSystem::OnInit()
+{
+    m_behaviorsPool = m_pScene->GetComponentPool<BehaviorComponent>();
+}
+
 void BehaviorSystem::OnShutdown()
 {
-    auto& behaviorComponents = m_pScene->GetComponents<BehaviorComponent>();
+    auto& behaviorComponents = m_behaviorsPool->GetComponents();
     for (uint32_t i = 0; i < behaviorComponents.size(); ++i) {
         auto& component = behaviorComponents[i];
         if (component.behavior) {
@@ -22,7 +27,7 @@ void BehaviorSystem::OnShutdown()
 
 void BehaviorSystem::OnUpdate(float dt)
 {
-    auto& behaviorComponents = m_pScene->GetComponents<BehaviorComponent>();
+    auto& behaviorComponents = m_behaviorsPool->GetComponents();
     for (uint32_t i = 0; i < behaviorComponents.size(); ++i) {
         auto& component = behaviorComponents[i];
         if (component.behavior) {
@@ -30,7 +35,7 @@ void BehaviorSystem::OnUpdate(float dt)
                 component.behavior->OnUpdate(dt);
             }
         } else {
-            const ecs::Entity entity = m_pScene->GetEntity<BehaviorComponent>(i);
+            const ecs::Entity entity = m_behaviorsPool->GetEntity(i);
             component.behavior = component.instantiateBehavior();
             component.behavior->SetEntity(entity);
             component.behavior->OnCreate();
@@ -39,7 +44,7 @@ void BehaviorSystem::OnUpdate(float dt)
 }
 void BehaviorSystem::OnRender(float dt)
 {
-    for (auto& component : m_pScene->GetComponents<BehaviorComponent>()) {
+    for (auto& component : m_behaviorsPool->GetComponents()) {
         if (component.behavior) {
             component.behavior->OnRender(dt);
         }

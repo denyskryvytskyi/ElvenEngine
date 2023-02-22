@@ -26,8 +26,6 @@ public:
 private:
     irrklang::ISoundEngine* m_engine { nullptr };
     std::unordered_map<std::string, irrklang::ISound*> m_sounds;
-
-    irrklang::ISound* testSound;
 };
 
 extern AudioManager gAudioManager;

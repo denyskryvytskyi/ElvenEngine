@@ -13,6 +13,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 option(BUILD_SANDBOX "build sandbox projects" ON)
 option(BUILD_GAMES "build games" ON)
 option(EDITOR_MODE "Enable ImGUI editor overlay" ON)
+option(PROFILE_MODE "Enable functions profiling" ON)
 
 if(WIN32)
     add_compile_definitions(
@@ -25,6 +26,10 @@ endif()
 
 if (EDITOR_MODE)
     add_compile_definitions(EDITOR_MODE)
+endif()
+
+if (PROFILE_MODE)
+    add_compile_definitions(PROFILE_MODE)
 endif()
 
 add_subdirectory(Engine)

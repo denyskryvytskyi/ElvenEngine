@@ -1,5 +1,7 @@
 #pragma once
+
 #include "Scene/ComponentSystem.h"
+#include "Scene/Components/SceneComponents.h"
 
 namespace elv {
 class Scene;
@@ -10,10 +12,12 @@ class BehaviorSystem final : public ecs::IComponentSystem {
 public:
     BehaviorSystem(Scene* scenePtr);
 
-    void OnShutdown() final override;
-    void OnUpdate(float dt) final override;
-    void OnRender(float dt) final override;
+    void OnInit() override;
+    void OnShutdown() override;
+    void OnUpdate(float dt) override;
+    void OnRender(float dt) override;
 
-    // Here may be different eventhandlers (mouse/keyboard inputs, on collision etc.)
+private:
+    SharedPtr<ecs::ComponentPool<BehaviorComponent>> m_behaviorsPool { nullptr };
 };
 } // namespace elv

@@ -8,7 +8,7 @@
 #include "Core/StringId.h"
 #include "Events/EventManager.h"
 #include "Events/TextureEvent.h"
-#include "Renderer/TextureManager.h"
+#include "Resources/TextureManager.h"
 
 namespace lia {
 using json = nlohmann::json;

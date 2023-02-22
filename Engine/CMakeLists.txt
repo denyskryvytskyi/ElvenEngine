@@ -15,6 +15,7 @@ set(ENGINE_HEADERS
 "src/Core/StringId.h"
 "src/Core/CRC32.h"
 "src/Core/SettingsConfig.h"
+"src/Core/Profiler.h"
 "src/Events/ApplicationEvent.h"
 "src/Events/Event.h"
 "src/Events/EventHandler.h"
@@ -34,7 +35,6 @@ set(ENGINE_HEADERS
 "src/Renderer/Shader.h"
 "src/Renderer/VertexArray.h"
 "src/Renderer/Texture2D.h"
-"src/Renderer/TextureManager.h"
 "src/Renderer/TextRenderer.h"
 "src/Platform/Windows/WindowsWindow.h"
 "src/Platform/OpenGL/OpenGLBuffer.h"
@@ -53,7 +53,9 @@ set(ENGINE_HEADERS
 "src/Scene/Components/SceneComponents.h"
 "src/Scene/Systems/Render2dSystem.h"
 "src/Scene/Systems/BehaviorSystem.h"
+"src/Resources/TextureManager.h"
 "src/Resources/AudioManager.h"
+"src/Resources/FontManager.h"
 )
 
 #editor stuff
@@ -83,7 +85,6 @@ set(ENGINE_SOURCES
 "src/Renderer/RendererAPI.cpp"
 "src/Renderer/Shader.cpp"
 "src/Renderer/VertexArray.cpp"
-"src/Renderer/TextureManager.cpp"
 "src/Renderer/TextRenderer.cpp"
 "src/Platform/OpenGL/OpenGLBuffer.cpp"
 "src/Platform/OpenGL/OpenGLContext.cpp"
@@ -102,7 +103,9 @@ set(ENGINE_SOURCES
 "src/Scene/Components/SceneComponents.cpp"
 "src/Scene/Systems/Render2dSystem.cpp"
 "src/Scene/Systems/BehaviorSystem.cpp"
+"src/Resources/TextureManager.cpp"
 "src/Resources/AudioManager.cpp"
+"src/Resources/FontManager.cpp"
 ${ENGINE_HEADERS}
 )
 

@@ -2,8 +2,8 @@
 
 #include "Renderer/RenderCommand.h"
 #include "Renderer/Shader.h"
-#include "Renderer/TextureManager.h"
 #include "Renderer/VertexArray.h"
+#include "Resources/TextureManager.h"
 
 #include "Core/FileSystem.h"
 

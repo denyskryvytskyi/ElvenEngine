@@ -3,21 +3,19 @@
 #include "RenderCommand.h"
 #include "Renderer/Buffer.h"
 #include "Renderer/VertexArray.h"
+#include "Resources/FontManager.h"
+#include "Resources/TextureManager.h"
 #include "Shader.h"
 #include "Texture2D.h"
-#include "TextureManager.h"
 
 #include "Core/Application.h"
 #include "Core/Window.h"
 #include "Scene/Components/SceneComponents.h"
 #include "Scene/SceneManager.h"
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
+namespace elv {
 namespace {
-constexpr uint32_t fontSize = 64;
-constexpr uint16_t asciiCharNumToLoad = 128;
+
 constexpr uint32_t quadIndexCount = 6;
 constexpr uint8_t topGlyph = 'H'; // highest glyph for Y offset calculation
 
@@ -25,15 +23,7 @@ constexpr float uiRectMin = 0.0f;
 constexpr float uiRectMax = 100.0f;
 constexpr float uiRange = uiRectMax - uiRectMin;
 
-struct Glyph {
-    elv::SharedPtr<elv::Texture2D> texture { nullptr };
-    lia::vec2 size;   // size of glyph
-    lia::vec2 offset; // offset from baseline to left/top glyph
-    uint32_t advance; // horizontal offset to advance to the next glyph
-};
-
 struct Data {
-    std::unordered_map<char, Glyph> glyphs;
     elv::SharedPtr<elv::Shader> shader;
 
     elv::SharedPtr<elv::VertexArray> vao;
@@ -46,8 +36,6 @@ struct Data {
 } s_data;
 
 } // namespace
-
-namespace elv {
 
 // Convert from pixel size to camera space size
 static lia::vec2 GetPixelToCameraVec(const elv::OrthoCameraBounds& cameraBounds)
@@ -87,58 +75,9 @@ void TextRenderer::Init()
     };
     SharedPtr<IndexBuffer> ebo = IndexBuffer::Create(quadIndices, quadIndexCount);
     s_data.vao->SetIndexBuffer(ebo);
-}
-
-void TextRenderer::Load(std::string_view font)
-{
-    s_data.glyphs.clear();
-
-    FT_Library ft;
-    if (FT_Init_FreeType(&ft)) {
-        EL_CORE_ERROR("ERROR::FREETYPE: Could not init FreeType Library");
-    }
-
-    FT_Face face;
-    if (FT_New_Face(ft, "assets/fonts/arial.ttf", 0, &face)) {
-        EL_CORE_ERROR("ERROR::FREETYPE: Failed to load font");
-    }
-
-    if (FT_Load_Char(face, 'X', FT_LOAD_RENDER)) {
-        EL_CORE_ERROR("ERROR::FREETYTPE: Failed to load Glyph");
-    }
-
-    // set size to load glyphs as
-    FT_Set_Pixel_Sizes(face, 0, fontSize);
 
     // disable byte-alignment restriction
     RenderCommand::DisableByteAlignment();
-
-    for (uint8_t c = 32; c < asciiCharNumToLoad; ++c) {
-        if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-            EL_CORE_ERROR("ERROR::FREETYTPE: Failed to load Glyph");
-            continue;
-        }
-
-        SharedPtr<Texture2D> texture { nullptr };
-        // don't create texture for the Space symbol
-        if (c != 32) {
-
-            const std::string textureName = std::format("{}{}", "text2d_glyph_", c);
-            texture = textures::Load(textureName, face->glyph->bitmap.width, face->glyph->bitmap.rows, 1);
-            texture->SetData(face->glyph->bitmap.buffer);
-        }
-
-        Glyph glyph = {
-            texture,
-            lia::vec2(static_cast<float>(face->glyph->bitmap.width), static_cast<float>(face->glyph->bitmap.rows)),
-            lia::vec2(static_cast<float>(face->glyph->bitmap_left), static_cast<float>(face->glyph->bitmap_top)),
-            static_cast<uint32_t>(face->glyph->advance.x)
-        };
-        s_data.glyphs.insert({ c, std::move(glyph) });
-    }
-
-    FT_Done_Face(face);
-    FT_Done_FreeType(ft);
 }
 
 void TextRenderer::PreRender(const Camera& camera)
@@ -148,7 +87,7 @@ void TextRenderer::PreRender(const Camera& camera)
 
     s_data.cameraBounds = GetScene().GetComponent<elv::CameraComponent>(Application::Get().GetOrthographicCameraEntity()).camera.GetOrthographicsBounds();
     s_data.pixelToCamera = GetPixelToCameraVec(s_data.cameraBounds);
-    s_data.topGlyphOffsetY = s_data.glyphs[topGlyph].offset.y * s_data.pixelToCamera.y;
+    s_data.topGlyphOffsetY = gFontManager.GetGlyphs().at(topGlyph).offset.y * s_data.pixelToCamera.y;
 }
 
 void TextRenderer::RenderText(std::string_view text, const lia::vec2& pos, const lia::vec2& scale, lia::vec4 color)
@@ -159,11 +98,13 @@ void TextRenderer::RenderText(std::string_view text, const lia::vec2& pos, const
     const lia::vec2 convertedPos = FromUiToCameraPos(pos, s_data.cameraBounds);
     float currentGlyphPosX = convertedPos.x;
 
+    auto glyphs = gFontManager.GetGlyphs();
+
     for (auto c : text) {
 
-        auto it = s_data.glyphs.find(c);
+        auto it = glyphs.find(c);
 
-        if (it == s_data.glyphs.end()) {
+        if (it == glyphs.end()) {
             EL_ERROR("Glyph {0} isn't supported by loaded font.", c);
             continue;
         }

@@ -7,7 +7,8 @@
 #include "Renderer/RenderCommand.h"
 #include "Renderer/Renderer2D.h"
 #include "Renderer/TextRenderer.h"
-#include "Renderer/TextureManager.h"
+#include "Resources/FontManager.h"
+#include "Resources/TextureManager.h"
 #include "Scene/Scene.h"
 
 namespace elv {
@@ -19,11 +20,13 @@ Render2dSystem::Render2dSystem(Scene* scenePtr)
 
 void Render2dSystem::OnInit()
 {
-    elv::TextRenderer::Load("assets/fonts/arial.ttf");
-}
+    gFontManager.Load("assets/fonts/arial.ttf");
 
-void Render2dSystem::OnUpdate(float dt)
-{
+    m_spritesPool = m_pScene->GetComponentPool<SpriteComponent>();
+    m_trasformsPool = m_pScene->GetComponentPool<TransformComponent>();
+    m_quadsPool = m_pScene->GetComponentPool<QuadComponent>();
+    m_textsPool = m_pScene->GetComponentPool<TextComponent>();
+    m_rectTransformPool = m_pScene->GetComponentPool<RectTransformComponent>();
 }
 
 void Render2dSystem::OnRender(float dt)
@@ -32,12 +35,12 @@ void Render2dSystem::OnRender(float dt)
     Renderer2D::BeginScene(camera);
 
     // Sprites
-    auto& spriteComponents = m_pScene->GetComponents<SpriteComponent>();
+    auto& spriteComponents = m_spritesPool->GetComponents();
     for (uint32_t index = 0; index < spriteComponents.size(); ++index) {
-        const ecs::Entity entity = m_pScene->GetEntity<SpriteComponent>(index);
+        const ecs::Entity entity = m_spritesPool->GetEntity(index);
 
         auto& spriteComponent = spriteComponents[index];
-        auto& transformComponent = m_pScene->GetComponent<TransformComponent>(entity);
+        auto& transformComponent = m_trasformsPool->GetComponent(entity);
         if (spriteComponent.texture != nullptr) {
             elv::Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.pos, transformComponent.scale, transformComponent.rotation.z);
         }
@@ -45,12 +48,12 @@ void Render2dSystem::OnRender(float dt)
     //
 
     // Quads
-    auto& quadComponents = m_pScene->GetComponents<QuadComponent>();
+    auto& quadComponents = m_quadsPool->GetComponents();
     for (uint32_t index = 0; index < quadComponents.size(); ++index) {
-        const ecs::Entity entity = m_pScene->GetEntity<QuadComponent>(index);
+        const ecs::Entity entity = m_quadsPool->GetEntity(index);
 
         auto& quadComponent = quadComponents[index];
-        auto& transformComponent = m_pScene->GetComponent<TransformComponent>(entity);
+        auto& transformComponent = m_trasformsPool->GetComponent(entity);
         elv::Renderer2D::DrawQuad(transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, quadComponent.color);
     }
     //
@@ -58,13 +61,13 @@ void Render2dSystem::OnRender(float dt)
 
     // Text
     TextRenderer::PreRender(camera);
-    auto& textComponents = m_pScene->GetComponents<TextComponent>();
+    auto& textComponents = m_textsPool->GetComponents();
     for (uint32_t i = 0; i < textComponents.size(); ++i) {
-        const ecs::Entity entity = m_pScene->GetEntity<TextComponent>(i);
+        const ecs::Entity entity = m_textsPool->GetEntity(i);
 
         auto& textComponent = textComponents[i];
         if (textComponent.isVisible) {
-            auto& rectTransform = m_pScene->GetComponent<RectTransformComponent>(entity);
+            auto& rectTransform = m_rectTransformPool->GetComponent(entity);
             elv::TextRenderer::RenderText(textComponent.text, rectTransform.pos, rectTransform.scale, textComponent.color);
         }
     }

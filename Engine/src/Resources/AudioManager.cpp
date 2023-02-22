@@ -1,6 +1,7 @@
 #include "AudioManager.h"
 #include "Core/FileSystem.h"
 
+#include "Core/Profiler.h"
 #include "Core/Timer.h"
 
 #include <irrKlang.h>
@@ -27,9 +28,11 @@ void AudioManager::Shutdown()
 
 void AudioManager::AddSound(const std::string& name, const std::string& path)
 {
-    Timer timer;
-    irrklang::ISound* sound = m_engine->play2D(std::format("{}{}", FileSystem::GetSoundsPath(), path).c_str(), false, true, true);
-    EL_CORE_INFO("Audio file {0} is loaded in {1} ms.", name, timer.ElapsedMs());
+    irrklang::ISound* sound = nullptr;
+    {
+        PROFILE_SCOPE(std::format("Audio file {} is loaded in:", name));
+        sound = m_engine->play2D(std::format("{}{}", FileSystem::GetSoundsPath(), path).c_str(), false, true, true);
+    }
     if (sound) {
         m_sounds.insert({ name, sound });
     }
