@@ -101,6 +101,10 @@ public:
 };
 
 struct CameraComponent {
+    CameraComponent()
+        : camera(false)
+    { }
+
     CameraComponent(bool isPerspective)
         : camera(isPerspective)
     { }

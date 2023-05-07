@@ -55,39 +55,51 @@ public:
     void RegisterComponent()
     {
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
-        auto componentPoolIt = m_componentPools.find(componentTypeId);
-        if (componentPoolIt == m_componentPools.end()) {
+        auto it = m_componentPools.find(componentTypeId);
+        if (it == m_componentPools.end()) {
             m_componentPools.insert({ componentTypeId, MakeSharedPtr<ecs::ComponentPool<ComponentType>>() });
         } else {
-            EL_CORE_WARN("Component pool already registered, id = {0}", componentTypeId);
+            EL_CORE_WARN("Component type is already registered with id = {0}", componentTypeId);
         }
     }
 
     template<typename ComponentType, typename... Args>
     ComponentType& AddComponent(ecs::Entity entity, Args&&... args)
     {
-        auto entityIt = m_entitiesSignatures.find(entity);
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
+
+        auto it = m_componentPools.find(componentTypeId);
+        if (it == m_componentPools.end()) {
+            EL_CORE_ERROR("Failed to add component. Component type isn't registered.");
+            EL_CORE_ASSERT(false, "ECS error");
+
+            static ComponentType invalid;
+            return invalid;
+        }
+
+        auto entityIt = m_entitiesSignatures.find(entity);
         entityIt->second.set(componentTypeId);
 
-        auto componentPoolIt = m_componentPools.find(componentTypeId);
-        EL_CORE_ASSERT(componentPoolIt != m_componentPools.end(), "Component pool isn't registered");
-
-        return std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(componentPoolIt->second)->AddComponent(entity, std::forward<Args>(args)...);
+        return std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(it->second)->AddComponent(entity, std::forward<Args>(args)...);
     };
 
     template<typename ComponentType>
     ComponentType& AddComponent(ecs::Entity entity, ComponentType&& component)
     {
-        auto entityIt = m_entitiesSignatures.find(entity);
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
+
+        auto it = m_componentPools.find(componentTypeId);
+        if (it == m_componentPools.end()) {
+            EL_CORE_ERROR("Failed to add component. Component type isn't registered.");
+            EL_CORE_ASSERT(false, "ECS error");
+            static ComponentType invalid;
+            return invalid;
+        }
+
+        auto entityIt = m_entitiesSignatures.find(entity);
         entityIt->second.set(componentTypeId);
 
-        auto componentPoolIt = m_componentPools.find(componentTypeId);
-
-        EL_CORE_ASSERT(componentPoolIt != m_componentPools.end(), "Component pool isn't registered");
-
-        return std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(componentPoolIt->second)->AddComponent(entity, std::forward<ComponentType>(component));
+        return std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(it->second)->AddComponent(entity, std::forward<ComponentType>(component));
     };
 
     template<typename ComponentType>
@@ -97,11 +109,14 @@ public:
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
         entityIt->second.set(componentTypeId, false);
 
-        auto componentPoolIt = m_componentPools.find(componentTypeId);
+        auto it = m_componentPools.find(componentTypeId);
+        if (it == m_componentPools.end()) {
+            EL_CORE_ERROR("Failed to remove component. Component type isn't registered");
+            EL_CORE_ASSERT(false, "ECS error");
+            return;
+        }
 
-        EL_CORE_ASSERT(componentPoolIt != m_componentPools.end(), "Component type isn't registered.")
-
-        componentPoolIt->second->RemoveComponent(entity);
+        it->second->RemoveComponent(entity);
     };
 
     template<typename ComponentType>
@@ -109,12 +124,14 @@ public:
     {
         auto entityIt = m_entitiesSignatures.find(entity);
 
-        if (entityIt != m_entitiesSignatures.end()) {
-            const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
-            return entityIt->second.test(componentTypeId);
+        if (entityIt == m_entitiesSignatures.end()) {
+            EL_CORE_ERROR("The entity with id={0} is not found.", entity);
+            EL_CORE_ASSERT(false, "ECS error");
+            return false;
         }
 
-        return false;
+        const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
+        return entityIt->second.test(componentTypeId);
     }
 
     template<typename ComponentType>
@@ -123,7 +140,12 @@ public:
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
         auto it = m_componentPools.find(componentTypeId);
 
-        EL_CORE_ASSERT(it != m_componentPools.end(), "Component type isn't registered.");
+        if (it == m_componentPools.end()) {
+            EL_CORE_ERROR("Failed to get component. Component type isn't registered.");
+            EL_CORE_ASSERT(false, "ECS error");
+            static ComponentType invalid;
+            return invalid;
+        }
 
         return std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(it->second)->GetComponent(entity);
     }
@@ -134,13 +156,17 @@ public:
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
         auto it = m_componentPools.find(componentTypeId);
 
-        EL_CORE_ASSERT(it != m_componentPools.end(), "Component type isn't registered.")
+        if (it == m_componentPools.end()) {
+            EL_CORE_ERROR("Failed to get components. Component type isn't registered.");
+            EL_CORE_ASSERT(false, "ECS error");
+            return std::vector<ComponentType>();
+        }
 
         return std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(it->second)->GetComponents();
     }
 
     template<typename ComponentType>
-    bool HasComponentPool() const
+    bool IsComponentTypeRegistered() const
     {
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
         auto it = m_componentPools.find(componentTypeId);
@@ -154,9 +180,13 @@ public:
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
         auto it = m_componentPools.find(componentTypeId);
 
-        EL_CORE_ASSERT(it != m_componentPools.end(), "Failed to get component pool!");
+        if (it == m_componentPools.end()) {
+            EL_CORE_ERROR("Failed to get component pool. Component type isn't registered.");
+            EL_CORE_ASSERT(false, "ECS error");
+            return nullptr;
+        }
 
-        return it != m_componentPools.end() ? std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(it->second) : nullptr;
+        return std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(it->second);
     }
 
     template<typename ComponentType>
@@ -165,7 +195,11 @@ public:
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
         auto it = m_componentPools.find(componentTypeId);
 
-        EL_CORE_ASSERT(it != m_componentPools.end(), "Component type isn't registered.")
+        if (it == m_componentPools.end()) {
+            EL_CORE_ERROR("Failed to get entity by component index. Component type isn't registered.");
+            EL_CORE_ASSERT(false, "ECS error");
+            return ecs::INVALID_ENTITY_ID;
+        }
 
         return it->second->GetEntity(componentIndex);
     }
