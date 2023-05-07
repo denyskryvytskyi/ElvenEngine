@@ -1,9 +1,8 @@
 #pragma once
 
-#pragma warning(push, 0)
+#define SPDLOG_FMT_EXTERNAL
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
-#pragma warning(pop)
 
 namespace elv {
 

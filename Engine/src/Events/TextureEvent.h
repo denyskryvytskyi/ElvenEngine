@@ -12,7 +12,7 @@ public:
 
     std::string ToString() const override
     {
-        return std::format("TextureLoadedEvent: {}", textureName);
+        return fmt::format("TextureLoadedEvent: {}", textureName);
     }
 
 public:

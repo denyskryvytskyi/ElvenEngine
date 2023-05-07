@@ -17,7 +17,7 @@ public:
 
     std::string ToString() const override
     {
-        return std::format("KeyPressedEvent: {} ({} repeats)", key, repeatCount);
+        return fmt::format("KeyPressedEvent: {} ({} repeats)", key, repeatCount);
     }
 
 public:
@@ -36,7 +36,7 @@ public:
 
     std::string ToString() const override
     {
-        return std::format("KeyReleasedEvent: {}", key);
+        return fmt::format("KeyReleasedEvent: {}", key);
     }
 
 public:
@@ -54,7 +54,7 @@ public:
 
     std::string ToString() const override
     {
-        return std::format("KeyTypedEvent: {}", key);
+        return fmt::format("KeyTypedEvent: {}", key);
     }
 
 public:

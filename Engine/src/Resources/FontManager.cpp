@@ -47,7 +47,7 @@ void FontManager::Load(std::string_view font)
         // don't create texture for the Space symbol
         if (c != 32) {
 
-            const std::string textureName = std::format("{}{}", "text2d_glyph_", c);
+            const std::string textureName = fmt::format("{}{}", "text2d_glyph_", c);
             texture = textures::Load(textureName, face->glyph->bitmap.width, face->glyph->bitmap.rows, 1);
             texture->SetData(face->glyph->bitmap.buffer);
         }

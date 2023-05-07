@@ -22,7 +22,8 @@ uint16_t s_GLFWwindowCount = 0;
 
 static void GLFWErrorCallback(int error, const char* description)
 {
-    EL_CORE_ASSERT("GLFW Error ({0}): {1}", error, description);
+    EL_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
+    EL_CORE_ASSERT(false, "GLFW erroe calllback");
 }
 
 WindowsWindow::WindowsWindow(const WindowProps& props)

@@ -14,7 +14,6 @@
 #include <variant>
 
 #include <array>
-#include <format>
 #include <fstream>
 #include <set>
 #include <sstream>
@@ -33,3 +32,6 @@
 #ifdef EL_PLATFORM_WINDOWS
 #    include <Windows.h>
 #endif
+
+// vendor
+#include <fmt/format.h>

@@ -138,6 +138,7 @@ ${VENDOR_PATH}/stb/include
 ${VENDOR_PATH}/json/include
 ${VENDOR_PATH}/freetype/include
 ${VENDOR_PATH}/irrklang/include
+${VENDOR_PATH}/fmt/include
 )
 
 if (EDITOR_MODE)
@@ -171,6 +172,7 @@ find_library(spdlog_d NAMES spdlogd PATHS ${VENDOR_PATH_DEBUG})
 find_library(lia_d NAMES lia PATHS ${VENDOR_PATH_DEBUG})
 find_library(stb_d NAMES stb PATHS ${VENDOR_PATH_DEBUG})
 find_library(freetype_d NAMES freetyped PATHS ${VENDOR_PATH_DEBUG})
+find_library(fmt_d NAMES fmtd PATHS ${VENDOR_PATH_DEBUG})
 
 find_library(glad NAMES glad PATHS ${VENDOR_PATH_RELEASE})
 find_library(glfw NAMES glfw3 PATHS ${VENDOR_PATH_RELEASE})
@@ -178,6 +180,7 @@ find_library(spdlog NAMES spdlog PATHS ${VENDOR_PATH_RELEASE})
 find_library(lia NAMES lia PATHS ${VENDOR_PATH_RELEASE})
 find_library(stb NAMES stb PATHS ${VENDOR_PATH_RELEASE})
 find_library(freetype NAMES freetype PATHS ${VENDOR_PATH_RELEASE})
+find_library(fmt NAMES fmt PATHS ${VENDOR_PATH_RELEASE})
 find_library(irrklang NAMES irrKlang.lib PATHS ${VENDOR_PATH}/irrklang/lib)
 
 set(VENDOR
@@ -188,6 +191,7 @@ debug ${lia_d} optimized ${lia}
 debug ${stb_d} optimized ${stb}
 debug ${freetype_d} optimized ${freetype}
 debug ${irrklang} optimized ${irrklang}
+debug ${fmt_d} optimized ${fmt}
 )
 
 target_link_libraries(${LIBRARY_NAME} ${STATIC_THIRD_PARTY_LIBRARIES} ${VENDOR})

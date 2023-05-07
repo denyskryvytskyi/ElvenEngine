@@ -17,7 +17,7 @@ public:
 
     std::string ToString() const override
     {
-        return std::format("MouseMovedEvent: {}, {}", mouseX, mouseY);
+        return fmt::format("MouseMovedEvent: {}, {}", mouseX, mouseY);
     }
 
 public:
@@ -37,7 +37,7 @@ public:
 
     std::string ToString() const override
     {
-        return std::format("MouseScrolledEvent: {}, {}", xOffset, yOffset);
+        return fmt::format("MouseScrolledEvent: {}, {}", xOffset, yOffset);
     }
 
 public:
@@ -56,7 +56,7 @@ public:
 
     std::string ToString() const override
     {
-        return std::format("MouseButtonPressedEvent: {}", button);
+        return fmt::format("MouseButtonPressedEvent: {}", button);
     }
 
 public:
@@ -74,7 +74,7 @@ public:
 
     std::string ToString() const override
     {
-        return std::format("MouseButtonReleasedEvent: {}", button);
+        return fmt::format("MouseButtonReleasedEvent: {}", button);
     }
 
 public:
