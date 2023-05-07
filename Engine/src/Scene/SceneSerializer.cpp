@@ -20,7 +20,7 @@ void SceneSerializer::LoadScene(std::string_view sceneName)
     EL_CORE_INFO("Scene loading...");
     json j;
     {
-        std::ifstream in(std::format("{}{}{}", FileSystem::GetScenesPath(), sceneName, ".scene"));
+        std::ifstream in(fmt::format("{}{}{}", FileSystem::GetScenesPath(), sceneName, ".scene"));
         if (in.is_open()) {
             in >> j;
         } else {
@@ -38,7 +38,7 @@ void SceneSerializer::LoadScene(std::string_view sceneName)
 
 void SceneSerializer::SaveScene(std::string_view sceneName)
 {
-    std::ofstream out(std::format("{}{}{}{}", FileSystem::GetScenesPath(), "new_", sceneName, ".scene"));
+    std::ofstream out(fmt::format("{}{}{}{}", FileSystem::GetScenesPath(), "new_", sceneName, ".scene"));
     json j;
 
     j["name"] = sceneName;

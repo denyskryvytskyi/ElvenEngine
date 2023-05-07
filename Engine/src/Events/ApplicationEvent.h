@@ -2,7 +2,7 @@
 
 #include "Events/Event.h"
 
-#include <format>
+#include <fmt/format.h>
 
 namespace elv::events {
 
@@ -18,7 +18,7 @@ public:
 
     std::string ToString() const override
     {
-        return std::format("WindowResizeEvent: {}, {}", width, height);
+        return fmt::format("WindowResizeEvent: {}, {}", width, height);
     }
 
 public:
