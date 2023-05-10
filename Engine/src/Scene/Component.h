@@ -9,10 +9,10 @@ namespace elv::ecs {
 using ComponentTypeId = std::uint64_t;
 
 constexpr ComponentTypeId INVALID_COMPONENT_TYPE_ID = 0;
-constexpr std::uint32_t MAX_ENTITIES_PER_COMPONENT = 100'000;
-constexpr std::uint32_t MAX_COMPONENTS = 32;
+constexpr std::uint32_t INIT_COMPONENT_POOL_CAPACITY = 100'000;
+constexpr std::uint32_t MAX_COMPONENT_TYPES = 100;
 
-using ComponentMask = std::bitset<MAX_COMPONENTS>;
+using ComponentMask = std::bitset<MAX_COMPONENT_TYPES>;
 
 class ComponentTypeIdHolder {
 public:
@@ -24,10 +24,10 @@ inline ComponentTypeId GetComponentTypeId()
 {
     static ComponentTypeId id = INVALID_COMPONENT_TYPE_ID;
     if (id == INVALID_COMPONENT_TYPE_ID) {
-        if (ComponentTypeIdHolder::s_componentTypeCounter < MAX_COMPONENTS)
+        if (ComponentTypeIdHolder::s_componentTypeCounter < MAX_COMPONENT_TYPES)
             id = ++ComponentTypeIdHolder::s_componentTypeCounter;
         else {
-            EL_CORE_ERROR("Maximum component types limit reached = {0}!", MAX_COMPONENTS);
+            EL_CORE_ERROR("Maximum component types limit reached = {0}!", MAX_COMPONENT_TYPES);
             EL_CORE_ASSERT(false, "Maximum component types limit reached");
             return INVALID_COMPONENT_TYPE_ID;
         }
@@ -49,7 +49,7 @@ class ComponentPool final : public IComponentPool {
 public:
     ComponentPool()
     {
-        m_components.reserve(MAX_ENTITIES_PER_COMPONENT);
+        m_components.reserve(INIT_COMPONENT_POOL_CAPACITY);
     }
 
     void Clear() override
@@ -62,12 +62,6 @@ public:
     template<typename... Args>
     ComponentType& AddComponent(Entity entity, Args&&... args)
     {
-        if (m_components.size() >= MAX_ENTITIES_PER_COMPONENT) {
-            EL_CORE_ERROR("Entities limit reached for this component type = {0}!", MAX_COMPONENTS);
-            EL_CORE_ASSERT(false, "ECS error");
-            return m_invalidComponent;
-        }
-
         m_entityToComponentIndex.insert({ entity, m_components.size() });
         m_components.emplace_back(std::forward<Args>(args)...);
         m_entities.emplace_back(entity);
@@ -76,12 +70,6 @@ public:
 
     ComponentType& AddComponent(Entity entity, ComponentType&& component)
     {
-        if (m_components.size() >= MAX_ENTITIES_PER_COMPONENT) {
-            EL_CORE_ERROR("Entities limit reached for this component type = {0}!", MAX_COMPONENTS);
-            EL_CORE_ASSERT(false, "ECS error");
-            return m_invalidComponent;
-        }
-
         m_entityToComponentIndex.insert({ entity, m_components.size() });
         m_components.emplace_back(std::move(component));
         m_entities.emplace_back(entity);
@@ -91,20 +79,20 @@ public:
     void RemoveComponent(Entity entity) override
     {
         auto it = m_entityToComponentIndex.find(entity);
-        if (it != m_entityToComponentIndex.end()) {
-            const std::uint64_t componentIndex = it->second;
+        EL_CORE_ASSERT(it != m_entityToComponentIndex.end(), "Entity has not component of this type");
 
-            if (componentIndex < m_components.size() - 1) {
-                // replace dead component with the last one
-                m_components[componentIndex] = std::move(m_components.back());
-                m_entities[componentIndex] = std::move(m_entities.back());
+        const std::uint64_t componentIndex = it->second;
 
-                const Entity movedComponentEntityId = m_entities.back();
-                m_entityToComponentIndex[movedComponentEntityId] = componentIndex; // new mapping for moved component
-            }
+        if (componentIndex < m_components.size() - 1) {
+            // replace dead component with the last one
+            m_components[componentIndex] = std::move(m_components.back());
+            m_entities[componentIndex] = std::move(m_entities.back());
 
-            m_entityToComponentIndex.erase(it);
+            const Entity movedComponentEntityId = m_entities.back();
+            m_entityToComponentIndex[movedComponentEntityId] = componentIndex; // new mapping for moved component
         }
+
+        m_entityToComponentIndex.erase(it);
 
         if (!m_components.empty()) {
             m_components.pop_back();
@@ -121,11 +109,7 @@ public:
     {
         auto it = m_entityToComponentIndex.find(entity);
 
-        if (it == m_entityToComponentIndex.end()) {
-            EL_CORE_ERROR("Failed to find component by entity id={0}", entity);
-            EL_CORE_ASSERT(false, "ECS error");
-            return m_invalidComponent;
-        }
+        EL_CORE_ASSERT(it != m_entityToComponentIndex.end(), "The entity hasn't component of this type");
 
         return m_components[it->second];
     }
@@ -147,8 +131,6 @@ private:
     // index - component index that is the same for index from m_components
     // value - entity id associated with this component
     std::vector<Entity> m_entities;
-
-    ComponentType m_invalidComponent;
 };
 
 } // namespace elv::ecs
