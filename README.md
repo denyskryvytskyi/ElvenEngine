@@ -101,3 +101,4 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
 | [stb image](https://github.com/nothings/stb/blob/master/stb_image.h) | image loader |
 | [json](https://github.com/nlohmann/json) | json lib for serialization and data-driven architecture |
 | [irrKlang](https://www.ambiera.com/irrklang/) | sound library |
+| [fmt](https://github.com/fmtlib/fmt) | formatting library |
