@@ -84,10 +84,10 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
 <img src=".github/demo/fantasy.png" width="80%">
 
 #### Quad and texture batch rendering (20000 wizards)
-<img src=".github/demo/BatchRenderer_1.png" width="80%">
+<img src=".github/demo/batch_wizards.gif">
 
 #### 3D rendering
-<img src=".github/demo/3D_demo.png" width="80%">
+<img src=".github/demo/3D_cubes.gif">
 
 ## Third party libraries
 | Lib |  |

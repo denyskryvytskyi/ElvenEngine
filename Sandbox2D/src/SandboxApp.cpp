@@ -46,7 +46,9 @@ void Sandbox2D::OnCreate()
     elv::gAudioManager.SetVolume("back", 0.8f);
     elv::gAudioManager.Play("back");
 
-    if (false && !elv::gEngineSettings.loadDefaultScene) {
+    const bool wizardsScene = true;
+
+    if (wizardsScene && !elv::gEngineSettings.loadDefaultScene) {
         elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, elv::string_id("wizard"));
         elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, elv::string_id("wizard_fire"));
         elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, elv::string_id("wizard_ice"));
@@ -60,10 +62,10 @@ void Sandbox2D::OnCreate()
         for (size_t i = 0; i < texturesLoadList.size(); i++) {
             elv::textures::Load(texturesLoadList[i].first, texturesLoadList[i].second);
         }
+        return;
     }
 
-    // return;
-    //   another test scene
+    // fanstasy test scene
     elv::Scene& scene = elv::GetScene();
 
     const elv::ecs::Entity back_entity = scene.CreateEntity();
@@ -108,8 +110,8 @@ void Sandbox2D::OnTextureLoaded(const elv::events::TextureLoadedEvent& e)
 
         const elv::SharedPtr<elv::Texture2D> texture = elv::textures::Get("wizard_fire");
 
-        for (size_t i = 0; i < 10; ++i) {
-            for (size_t j = 0; j < 10; ++j) {
+        for (size_t i = 0; i < 100; ++i) {
+            for (size_t j = 0; j < 100; ++j) {
                 const elv::ecs::Entity entityQuad = scene.CreateEntity();
 
                 auto& transform = scene.AddComponent<elv::TransformComponent>(
