@@ -43,7 +43,6 @@ void Scene::OnShutdown()
     }
 
     m_componentPools.clear();
-    m_entities.clear();
     m_systems.clear();
 }
 

@@ -13,17 +13,31 @@ struct Glyph {
 
 class FontManager {
 public:
+    using GlyphsMap = std::unordered_map<char, Glyph>;
+    using FontsGlyphsMap = std::unordered_map<std::string, GlyphsMap>;
+
+public:
     FontManager() = default;
     FontManager(const FontManager&) = delete;
     const FontManager& operator=(const FontManager&) = delete;
 
     // Precompile a list of glyphs from the font
-    void Load(std::string_view font);
+    void Load(const std::string& fontName, const std::string& fontPath);
 
-    std::unordered_map<char, Glyph>& GetGlyphs() { return m_glyphs; };
+    const GlyphsMap& GetGlyphs(const std::string& fontName) const
+    {
+        auto it = m_fonts.find(fontName);
+        if (it != m_fonts.end()) {
+            return it->second;
+        }
+
+        EL_CORE_ERROR("Glyphs for the font {0} isn't found.", fontName);
+
+        return GlyphsMap();
+    };
 
 private:
-    std::unordered_map<char, Glyph> m_glyphs;
+    FontsGlyphsMap m_fonts;
 };
 
 extern FontManager gFontManager;

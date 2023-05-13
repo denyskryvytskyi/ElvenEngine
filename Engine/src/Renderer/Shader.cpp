@@ -44,7 +44,7 @@ SharedPtr<Shader> ShaderManager::Get(const std::string& name)
 
 std::string ShaderManager::ReadFile(const std::string& shaderFile)
 {
-    const std::string shaderPath = FileSystem::GetShadersPath() + shaderFile;
+    const std::string shaderPath = fileSystem::SHADERS_PATH + shaderFile;
     std::string result;
     std::ifstream in(shaderPath, std::ios::in || std::ios::binary);
     if (in) {

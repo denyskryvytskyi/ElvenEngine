@@ -87,18 +87,18 @@ void TextRenderer::PreRender(const Camera& camera)
 
     s_data.cameraBounds = GetScene().GetComponent<elv::CameraComponent>(Application::Get().GetOrthographicCameraEntity()).camera.GetOrthographicsBounds();
     s_data.pixelToCamera = GetPixelToCameraVec(s_data.cameraBounds);
-    s_data.topGlyphOffsetY = gFontManager.GetGlyphs().at(topGlyph).offset.y * s_data.pixelToCamera.y;
 }
 
-void TextRenderer::RenderText(std::string_view text, const lia::vec2& pos, const lia::vec2& scale, lia::vec4 color)
+void TextRenderer::RenderText(std::string_view text, const std::string& fontName, const lia::vec2& pos, const lia::vec2& scale, lia::vec4 color)
 {
+    const auto& glyphs = gFontManager.GetGlyphs(fontName);
+
+    s_data.topGlyphOffsetY = glyphs.at(topGlyph).offset.y * s_data.pixelToCamera.y;
     s_data.shader->Bind();
     s_data.shader->SetVector4f("textColor", color);
 
     const lia::vec2 convertedPos = FromUiToCameraPos(pos, s_data.cameraBounds);
     float currentGlyphPosX = convertedPos.x;
-
-    auto glyphs = gFontManager.GetGlyphs();
 
     for (auto c : text) {
 

@@ -31,7 +31,7 @@ void AudioManager::AddSound(const std::string& name, const std::string& path)
     irrklang::ISound* sound = nullptr;
     {
         PROFILE_SCOPE(fmt::format("Audio file {} is loaded in:", name));
-        sound = m_engine->play2D(fmt::format("{}{}", FileSystem::GetSoundsPath(), path).c_str(), false, true, true);
+        sound = m_engine->play2D(fmt::format("{}{}", fileSystem::SOUNDS_PATH, path).c_str(), false, true, true);
     }
     if (sound) {
         m_sounds.insert({ name, sound });

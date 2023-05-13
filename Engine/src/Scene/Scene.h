@@ -24,30 +24,28 @@ public:
     ecs::Entity CreateEntity()
     {
         const ecs::Entity id = ecs::GenerateEntityId();
-        m_entitiesSignatures.insert({ id, ecs::ComponentMask() });
-        m_entities.emplace_back(id);
+        m_entities.insert({ id, ecs::ComponentMask() });
 
         return id;
     }
 
-    const std::vector<ecs::Entity>& GetEntities() const
+    const std::unordered_map<ecs::Entity, ecs::ComponentMask>& GetEntities() const
     {
         return m_entities;
     }
 
     void DestroyEntity(const ecs::Entity& entity)
     {
-        auto entityIt = std::find(m_entities.begin(), m_entities.end(), entity);
+        auto entityIt = m_entities.find(entity);
 
         if (entityIt != m_entities.end()) {
-            auto componentMask = m_entitiesSignatures[entity];
+            const auto& componentMask = entityIt->second;
             for (size_t i = 0; i < componentMask.size(); ++i) {
                 if (componentMask.test(i)) {
                     m_componentPools[i]->RemoveComponent(entity);
                 }
             }
-            m_entitiesSignatures.erase(entity);
-            m_entities.erase(entityIt);
+            m_entities.erase(entity);
         }
     }
 
@@ -71,8 +69,8 @@ public:
         auto it = m_componentPools.find(componentTypeId);
         EL_CORE_ASSERT(it != m_componentPools.end(), "Failed to add component. Component type isn't registered.");
 
-        auto entityIt = m_entitiesSignatures.find(entity);
-        EL_CORE_ASSERT(entityIt != m_entitiesSignatures.end(), "The entity isn't found.");
+        auto entityIt = m_entities.find(entity);
+        EL_CORE_ASSERT(entityIt != m_entities.end(), "The entity isn't found.");
         entityIt->second.set(componentTypeId);
 
         return std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(it->second)->AddComponent(entity, std::forward<Args>(args)...);
@@ -86,8 +84,8 @@ public:
         auto it = m_componentPools.find(componentTypeId);
         EL_CORE_ASSERT(it != m_componentPools.end(), "Failed to add component. Component type isn't registered.");
 
-        auto entityIt = m_entitiesSignatures.find(entity);
-        EL_CORE_ASSERT(entityIt != m_entitiesSignatures.end(), "The entity isn't found.");
+        auto entityIt = m_entities.find(entity);
+        EL_CORE_ASSERT(entityIt != m_entities.end(), "The entity isn't found.");
         entityIt->second.set(componentTypeId);
 
         return std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(it->second)->AddComponent(entity, std::forward<ComponentType>(component));
@@ -96,8 +94,8 @@ public:
     template<typename ComponentType>
     void RemoveComponent(ecs::Entity entity)
     {
-        auto entityIt = m_entitiesSignatures.find(entity);
-        EL_CORE_ASSERT(entityIt != m_entitiesSignatures.end(), "The entity isn't found.");
+        auto entityIt = m_entities.find(entity);
+        EL_CORE_ASSERT(entityIt != m_entities.end(), "The entity isn't found.");
 
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
         auto it = m_componentPools.find(componentTypeId);
@@ -110,8 +108,8 @@ public:
     template<typename ComponentType>
     bool HasComponent(ecs::Entity entity)
     {
-        auto entityIt = m_entitiesSignatures.find(entity);
-        EL_CORE_ASSERT(entityIt != m_entitiesSignatures.end(), "The entity isn't found");
+        auto entityIt = m_entities.find(entity);
+        EL_CORE_ASSERT(entityIt != m_entities.end(), "The entity isn't found");
 
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
         return entityIt->second.test(componentTypeId);
@@ -120,8 +118,8 @@ public:
     template<typename ComponentType>
     ComponentType& GetComponent(ecs::Entity entity)
     {
-        auto entityIt = m_entitiesSignatures.find(entity);
-        EL_CORE_ASSERT(entityIt != m_entitiesSignatures.end(), "The entity isn't found");
+        auto entityIt = m_entities.find(entity);
+        EL_CORE_ASSERT(entityIt != m_entities.end(), "The entity isn't found");
 
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
         EL_CORE_ASSERT(entityIt->second.test(componentTypeId), "The entity hasn't component of this type.")
@@ -183,8 +181,7 @@ private:
 
     std::unordered_map<ecs::ComponentTypeId, SharedPtr<ecs::IComponentPool>> m_componentPools;
     std::vector<UniquePtr<ecs::IComponentSystem>> m_systems;
-    std::vector<ecs::Entity> m_entities;
-    std::unordered_map<ecs::Entity, ecs::ComponentMask> m_entitiesSignatures;
+    std::unordered_map<ecs::Entity, ecs::ComponentMask> m_entities;
 };
 
 } // namespace elv

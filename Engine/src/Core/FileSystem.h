@@ -2,16 +2,16 @@
 
 #include <filesystem>
 
-namespace elv {
+namespace elv::fileSystem {
 
-class FileSystem {
-public:
-    static const char* GetAssetsPath() { return "assets/"; }
-    static const char* GetShadersPath() { return "assets/shaders/"; }
-    static const char* GetImagesPath() { return "assets/images/"; }
-    static const char* GetScenesPath() { return "assets/scenes/"; }
-    static const char* GetSoundsPath() { return "assets/sounds/"; }
-    static std::string GetCurrentPath() { return std::filesystem::current_path().string(); }
-};
+inline constexpr const char* ASSETS_PATH = "assets/";
+inline constexpr const char* SHADERS_PATH = "assets/shaders/";
+inline constexpr const char* IMAGES_PATH = "assets/images/";
+inline constexpr const char* SCENES_PATH = "assets/scenes/";
+inline constexpr const char* SOUNDS_PATH = "assets/sounds/";
 
-} // namespace elv
+inline std::string GetCurrentPath() { return std::filesystem::current_path().string(); }
+inline bool IsDirectoryExists(const std::string dir) { return std::filesystem::exists(dir); }
+inline void CreateDir(const std::string dir) { std::filesystem::create_directory(dir); }
+
+} // namespace elv::fileSystem

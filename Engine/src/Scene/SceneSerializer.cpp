@@ -20,7 +20,7 @@ void SceneSerializer::LoadScene(std::string_view sceneName)
     EL_CORE_INFO("Scene loading...");
     json j;
     {
-        std::ifstream in(fmt::format("{}{}{}", FileSystem::GetScenesPath(), sceneName, ".scene"));
+        std::ifstream in(fmt::format("{}{}{}", fileSystem::SCENES_PATH, sceneName, ".scene"));
         if (in.is_open()) {
             in >> j;
         } else {
@@ -38,16 +38,20 @@ void SceneSerializer::LoadScene(std::string_view sceneName)
 
 void SceneSerializer::SaveScene(std::string_view sceneName)
 {
-    std::ofstream out(fmt::format("{}{}{}{}", FileSystem::GetScenesPath(), "new_", sceneName, ".scene"));
+    if (!fileSystem::IsDirectoryExists(fileSystem::SCENES_PATH)) {
+        fileSystem::CreateDir(fileSystem::SCENES_PATH);
+    }
+
+    std::ofstream out(fmt::format("{}{}{}{}", fileSystem::SCENES_PATH, "new_", sceneName, ".scene"));
     json j;
 
     j["name"] = sceneName;
 
     auto entities = json::array();
-    for (ecs::Entity entity : m_pScene->GetEntities()) {
+    for (const auto& entityInfo : m_pScene->GetEntities()) {
         auto entityObj = json::object();
-        SaveEntity(entity, entityObj);
-        entities.push_back(entityObj);
+        if (SaveEntity(entityInfo, entityObj))
+            entities.push_back(entityObj);
     }
     j["entities"] = entities;
     out << std::setfill(' ') << std::setw(2) << j;
@@ -57,6 +61,10 @@ void SceneSerializer::LoadEntity(ecs::Entity entity, const nlohmann::json& jObj)
 {
     auto transform = jObj.at("Transform").get<TransformComponent>();
     m_pScene->AddComponent(entity, std::move(transform));
+
+    //
+    auto quad = jObj.at("Quad").get<QuadComponent>();
+    m_pScene->AddComponent(entity, std::move(quad));
 
     //
     auto sprite = jObj.at("Sprite").get<SpriteComponent>();
@@ -69,28 +77,39 @@ void SceneSerializer::LoadEntity(ecs::Entity entity, const nlohmann::json& jObj)
     m_pScene->AddComponent(entity, std::move(rectTransform));
 
     //
-    auto text = jObj.at("TExt").get<TextComponent>();
+    auto text = jObj.at("Text").get<TextComponent>();
     m_pScene->AddComponent(entity, std::move(text));
 }
 
-void SceneSerializer::SaveEntity(ecs::Entity entity, nlohmann::json& jObj)
+bool SceneSerializer::SaveEntity(std::pair<ecs::Entity, ecs::ComponentMask> entityInfo, nlohmann::json& jObj)
 {
-    if (m_pScene->HasComponent<TransformComponent>(entity)) {
+    bool isEntityHasComponents = false;
+    if (entityInfo.second.test(ecs::GetComponentTypeId<TransformComponent>())) {
 
-        jObj["Transform"] = m_pScene->GetComponent<TransformComponent>(entity);
+        jObj["Transform"] = m_pScene->GetComponent<TransformComponent>(entityInfo.first);
+        isEntityHasComponents = true;
     }
-    if (m_pScene->HasComponent<SpriteComponent>(entity)) {
+    if (entityInfo.second.test(ecs::GetComponentTypeId<QuadComponent>())) {
 
-        jObj["Sprite"] = m_pScene->GetComponent<SpriteComponent>(entity);
+        jObj["Quad"] = m_pScene->GetComponent<QuadComponent>(entityInfo.first);
+        isEntityHasComponents = true;
     }
-    if (m_pScene->HasComponent<RectTransformComponent>(entity)) {
+    if (entityInfo.second.test(ecs::GetComponentTypeId<SpriteComponent>())) {
 
-        jObj["RectTransform"] = m_pScene->GetComponent<RectTransformComponent>(entity);
+        jObj["Sprite"] = m_pScene->GetComponent<SpriteComponent>(entityInfo.first);
+        isEntityHasComponents = true;
     }
-    if (m_pScene->HasComponent<TextComponent>(entity)) {
+    if (entityInfo.second.test(ecs::GetComponentTypeId<RectTransformComponent>())) {
 
-        jObj["Text"] = m_pScene->GetComponent<TextComponent>(entity);
+        jObj["RectTransform"] = m_pScene->GetComponent<RectTransformComponent>(entityInfo.first);
+        isEntityHasComponents = true;
     }
+    if (entityInfo.second.test(ecs::GetComponentTypeId<TextComponent>())) {
+        jObj["Text"] = m_pScene->GetComponent<TextComponent>(entityInfo.first);
+        isEntityHasComponents = true;
+    }
+
+    return isEntityHasComponents;
 }
 
 } // namespace elv

@@ -52,7 +52,7 @@ public:
 
     void LookAt(const lia::vec3 pos, const lia::vec3 front, const lia::vec3 up);
 
-    OrthoCameraBounds GetOrthographicsBounds() const { return m_orthographicBounds; }
+    const OrthoCameraBounds& GetOrthographicsBounds() const { return m_orthographicBounds; }
 
 private:
     void RecalculateViewMatrix();

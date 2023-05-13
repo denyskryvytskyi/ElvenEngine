@@ -21,7 +21,7 @@ void SceneManager::Init()
 
 void SceneManager::Shutdown()
 {
-    if (gEngineSettings.loadDefaultScene) {
+    if (gEngineSettings.enableSaveScene) {
         m_serializer.SaveScene(gEngineSettings.defaultSceneName);
     }
     m_activeScene.OnShutdown();

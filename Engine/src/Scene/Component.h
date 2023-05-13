@@ -124,6 +124,11 @@ public:
         return m_components;
     }
 
+    const std::vector<Entity>& GetEntites() const
+    {
+        return m_entities;
+    }
+
 private:
     std::vector<ComponentType> m_components;
     std::unordered_map<Entity, std::uint64_t> m_entityToComponentIndex;

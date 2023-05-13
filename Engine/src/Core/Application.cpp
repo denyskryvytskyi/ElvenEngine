@@ -33,7 +33,7 @@ Application::Application()
     EL_CORE_ASSERT(!s_instance, "Application already exists!");
     s_instance = this;
 
-    EL_CORE_INFO("Executable path: {0}", FileSystem::GetCurrentPath());
+    EL_CORE_INFO("Executable path: {0}", fileSystem::GetCurrentPath());
 
     // Init global engine settings
     gEngineSettings.LoadSettings();
@@ -61,7 +61,7 @@ Application::Application()
 
     auto& cameraComponent = scene.AddComponent<CameraComponent>(m_orthoCameraEntity, false);
     const float aspectRatio = static_cast<float>(gEngineSettings.windowWidth) / static_cast<float>(gEngineSettings.windowHeight);
-    cameraComponent.camera.SetProjection(-aspectRatio * gEngineSettings.orthographicCameraSize, aspectRatio * gEngineSettings.orthographicCameraSize, -gEngineSettings.orthographicCameraSize, gEngineSettings.orthographicCameraSize, -1.0f, 1.0f);
+    cameraComponent.camera.SetProjection(-aspectRatio * gEngineSettings.orthographicCameraSize, aspectRatio * gEngineSettings.orthographicCameraSize, -gEngineSettings.orthographicCameraSize, gEngineSettings.orthographicCameraSize, -10.0f, 10.0f);
 
     // fps counter
     if (gEngineSettings.enableFpsCounter) {

@@ -143,9 +143,10 @@ void from_json(const nlohmann::json& j, RectTransformComponent& t);
 
 struct TextComponent {
     TextComponent() = default;
-    TextComponent(std::string_view text_, const lia::vec4& color_ = { 1.0f })
+    TextComponent(std::string_view text_, const lia::vec4& color_ = { 1.0f }, std::string_view font_name = "arial")
         : text(text_)
         , color(color_)
+        , fontName(font_name)
     { }
 
     void Show()
@@ -158,10 +159,16 @@ struct TextComponent {
         isVisible = false;
     }
 
+    void SetFontName(std::string_view font_name)
+    {
+        fontName = font_name;
+    }
+
 public:
     std::string text;
     lia::vec4 color { 1.0f };
     bool isVisible { true };
+    std::string fontName = "arial";
 };
 
 void to_json(nlohmann::json& j, const TextComponent& t);

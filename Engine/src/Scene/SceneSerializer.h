@@ -15,7 +15,7 @@ public:
 
 private:
     void LoadEntity(ecs::Entity entity, const nlohmann::json& jObj);
-    void SaveEntity(ecs::Entity entity, nlohmann::json& jObj);
+    bool SaveEntity(std::pair<ecs::Entity, ecs::ComponentMask> entityInfo, nlohmann::json& jObj);
 
 private:
     Scene* m_pScene { nullptr };
