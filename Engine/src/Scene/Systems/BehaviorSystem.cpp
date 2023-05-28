@@ -4,10 +4,6 @@
 #include "Scene/Scene.h"
 
 namespace elv {
-BehaviorSystem::BehaviorSystem(Scene* scenePtr)
-    : ecs::IComponentSystem(scenePtr)
-{
-}
 
 void BehaviorSystem::OnInit()
 {
@@ -16,9 +12,7 @@ void BehaviorSystem::OnInit()
 
 void BehaviorSystem::OnShutdown()
 {
-    auto& behaviorComponents = m_behaviorsPool->GetComponents();
-    for (uint32_t i = 0; i < behaviorComponents.size(); ++i) {
-        auto& component = behaviorComponents[i];
+    for (auto& component : m_behaviorsPool->GetComponents()) {
         if (component.behavior) {
             component.behavior->OnDestroy();
         }

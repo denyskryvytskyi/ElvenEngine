@@ -7,6 +7,8 @@
 #include "Platform/OpenGL/OpenGLTexture2D.h"
 #include "Renderer/Renderer.h"
 
+#include "Core/Timer.h"
+
 #include <stb/stb_image.h>
 
 namespace elv {
@@ -22,7 +24,9 @@ static void LoadTextureFromFile(std::vector<TextureManager::LoadedTextureInfo>& 
 
     TextureManager::LoadedTextureInfo info;
     info.textureName = textureName;
+    Timer timer;
     info.data = stbi_load(filepath.data(), &info.width, &info.height, &info.nrChannels, 0);
+    EL_CORE_INFO("Texture {0} loaded in {1} seconds", textureName.c_str(), timer.Elapsed());
 
     if (info.data == nullptr) {
         EL_CORE_CRITICAL("Failed to load texture: {0}", textureName);

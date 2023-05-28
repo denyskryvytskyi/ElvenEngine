@@ -10,7 +10,7 @@ using ComponentTypeId = std::uint64_t;
 
 constexpr ComponentTypeId INVALID_COMPONENT_TYPE_ID = 0;
 constexpr std::uint32_t INIT_COMPONENT_POOL_CAPACITY = 100'000;
-constexpr std::uint32_t MAX_COMPONENT_TYPES = 100;
+constexpr std::uint32_t MAX_COMPONENT_TYPES = 64;
 
 using ComponentMask = std::bitset<MAX_COMPONENT_TYPES>;
 
@@ -60,6 +60,15 @@ public:
     }
 
     template<typename... Args>
+    ComponentType& AddComponent(Entity entity)
+    {
+        m_entityToComponentIndex.insert({ entity, m_components.size() });
+        m_components.emplace_back();
+        m_entities.emplace_back(entity);
+        return m_components.back();
+    }
+
+    template<typename... Args>
     ComponentType& AddComponent(Entity entity, Args&&... args)
     {
         m_entityToComponentIndex.insert({ entity, m_components.size() });
@@ -105,6 +114,12 @@ public:
         return m_entities[componentIndex];
     }
 
+    ComponentType& GetByIndex(const std::uint32_t componentIndex)
+    {
+        EL_CORE_ASSERT(m_components.size() > componentIndex, "Out of components pool range.")
+        return m_components[componentIndex];
+    }
+
     ComponentType& GetComponent(Entity entity)
     {
         auto it = m_entityToComponentIndex.find(entity);
@@ -124,9 +139,14 @@ public:
         return m_components;
     }
 
-    const std::vector<Entity>& GetEntites() const
+    const std::vector<Entity>& GetEntities() const
     {
         return m_entities;
+    }
+
+    size_t Size() const
+    {
+        return m_components.size();
     }
 
 private:

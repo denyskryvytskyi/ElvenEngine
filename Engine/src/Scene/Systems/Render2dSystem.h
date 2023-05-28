@@ -10,7 +10,7 @@ namespace elv {
 class Render2dSystem
     : public ecs::IComponentSystem {
 public:
-    Render2dSystem(Scene* scenePtr);
+    Render2dSystem();
 
     void OnInit() override;
     void OnRender(float dt) override;

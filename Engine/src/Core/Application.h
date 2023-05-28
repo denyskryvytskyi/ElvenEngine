@@ -55,6 +55,7 @@ private:
 
     UniquePtr<Window> m_window { nullptr };
     ecs::Entity m_fpsCounterEntityId { 0 };
+    bool m_isPaused { false };
 
 #if EDITOR_MODE
     ImGuiOverlay m_imGuiOverlay;

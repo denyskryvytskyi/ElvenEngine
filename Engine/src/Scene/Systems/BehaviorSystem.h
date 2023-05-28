@@ -10,8 +10,6 @@ class Scene;
 */
 class BehaviorSystem final : public ecs::IComponentSystem {
 public:
-    BehaviorSystem(Scene* scenePtr);
-
     void OnInit() override;
     void OnShutdown() override;
     void OnUpdate(float dt) override;

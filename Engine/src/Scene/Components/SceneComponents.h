@@ -57,11 +57,16 @@ struct SpriteComponent {
      * @param texture_name Texture name to store in manager
      * @param texture_path Relative path to the texture file
      */
-    void SetTexture(std::string_view texture_name, std::string_view texture_path)
+    void SetTexture(const std::string& texture_name, const std::string& texture_path)
     {
         textureName = texture_name;
         texturePath = texture_path;
         LoadTexture();
+    }
+
+    void SetColor(const lia::vec4& color_)
+    {
+        color = color_;
     }
 
     // Load texture if it has textureName and texturePath
@@ -72,12 +77,57 @@ public:
     std::string textureName;
     std::string texturePath;
     SharedPtr<Texture2D> texture { nullptr };
+    lia::vec4 color { 1.0f };
 };
 
 void to_json(nlohmann::json& j, const SpriteComponent& t);
 void from_json(const nlohmann::json& j, SpriteComponent& t);
 
+// spritesheet animation
+struct SriteAnimation {
+    SriteAnimation(int frames_count, float time_per_frame)
+        : framesCount(frames_count)
+        , timePerFrame(time_per_frame)
+    { }
+
+    void AddTextures(std::string_view sprite_sheet_name, const std::string_view sprite_sheet_path)
+    {
+        /*textures = std::move(textures_);
+        LoadTextures(pathToTextures);*/
+    }
+
+    void Update(float elapsed)
+    {
+
+        elapsedTime += elapsed;
+    }
+
+private:
+    void LoadTextures(const std::string& pathToTextures);
+
+public:
+    int framesCount { 0 };
+    float timePerFrame { 0.0f };  // time while one frame is active
+    int currentTextureName { 0 }; // name of the current frame texture
+    float elapsedTime { 0.0f };   // internal usage
+    std::vector<std::string> textures;
+};
+
+// anim with the spritesheet
+
 struct BehaviorComponent {
+public:
+    BehaviorComponent() = default;
+    BehaviorComponent(BehaviorComponent&&) = default;
+    ~BehaviorComponent()
+    {
+        if (behavior) {
+            behavior->OnDestroy();
+        }
+    }
+
+    BehaviorComponent& operator=(BehaviorComponent&& other) = default;
+
     template<class BehaviorType>
     void Bind()
     {
@@ -173,4 +223,13 @@ public:
 
 void to_json(nlohmann::json& j, const TextComponent& t);
 void from_json(const nlohmann::json& j, TextComponent& t);
+
+struct AABBComponent {
+    lia::vec2 size { 0.0f };
+};
+
+struct TagComponent {
+    std::string tag;
+};
+
 } // namespace elv

@@ -39,10 +39,10 @@ struct Renderer2DData {
     uint32_t usedTextureSlots = 1; // white texture
 
     const lia::vec4 quadPositions[4] = {
-        { -0.5f, -0.5f, 0.0f, 1.0f },
-        { -0.5f, 0.5f, 0.0f, 1.0f },
-        { 0.5f, 0.5f, 0.0f, 1.0f },
-        { 0.5f, -0.5f, 0.0f, 1.0f }
+        { -0.5f, -0.5f, 1.0f, 1.0f },
+        { -0.5f, 0.5f, 1.0f, 1.0f },
+        { 0.5f, 0.5f, 1.0f, 1.0f },
+        { 0.5f, -0.5f, 1.0f, 1.0f }
     };
     const lia::vec2 quadUV[4] = {
         { 0.0f, 0.0f },

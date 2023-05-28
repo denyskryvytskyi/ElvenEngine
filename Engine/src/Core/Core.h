@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <random>
 
 #ifdef DEBUG_MODE
 #    if defined(EL_PLATFORM_WINDOWS)
@@ -59,6 +60,15 @@ template<typename T, typename... Args>
 constexpr SharedPtr<T> MakeSharedPtr(Args&&... args)
 {
     return std::make_shared<T>(std::forward<Args>(args)...);
+}
+
+inline int GetRand(int leftRange, int rightRange)
+{
+    static std::random_device rd;                                 // obtain a random number from hardware
+    static std::mt19937 gen(rd());                                // seed the generator
+    std::uniform_int_distribution<> distr(leftRange, rightRange); // define the range
+
+    return distr(gen);
 }
 
 } // namespace elv

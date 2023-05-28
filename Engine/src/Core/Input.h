@@ -8,6 +8,7 @@ namespace elv {
 class Input {
 public:
     static bool IsKeyPressed(Keycode key);
+    static bool IsKeyReleased(Keycode key);
 
     static bool IsMousePressed(MouseCode button);
     static std::pair<float, float> GetMousePosition();

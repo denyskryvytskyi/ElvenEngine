@@ -11,11 +11,7 @@ namespace elv::ecs {
 
 class IComponentSystem {
 public:
-    IComponentSystem(Scene* scenePtr)
-        : m_pScene(scenePtr)
-    {
-        OnInit();
-    }
+    explicit IComponentSystem();
 
     virtual ~IComponentSystem() = default;
 

@@ -1,2 +1,10 @@
 #include "ComponentSystem.h"
-#include "Scene/Scene.h"
+#include "SceneManager.h"
+
+namespace elv::ecs {
+IComponentSystem::IComponentSystem()
+{
+    m_pScene = &GetScene();
+    OnInit();
+}
+} // namespace elv::ecs

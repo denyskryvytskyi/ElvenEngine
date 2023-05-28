@@ -8,6 +8,7 @@
 
 #include "Components/SceneComponents.h"
 #include "Systems/BehaviorSystem.h"
+#include "Systems/Physics2dSystem.h"
 #include "Systems/Render2dSystem.h"
 
 namespace elv {
@@ -26,10 +27,13 @@ void Scene::OnInit()
     RegisterComponent<CameraComponent>();
     RegisterComponent<TextComponent>();
     RegisterComponent<RectTransformComponent>();
+    RegisterComponent<AABBComponent>();
+    RegisterComponent<TagComponent>();
 
     // Engine systems register
     RegisterSystem<BehaviorSystem>();
     RegisterSystem<Render2dSystem>();
+    RegisterSystem<Physics2dSystem>();
 }
 
 void Scene::OnShutdown()
@@ -51,6 +55,12 @@ void Scene::OnUpdate(float dt)
     for (auto& system : m_systems) {
         system->OnUpdate(dt);
     }
+
+    for (auto entity : m_entitiesToDestroy) {
+        DestroyEntity(entity);
+    }
+
+    m_entitiesToDestroy.clear();
 }
 
 void Scene::OnRender(float dt)

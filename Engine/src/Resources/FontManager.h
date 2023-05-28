@@ -33,7 +33,8 @@ public:
 
         EL_CORE_ERROR("Glyphs for the font {0} isn't found.", fontName);
 
-        return GlyphsMap();
+        static GlyphsMap placeholder;
+        return placeholder;
     };
 
 private:

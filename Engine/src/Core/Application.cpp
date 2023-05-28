@@ -93,6 +93,12 @@ void Application::Run()
 
     Timer timer;
     while (m_running) {
+
+        if (m_isPaused) {
+            // Window update only to catch maximized event
+            m_window->OnUpdate();
+        }
+
         const float elapsedTime = timer.Elapsed();
         timer.Restart();
 
@@ -146,8 +152,10 @@ void Application::OnWindowClose(const events::WindowCloseEvent& e)
 void Application::OnWindowResize(const events::WindowResizeEvent& e)
 {
     if (e.width == 0 || e.height == 0) {
-        // minimized logic
+        m_isPaused = true;
+        return;
     }
+    m_isPaused = false;
 
     Renderer::OnWindowResize(e.width, e.height);
 

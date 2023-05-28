@@ -54,7 +54,7 @@ void AudioManager::Play(const std::string& name, bool looped)
     if (it != m_sounds.end()) {
         auto sound = it->second;
         if (sound->isFinished()) {
-            m_engine->play2D(sound->getSoundSource(), looped, false, true);
+             m_engine->play2D(sound->getSoundSource(), looped, false, true);
         } else if (sound->getIsPaused()) {
             sound->setIsPaused(false);
         }

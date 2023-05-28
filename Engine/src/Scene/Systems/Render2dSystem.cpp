@@ -18,8 +18,8 @@ struct SpriteSortingInfo {
     float zOrder { 0.0f };
 };
 
-Render2dSystem::Render2dSystem(Scene* scenePtr)
-    : ecs::IComponentSystem(scenePtr)
+Render2dSystem::Render2dSystem()
+    : ecs::IComponentSystem()
 {
     m_orthoCameraEntity = Application::Get().GetOrthographicCameraEntity();
 }
@@ -45,7 +45,7 @@ void Render2dSystem::OnRender(float dt)
         // current brute solution for the z-order sorting but it hits performance right now
         // TODO: replace this with the Sorting Layers feature
         std::vector<SpriteSortingInfo> sortingInfo;
-        const auto& entities = m_spritesPool->GetEntites();
+        const auto& entities = m_spritesPool->GetEntities();
         for (auto entity : entities) {
             sortingInfo.emplace_back(entity, m_trasformsPool->GetComponent(entity).pos.z);
         }
@@ -59,7 +59,7 @@ void Render2dSystem::OnRender(float dt)
             auto& spriteComponent = m_spritesPool->GetComponent(info.entity);
             auto& transformComponent = m_trasformsPool->GetComponent(info.entity);
             if (spriteComponent.texture != nullptr) {
-                elv::Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.pos, transformComponent.scale, transformComponent.rotation.z);
+                elv::Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, spriteComponent.color);
             }
         }
     } else {
@@ -70,7 +70,7 @@ void Render2dSystem::OnRender(float dt)
             auto& spriteComponent = spriteComponents[index];
             auto& transformComponent = m_trasformsPool->GetComponent(entity);
             if (spriteComponent.texture != nullptr) {
-                elv::Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.pos, transformComponent.scale, transformComponent.rotation.z);
+                elv::Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, spriteComponent.color);
             }
         }
     }

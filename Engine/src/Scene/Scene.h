@@ -34,7 +34,7 @@ public:
         return m_entities;
     }
 
-    void DestroyEntity(const ecs::Entity& entity)
+    void DestroyEntity(ecs::Entity entity)
     {
         auto entityIt = m_entities.find(entity);
 
@@ -45,8 +45,19 @@ public:
                     m_componentPools[i]->RemoveComponent(entity);
                 }
             }
-            m_entities.erase(entity);
+            m_entities.erase(entityIt);
         }
+    }
+
+    // entity will be destroyed at the end of current game loop
+    void MarkToDestroyEntity(ecs::Entity entity)
+    {
+        m_entitiesToDestroy.emplace_back(entity);
+    }
+
+    bool IsEntityAlive(ecs::Entity entity) const
+    {
+        return m_entities.find(entity) != m_entities.end();
     }
 
     template<typename ComponentType>
@@ -73,7 +84,12 @@ public:
         EL_CORE_ASSERT(entityIt != m_entities.end(), "The entity isn't found.");
         entityIt->second.set(componentTypeId);
 
-        return std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(it->second)->AddComponent(entity, std::forward<Args>(args)...);
+        auto pool = std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(it->second);
+        if (sizeof...(args) > 0) {
+            return pool->AddComponent(entity, std::forward<Args>(args)...);
+        } else {
+            return pool->AddComponent(entity);
+        }
     };
 
     template<typename ComponentType>
@@ -172,7 +188,7 @@ public:
     template<typename SystemType>
     void RegisterSystem()
     {
-        m_systems.emplace_back(MakeUniquePtr<SystemType>(this));
+        m_systems.emplace_back(MakeUniquePtr<SystemType>());
         m_systems.back()->OnInit();
     }
 
@@ -182,6 +198,8 @@ private:
     std::unordered_map<ecs::ComponentTypeId, SharedPtr<ecs::IComponentPool>> m_componentPools;
     std::vector<UniquePtr<ecs::IComponentSystem>> m_systems;
     std::unordered_map<ecs::Entity, ecs::ComponentMask> m_entities;
+
+    std::vector<ecs::Entity> m_entitiesToDestroy;
 };
 
 } // namespace elv

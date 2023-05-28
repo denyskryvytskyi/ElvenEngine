@@ -9,7 +9,6 @@ namespace elv::ecs {
 class IBehavior {
 public:
     IBehavior();
-
     virtual ~IBehavior() = default;
 
     virtual void OnCreate() { }

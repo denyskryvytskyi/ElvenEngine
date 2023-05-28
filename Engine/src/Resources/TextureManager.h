@@ -39,7 +39,7 @@ private:
 private:
     std::unordered_map<std::string, SharedPtr<Texture2D>> m_textures;
     std::vector<LoadedTextureInfo> m_loadedInfo;
-    std::set<std::string_view> m_textureLoadingInProgress;
+    std::set<std::string> m_textureLoadingInProgress;
     std::vector<std::future<void>> m_futures;
 };
 

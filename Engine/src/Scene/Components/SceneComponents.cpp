@@ -96,10 +96,12 @@ void from_json(const nlohmann::json& j, SpriteComponent& t)
 
 void SpriteComponent::LoadTexture()
 {
-    if (!textureName.empty() && !texturePath.empty()) {
+    if (!textureName.empty()) {
         auto texturePtr = textures::Get(textureName);
         if (texturePtr) {
             texture = texturePtr;
+        } else if (texturePath.empty()) {
+            EL_CORE_WARN("Failed to set texture to hte Sprite component, texturePath is missed");
         } else {
             textures::Load(textureName, texturePath);
 
@@ -138,5 +140,19 @@ void from_json(const nlohmann::json& j, TextComponent& t)
     j.at("color").get_to(t.color);
     j.at("is_visible").get_to(t.isVisible);
 }
+
+// void SriteAnimationComponent::LoadTextures(const std::string& pathToTextures)
+//{
+//     for (auto textureName : textures) {
+//         if (!textureName.empty() && !pathToTextures.empty()) {
+//             auto texturePtr = textures::Get(textureName);
+//             if (!texturePtr) {
+//                 textures::Load(textureName, pathToTextures);
+//             }
+//         } else {
+//             EL_CORE_WARN("Texture name is wrong.");
+//         }
+//     }
+// }
 
 } // namespace elv

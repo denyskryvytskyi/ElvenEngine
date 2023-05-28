@@ -202,8 +202,8 @@ void TRON::OnGameOver()
     std::string result;
     if (m_winnerId != -1) {
         ++m_players[m_winnerId].score;
-        scene.GetComponent<elv::TextComponent>(m_players[m_winnerId].entity).text = std::format("{}", m_players[m_winnerId].score);
-        result = std::format("Player {} win", m_winnerId + 1);
+        scene.GetComponent<elv::TextComponent>(m_players[m_winnerId].entity).text = fmt::format("{}", m_players[m_winnerId].score);
+        result = fmt::format("Player {} win", m_winnerId + 1);
     } else {
         result = "End of line...";
     }

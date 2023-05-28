@@ -12,6 +12,7 @@
 #include "Core/Log.h"
 #include "Core/SettingsConfig.h"
 #include "Core/StringId.h"
+#include "Core/TimeHelpers.h"
 #include "Core/Timer.h"
 
 #include "Core/Window.h"

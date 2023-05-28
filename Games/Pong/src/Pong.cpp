@@ -62,8 +62,8 @@ class BallBehavior : public elv::ecs::IBehavior {
     void OnCreate()
     {
         BallComponent& ball = GetComponent<BallComponent>();
-        ball.velocity.x = (static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX)) > 0.5f ? -1.0f : 1.0f;
-        ball.velocity.y = (static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX)) > 0.5f ? -1.0f : 1.0f;
+        ball.velocity.x = elv::GetRand(0, 1) == 0 ? -1.0f : 1.0f;
+        ball.velocity.y = elv::GetRand(0, 1) == 0 ? -1.0f : 1.0f;
     }
 
     void OnUpdate(float dt) override
@@ -229,8 +229,8 @@ void Pong::OnPlay()
 
     if (winnerId != -1) {
         ++m_players[winnerId].score;
-        scene.GetComponent<elv::TextComponent>(m_players[winnerId].entity).text = std::format("{}", m_players[winnerId].score);
-        scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).text = std::format("Player {} win", winnerId + 1);
+        scene.GetComponent<elv::TextComponent>(m_players[winnerId].entity).text = fmt::format("{}", m_players[winnerId].score);
+        scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).text = fmt::format("Player {} win", winnerId + 1);
         scene.GetComponent<elv::TextComponent>(m_gameOverTextEntity).Show();
         scene.GetComponent<elv::TextComponent>(m_restartMenuTextEntity).Show();
         OnGameOver();
