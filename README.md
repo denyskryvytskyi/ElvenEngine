@@ -74,6 +74,9 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
   - [ ] Thread pool
 
 ## Demo
+#### Space Invaders
+https://github.com/denyskryvytskyi/ElvenEngine/assets/25298585/f0d32c8b-1ed2-44e3-9c93-a781f3da4203
+
 #### Ping-pong
 <img src=".github/demo/pong.gif">
 
