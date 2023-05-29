@@ -5,7 +5,7 @@
 namespace elv::ecs {
 
 using Entity = uint64_t;
-constexpr Entity INVALID_ENTITY_ID = 0;
+inline constexpr Entity INVALID_ENTITY_ID = 0;
 
 inline Entity GenerateEntityId()
 {

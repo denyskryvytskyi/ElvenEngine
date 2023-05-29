@@ -8,9 +8,9 @@ namespace elv::ecs {
 
 using ComponentTypeId = std::uint64_t;
 
-constexpr ComponentTypeId INVALID_COMPONENT_TYPE_ID = 0;
-constexpr std::uint32_t INIT_COMPONENT_POOL_CAPACITY = 100'000;
-constexpr std::uint32_t MAX_COMPONENT_TYPES = 64;
+inline constexpr ComponentTypeId INVALID_COMPONENT_TYPE_ID = 0;
+inline constexpr std::uint32_t INIT_COMPONENT_POOL_CAPACITY = 100'000;
+inline constexpr std::uint32_t MAX_COMPONENT_TYPES = 64;
 
 using ComponentMask = std::bitset<MAX_COMPONENT_TYPES>;
 
