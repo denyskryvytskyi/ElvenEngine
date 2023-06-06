@@ -225,10 +225,8 @@ TEST(printf_test, hash_flag) {
   EXPECT_PRINTF("-42.0000", "%#g", -42.0);
   EXPECT_PRINTF("-42.0000", "%#G", -42.0);
 
-  safe_sprintf(buffer, "%#a", 16.0);
-  EXPECT_PRINTF(buffer, "%#a", 16.0);
-  safe_sprintf(buffer, "%#A", 16.0);
-  EXPECT_PRINTF(buffer, "%#A", 16.0);
+  EXPECT_PRINTF("0x1.p+4", "%#a", 16.0);
+  EXPECT_PRINTF("0X1.P+4", "%#A", 16.0);
 
   // '#' flag is ignored for non-numeric types.
   EXPECT_PRINTF("x", "%#c", 'x');
@@ -239,7 +237,7 @@ TEST(printf_test, width) {
 
   // Width cannot be specified twice.
   EXPECT_THROW_MSG(test_sprintf("%5-5d", 42), format_error,
-                   "invalid type specifier");
+                   "invalid format specifier");
 
   EXPECT_THROW_MSG(test_sprintf(format("%{}d", big_num), 42), format_error,
                    "number is too big");
@@ -407,10 +405,7 @@ TEST(printf_test, length) {
   EXPECT_PRINTF(fmt::format("{:.6}", max), "%Lg", max);
 }
 
-TEST(printf_test, bool) {
-  EXPECT_PRINTF("1", "%d", true);
-  EXPECT_PRINTF("true", "%s", true);
-}
+TEST(printf_test, bool) { EXPECT_PRINTF("1", "%d", true); }
 
 TEST(printf_test, int) {
   EXPECT_PRINTF("-42", "%d", -42);

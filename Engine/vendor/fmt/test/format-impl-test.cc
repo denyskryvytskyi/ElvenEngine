@@ -242,11 +242,11 @@ TEST(fp_test, dragonbox_max_k) {
           floor_log10_pow2(std::numeric_limits<float>::min_exponent -
                            fmt::detail::num_significand_bits<float>() - 1));
   using double_info = fmt::detail::dragonbox::float_info<double>;
-  EXPECT_EQ(
-      fmt::detail::const_check(double_info::max_k),
-      double_info::kappa -
-          floor_log10_pow2(std::numeric_limits<double>::min_exponent -
-                           fmt::detail::num_significand_bits<double>() - 1));
+  EXPECT_EQ(fmt::detail::const_check(double_info::max_k),
+            double_info::kappa -
+                floor_log10_pow2(
+                    std::numeric_limits<double>::min_exponent -
+                    2 * fmt::detail::num_significand_bits<double>() - 1));
 }
 
 TEST(fp_test, get_round_direction) {
@@ -301,7 +301,7 @@ TEST(format_impl_test, format_error_code) {
   std::string msg = "error 42", sep = ": ";
   {
     auto buffer = fmt::memory_buffer();
-    format_to(fmt::appender(buffer), "garbage");
+    fmt::format_to(fmt::appender(buffer), "garbage");
     fmt::detail::format_error_code(buffer, 42, "test");
     EXPECT_EQ(to_string(buffer), "test: " + msg);
   }
@@ -353,6 +353,16 @@ TEST(format_impl_test, count_digits) {
   test_count_digits<uint64_t>();
 }
 
+TEST(format_impl_test, countl_zero) {
+  constexpr auto num_bits = fmt::detail::num_bits<uint32_t>();
+  uint32_t n = 1u;
+  for (int i = 1; i < num_bits - 1; i++) {
+    n <<= 1;
+    EXPECT_EQ(fmt::detail::countl_zero(n - 1), num_bits - i);
+    EXPECT_EQ(fmt::detail::countl_zero(n), num_bits - i - 1);
+  }
+}
+
 #if FMT_USE_FLOAT128
 TEST(format_impl_test, write_float128) {
   auto s = std::string();
@@ -372,6 +382,8 @@ struct double_double {
   auto operator-() const -> double_double { return double_double(-a, -b); }
 };
 
+auto format_as(double_double d) -> double { return d; }
+
 bool operator>=(const double_double& lhs, const double_double& rhs) {
   return lhs.a + lhs.b >= rhs.a + rhs.b;
 }
@@ -383,6 +395,8 @@ struct slow_float {
   operator float() const { return value; }
   auto operator-() const -> slow_float { return slow_float(-value); }
 };
+
+auto format_as(slow_float f) -> float { return f; }
 
 namespace std {
 template <> struct is_floating_point<double_double> : std::true_type {};
@@ -544,4 +558,11 @@ TEST(format_impl_test, utf8_decode_bogus_byte_sequences) {
   len = fmt::detail::utf8_decode(buf2, &c, &e) - buf2;
   EXPECT_NE(e, 0);    // "bogus [c0 0a] 0x%02x U+%04lx", e, (unsigned long)c
   EXPECT_EQ(len, 2);  // "bogus [c0 0a] recovery %d", len);
+}
+
+TEST(format_impl_test, unicode_to_utf8) {
+  auto s = std::string("ёжик");
+  fmt::detail::unicode_to_utf8<wchar_t> u(L"\x0451\x0436\x0438\x043A");
+  EXPECT_EQ(s, u.str());
+  EXPECT_EQ(s.size(), u.size());
 }
