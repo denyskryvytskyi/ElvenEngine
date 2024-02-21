@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.8...3.26)
 
 # Fallback for using newer policies on CMake <3.12.
-if(${CMAKE_VERSION} VERSION_LESS 3.12)
+if (${CMAKE_VERSION} VERSION_LESS 3.12)
   cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
-endif()
+endif ()
 
 # Determine if fmt is built as a subproject (using add_subdirectory)
 # or if it is the master project.
@@ -162,10 +162,10 @@ set(FMT_SYSTEM_HEADERS_ATTRIBUTE "")
 if (FMT_SYSTEM_HEADERS)
   set(FMT_SYSTEM_HEADERS_ATTRIBUTE SYSTEM)
 endif ()
-if(CMAKE_SYSTEM_NAME STREQUAL "MSDOS")
+if (CMAKE_SYSTEM_NAME STREQUAL "MSDOS")
   set(FMT_TEST OFF)
   message(STATUS "MSDOS is incompatible with gtest")
-endif()
+endif ()
 
 # Get version from core.h
 file(READ include/fmt/core.h core_h)
@@ -283,7 +283,7 @@ if (FMT_OS)
 endif ()
 
 add_module_library(fmt src/fmt.cc FALLBACK
-                   ${FMT_SOURCES} ${FMT_HEADERS} README.rst ChangeLog.rst
+                   ${FMT_SOURCES} ${FMT_HEADERS} README.md ChangeLog.md
                    IF FMT_MODULE)
 add_library(fmt::fmt ALIAS fmt)
 if (FMT_MODULE)
@@ -297,7 +297,11 @@ if (FMT_PEDANTIC)
   target_compile_options(fmt PRIVATE ${PEDANTIC_COMPILE_FLAGS})
 endif ()
 
-target_compile_features(fmt PUBLIC cxx_std_11)
+if (cxx_std_11 IN_LIST CMAKE_CXX_COMPILE_FEATURES)
+  target_compile_features(fmt PUBLIC cxx_std_11)
+else ()
+  message(WARNING "Feature cxx_std_11 is unknown for the CXX compiler")
+endif ()
 
 target_include_directories(fmt ${FMT_SYSTEM_HEADERS_ATTRIBUTE} PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
@@ -308,7 +312,15 @@ set(FMT_DEBUG_POSTFIX d CACHE STRING "Debug library postfix.")
 set_target_properties(fmt PROPERTIES
   VERSION ${FMT_VERSION} SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR}
   PUBLIC_HEADER "${FMT_HEADERS}"
-  DEBUG_POSTFIX "${FMT_DEBUG_POSTFIX}")
+  DEBUG_POSTFIX "${FMT_DEBUG_POSTFIX}"
+
+  # Workaround for Visual Studio 2017:
+  # Ensure the .pdb is created with the same name and in the same directory
+  # as the .lib. Newer VS versions already do this by default, but there is no
+  # harm in setting it for those too. Ignored by other generators.
+  COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+  COMPILE_PDB_NAME "fmt"
+  COMPILE_PDB_NAME_DEBUG "fmt${FMT_DEBUG_POSTFIX}")
 
 # Set FMT_LIB_NAME for pkg-config fmt.pc. We cannot use the OUTPUT_NAME target
 # property because it's not set by default.
@@ -322,7 +334,7 @@ if (BUILD_SHARED_LIBS)
 endif ()
 if (FMT_SAFE_DURATION_CAST)
   target_compile_definitions(fmt PUBLIC FMT_SAFE_DURATION_CAST)
-endif()
+endif ()
 
 add_library(fmt-header-only INTERFACE)
 add_library(fmt::fmt-header-only ALIAS fmt-header-only)
@@ -330,7 +342,8 @@ add_library(fmt::fmt-header-only ALIAS fmt-header-only)
 target_compile_definitions(fmt-header-only INTERFACE FMT_HEADER_ONLY=1)
 target_compile_features(fmt-header-only INTERFACE cxx_std_11)
 
-target_include_directories(fmt-header-only ${FMT_SYSTEM_HEADERS_ATTRIBUTE} INTERFACE
+target_include_directories(fmt-header-only
+  ${FMT_SYSTEM_HEADERS_ATTRIBUTE} INTERFACE
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${FMT_INC_DIR}>)
 
@@ -350,7 +363,7 @@ if (FMT_INSTALL)
               "Installation directory for libraries, a relative path that "
               "will be joined to ${CMAKE_INSTALL_PREFIX} or an absolute path.")
 
-  set_verbose(FMT_PKGCONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/pkgconfig CACHE PATH
+  set_verbose(FMT_PKGCONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/pkgconfig CACHE STRING
               "Installation directory for pkgconfig (.pc) files, a relative "
               "path that will be joined with ${CMAKE_INSTALL_PREFIX} or an "
               "absolute path.")
@@ -380,7 +393,6 @@ if (FMT_INSTALL)
           LIBRARY DESTINATION ${FMT_LIB_DIR}
           ARCHIVE DESTINATION ${FMT_LIB_DIR}
           PUBLIC_HEADER DESTINATION "${FMT_INC_DIR}/fmt"
-          FRAMEWORK DESTINATION "."
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
   # Use a namespace because CMake provides better diagnostics for namespaced
@@ -436,6 +448,6 @@ if (FMT_MASTER_PROJECT AND EXISTS ${gitignore})
   set(CPACK_SOURCE_IGNORE_FILES ${ignored_files})
   set(CPACK_SOURCE_PACKAGE_FILE_NAME fmt-${FMT_VERSION})
   set(CPACK_PACKAGE_NAME fmt)
-  set(CPACK_RESOURCE_FILE_README ${PROJECT_SOURCE_DIR}/README.rst)
+  set(CPACK_RESOURCE_FILE_README ${PROJECT_SOURCE_DIR}/README.md)
   include(CPack)
 endif ()

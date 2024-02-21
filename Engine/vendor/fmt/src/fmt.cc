@@ -63,8 +63,6 @@ module;
 #  if defined(__GLIBCXX__)
 #    include <ext/stdio_filebuf.h>
 #    include <ext/stdio_sync_filebuf.h>
-#  elif defined(_LIBCPP_VERSION)
-#    include <__std_stream>
 #  endif
 #  define WIN32_LEAN_AND_MEAN
 #  include <windows.h>
@@ -72,15 +70,10 @@ module;
 
 export module fmt;
 
-#define FMT_MODULE_EXPORT export
+#define FMT_EXPORT export
 #define FMT_BEGIN_EXPORT export {
 #define FMT_END_EXPORT }
-#define FMT_BEGIN_DETAIL_NAMESPACE \
-  }                                \
-  namespace detail {
-#define FMT_END_DETAIL_NAMESPACE \
-  }                              \
-  export {
+
 // If you define FMT_ATTACH_TO_GLOBAL_MODULE
 //  - all declarations are detached from module 'fmt'
 //  - the module behaves like a traditional static library, too
@@ -101,7 +94,6 @@ extern "C++" {
 #include "fmt/printf.h"
 #include "fmt/std.h"
 #include "fmt/xchar.h"
-
 
 #ifdef FMT_ATTACH_TO_GLOBAL_MODULE
 }

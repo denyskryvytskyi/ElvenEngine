@@ -9,7 +9,7 @@
     
     <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Usage &mdash; fmt 10.0.0 documentation</title>
+    <title>Usage &mdash; fmt 10.2.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '10.0.0',
+        VERSION:     '10.2.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -70,15 +70,15 @@
           <ul class="nav navbar-nav">
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                 role="button" aria-expanded="false">10.0.0
+                 role="button" aria-expanded="false">10.2.1
                 <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 
-                <li><a href="https://fmt.dev/10.0.0">10.0.0</a></li>
+                <li><a href="https://fmt.dev/10.2.1">10.2.1</a></li>
                 
-                <li><a href="https://fmt.dev/9.1.0">9.1.0</a></li>
+                <li><a href="https://fmt.dev/10.2.0">10.2.0</a></li>
                 
-                <li><a href="https://fmt.dev/9.0.0">9.0.0</a></li>
+                <li><a href="https://fmt.dev/10.1.1">10.1.1</a></li>
                 
               </ul>
             </li>
@@ -242,6 +242,44 @@ using <code class="xref cpp cpp-any docutils literal notranslate"><span class="p
 <p>For <code class="docutils literal notranslate"><span class="pre">build2</span></code> newcomers or to get more details and use cases, you can read the
 <code class="docutils literal notranslate"><span class="pre">build2</span></code>
 <a class="reference external" href="https://build2.org/build2-toolchain/doc/build2-toolchain-intro.xhtml">toolchain introduction</a>.</p>
+</section>
+<section id="usage-with-meson">
+<h2>Usage with Meson<a class="headerlink" href="#usage-with-meson" title="Permalink to this headline">¶</a></h2>
+<p><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">Meson's</span> <span class="pre">WrapDB</span></code> includes a <code class="docutils literal notranslate"><span class="pre">fmt</span></code>
+package, which repackages fmt to be built by Meson as a subproject.</p>
+<p><strong>Usage:</strong></p>
+<ul>
+<li><p>Install the <code class="docutils literal notranslate"><span class="pre">fmt</span></code> subproject from the WrapDB by running:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">meson</span><span class="w"> </span><span class="n">wrap</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">fmt</span>
+</pre></div>
+</div>
+<p>from the root of your project.</p>
+</li>
+<li><p>In your project’s <code class="docutils literal notranslate"><span class="pre">meson.build</span></code> file, add an entry for the new subproject:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span>fmt = subproject(&#39;fmt&#39;)
+fmt_dep = fmt.get_variable(&#39;fmt_dep&#39;)
+</pre></div>
+</div>
+</li>
+<li><p>Include the new dependency object to link with fmt:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span>my_build_target = executable(&#39;name&#39;, &#39;src/main.cc&#39;, dependencies: [fmt_dep])
+</pre></div>
+</div>
+</li>
+</ul>
+<p><strong>Options:</strong></p>
+<p>If desired, <code class="docutils literal notranslate"><span class="pre">fmt</span></code> may be built as a static library, or as a header-only
+library.</p>
+<p>For a static build, use the following subproject definition:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span>fmt = subproject(&#39;fmt&#39;, default_options: &#39;default_library=static&#39;)
+fmt_dep = fmt.get_variable(&#39;fmt_dep&#39;)
+</pre></div>
+</div>
+<p>For the header-only version, use:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span>fmt = subproject(&#39;fmt&#39;)
+fmt_dep = fmt.get_variable(&#39;fmt_header_only_dep&#39;)
+</pre></div>
+</div>
 </section>
 <section id="building-the-documentation">
 <h2>Building the Documentation<a class="headerlink" href="#building-the-documentation" title="Permalink to this headline">¶</a></h2>

@@ -102,10 +102,70 @@ struct custom_char {
   template <typename T>
   constexpr custom_char(T val) : value(static_cast<int>(val)) {}
 
-  operator char() const {
+  constexpr operator char() const {
     return value <= 0xff ? static_cast<char>(value) : '\0';
   }
+  constexpr bool operator<(custom_char c) const { return value < c.value; }
 };
+
+namespace std {
+
+template <> struct char_traits<custom_char> {
+  using char_type = custom_char;
+  using int_type = int;
+  using off_type = streamoff;
+  using pos_type = streampos;
+  using state_type = mbstate_t;
+
+  static constexpr void assign(char_type& r, const char_type& a) { r = a; }
+  static constexpr bool eq(char_type a, char_type b) { return a == b; }
+  static constexpr bool lt(char_type a, char_type b) { return a < b; }
+  static FMT_CONSTEXPR int compare(const char_type* s1, const char_type* s2,
+                                   size_t count) {
+    for (; count; count--, s1++, s2++) {
+      if (lt(*s1, *s2)) return -1;
+      if (lt(*s2, *s1)) return 1;
+    }
+    return 0;
+  }
+  static FMT_CONSTEXPR size_t length(const char_type* s) {
+    size_t count = 0;
+    while (!eq(*s++, custom_char(0))) count++;
+    return count;
+  }
+  static const char_type* find(const char_type*, size_t, const char_type&);
+  static FMT_CONSTEXPR char_type* move(char_type* dest, const char_type* src,
+                                       size_t count) {
+    if (count == 0) return dest;
+    char_type* ret = dest;
+    if (src < dest) {
+      dest += count;
+      src += count;
+      for (; count; count--) assign(*--dest, *--src);
+    } else if (src > dest)
+      copy(dest, src, count);
+    return ret;
+  }
+  static FMT_CONSTEXPR char_type* copy(char_type* dest, const char_type* src,
+                                       size_t count) {
+    char_type* ret = dest;
+    for (; count; count--) assign(*dest++, *src++);
+    return ret;
+  }
+  static FMT_CONSTEXPR char_type* assign(char_type* dest, std::size_t count,
+                                         char_type a) {
+    char_type* ret = dest;
+    for (; count; count--) assign(*dest++, a);
+    return ret;
+  }
+  static int_type not_eof(int_type);
+  static char_type to_char_type(int_type);
+  static int_type to_int_type(char_type);
+  static bool eq_int_type(int_type, int_type);
+  static int_type eof();
+};
+
+}  // namespace std
 
 auto to_ascii(custom_char c) -> char { return c; }
 
@@ -127,18 +187,6 @@ template <typename S> std::string from_u8str(const S& str) {
   return std::string(str.begin(), str.end());
 }
 
-TEST(xchar_test, format_utf8_precision) {
-  using str_type = std::basic_string<fmt::detail::char8_type>;
-  auto format =
-      str_type(reinterpret_cast<const fmt::detail::char8_type*>(u8"{:.4}"));
-  auto str = str_type(reinterpret_cast<const fmt::detail::char8_type*>(
-      u8"caf\u00e9s"));  // cafés
-  auto result = fmt::format(format, str);
-  EXPECT_EQ(fmt::detail::compute_width(result), 4);
-  EXPECT_EQ(result.size(), 5);
-  EXPECT_EQ(from_u8str(result), from_u8str(str.substr(0, 5)));
-}
-
 TEST(xchar_test, format_to) {
   auto buf = std::vector<wchar_t>();
   fmt::format_to(std::back_inserter(buf), L"{}{}", 42, L'\0');
@@ -146,15 +194,19 @@ TEST(xchar_test, format_to) {
 }
 
 TEST(xchar_test, vformat_to) {
-  using wcontext = fmt::wformat_context;
-  fmt::basic_format_arg<wcontext> warg = fmt::detail::make_arg<wcontext>(42);
-  auto wargs = fmt::basic_format_args<wcontext>(&warg, 1);
+  auto args = fmt::make_wformat_args(42);
   auto w = std::wstring();
-  fmt::vformat_to(std::back_inserter(w), L"{}", wargs);
+  fmt::vformat_to(std::back_inserter(w), L"{}", args);
   EXPECT_EQ(L"42", w);
-  w.clear();
-  fmt::vformat_to(std::back_inserter(w), FMT_STRING(L"{}"), wargs);
-  EXPECT_EQ(L"42", w);
+}
+
+namespace test {
+struct struct_as_wstring_view {};
+auto format_as(struct_as_wstring_view) -> fmt::wstring_view { return L"foo"; }
+}  // namespace test
+
+TEST(xchar_test, format_as) {
+  EXPECT_EQ(fmt::format(L"{}", test::struct_as_wstring_view()), L"foo");
 }
 
 TEST(format_test, wide_format_to_n) {
@@ -442,8 +494,8 @@ TEST(locale_test, format) {
   EXPECT_EQ("1~234~567", fmt::format(loc, "{:L}", 1234567));
   EXPECT_EQ("-1~234~567", fmt::format(loc, "{:L}", -1234567));
   EXPECT_EQ("-256", fmt::format(loc, "{:L}", -256));
-  fmt::format_arg_store<fmt::format_context, int> as{1234567};
-  EXPECT_EQ("1~234~567", fmt::vformat(loc, "{:L}", fmt::format_args(as)));
+  auto n = 1234567;
+  EXPECT_EQ("1~234~567", fmt::vformat(loc, "{:L}", fmt::make_format_args(n)));
   auto s = std::string();
   fmt::format_to(std::back_inserter(s), loc, "{:L}", 1234567);
   EXPECT_EQ("1~234~567", s);
@@ -476,10 +528,9 @@ TEST(locale_test, wformat) {
   auto loc = std::locale(std::locale(), new numpunct<wchar_t>());
   EXPECT_EQ(L"1234567", fmt::format(std::locale(), L"{:L}", 1234567));
   EXPECT_EQ(L"1~234~567", fmt::format(loc, L"{:L}", 1234567));
-  using wcontext = fmt::buffer_context<wchar_t>;
-  fmt::format_arg_store<wcontext, int> as{1234567};
+  int n = 1234567;
   EXPECT_EQ(L"1~234~567",
-            fmt::vformat(loc, L"{:L}", fmt::basic_format_args<wcontext>(as)));
+            fmt::vformat(loc, L"{:L}", fmt::make_wformat_args(n)));
   EXPECT_EQ(L"1234567", fmt::format(std::locale("C"), L"{:L}", 1234567));
 
   auto no_grouping_loc = std::locale(std::locale(), new no_grouping<wchar_t>());
@@ -518,7 +569,7 @@ template <class charT> struct formatter<std::complex<double>, charT> {
       basic_format_parse_context<charT>& ctx) {
     auto end = parse_format_specs(ctx.begin(), ctx.end(), specs_, ctx,
                                   detail::type::float_type);
-    detail::parse_float_type_spec(specs_, detail::error_handler());
+    detail::parse_float_type_spec(specs_);
     return end;
   }
 
@@ -536,9 +587,9 @@ template <class charT> struct formatter<std::complex<double>, charT> {
                             fmt::runtime("{:" + specs + "}"), c.imag());
     auto fill_align_width = std::string();
     if (specs_.width > 0) fill_align_width = fmt::format(">{}", specs_.width);
-    return format_to(ctx.out(), runtime("{:" + fill_align_width + "}"),
-                     c.real() != 0 ? fmt::format("({}+{}i)", real, imag)
-                                   : fmt::format("{}i", imag));
+    return fmt::format_to(ctx.out(), runtime("{:" + fill_align_width + "}"),
+                          c.real() != 0 ? fmt::format("({}+{}i)", real, imag)
+                                        : fmt::format("{}i", imag));
   }
 };
 FMT_END_NAMESPACE
@@ -551,17 +602,14 @@ TEST(locale_test, complex) {
 }
 
 TEST(locale_test, chrono_weekday) {
-  auto loc = get_locale("ru_RU.UTF-8", "Russian_Russia.1251");
+  auto loc = get_locale("es_ES.UTF-8", "Spanish_Spain.1252");
   auto loc_old = std::locale::global(loc);
-  auto mon = fmt::weekday(1);
-  EXPECT_EQ(fmt::format(L"{}", mon), L"Mon");
+  auto sat = fmt::weekday(6);
+  EXPECT_EQ(fmt::format(L"{}", sat), L"Sat");
   if (loc != std::locale::classic()) {
-    // {L"\x43F\x43D", L"\x41F\x43D", L"\x43F\x43D\x434", L"\x41F\x43D\x434"}
-    // {L"пн", L"Пн", L"пнд", L"Пнд"}
-    EXPECT_THAT(
-        (std::vector<std::wstring>{L"\x43F\x43D", L"\x41F\x43D",
-                                   L"\x43F\x43D\x434", L"\x41F\x43D\x434"}),
-        Contains(fmt::format(loc, L"{:L}", mon)));
+    // L'\xE1' is 'á'.
+    auto saturdays = std::vector<std::wstring>{L"s\xE1""b", L"s\xE1."};
+    EXPECT_THAT(saturdays, Contains(fmt::format(loc, L"{:L}", sat)));
   }
   std::locale::global(loc_old);
 }

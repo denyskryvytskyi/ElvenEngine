@@ -9,7 +9,7 @@
     
     <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Format String Syntax &mdash; fmt 10.0.0 documentation</title>
+    <title>Format String Syntax &mdash; fmt 10.2.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '10.0.0',
+        VERSION:     '10.2.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '.html',
@@ -70,15 +70,15 @@
           <ul class="nav navbar-nav">
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                 role="button" aria-expanded="false">10.0.0
+                 role="button" aria-expanded="false">10.2.1
                 <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 
-                <li><a href="https://fmt.dev/10.0.0">10.0.0</a></li>
+                <li><a href="https://fmt.dev/10.2.1">10.2.1</a></li>
                 
-                <li><a href="https://fmt.dev/9.1.0">9.1.0</a></li>
+                <li><a href="https://fmt.dev/10.2.0">10.2.0</a></li>
                 
-                <li><a href="https://fmt.dev/9.0.0">9.0.0</a></li>
+                <li><a href="https://fmt.dev/10.1.1">10.1.1</a></li>
                 
               </ul>
             </li>
@@ -191,7 +191,7 @@ although some of the formatting options are only supported by the numeric types.
 <strong id="grammar-token-sf-width"><span id="grammar-token-width"></span>width      </strong> ::=  <a class="reference internal" href="#grammar-token-sf-integer"><code class="xref docutils literal notranslate"><span class="pre">integer</span></code></a> | &quot;{&quot; [<a class="reference internal" href="#grammar-token-sf-arg_id"><code class="xref docutils literal notranslate"><span class="pre">arg_id</span></code></a>] &quot;}&quot;
 <strong id="grammar-token-sf-precision"><span id="grammar-token-precision"></span>precision  </strong> ::=  <a class="reference internal" href="#grammar-token-sf-integer"><code class="xref docutils literal notranslate"><span class="pre">integer</span></code></a> | &quot;{&quot; [<a class="reference internal" href="#grammar-token-sf-arg_id"><code class="xref docutils literal notranslate"><span class="pre">arg_id</span></code></a>] &quot;}&quot;
 <strong id="grammar-token-sf-type"><span id="grammar-token-type"></span>type       </strong> ::=  &quot;a&quot; | &quot;A&quot; | &quot;b&quot; | &quot;B&quot; | &quot;c&quot; | &quot;d&quot; | &quot;e&quot; | &quot;E&quot; | &quot;f&quot; | &quot;F&quot; | &quot;g&quot; | &quot;G&quot; |
-                 &quot;o&quot; | &quot;p&quot; | &quot;s&quot; | &quot;x&quot; | &quot;X&quot;
+                 &quot;o&quot; | &quot;p&quot; | &quot;s&quot; | &quot;x&quot; | &quot;X&quot; | &quot;?&quot;
 </pre>
 <p>The <em>fill</em> character can be any Unicode code point other than <code class="docutils literal notranslate"><span class="pre">'{'</span></code> or
 <code class="docutils literal notranslate"><span class="pre">'}'</span></code>. The presence of a fill character is signaled by the character following
@@ -302,7 +302,11 @@ number separator characters. This option is only valid for numeric types.</p>
 <td><p>String format. This is the default type for strings and
 may be omitted.</p></td>
 </tr>
-<tr class="row-odd"><td><p>none</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'?'</span></code></p></td>
+<td><p>Debug format. The string is quoted and special
+characters escaped.</p></td>
+</tr>
+<tr class="row-even"><td><p>none</p></td>
 <td><p>The same as <code class="docutils literal notranslate"><span class="pre">'s'</span></code>.</p></td>
 </tr>
 </tbody>
@@ -323,7 +327,11 @@ may be omitted.</p></td>
 <td><p>Character format. This is the default type for
 characters and may be omitted.</p></td>
 </tr>
-<tr class="row-odd"><td><p>none</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'?'</span></code></p></td>
+<td><p>Debug format. The character is quoted and special
+characters escaped.</p></td>
+</tr>
+<tr class="row-even"><td><p>none</p></td>
 <td><p>The same as <code class="docutils literal notranslate"><span class="pre">'c'</span></code>.</p></td>
 </tr>
 </tbody>
@@ -376,9 +384,10 @@ to the output value.</p></td>
 </tr>
 </tbody>
 </table>
-<p>Integer presentation types can also be used with character and Boolean values.
-Boolean values are formatted using textual representation, either <code class="docutils literal notranslate"><span class="pre">true</span></code> or
-<code class="docutils literal notranslate"><span class="pre">false</span></code>, if the presentation type is not specified.</p>
+<p>Integer presentation types can also be used with character and Boolean values
+with the only exception that <code class="docutils literal notranslate"><span class="pre">'c'</span></code> cannot be used with <code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">bool</span></code>. Boolean values
+are formatted using textual representation, either <code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>, if the
+presentation type is not specified.</p>
 <p>The available presentation types for floating-point values are:</p>
 <table class="docutils align-default">
 <colgroup>

@@ -111,4 +111,4 @@ https://github.com/denyskryvytskyi/ElvenEngine/assets/25298585/f0d32c8b-1ed2-44e
 | [json](https://github.com/nlohmann/json) | json lib for serialization and data-driven architecture |
 | [irrKlang](https://www.ambiera.com/irrklang/) | sound library |
 | [fmt](https://github.com/fmtlib/fmt) | formatting library |
-| [freetype]([https://github.com/fmtlib/fmt](https://freetype.org/)) | fonts rendering |
+| [freetype](https://freetype.org/) | fonts rendering |
