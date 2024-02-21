@@ -9,28 +9,28 @@
   
 </h1>
 
-Elven Engine is primarily 2D/3D game engine that is being developed from scratch.
+Elven Engine is primarily a 2D/3D game engine that is being developed from scratch.
 
 ## Getting Started
 
-Windows platform only support for now (Linux and MacOS platforms are for the future support)
+Windows platform only support for now (Linux and MacOS platforms are for future support)
 
-You can clone repository using git (**`--recursive`** is required to fetch all of the submodules):
+You can clone the repository using git (**`--recursive`** is required to fetch all of the submodules):
 
 `git clone --recursive https://github.com/kryvytskyidenys/ElvenEngine`
 
 Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for VS 2022 support).
 
 ### Windows
-1. Configure and build third party libraries: `scripts/setup-vendor.bat`
+1. Configure and build third-party libraries: `scripts/setup-vendor.bat`
 2. Configure Visual Studio solution for the Engine and Game/Example projects: `scripts/configure-vs2022`.
     
-    2.1. Or run command from the build directory with your generator and architecture: `cmake -G "Visual Studio Generator 17 2022" -A x64`
-3. Build solution (if you want to build using cmake) both Debug/Release config (pass it as argument): `scripts/build.bat`
+    2.1. Or run a command from the build directory with your generator and architecture: `cmake -G "Visual Studio Generator 17 2022" -A x64`
+3. Build a solution (if you want to build using cmake) for both Debug and Release config (pass it as an argument): `scripts/build.bat`
 
 ## Features
 + [x] Logging system
-+ [x] Event sytem (non-blocking event queue based system)
++ [x] Event system (non-blocking event queue-based system)
 + [x] Custom math library ([lia](https://github.com/denyskryvytskyi/lia))
 + [x] Renderer core (graphics API agnostic)
   - [x] Shaders loading
@@ -54,7 +54,7 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
   - [x] Scene as the ECS coordinator
   - [x] Scene serialization
 + [x] Data-driven architecture
-  - [x] Load/Save engine settings from/to json files
+  - [x] Load/Save engine settings from/to JSON files
 + [x] Sound engine
   - [x] Support formats: mp3, wav, ogg, flac etc.
   - [x] Add/Play/Pause/Stop functionality
@@ -76,8 +76,11 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
 ## Demo
 #### Space Invaders
 <b>Quick demo</b>
+
 <img src=".github/demo/invaders.gif">
+
 <b>Full demo</b>
+
 https://github.com/denyskryvytskyi/ElvenEngine/assets/25298585/f0d32c8b-1ed2-44e3-9c93-a781f3da4203
 
 #### Ping-pong
@@ -95,7 +98,7 @@ https://github.com/denyskryvytskyi/ElvenEngine/assets/25298585/f0d32c8b-1ed2-44e
 #### 3D rendering
 <img src=".github/demo/cubes.gif">
 
-## Third party libraries
+## Third-party libraries
 | Lib |  |
 | ------ | ------ |
 | [cmake](https://github.com/Kitware/CMake) | build system |
@@ -108,3 +111,4 @@ https://github.com/denyskryvytskyi/ElvenEngine/assets/25298585/f0d32c8b-1ed2-44e
 | [json](https://github.com/nlohmann/json) | json lib for serialization and data-driven architecture |
 | [irrKlang](https://www.ambiera.com/irrklang/) | sound library |
 | [fmt](https://github.com/fmtlib/fmt) | formatting library |
+| [freetype]([https://github.com/fmtlib/fmt](https://freetype.org/)) | fonts rendering |
