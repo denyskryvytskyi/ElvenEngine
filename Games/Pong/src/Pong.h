@@ -32,8 +32,8 @@ public:
 
 private:
     Player m_players[2];
-    elv::ecs::Entity m_ball;
-    elv::ecs::Entity m_winnerEntity;
+    elv::ecs::Entity m_ball { elv::ecs::INVALID_ENTITY_ID };
+    elv::ecs::Entity m_winnerEntity { elv::ecs::INVALID_ENTITY_ID };
     GameState m_gameState { GameState::Menu };
 
     // text

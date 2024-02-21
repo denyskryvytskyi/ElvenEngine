@@ -75,6 +75,9 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
 
 ## Demo
 #### Space Invaders
+<b>Quick demo</b>
+<img src=".github/demo/invaders.gif">
+<b>Full demo</b>
 https://github.com/denyskryvytskyi/ElvenEngine/assets/25298585/f0d32c8b-1ed2-44e3-9c93-a781f3da4203
 
 #### Ping-pong

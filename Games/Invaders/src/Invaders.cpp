@@ -351,6 +351,11 @@ public:
         if (m_shieldEntity != elv::ecs::INVALID_ENTITY_ID) {
             p_Scene->DestroyEntity(m_shieldEntity);
         }
+
+        auto& playerComponent = GetComponent<PlayerComponent>();
+        for (const auto lifeEntity : playerComponent.lifeEntities) {
+            p_Scene->DestroyEntity(lifeEntity);
+        }
     }
 
     void OnUpdate(float dt) override

@@ -54,8 +54,8 @@ private:
 };
 
 struct BallComponent {
-    lia::vec3 velocity { 0.0f, 0.0f, 0.0f };
     float speed = ballSpeed;
+    lia::vec3 velocity { 0.0f, 0.0f, 0.0f };
 };
 
 class BallBehavior : public elv::ecs::IBehavior {
