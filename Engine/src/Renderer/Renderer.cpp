@@ -1,5 +1,4 @@
 #include "Renderer/Renderer.h"
-#include "Renderer/Renderer2D.h"
 
 namespace elv {
 UniquePtr<Renderer::SceneData> Renderer::m_sceneData = MakeUniquePtr<Renderer::SceneData>();
@@ -26,7 +25,7 @@ void Renderer::EndScene()
 
 void Renderer::Submit(const SharedPtr<Shader>& shader, const SharedPtr<VertexArray>& vertexArray, const lia::mat4& modelMatrix)
 {
-    shader->Bind();
+    // shader->Bind();
     shader->SetMatrix4("u_ViewProjection", m_sceneData->ViewProjectionMatrix);
     shader->SetMatrix4("u_Model", modelMatrix);
 

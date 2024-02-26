@@ -1,10 +1,15 @@
 set(SANDBOX_SOURCES
-    "src/SandboxApp.h"
     "src/SandboxApp.cpp"
-    "assets/shaders/shader.frag"
-    "assets/shaders/shader.vert"
-    "assets/shaders/texture_shader.frag"
-    "assets/shaders/texture_shader.vert"
+    "src/CubesSandbox.h"
+    "src/CubesSandbox.cpp"
+    "src/LightingSandbox.h"
+    "src/LightingSandbox.cpp"
+    "assets/shaders/default.frag"
+    "assets/shaders/default.vert"
+    "assets/shaders/colors.frag"
+    "assets/shaders/colors.vert"
+    "assets/shaders/light_cube.frag"
+    "assets/shaders/light_cube.vert"
 )
 
 set(PROJECT_INCLUDE_DIRECTORIES

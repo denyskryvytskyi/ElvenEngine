@@ -6,6 +6,8 @@
 namespace elv {
 
 const static float s_cameraMovementSpeed = 5.0f;
+const static float s_cameraUpSpeed = 5.0f;
+const static float s_cameraDownSpeed = 5.0f;
 
 CameraController::CameraController(float fov, float aspectRatio, float near_, float far_, bool enableFly)
     : m_camera(lia::radians(fov), aspectRatio, near_, far_)
@@ -55,6 +57,16 @@ void CameraController::ProcessInput(float dt)
 
     if (Input::IsKeyPressed(key::D)) {
         m_position += lia::normalize(lia::cross(m_front, m_up)) * s_cameraMovementSpeed * dt;
+        m_updateLookAt = true;
+    }
+
+    if (Input::IsKeyPressed(key::E)) {
+        m_position.y += s_cameraUpSpeed * dt;
+        m_updateLookAt = true;
+    }
+
+    if (Input::IsKeyPressed(key::Q)) {
+        m_position.y -= s_cameraDownSpeed * dt;
         m_updateLookAt = true;
     }
 }

@@ -10,7 +10,7 @@ namespace elv {
 
 class CameraController {
 public:
-    CameraController(float fov, float aspectRatio, float near_, float far_, bool enableFly = false);
+    CameraController(float fov, float aspectRatio, float near_, float far_, bool enableFly = true);
     ~CameraController() = default;
 
     void OnUpdate(float dt);
