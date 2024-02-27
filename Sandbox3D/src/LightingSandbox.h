@@ -15,13 +15,14 @@ public:
     virtual void OnCreate();
     virtual void OnUpdate(float dt);
     virtual void OnRender(float dt);
+    virtual void OnImguiRender();
     virtual void OnDestroy();
 
 private:
     void OnTextureLoaded(const elv::events::TextureLoadedEvent& e);
 
 private:
-    elv::CameraController m_cameraController;
+    elv::EditorCameraController m_cameraController;
     elv::events::EventHandler<elv::events::TextureLoadedEvent> m_textureLoadedCallback;
 
     // objects
@@ -34,4 +35,6 @@ private:
     // light
     elv::SharedPtr<elv::VertexArray> m_lightVao;
     elv::SharedPtr<elv::Shader> m_lightShader;
+
+    lia::vec3 m_lightPos { 0.8f, 1.0f, 1.2f };
 };

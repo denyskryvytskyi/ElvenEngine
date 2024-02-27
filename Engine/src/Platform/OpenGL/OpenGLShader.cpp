@@ -122,7 +122,7 @@ std::uint32_t OpenGLShader::CompileShader(std::uint32_t type, const std::string&
 
         glDeleteShader(shaderId);
 
-        EL_CORE_ERROR("Failed shader compile: {0} {1} {2}", type == GL_VERTEX_SHADER ? "vertex" : "fragment", " shader:", infoLog.data());
+        EL_CORE_ERROR("Failed shader compile:\n\t name: {0};\n\t type: {1};\n\t info: {2}", m_name, type == GL_VERTEX_SHADER ? "vertex" : "fragment", infoLog.data());
 
         return -1;
     }

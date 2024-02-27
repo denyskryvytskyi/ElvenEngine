@@ -10,22 +10,25 @@ namespace elv {
 
 class CameraController {
 public:
-    CameraController(float fov, float aspectRatio, float near_, float far_, bool enableFly = true);
-    ~CameraController() = default;
+    CameraController(float fov, float aspectRatio, float near_, float far_, bool enableFly = false);
+    virtual ~CameraController() = default;
 
     void OnUpdate(float dt);
 
     Camera& GetCamera() { return m_camera; }
     const Camera& GetCamera() const { return m_camera; }
 
-private:
-    void ProcessInput(float dt);
+protected:
+    virtual void ProcessInput(float dt);
+    virtual void OnMouseMoved(const events::MouseMovedEvent& e);
 
-    void OnMouseMoved(const events::MouseMovedEvent& e);
+    void UpdateFront();
+
+private:
     void OnMouseScrolled(const events::MouseScrolledEvent& e);
     void OnWindowResized(const events::WindowResizeEvent& e);
 
-private:
+protected:
     Camera m_camera;
 
     lia::vec3 m_position { 0.0f, 0.0f, 3.0f };
@@ -44,6 +47,7 @@ private:
 
     bool m_mouseLastPosInited { false };
     bool m_isFlyEnabled { false };
+    bool m_isMoveEnabled { true };
     bool m_updateLookAt { true };
 
     events::EventHandler<events::MouseMovedEvent> m_mouseMovedCallback;

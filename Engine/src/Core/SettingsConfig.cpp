@@ -9,6 +9,16 @@ namespace {
 constexpr std::string_view engineSettingsFile = "settings.cfg";
 }
 
+template<typename T>
+void LoadSetting(const std::string& name, T& setting, nlohmann::json& j)
+{
+    try {
+        j.at(name).get_to(setting);
+    } catch (nlohmann::json_abi_v3_11_2::detail::out_of_range e) {
+        EL_CORE_WARN("Failed to load setting: {}", e.what());
+    }
+}
+
 SettingsConfig gEngineSettings;
 
 void SettingsConfig::LoadSettings()
@@ -26,22 +36,18 @@ void SettingsConfig::LoadSettings()
         }
     }
 
-    try {
-
-        j.at("window_height").get_to(windowHeight);
-        j.at("window_width").get_to(windowWidth);
-        j.at("default_scene_name").get_to(defaultSceneName);
-        j.at("load_default_scene").get_to(loadDefaultScene);
-        j.at("orthographic_camera_size").get_to(orthographicCameraSize);
-        j.at("enable_save_scene").get_to(enableSaveScene);
-        j.at("enable_editor").get_to(enableEditor);
-        j.at("enable_fullscreen").get_to(enableFullscreen);
-        j.at("enable_vsync").get_to(enableVSync);
-        j.at("enable_fps_counter").get_to(enableFpsCounter);
-        j.at("enable_z_sorting").get_to(enableZSorting);
-    } catch (nlohmann::json_abi_v3_11_2::detail::out_of_range e) {
-        EL_CORE_WARN("Failed to load setting: {}", e.what());
-    }
+    LoadSetting("window_height", windowHeight, j);
+    LoadSetting("window_height", windowHeight, j);
+    LoadSetting("window_width", windowWidth, j);
+    LoadSetting("default_scene_name", defaultSceneName, j);
+    LoadSetting("load_default_scene", loadDefaultScene, j);
+    LoadSetting("orthographic_camera_size", orthographicCameraSize, j);
+    LoadSetting("enable_save_scene", enableSaveScene, j);
+    LoadSetting("enable_editor", enableEditor, j);
+    LoadSetting("enable_fullscreen", enableFullscreen, j);
+    LoadSetting("enable_vsync", enableVSync, j);
+    LoadSetting("enable_fps_counter", enableFpsCounter, j);
+    LoadSetting("enable_z_sorting", enableZSorting, j);
 
     EL_CORE_INFO("Settings loaded");
 }

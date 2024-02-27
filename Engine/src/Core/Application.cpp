@@ -130,6 +130,7 @@ void Application::Run()
             // ImGui overlay rendering
             m_imGuiOverlay.Begin();
             m_imGuiOverlay.ImGuiRender();
+            OnImguiRender();
             m_imGuiOverlay.End();
         }
 #endif

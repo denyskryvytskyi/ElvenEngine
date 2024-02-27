@@ -37,6 +37,7 @@ protected:
     virtual void OnCreate() {};
     virtual void OnUpdate(float dt) {};
     virtual void OnRender(float dt) {};
+    virtual void OnImguiRender() {};
     virtual void OnDestroy() {};
 
     virtual void OnWindowResizeApp() {};

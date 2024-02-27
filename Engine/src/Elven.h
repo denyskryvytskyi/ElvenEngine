@@ -24,6 +24,7 @@
 /// Renderer ////////////////////////////////////
 
 #include "Renderer/CameraController.h"
+#include "Renderer/EditorCameraController.h"
 #include "Renderer/OrthographicCameraController.h"
 #include "Renderer/RenderCommand.h"
 #include "Renderer/Renderer.h"

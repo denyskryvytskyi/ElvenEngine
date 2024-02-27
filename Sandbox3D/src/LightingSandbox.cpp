@@ -2,8 +2,11 @@
 
 #include "Events/TextureEvent.h"
 
+#include <imgui.h>
+#include <imgui_internal.h>
+
 namespace {
-const lia::vec3 lightPos(1.2f, 1.0f, 2.0f);
+
 }
 
 LightingSandbox::LightingSandbox()
@@ -15,39 +18,40 @@ LightingSandbox::LightingSandbox()
     // cube vertices
     float vertices[] = {
         // front
-        -0.5, -0.5, 0.5,
-        0.5, -0.5, 0.5,
-        0.5, 0.5, 0.5,
-        -0.5, 0.5, 0.5,
+        -0.5, -0.5, 0.5, 0.0f, 0.0f, 1.0f,
+        0.5, -0.5, 0.5, 0.0f, 0.0f, 1.0f,
+        0.5, 0.5, 0.5, 0.0f, 0.0f, 1.0f,
+        -0.5, 0.5, 0.5, 0.0f, 0.0f, 1.0f,
         // top
-        -0.5, 0.5, 0.5,
-        0.5, 0.5, 0.5,
-        0.5, 0.5, -0.5,
-        -0.5, 0.5, -0.5,
+        -0.5, 0.5, 0.5, 0.0f, 1.0f, 0.0f,
+        0.5, 0.5, 0.5, 0.0f, 1.0f, 0.0f,
+        0.5, 0.5, -0.5, 0.0f, 1.0f, 0.0f,
+        -0.5, 0.5, -0.5, 0.0f, 1.0f, 0.0f,
         // back
-        0.5, -0.5, -0.5,
-        -0.5, -0.5, -0.5,
-        -0.5, 0.5, -0.5,
-        0.5, 0.5, -0.5,
+        0.5, -0.5, -0.5, 0.0f, 0.0f, -1.0f,
+        -0.5, -0.5, -0.5, 0.0f, 0.0f, -1.0f,
+        -0.5, 0.5, -0.5, 0.0f, 0.0f, -1.0f,
+        0.5, 0.5, -0.5, 0.0f, 0.0f, -1.0f,
         // bottom
-        -0.5, -0.5, -0.5,
-        0.5, -0.5, -0.5,
-        0.5, -0.5, 0.5,
-        -0.5, -0.5, 0.5,
+        -0.5, -0.5, -0.5, 0.0f, -1.0f, 0.0f,
+        0.5, -0.5, -0.5, 0.0f, -1.0f, 0.0f,
+        0.5, -0.5, 0.5, 0.0f, -1.0f, 0.0f,
+        -0.5, -0.5, 0.5, 0.0f, -1.0f, 0.0f,
         // left
-        -0.5, -0.5, -0.5,
-        -0.5, -0.5, 0.5,
-        -0.5, 0.5, 0.5,
-        -0.5, 0.5, -0.5,
+        -0.5, -0.5, -0.5, -1.0f, 0.0f, 0.0f,
+        -0.5, -0.5, 0.5, -1.0f, 0.0f, 0.0f,
+        -0.5, 0.5, 0.5, -1.0f, 0.0f, 0.0f,
+        -0.5, 0.5, -0.5, -1.0f, 0.0f, 0.0f,
         // right
-        0.5, -0.5, 0.5,
-        0.5, -0.5, -0.5,
-        0.5, 0.5, -0.5,
-        0.5, 0.5, 0.5
+        0.5, -0.5, 0.5, 1.0f, 0.0f, 0.0f,
+        0.5, -0.5, -0.5, 1.0f, 0.0f, 0.0f,
+        0.5, 0.5, -0.5, 1.0f, 0.0f, 0.0f,
+        0.5, 0.5, 0.5, 1.0f, 0.0f, 0.0f
     };
 
     elv::SharedPtr<elv::VertexBuffer> vbo = elv::VertexBuffer::Create(vertices, sizeof(vertices));
-    vbo->SetLayout({ { elv::BufferAttributeType::Float3 } });
+    vbo->SetLayout({ { elv::BufferAttributeType::Float3 },    // pos
+                     { elv::BufferAttributeType::Float3 } }); // normal
 
     m_vao->AddVertexBuffer(vbo);
 
@@ -89,7 +93,39 @@ LightingSandbox::LightingSandbox()
     };
 
     // Lights
-    elv::SharedPtr<elv::VertexBuffer> lVbo = elv::VertexBuffer::Create(vertices, sizeof(vertices));
+    float lightCubeVertices[] = {
+        // front
+        -0.5, -0.5, 0.5,
+        0.5, -0.5, 0.5,
+        0.5, 0.5, 0.5,
+        -0.5, 0.5, 0.5,
+        // top
+        -0.5, 0.5, 0.5,
+        0.5, 0.5, 0.5,
+        0.5, 0.5, -0.5,
+        -0.5, 0.5, -0.5,
+        // back
+        0.5, -0.5, -0.5,
+        -0.5, -0.5, -0.5,
+        -0.5, 0.5, -0.5,
+        0.5, 0.5, -0.5,
+        // bottom
+        -0.5, -0.5, -0.5,
+        0.5, -0.5, -0.5,
+        0.5, -0.5, 0.5,
+        -0.5, -0.5, 0.5,
+        // left
+        -0.5, -0.5, -0.5,
+        -0.5, -0.5, 0.5,
+        -0.5, 0.5, 0.5,
+        -0.5, 0.5, -0.5,
+        // right
+        0.5, -0.5, 0.5,
+        0.5, -0.5, -0.5,
+        0.5, 0.5, -0.5,
+        0.5, 0.5, 0.5
+    };
+    elv::SharedPtr<elv::VertexBuffer> lVbo = elv::VertexBuffer::Create(lightCubeVertices, sizeof(lightCubeVertices));
     lVbo->SetLayout({ { elv::BufferAttributeType::Float3 } });
     m_lightVao->AddVertexBuffer(lVbo);
 
@@ -113,7 +149,8 @@ void LightingSandbox::OnRender(float dt)
     /*if (m_texture == nullptr)
         return;*/
 
-    elv::Renderer::BeginScene(m_cameraController.GetCamera());
+    auto& camera = m_cameraController.GetCamera();
+    elv::Renderer::BeginScene(camera);
 
     // render cubes
     m_shader->Bind();
@@ -123,9 +160,12 @@ void LightingSandbox::OnRender(float dt)
 
         m_shader->SetVector3f("u_ObjectColor", 1.0f, 0.5f, 0.31f);
         m_shader->SetVector3f("u_LightColor", 1.0f, 1.0f, 1.0f);
+        m_shader->SetVector3f("u_LightPos", m_lightPos);
+        m_shader->SetVector3f("u_ViewPos", camera.GetPosition());
 
         lia::mat4 model(1.0f);
-        // model = lia::translate(model, m_cubes[i]);
+        // m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(model));
+        //  model = lia::translate(model, m_cubes[i]);
         elv::Renderer::Submit(m_shader, m_vao, model);
     }
 
@@ -133,10 +173,86 @@ void LightingSandbox::OnRender(float dt)
     m_lightShader->Bind();
     lia::mat4 model(1.0f);
     model = lia::scale(model, lia::vec3(0.2f)); // a smaller cube
-    model = lia::translate(model, lightPos);
+    model = lia::translate(model, m_lightPos);
     elv::Renderer::Submit(m_shader, m_vao, model);
 
     elv::Renderer::EndScene();
+}
+
+void LightingSandbox::OnImguiRender()
+{
+    float columnWidth = 150.f;
+    std::string label = "light";
+    float resetValue = 0.0f;
+
+    //
+    ImGui::Begin("Light");
+    // ImGui::SetWindowSize(ImVec2(300.0f, 200.0f));
+
+    ImGuiIO& io = ImGui::GetIO();
+    auto boldFont = io.Fonts->Fonts[0];
+
+    ImGui::PushID(label.c_str());
+
+    ImGui::Columns(2);
+    ImGui::SetColumnWidth(0, 50);
+    ImGui::Text(label.c_str());
+    ImGui::NextColumn();
+
+    ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2 { 0, 0 });
+
+    float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+    ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4 { 0.8f, 0.1f, 0.15f, 1.0f });
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4 { 0.9f, 0.2f, 0.2f, 1.0f });
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4 { 0.8f, 0.1f, 0.15f, 1.0f });
+    ImGui::PushFont(boldFont);
+    if (ImGui::Button("X", buttonSize))
+        m_lightPos.x = resetValue;
+    ImGui::PopFont();
+    ImGui::PopStyleColor(3);
+
+    ImGui::SameLine();
+    ImGui::DragFloat("##X", &m_lightPos.x, 0.1f, 0.0f, 0.0f, "%.2f");
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4 { 0.2f, 0.7f, 0.2f, 1.0f });
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4 { 0.3f, 0.8f, 0.3f, 1.0f });
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4 { 0.2f, 0.7f, 0.2f, 1.0f });
+    ImGui::PushFont(boldFont);
+    if (ImGui::Button("Y", buttonSize))
+        m_lightPos.y = resetValue;
+    ImGui::PopFont();
+    ImGui::PopStyleColor(3);
+
+    ImGui::SameLine();
+    ImGui::DragFloat("##Y", &m_lightPos.y, 0.1f, 0.0f, 0.0f, "%.2f");
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4 { 0.1f, 0.25f, 0.8f, 1.0f });
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4 { 0.2f, 0.35f, 0.9f, 1.0f });
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4 { 0.1f, 0.25f, 0.8f, 1.0f });
+    ImGui::PushFont(boldFont);
+    if (ImGui::Button("Z", buttonSize))
+        m_lightPos.z = resetValue;
+    ImGui::PopFont();
+    ImGui::PopStyleColor(3);
+
+    ImGui::SameLine();
+    ImGui::DragFloat("##Z", &m_lightPos.z, 0.1f, 0.0f, 0.0f, "%.2f");
+    ImGui::PopItemWidth();
+
+    ImGui::PopStyleVar();
+
+    ImGui::Columns(1);
+
+    ImGui::PopID();
+
+    ImGui::End();
 }
 
 void LightingSandbox::OnDestroy()

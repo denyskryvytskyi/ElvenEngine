@@ -55,8 +55,8 @@ void ImGuiOverlay::Shutdown()
 
 void ImGuiOverlay::ImGuiRender()
 {
-    static bool showDemo = false;
-    // ImGui::ShowDemoWindow(&showDemo);
+    static bool showDemo = true;
+    ImGui::ShowDemoWindow(&showDemo);
 
     // ------- Custom panels -------
     ImGui::Begin("Menu");
