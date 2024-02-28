@@ -37,7 +37,9 @@ protected:
     virtual void OnCreate() {};
     virtual void OnUpdate(float dt) {};
     virtual void OnRender(float dt) {};
+#if EDITOR_MODE
     virtual void OnImguiRender() {};
+#endif
     virtual void OnDestroy() {};
 
     virtual void OnWindowResizeApp() {};

@@ -57,6 +57,7 @@ void EditorCameraController::OnMouseButtonRelease(const events::MouseButtonRelea
 {
     if (e.button == Mouse::ButtonRight) {
         m_isMoveEnabled = false;
+        m_mouseLastPosInited = false;
     }
 }
 

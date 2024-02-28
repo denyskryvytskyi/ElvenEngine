@@ -1,13 +1,11 @@
 #include "LightingSandbox.h"
 
-#include "Events/TextureEvent.h"
+#include <Events/TextureEvent.h>
 
-#include <imgui.h>
-#include <imgui_internal.h>
-
-namespace {
-
-}
+#if EDITOR_MODE
+#    include <ImGui/EditorHelpers.h>
+#    include <imgui.h>
+#endif
 
 LightingSandbox::LightingSandbox()
     : m_cameraController(45.0f, 1280.0f / 720.0f, 0.1f, 100.0f)
@@ -88,10 +86,6 @@ LightingSandbox::LightingSandbox()
     elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hash);
     elv::textures::Load("wall", "wall.png");*/
 
-    m_cubes = {
-        lia::vec3(0.0f, 0.0f, 0.0f)
-    };
-
     // Lights
     float lightCubeVertices[] = {
         // front
@@ -156,104 +150,75 @@ void LightingSandbox::OnRender(float dt)
     m_shader->Bind();
 
     elv::RenderCommand::DrawIndexed(m_vao);
-    for (size_t i = 0; i < m_cubes.size(); i++) {
 
-        m_shader->SetVector3f("u_ObjectColor", 1.0f, 0.5f, 0.31f);
-        m_shader->SetVector3f("u_LightColor", 1.0f, 1.0f, 1.0f);
-        m_shader->SetVector3f("u_LightPos", m_lightPos);
-        m_shader->SetVector3f("u_ViewPos", camera.GetPosition());
+    m_shader->SetVector3f("u_LightColor", { 1.0f });
+    m_shader->SetVector3f("u_ViewPos", camera.GetPosition());
 
-        lia::mat4 model(1.0f);
-        // m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(model));
-        //  model = lia::translate(model, m_cubes[i]);
-        elv::Renderer::Submit(m_shader, m_vao, model);
-    }
+    // cube material
+    m_shader->SetVector3f("u_Material.ambient", m_cubeMaterial.ambient);
+    m_shader->SetVector3f("u_Material.diffuse", m_cubeMaterial.diffuse);
+    m_shader->SetVector3f("u_Material.specular", m_cubeMaterial.specular);
+    m_shader->SetFloat("u_Material.shininess", m_cubeMaterial.shininess);
+
+    m_shader->SetVector3f("u_Light.position", m_light.position);
+    m_shader->SetVector3f("u_Light.ambient", m_light.ambient);
+    m_shader->SetVector3f("u_Light.diffuse", m_light.diffuse);
+    m_shader->SetVector3f("u_Light.specular", m_light.specular);
+
+    lia::mat4 model(1.0f);
+    model = lia::scale(model, lia::vec3(m_cubeScale.x, m_cubeScale.y, m_cubeScale.z))
+        * lia::rotateX({ 1.0f }, lia::radians(m_cubeRotation.x))
+        * lia::rotateY({ 1.0f }, lia::radians(m_cubeRotation.y))
+        * lia::rotateZ({ 1.0f }, lia::radians(m_cubeRotation.z))
+        * lia::translate({ 1.0f }, m_cubePosition);
+
+    m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(model));
+    elv::Renderer::Submit(m_shader, m_vao, model);
 
     // render lights
     m_lightShader->Bind();
-    lia::mat4 model(1.0f);
-    model = lia::scale(model, lia::vec3(0.2f)); // a smaller cube
-    model = lia::translate(model, m_lightPos);
-    elv::Renderer::Submit(m_shader, m_vao, model);
+    lia::mat4 lightModel(1.0f);
+    lightModel = lia::scale(lightModel, lia::vec3(0.2f)) * lia::translate({ 1.0f }, m_light.position);
+
+    elv::Renderer::Submit(m_shader, m_vao, lightModel);
 
     elv::Renderer::EndScene();
 }
 
+#if EDITOR_MODE
 void LightingSandbox::OnImguiRender()
 {
-    float columnWidth = 150.f;
-    std::string label = "light";
-    float resetValue = 0.0f;
+    ImGui::Begin("Scene properties");
+    // ImGui::SetWindowSize(ImVec2(300.0f, 300.0f));
 
-    //
-    ImGui::Begin("Light");
-    // ImGui::SetWindowSize(ImVec2(300.0f, 200.0f));
+    ImGui::Text("Cube Transform");
+    ImGui::Separator();
+    elv::editor::DrawVec3Control("cube_pos", "Position", m_cubePosition);
+    elv::editor::DrawVec3Control("cube_rotation", "Rotation", m_cubeRotation);
+    elv::editor::DrawVec3Control("cube_scale", "Scale", m_cubeScale);
+    ImGui::Separator();
 
-    ImGuiIO& io = ImGui::GetIO();
-    auto boldFont = io.Fonts->Fonts[0];
+    ImGui::Text("Cube Material");
+    elv::editor::DrawRGBColorControl("ambient", m_cubeMaterial.ambient);
+    elv::editor::DrawRGBColorControl("diffuse", m_cubeMaterial.diffuse);
+    elv::editor::DrawRGBColorControl("specular", m_cubeMaterial.specular);
+    elv::editor::DrawSliderFloat("shininess", 1.0f, 256.0f, m_cubeMaterial.shininess);
+    ImGui::Separator();
 
-    ImGui::PushID(label.c_str());
+    ImGui::Text("Light");
+    ImGui::Separator();
+    elv::editor::DrawVec3Control("light_pos", "Position", m_light.position);
+    ImGui::Separator();
 
-    ImGui::Columns(2);
-    ImGui::SetColumnWidth(0, 50);
-    ImGui::Text(label.c_str());
-    ImGui::NextColumn();
-
-    ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
-    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2 { 0, 0 });
-
-    float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
-    ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
-
-    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4 { 0.8f, 0.1f, 0.15f, 1.0f });
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4 { 0.9f, 0.2f, 0.2f, 1.0f });
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4 { 0.8f, 0.1f, 0.15f, 1.0f });
-    ImGui::PushFont(boldFont);
-    if (ImGui::Button("X", buttonSize))
-        m_lightPos.x = resetValue;
-    ImGui::PopFont();
-    ImGui::PopStyleColor(3);
-
-    ImGui::SameLine();
-    ImGui::DragFloat("##X", &m_lightPos.x, 0.1f, 0.0f, 0.0f, "%.2f");
-    ImGui::PopItemWidth();
-    ImGui::SameLine();
-
-    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4 { 0.2f, 0.7f, 0.2f, 1.0f });
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4 { 0.3f, 0.8f, 0.3f, 1.0f });
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4 { 0.2f, 0.7f, 0.2f, 1.0f });
-    ImGui::PushFont(boldFont);
-    if (ImGui::Button("Y", buttonSize))
-        m_lightPos.y = resetValue;
-    ImGui::PopFont();
-    ImGui::PopStyleColor(3);
-
-    ImGui::SameLine();
-    ImGui::DragFloat("##Y", &m_lightPos.y, 0.1f, 0.0f, 0.0f, "%.2f");
-    ImGui::PopItemWidth();
-    ImGui::SameLine();
-
-    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4 { 0.1f, 0.25f, 0.8f, 1.0f });
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4 { 0.2f, 0.35f, 0.9f, 1.0f });
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4 { 0.1f, 0.25f, 0.8f, 1.0f });
-    ImGui::PushFont(boldFont);
-    if (ImGui::Button("Z", buttonSize))
-        m_lightPos.z = resetValue;
-    ImGui::PopFont();
-    ImGui::PopStyleColor(3);
-
-    ImGui::SameLine();
-    ImGui::DragFloat("##Z", &m_lightPos.z, 0.1f, 0.0f, 0.0f, "%.2f");
-    ImGui::PopItemWidth();
-
-    ImGui::PopStyleVar();
-
-    ImGui::Columns(1);
-
-    ImGui::PopID();
+    ImGui::Text("Light Material");
+    ImGui::Separator();
+    elv::editor::DrawRGBColorControl("light ambient", m_light.ambient);
+    elv::editor::DrawRGBColorControl("light diffuse", m_light.diffuse);
+    elv::editor::DrawRGBColorControl("light specular", m_light.specular);
 
     ImGui::End();
 }
+#endif
 
 void LightingSandbox::OnDestroy()
 {

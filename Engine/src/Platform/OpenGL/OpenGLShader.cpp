@@ -30,6 +30,11 @@ void OpenGLShader::SetInteger(const std::string& name, std::uint32_t value)
     glUniform1i(GetUniformLocation(name), value);
 }
 
+void OpenGLShader::SetFloat(const std::string& name, float value)
+{
+    glUniform1f(GetUniformLocation(name), value);
+}
+
 void OpenGLShader::SetVector2f(const std::string& name, float x, float y)
 {
     glUniform2f(GetUniformLocation(name), x, y);

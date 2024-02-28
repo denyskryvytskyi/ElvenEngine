@@ -67,6 +67,7 @@ if (EDITOR_MODE)
     set(ENGINE_HEADERS
     ${ENGINE_HEADERS}
     "src/ImGui/ImGuiOverlay.h"
+    "src/Imgui/EditorHelpers.h"
     )
 endif()
 
@@ -119,6 +120,7 @@ if (EDITOR_MODE)
     set(ENGINE_SOURCES
     ${ENGINE_SOURCES}
     "src/ImGui/ImGuiOverlay.cpp"
+    "src/Imgui/EditorHelpers.cpp"
     )
 endif()
 

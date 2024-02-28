@@ -13,6 +13,7 @@ public:
     void Unbind() const override;
 
     void SetInteger(const std::string& name, std::uint32_t value) override;
+    void SetFloat(const std::string& name, float value) override;
     void SetVector2f(const std::string& name, float x, float y) override;
     void SetVector2f(const std::string& name, const lia::vec2& value) override;
     void SetVector3f(const std::string& name, float x, float y, float z) override;
