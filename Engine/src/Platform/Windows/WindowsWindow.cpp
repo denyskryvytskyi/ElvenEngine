@@ -103,6 +103,7 @@ void WindowsWindow::Init(const WindowProps& props)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_TRUE);
+    glfwWindowHint(GLFW_SAMPLES, 4);
 
     m_monitor = glfwGetPrimaryMonitor();
     if (m_data.FullScreen) {

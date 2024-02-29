@@ -38,6 +38,8 @@ void OpenGLRendererAPI::Init()
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glEnable(GL_MULTISAMPLE);
 }
 
 void OpenGLRendererAPI::SetViewport(std::uint32_t x, std::uint32_t y, std::uint32_t width, std::uint32_t height)
@@ -61,6 +63,15 @@ void OpenGLRendererAPI::EnableDepthTesting(bool enabled)
         glDepthFunc(GL_LEQUAL);
     } else {
         glDisable(GL_DEPTH_TEST);
+    }
+}
+
+void OpenGLRendererAPI::EnableMSAA(bool enabled)
+{
+    if (enabled) {
+        glEnable(GL_MULTISAMPLE);
+    } else {
+        glDisable(GL_MULTISAMPLE);
     }
 }
 

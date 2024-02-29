@@ -9,6 +9,7 @@
 
 #include "Core/Application.h"
 #include "Core/Window.h"
+#include "Renderer/RenderCommand.h"
 #include "Renderer/Renderer2D.h"
 
 namespace elv {
@@ -83,6 +84,10 @@ void ImGuiOverlay::ImGuiRender()
 
     if (ImGui::Checkbox("Fullsreen mode", &m_isFullScreen)) {
         Application::Get().GetWindow()->SetFullScreen(m_isFullScreen);
+    }
+
+    if (ImGui::Checkbox("MSAA", &m_isMSAAEnabled)) {
+        RenderCommand::EnableMSAA(m_isMSAAEnabled);
     }
 
     ImGui::End();

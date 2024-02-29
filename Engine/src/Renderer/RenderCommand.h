@@ -45,6 +45,11 @@ public:
         s_RendererAPI->DisableByteAlignment();
     }
 
+    static void EnableMSAA(bool enable)
+    {
+        s_RendererAPI->EnableMSAA(enable);
+    }
+
 private:
     static UniquePtr<RendererAPI> s_RendererAPI;
 };

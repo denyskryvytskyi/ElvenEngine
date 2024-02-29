@@ -151,7 +151,6 @@ void LightingSandbox::OnRender(float dt)
 
     elv::RenderCommand::DrawIndexed(m_vao);
 
-    m_shader->SetVector3f("u_LightColor", { 1.0f });
     m_shader->SetVector3f("u_ViewPos", camera.GetPosition());
 
     // cube material
@@ -159,6 +158,11 @@ void LightingSandbox::OnRender(float dt)
     m_shader->SetVector3f("u_Material.diffuse", m_cubeMaterial.diffuse);
     m_shader->SetVector3f("u_Material.specular", m_cubeMaterial.specular);
     m_shader->SetFloat("u_Material.shininess", m_cubeMaterial.shininess);
+
+    if (m_lightDemoRotationEnabled) {
+        m_light.position.x = sin(m_timer.Elapsed()) * 2.0f;
+        m_light.position.y = sin(m_timer.Elapsed() / 2.0f) * 1.0f;
+    }
 
     m_shader->SetVector3f("u_Light.position", m_light.position);
     m_shader->SetVector3f("u_Light.ambient", m_light.ambient);
@@ -180,7 +184,7 @@ void LightingSandbox::OnRender(float dt)
     lia::mat4 lightModel(1.0f);
     lightModel = lia::scale(lightModel, lia::vec3(0.2f)) * lia::translate({ 1.0f }, m_light.position);
 
-    elv::Renderer::Submit(m_shader, m_vao, lightModel);
+    elv::Renderer::Submit(m_lightShader, m_vao, lightModel);
 
     elv::Renderer::EndScene();
 }
@@ -205,9 +209,7 @@ void LightingSandbox::OnImguiRender()
     elv::editor::DrawSliderFloat("shininess", 1.0f, 256.0f, m_cubeMaterial.shininess);
     ImGui::Separator();
 
-    ImGui::Text("Light");
-    ImGui::Separator();
-    elv::editor::DrawVec3Control("light_pos", "Position", m_light.position);
+    elv::editor::DrawVec3Control("light_pos", "Light Position", m_light.position);
     ImGui::Separator();
 
     ImGui::Text("Light Material");
@@ -215,6 +217,9 @@ void LightingSandbox::OnImguiRender()
     elv::editor::DrawRGBColorControl("light ambient", m_light.ambient);
     elv::editor::DrawRGBColorControl("light diffuse", m_light.diffuse);
     elv::editor::DrawRGBColorControl("light specular", m_light.specular);
+
+    ImGui::Separator();
+    ImGui::Checkbox("Light demo rotation enabled", &m_lightDemoRotationEnabled);
 
     ImGui::End();
 }

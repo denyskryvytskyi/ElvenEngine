@@ -16,7 +16,7 @@ struct Material {
 };
 
 struct Light {
-    lia::vec3 position { 0.9f, 0.8f, 1.2f };
+    lia::vec3 position { 0.0f, 0.8f, 1.2f };
 
     lia::vec3 ambient { 0.2f, 0.2f, 0.2f };
     lia::vec3 diffuse { 0.4f, 0.4f, 0.4f };
@@ -42,6 +42,8 @@ private:
     elv::EditorCameraController m_cameraController;
     elv::events::EventHandler<elv::events::TextureLoadedEvent> m_textureLoadedCallback;
 
+    elv::Timer m_timer;
+
     // objects
     elv::SharedPtr<elv::VertexArray> m_vao;
     elv::SharedPtr<elv::Shader> m_shader;
@@ -58,4 +60,7 @@ private:
     elv::SharedPtr<elv::Shader> m_lightShader;
 
     Light m_light;
+
+    // settings
+    bool m_lightDemoRotationEnabled { false };
 };

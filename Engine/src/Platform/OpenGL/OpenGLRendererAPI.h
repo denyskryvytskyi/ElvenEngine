@@ -12,6 +12,7 @@ class OpenGLRendererAPI : public RendererAPI {
     void Clear() override;
 
     void EnableDepthTesting(bool enabled) override;
+    void EnableMSAA(bool enabled) override;
 
     void DisableByteAlignment() override;
 
