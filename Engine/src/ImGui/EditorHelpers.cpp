@@ -7,7 +7,7 @@ namespace elv::editor {
 
 namespace {
 const float kResetValue = 0.0f;
-const float kColumnWidth = 100.0f;
+const float kColumnWidth = 130.0f;
 } // namespace
 
 void DrawVec3Control(const std::string& id, const std::string& label, lia::vec3& properties)
