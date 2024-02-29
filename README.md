@@ -74,29 +74,20 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
   - [ ] Thread pool
 
 ## Demo
-#### Space Invaders
-<b>Quick demo</b>
-
-<img src=".github/demo/invaders.gif">
-
-<b>Full demo</b>
-
+#### Space Invaders full demo
 https://github.com/denyskryvytskyi/ElvenEngine/assets/25298585/f0d32c8b-1ed2-44e3-9c93-a781f3da4203
 
-#### Ping-pong
-<img src=".github/demo/pong.gif">
-
-#### TRON
-<img src=".github/demo/tron.gif">
-
-#### Sprite rendering
-<img src=".github/demo/fantasy.png" width="80%">
-
-#### Quad and texture batch rendering (20000 wizards)
-<img src=".github/demo/wizards.gif">
+| 2D Rendering  | |
+| --- | --- | 
+| Space Invades  | TRON |
+| <img src=".github/demo/invaders.gif"> | <img src=".github/demo/tron.gif"> |
+| Ping Pong | Quad and texture batch rendering (20000 wizards) |
+| <img src=".github/demo/pong.gif"> | <img src=".github/demo/wizards.gif"> |
 
 #### 3D rendering
-<img src=".github/demo/cubes.gif">
+| Simple lighting  | Textures |
+| --- | --- | 
+| <img src=".github/demo/lighting_demo.gif"> | <img src=".github/demo/cubes.gif"> |
 
 ## Third-party libraries
 | Lib |  |
