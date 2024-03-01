@@ -11,6 +11,7 @@ public:
 
     void BindToUnit(std::uint32_t unit) override;
     void SetData(void* data, bool generateMipmap = true) override;
+    void SetWrappingMode(const TextureWrappingMode wrappingMode) override;
 
 private:
     uint32_t m_id { 0 };

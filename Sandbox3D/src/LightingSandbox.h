@@ -44,10 +44,13 @@ private:
 
     elv::Timer m_timer;
 
+    int m_texturesToLoad = 3;
+    int m_texturesLoaded = 0;
+    bool m_texturesIsReady { false };
+
     // objects
     elv::SharedPtr<elv::VertexArray> m_vao;
     elv::SharedPtr<elv::Shader> m_shader;
-    elv::SharedPtr<elv::Texture2D> m_texture;
 
     lia::vec3 m_cubePosition;
     lia::vec3 m_cubeRotation;

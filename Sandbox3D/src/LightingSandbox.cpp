@@ -14,42 +14,45 @@ LightingSandbox::LightingSandbox()
     , m_textureLoadedCallback([this](const elv::events::TextureLoadedEvent& e) { OnTextureLoaded(e); })
 {
     // cube vertices
+    // clang-format off
     float vertices[] = {
-        // front
-        -0.5, -0.5, 0.5, 0.0f, 0.0f, 1.0f,
-        0.5, -0.5, 0.5, 0.0f, 0.0f, 1.0f,
-        0.5, 0.5, 0.5, 0.0f, 0.0f, 1.0f,
-        -0.5, 0.5, 0.5, 0.0f, 0.0f, 1.0f,
-        // top
-        -0.5, 0.5, 0.5, 0.0f, 1.0f, 0.0f,
-        0.5, 0.5, 0.5, 0.0f, 1.0f, 0.0f,
-        0.5, 0.5, -0.5, 0.0f, 1.0f, 0.0f,
-        -0.5, 0.5, -0.5, 0.0f, 1.0f, 0.0f,
-        // back
-        0.5, -0.5, -0.5, 0.0f, 0.0f, -1.0f,
-        -0.5, -0.5, -0.5, 0.0f, 0.0f, -1.0f,
-        -0.5, 0.5, -0.5, 0.0f, 0.0f, -1.0f,
-        0.5, 0.5, -0.5, 0.0f, 0.0f, -1.0f,
-        // bottom
-        -0.5, -0.5, -0.5, 0.0f, -1.0f, 0.0f,
-        0.5, -0.5, -0.5, 0.0f, -1.0f, 0.0f,
-        0.5, -0.5, 0.5, 0.0f, -1.0f, 0.0f,
-        -0.5, -0.5, 0.5, 0.0f, -1.0f, 0.0f,
-        // left
-        -0.5, -0.5, -0.5, -1.0f, 0.0f, 0.0f,
-        -0.5, -0.5, 0.5, -1.0f, 0.0f, 0.0f,
-        -0.5, 0.5, 0.5, -1.0f, 0.0f, 0.0f,
-        -0.5, 0.5, -0.5, -1.0f, 0.0f, 0.0f,
-        // right
-        0.5, -0.5, 0.5, 1.0f, 0.0f, 0.0f,
-        0.5, -0.5, -0.5, 1.0f, 0.0f, 0.0f,
-        0.5, 0.5, -0.5, 1.0f, 0.0f, 0.0f,
-        0.5, 0.5, 0.5, 1.0f, 0.0f, 0.0f
+        // front          // normals         // uv
+        -0.5, -0.5, 0.5,  0.0f, 0.0f, 1.0f,  0.0, 0.0,
+        0.5, -0.5, 0.5,   0.0f, 0.0f, 1.0f,  1.0, 0.0,
+        0.5, 0.5, 0.5,    0.0f, 0.0f, 1.0f,  1.0, 1.0,
+        -0.5, 0.5, 0.5,   0.0f, 0.0f, 1.0f,  0.0, 1.0,
+        // top            // normals         // uv
+        -0.5, 0.5, 0.5,   0.0f, 1.0f, 0.0f,  0.0, 0.0,
+        0.5, 0.5, 0.5,    0.0f, 1.0f, 0.0f,  1.0, 0.0,
+        0.5, 0.5, -0.5,   0.0f, 1.0f, 0.0f,  1.0, 1.0,
+        -0.5, 0.5, -0.5,  0.0f, 1.0f, 0.0f,  0.0, 1.0,
+        // back           // normals         // uv
+        0.5, -0.5, -0.5,  0.0f, 0.0f, -1.0f, 0.0, 0.0,
+        -0.5, -0.5, -0.5, 0.0f, 0.0f, -1.0f, 1.0, 0.0,
+        -0.5, 0.5, -0.5,  0.0f, 0.0f, -1.0f, 1.0, 1.0,
+        0.5, 0.5, -0.5,   0.0f, 0.0f, -1.0f, 0.0, 1.0,
+        // bottom         // normals         // uv
+        -0.5, -0.5, -0.5, 0.0f, -1.0f, 0.0f, 0.0, 0.0,
+        0.5, -0.5, -0.5,  0.0f, -1.0f, 0.0f, 1.0, 0.0,
+        0.5, -0.5, 0.5,   0.0f, -1.0f, 0.0f, 1.0, 1.0,
+        -0.5, -0.5, 0.5,  0.0f, -1.0f, 0.0f, 0.0, 1.0,
+        // left           // normals         // uv
+        -0.5, -0.5, -0.5, -1.0f, 0.0f, 0.0f, 0.0, 0.0,
+        -0.5, -0.5, 0.5,  -1.0f, 0.0f, 0.0f, 1.0, 0.0,
+        -0.5, 0.5, 0.5,   -1.0f, 0.0f, 0.0f, 1.0, 1.0,
+        -0.5, 0.5, -0.5,  -1.0f, 0.0f, 0.0f, 0.0, 1.0,
+        // right          // normals         // uv
+        0.5, -0.5, 0.5,   1.0f, 0.0f, 0.0f,  0.0, 0.0,
+        0.5, -0.5, -0.5,  1.0f, 0.0f, 0.0f,  1.0, 0.0,
+        0.5, 0.5, -0.5,   1.0f, 0.0f, 0.0f,  1.0, 1.0,
+        0.5, 0.5, 0.5,    1.0f, 0.0f, 0.0f,  0.0, 1.0
     };
+    // clang-format on
 
     elv::SharedPtr<elv::VertexBuffer> vbo = elv::VertexBuffer::Create(vertices, sizeof(vertices));
     vbo->SetLayout({ { elv::BufferAttributeType::Float3 },    // pos
-                     { elv::BufferAttributeType::Float3 } }); // normal
+                     { elv::BufferAttributeType::Float3 },    // normal
+                     { elv::BufferAttributeType::Float2 } }); // uv
 
     m_vao->AddVertexBuffer(vbo);
 
@@ -80,11 +83,20 @@ LightingSandbox::LightingSandbox()
 
     m_vao->SetIndexBuffer(ebo);
 
-    m_shader = elv::ShaderManager::Load("colors_cube_shader", "colors.vert", "colors.frag");
+    // m_shader = elv::ShaderManager::Load("colors_cube_shader", "colors.vert", "colors.frag"); // default colored cube
+    m_shader = elv::ShaderManager::Load("textured_cube_shader", "textured_cube.vert", "textured_cube.frag"); // textured cube
 
-    /*const uint64_t hash = elv::string_id("wall");
+    const uint64_t hash = elv::string_id("wooden_container");
     elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hash);
-    elv::textures::Load("wall", "wall.png");*/
+    elv::textures::Load("wooden_container", "wooden_container.png");
+
+    const uint64_t hashSpecular = elv::string_id("wooden_container_specular");
+    elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hashSpecular);
+    elv::textures::Load("wooden_container_specular", "wooden_container_specular.png");
+
+    const uint64_t hashMatrix = elv::string_id("matrix");
+    elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hashMatrix);
+    elv::textures::Load("matrix", "matrix.jpg");
 
     // Lights
     float lightCubeVertices[] = {
@@ -140,8 +152,8 @@ void LightingSandbox::OnUpdate(float dt)
 
 void LightingSandbox::OnRender(float dt)
 {
-    /*if (m_texture == nullptr)
-        return;*/
+    if (!m_texturesIsReady)
+        return;
 
     auto& camera = m_cameraController.GetCamera();
     elv::Renderer::BeginScene(camera);
@@ -154,9 +166,15 @@ void LightingSandbox::OnRender(float dt)
     m_shader->SetVector3f("u_ViewPos", camera.GetPosition());
 
     // cube material
-    m_shader->SetVector3f("u_Material.ambient", m_cubeMaterial.ambient);
-    m_shader->SetVector3f("u_Material.diffuse", m_cubeMaterial.diffuse);
-    m_shader->SetVector3f("u_Material.specular", m_cubeMaterial.specular);
+    // default colored cube shader
+    /* m_shader->SetVector3f("u_Material.ambient", m_cubeMaterial.ambient);
+     m_shader->SetVector3f("u_Material.diffuse", m_cubeMaterial.diffuse);
+    m_shader->SetVector3f("u_Material.specular", m_cubeMaterial.specular);*/
+
+    m_shader->SetInteger("u_Material.diffuse", 1);  // diffuse map binding
+    m_shader->SetInteger("u_Material.specular", 2); // specular map binding
+    m_shader->SetInteger("u_Material.emission", 3); // emission map binding
+    m_shader->SetInteger("u_Material.enableEmission", 0);
     m_shader->SetFloat("u_Material.shininess", m_cubeMaterial.shininess);
 
     if (m_lightDemoRotationEnabled) {
@@ -231,6 +249,18 @@ void LightingSandbox::OnDestroy()
 
 void LightingSandbox::OnTextureLoaded(const elv::events::TextureLoadedEvent& e)
 {
-    /* m_texture = elv::textures::Get("wall");
-     m_texture->BindToUnit(1);*/
+    auto texture = elv::textures::Get(e.textureName);
+    int textureUnit = 1;
+    if (e.textureName == "wooden_container_specular") {
+        textureUnit = 2;
+    } else if (e.textureName == "matrix") {
+        textureUnit = 3;
+    }
+    texture->BindToUnit(textureUnit);
+
+    ++m_texturesLoaded;
+
+    if (m_texturesToLoad == m_texturesLoaded) {
+        m_texturesIsReady = true;
+    }
 }

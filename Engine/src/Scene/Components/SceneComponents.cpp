@@ -101,7 +101,7 @@ void SpriteComponent::LoadTexture()
         if (texturePtr) {
             texture = texturePtr;
         } else if (texturePath.empty()) {
-            EL_CORE_WARN("Failed to set texture to hte Sprite component, texturePath is missed");
+            EL_CORE_WARN("Failed to set texture to the Sprite component, texturePath is missed");
         } else {
             textures::Load(textureName, texturePath);
 

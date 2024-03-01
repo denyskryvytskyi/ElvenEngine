@@ -30,7 +30,7 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
 
 ## Features
 + [x] Logging system
-+ [x] Event system (non-blocking event queue-based system)
++ [x] Event system (non-blocking event queue-based system, described architecture in the [article](https://denyskryvytskyi.github.io/event-system))
 + [x] Custom math library ([lia](https://github.com/denyskryvytskyi/lia))
 + [x] Renderer core (graphics API agnostic)
   - [x] Shaders loading
@@ -45,7 +45,7 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
   - [x] Batch rendering (quad and texture)
   - [x] Text Rendering
   - [ ] Spritesheet animation
-+ [x] ECS
++ [x] ECS (investigated different techniques and my particular architecture in the [article](https://denyskryvytskyi.github.io/ecs))
   - [x] Data-oriented cache-friendly components system architecture
   - [x] In-Engine components: Transform, Sprite, Text, Quad, Camera, RectTransform
   - [x] Components serialization
