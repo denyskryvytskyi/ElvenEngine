@@ -18,6 +18,8 @@ public:
     Camera& GetCamera() { return m_camera; }
     const Camera& GetCamera() const { return m_camera; }
 
+    const lia::vec3& GetFront() const { return m_front; };
+
 protected:
     virtual void ProcessInput(float dt);
     virtual void OnMouseMoved(const events::MouseMovedEvent& e);

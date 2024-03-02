@@ -84,7 +84,7 @@ LightingSandbox::LightingSandbox()
     m_vao->SetIndexBuffer(ebo);
 
     // m_shader = elv::ShaderManager::Load("colors_cube_shader", "colors.vert", "colors.frag"); // default colored cube
-    m_shader = elv::ShaderManager::Load("textured_cube_shader", "textured_cube.vert", "textured_cube.frag"); // textured cube
+    m_shader = elv::ShaderManager::Load("textured_cube", "textured_cube.vert", "textured_cube_with_spotlight_caster.frag"); // textured cube
 
     const uint64_t hash = elv::string_id("wooden_container");
     elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hash);
@@ -177,15 +177,49 @@ void LightingSandbox::OnRender(float dt)
     m_shader->SetInteger("u_Material.enableEmission", 0);
     m_shader->SetFloat("u_Material.shininess", m_cubeMaterial.shininess);
 
-    if (m_lightDemoRotationEnabled) {
+    /*if (m_lightDemoRotationEnabled) {
         m_light.position.x = sin(m_timer.Elapsed()) * 2.0f;
         m_light.position.y = sin(m_timer.Elapsed() / 2.0f) * 1.0f;
+    }*/
+
+    // directional light
+    const bool enableDirLight = false;
+    if (enableDirLight) {
+        m_shader->SetVector3f("u_Light.direction", m_dirLight.direction);
+        m_shader->SetVector3f("u_Light.ambient", m_dirLight.ambient);
+        m_shader->SetVector3f("u_Light.diffuse", m_dirLight.diffuse);
+        m_shader->SetVector3f("u_Light.specular", m_dirLight.specular);
     }
 
-    m_shader->SetVector3f("u_Light.position", m_light.position);
-    m_shader->SetVector3f("u_Light.ambient", m_light.ambient);
-    m_shader->SetVector3f("u_Light.diffuse", m_light.diffuse);
-    m_shader->SetVector3f("u_Light.specular", m_light.specular);
+    // point light
+    const bool enablePoint = false;
+    if (enablePoint) {
+        m_shader->SetVector3f("u_Light.position", m_pointLight.position);
+        m_shader->SetVector3f("u_Light.ambient", m_pointLight.ambient);
+        m_shader->SetVector3f("u_Light.diffuse", m_pointLight.diffuse);
+        m_shader->SetVector3f("u_Light.specular", m_pointLight.specular);
+        m_shader->SetFloat("u_Light.constant", m_pointLight.constant);
+        m_shader->SetFloat("u_Light.linear", m_pointLight.linear);
+        m_shader->SetFloat("u_Light.quadratic", m_pointLight.quadratic);
+    }
+
+    const bool enableSpotlight = true;
+    if (enableSpotlight) {
+        // spotlight (flashlight in this example with camera position and view direction)
+        m_flashlight.position = camera.GetPosition();
+        m_flashlight.direction = m_cameraController.GetFront();
+
+        m_shader->SetVector3f("u_Light.position", m_flashlight.position);
+        m_shader->SetVector3f("u_Light.direction", m_flashlight.direction);
+        m_shader->SetVector3f("u_Light.ambient", m_flashlight.ambient);
+        m_shader->SetVector3f("u_Light.diffuse", m_flashlight.diffuse);
+        m_shader->SetVector3f("u_Light.specular", m_flashlight.specular);
+        m_shader->SetFloat("u_Light.cutOff", cos(lia::radians(m_flashlight.cutOff)));
+        m_shader->SetFloat("u_Light.outerCutOff", cos(lia::radians(m_flashlight.outerCutOff)));
+        m_shader->SetFloat("u_Light.constant", m_flashlight.constant);
+        m_shader->SetFloat("u_Light.linear", m_flashlight.linear);
+        m_shader->SetFloat("u_Light.quadratic", m_flashlight.quadratic);
+    }
 
     lia::mat4 model(1.0f);
     model = lia::scale(model, lia::vec3(m_cubeScale.x, m_cubeScale.y, m_cubeScale.z))
@@ -197,10 +231,10 @@ void LightingSandbox::OnRender(float dt)
     m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(model));
     elv::Renderer::Submit(m_shader, m_vao, model);
 
-    // render lights
+    // render point lights
     m_lightShader->Bind();
     lia::mat4 lightModel(1.0f);
-    lightModel = lia::scale(lightModel, lia::vec3(0.2f)) * lia::translate({ 1.0f }, m_light.position);
+    lightModel = lia::scale(lightModel, lia::vec3(0.2f)) * lia::translate({ 1.0f }, m_pointLight.position);
 
     elv::Renderer::Submit(m_lightShader, m_vao, lightModel);
 
@@ -211,7 +245,6 @@ void LightingSandbox::OnRender(float dt)
 void LightingSandbox::OnImguiRender()
 {
     ImGui::Begin("Scene properties");
-    // ImGui::SetWindowSize(ImVec2(300.0f, 300.0f));
 
     ImGui::Text("Cube Transform");
     ImGui::Separator();
@@ -227,14 +260,21 @@ void LightingSandbox::OnImguiRender()
     elv::editor::DrawSliderFloat("shininess", 1.0f, 256.0f, m_cubeMaterial.shininess);
     ImGui::Separator();
 
-    elv::editor::DrawVec3Control("light_pos", "Light Position", m_light.position);
+    elv::editor::DrawVec3Control("light_dir", "Directional Light", m_dirLight.direction);
+    elv::editor::DrawVec3Control("light_pos", "Point Light Position", m_pointLight.position);
     ImGui::Separator();
 
-    ImGui::Text("Light Material");
+    ImGui::Text("Directional Light Material");
     ImGui::Separator();
-    elv::editor::DrawRGBColorControl("light ambient", m_light.ambient);
-    elv::editor::DrawRGBColorControl("light diffuse", m_light.diffuse);
-    elv::editor::DrawRGBColorControl("light specular", m_light.specular);
+    elv::editor::DrawRGBColorControl("dir light ambient", m_dirLight.ambient);
+    elv::editor::DrawRGBColorControl("dir light diffuse", m_dirLight.diffuse);
+    elv::editor::DrawRGBColorControl("dir light specular", m_dirLight.specular);
+
+    ImGui::Text("Position Light Material");
+    ImGui::Separator();
+    elv::editor::DrawRGBColorControl("pos light ambient", m_pointLight.ambient);
+    elv::editor::DrawRGBColorControl("pos light diffuse", m_pointLight.diffuse);
+    elv::editor::DrawRGBColorControl("pos light specular", m_pointLight.specular);
 
     ImGui::Separator();
     ImGui::Checkbox("Light demo rotation enabled", &m_lightDemoRotationEnabled);
