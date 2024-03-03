@@ -1,7 +1,8 @@
 #include "CubesSandbox.h"
-#include "LightingSandbox.h"
+#include "LightCastersSandbox.h"
+#include "SimpleLightSandbox.h"
 
 elv::Application* elv::CreateApplication()
 {
-    return new LightingSandbox();
+    return new SimpleLightSandbox();
 }

@@ -87,4 +87,9 @@ void DrawRGBColorControl(const std::string& label, lia::vec3& colorProperty)
     ImGui::ColorEdit3(label.c_str(), colorProperty.elementsPtr());
 }
 
+void DrawRGBAColorControl(const std::string& label, lia::vec4& colorProperty)
+{
+    ImGui::ColorEdit4(label.c_str(), colorProperty.elementsPtr());
+}
+
 } // namespace elv::editor

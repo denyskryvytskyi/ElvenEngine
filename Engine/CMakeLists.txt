@@ -39,6 +39,8 @@ set(ENGINE_HEADERS
 "src/Renderer/VertexArray.h"
 "src/Renderer/Texture2D.h"
 "src/Renderer/TextRenderer.h"
+"src/Renderer/Material.h"
+"src/Renderer/Light.h"
 "src/Platform/Windows/WindowsWindow.h"
 "src/Platform/OpenGL/OpenGLBuffer.h"
 "src/Platform/OpenGL/OpenGLContext.h"

@@ -34,6 +34,9 @@
 #include "Renderer/Shader.h"
 #include "Renderer/VertexArray.h"
 
+#include "Renderer/Light.h"
+#include "Renderer/Material.h"
+
 #include "Resources/TextureManager.h"
 
 /// Scene ////////////////////////////////////
