@@ -8,6 +8,7 @@
 #endif
 
 const int kCubesAmount = 10;
+const int kEnvironments = 4;
 
 const lia::vec3 kPointLightPositions[] = {
     lia::vec3(0.0f, 0.8f, 1.2f),
@@ -27,6 +28,121 @@ const lia::vec3 kCubePositions[] = {
     lia::vec3(1.5f, 2.0f, -2.5f),
     lia::vec3(1.5f, 0.2f, -1.5f),
     lia::vec3(-1.3f, 1.0f, -1.5f)
+};
+
+struct SpotLightEnvironmentSetting {
+    lia::vec3 ambient;
+    lia::vec3 diffuse;
+    lia::vec3 specular;
+};
+
+struct EnvironmentMaterials {
+    lia::vec4 clearColor;
+
+    elv::DirectionalLight dirLight;
+    SpotLightEnvironmentSetting spotLight;
+
+    lia::vec3 pointLightColors[kPointLightsAmount];
+};
+
+const EnvironmentMaterials kEnvironmenMaterials[kEnvironments] = {
+    // ============== DESERT ================
+    {
+
+        // clear color
+        { 0.75f, 0.52f, 0.3f, 1.0f },
+        // dir light
+        {
+            { -0.2f, -1.0f, -0.3f }, // direction
+            { 0.3f, 0.24f, 0.14f },  // ambient
+            { 0.7f, 0.42f, 0.26f },  // deffuse
+            { 0.5f, 0.5f, 0.5f },    // specular
+        },
+        // spot light
+        {
+            { 0.0f, 0.0f, 0.0f }, // ambient
+            { 0.8f, 0.8f, 0.0f }, // deffuse
+            { 0.8f, 0.8f, 0.0f }, // specular
+        },
+        // point lights
+        {
+            { 1.0f, 0.6f, 0.0f },
+            { 1.0f, 0.0f, 0.0f },
+            { 1.0f, 1.0f, 0.0f },
+            { 0.2f, 0.2f, 1.0f } } },
+    // ============== FACTORY ================
+    {
+
+        // clear color
+        { 0.1f, 0.1f, 0.1f, 1.0f },
+        // dir light
+        {
+            { -0.2f, -1.0f, -0.3f }, // direction
+            { 0.05f, 0.05f, 0.1f },  // ambient
+            { 0.2f, 0.2f, 0.7f },    // deffuse
+            { 0.7f, 0.7f, 0.7f },    // specular
+        },
+        // spot light
+        {
+            { 0.0f, 0.0f, 0.0f }, // ambient
+            { 1.0f, 1.0f, 1.0f }, // deffuse
+            { 1.0f, 1.0f, 1.0f }, // specular
+        },
+        // point lights
+        {
+            { 0.2f, 0.2f, 0.6f },
+            { 0.3f, 0.3f, 0.7f },
+            { 0.0f, 0.0f, 0.3f },
+            { 0.4f, 0.4f, 0.4f } } },
+    // ============== HORROR ================
+    {
+
+        // clear color
+        { 0.0f, 0.0f, 0.0f, 1.0f },
+        // dir light
+        {
+            { -0.2f, -1.0f, -0.3f }, // direction
+            { 0.0f, 0.0f, 0.0f },    // ambient
+            { 0.05f, 0.05f, 0.05f }, // deffuse
+            { 0.2f, 0.2f, 0.2f },    // specular
+        },
+        // spot light
+        {
+            { 0.0f, 0.0f, 0.0f }, // ambient
+            { 1.0f, 1.0f, 1.0f }, // deffuse
+            { 1.0f, 1.0f, 1.0f }, // specular
+        },
+        // point lights
+        {
+
+            { 0.1f, 0.1f, 0.1f },
+            { 0.1f, 0.1f, 0.1f },
+            { 0.1f, 0.1f, 0.1f },
+            { 0.3f, 0.1f, 0.1f } } },
+    // ============== BIOCHEMICAL LAB ================
+    {
+
+        // clear color
+        { 0.9f, 0.9f, 0.9f, 1.0f },
+        // dir light
+        {
+            { -0.2f, -1.0f, -0.3f }, // direction
+            { 0.5f, 0.5f, 0.5f },    // ambient
+            { 1.0f, 1.0f, 1.0f },    // deffuse
+            { 1.0f, 1.0f, 1.0f },    // specular
+        },
+        // spot light
+        {
+            { 0.0f, 0.0f, 0.0f }, // ambient
+            { 0.0f, 1.0f, 0.0f }, // deffuse
+            { 0.0f, 1.0f, 0.0f }, // specular
+        },
+        // point lights
+        {
+            { 0.4f, 0.7f, 0.1f },
+            { 0.4f, 0.7f, 0.1f },
+            { 0.4f, 0.7f, 0.1f },
+            { 0.4f, 0.7f, 0.1f } } }
 };
 
 LightCastersSandbox::LightCastersSandbox()
@@ -165,6 +281,9 @@ LightCastersSandbox::LightCastersSandbox()
     for (size_t i = 0; i < kPointLightsAmount; i++) {
         m_pointLights[i].position = kPointLightPositions[i];
     }
+
+    // default environment
+    SetEnvironment(0);
 }
 
 void LightCastersSandbox::OnCreate()
@@ -279,6 +398,25 @@ void LightCastersSandbox::OnImguiRender()
 
     if (ImGui::CollapsingHeader("Scene properties")) {
         elv::editor::DrawRGBAColorControl("Clear color", m_clearColor);
+
+        // environment materials combo
+        const char* items[] = { "Desert", "Factory", "Horror", "Biochemical lab" };
+        static int currentEnvironmentIndex = 0;
+        const char* combo_label = items[currentEnvironmentIndex];
+        if (ImGui::BeginCombo("Environment ", combo_label)) {
+            for (int i = 0; i < IM_ARRAYSIZE(items); ++i) {
+                const bool is_selected = (currentEnvironmentIndex == i);
+                if (ImGui::Selectable(items[i], is_selected)) {
+                    currentEnvironmentIndex = i;
+                    SetEnvironment(currentEnvironmentIndex);
+                }
+
+                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
     }
 
     if (ImGui::CollapsingHeader("Cube")) {
@@ -350,5 +488,22 @@ void LightCastersSandbox::OnTextureLoaded(const elv::events::TextureLoadedEvent&
 
     if (m_texturesToLoad == m_texturesLoaded) {
         m_texturesIsReady = true;
+    }
+}
+
+void LightCastersSandbox::SetEnvironment(const int envIndex)
+{
+    const auto& env = kEnvironmenMaterials[envIndex];
+
+    m_clearColor = env.clearColor;
+    m_dirLight = env.dirLight;
+    m_flashlight.ambient = env.spotLight.ambient;
+    m_flashlight.diffuse = env.spotLight.diffuse;
+    m_flashlight.specular = env.spotLight.specular;
+
+    for (size_t i = 0; i < kPointLightsAmount; ++i) {
+        m_pointLights[i].ambient = env.pointLightColors[i] * 0.1f;
+        m_pointLights[i].diffuse = env.pointLightColors[i];
+        m_pointLights[i].specular = env.pointLightColors[i];
     }
 }

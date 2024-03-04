@@ -61,11 +61,11 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
 + [x] Just cool stuff
   - [x] Orthographic camera controller (OrthographicCameraController), that can be used if needed
   - [x] Fly(FPS-like) 3D camera support (CameraController)
-+ [ ] 3D Renderer
++ [ ] 3D Renderer (IN PROGRESS)
+  - [x] Lighting: spotlight, directional and point light
   - [ ] Mesh/Model system
   - [ ] Primitives: cube, sphere, plane
   - [ ] Model loading (Assimp)
-  - [ ] Lighting support
 + [ ] In-engine editor (based on ImGui)
   - [ ] Scene hierarchy
   - [ ] Properties: entity components
@@ -74,20 +74,21 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
   - [ ] Thread pool
 
 ## Demo
-#### Space Invaders full demo
+### 2D Rendering
+**Space Invaders full demo**
+
 https://github.com/denyskryvytskyi/ElvenEngine/assets/25298585/f0d32c8b-1ed2-44e3-9c93-a781f3da4203
 
-| 2D Rendering  | |
-| --- | --- | 
 | Space Invades  | TRON |
+| --- | --- |
 | <img src=".github/demo/invaders.gif"> | <img src=".github/demo/tron.gif"> |
 | Ping Pong | Quad and texture batch rendering (20000 wizards) |
 | <img src=".github/demo/pong.gif"> | <img src=".github/demo/wizards.gif"> |
 
-#### 3D rendering
-| Simple lighting  | Textures |
+### 3D rendering
+| Lighting environments with spotlight, directional, and point lights | Cube transformation and simple light |
 | --- | --- | 
-| <img src=".github/demo/lighting_demo.gif"> | <img src=".github/demo/cubes.gif"> |
+| <img src=".github/demo/light_casters_demo.gif"> | <img src=".github/demo/cube_light_demo.gif"> |
 
 ## Third-party libraries
 | Lib |  |

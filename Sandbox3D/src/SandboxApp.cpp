@@ -4,5 +4,5 @@
 
 elv::Application* elv::CreateApplication()
 {
-    return new SimpleLightSandbox();
+    return new LightCastersSandbox();
 }

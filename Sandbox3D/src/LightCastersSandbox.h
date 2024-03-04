@@ -25,6 +25,8 @@ public:
 private:
     void OnTextureLoaded(const elv::events::TextureLoadedEvent& e);
 
+    void SetEnvironment(const int envIndex);
+
 private:
     elv::EditorCameraController m_cameraController;
     elv::events::EventHandler<elv::events::TextureLoadedEvent> m_textureLoadedCallback;
