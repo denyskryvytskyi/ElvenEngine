@@ -149,6 +149,8 @@ ${VENDOR_PATH}/json/include
 ${VENDOR_PATH}/freetype/include
 ${VENDOR_PATH}/irrklang/include
 ${VENDOR_PATH}/fmt/include
+${VENDOR_PATH}/assimp/include
+${PROJECT_SOURCE_DIR}/build_vendor/assimp/include # include generated config.h for assimp
 )
 
 if (EDITOR_MODE)
@@ -183,6 +185,8 @@ find_library(lia_d NAMES lia PATHS ${VENDOR_PATH_DEBUG})
 find_library(stb_d NAMES stb PATHS ${VENDOR_PATH_DEBUG})
 find_library(freetype_d NAMES freetyped PATHS ${VENDOR_PATH_DEBUG})
 find_library(fmt_d NAMES fmtd PATHS ${VENDOR_PATH_DEBUG})
+find_library(assimp_d NAMES assimp-vc143-mtd PATHS ${VENDOR_PATH_DEBUG})
+find_library(zlib_d NAMES zlibstaticd PATHS ${VENDOR_PATH_DEBUG})
 
 find_library(glad NAMES glad PATHS ${VENDOR_PATH_RELEASE})
 find_library(glfw NAMES glfw3 PATHS ${VENDOR_PATH_RELEASE})
@@ -192,6 +196,8 @@ find_library(stb NAMES stb PATHS ${VENDOR_PATH_RELEASE})
 find_library(freetype NAMES freetype PATHS ${VENDOR_PATH_RELEASE})
 find_library(fmt NAMES fmt PATHS ${VENDOR_PATH_RELEASE})
 find_library(irrklang NAMES irrKlang.lib PATHS ${VENDOR_PATH}/irrklang/lib)
+find_library(assimp NAMES assimp-vc143-mt PATHS ${VENDOR_PATH_RELEASE})
+find_library(zlib NAMES zlibstatic PATHS ${VENDOR_PATH_RELEASE})
 
 set(VENDOR
 debug ${glfw_d} optimized ${glfw}
@@ -202,6 +208,8 @@ debug ${stb_d} optimized ${stb}
 debug ${freetype_d} optimized ${freetype}
 debug ${irrklang} optimized ${irrklang}
 debug ${fmt_d} optimized ${fmt}
+debug ${assimp_d} optimized ${assimp}
+debug ${zlib_d} optimized ${zlib}
 )
 
 target_link_libraries(${LIBRARY_NAME} ${STATIC_THIRD_PARTY_LIBRARIES} ${VENDOR})

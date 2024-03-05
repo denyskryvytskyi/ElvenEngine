@@ -7,3 +7,6 @@
 [submodule "Engine/vendor/lia"]
 	path = Engine/vendor/lia
 	url = https://github.com/denyskryvytskyi/lia
+[submodule "Engine/vendor/assimp"]
+	path = Engine/vendor/assimp
+	url = https://github.com/assimp/assimp

@@ -17,3 +17,6 @@ add_subdirectory(spdlog)
 add_subdirectory(stb)
 add_subdirectory(freetype)
 add_subdirectory(fmt)
+# reset flag to build assimp dll
+set(BUILD_SHARED_LIBS ON) 
+add_subdirectory(assimp)
