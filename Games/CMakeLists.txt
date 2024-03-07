@@ -1,3 +1,5 @@
-add_subdirectory(TRON)
-add_subdirectory(Pong)
-add_subdirectory(Invaders)
+if (NOT ENABLE_3D_MODULE)
+    add_subdirectory(TRON)
+    add_subdirectory(Pong)
+    add_subdirectory(Invaders)
+endif()

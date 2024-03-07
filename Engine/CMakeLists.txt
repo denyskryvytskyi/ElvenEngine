@@ -208,9 +208,15 @@ debug ${stb_d} optimized ${stb}
 debug ${freetype_d} optimized ${freetype}
 debug ${irrklang} optimized ${irrklang}
 debug ${fmt_d} optimized ${fmt}
-debug ${assimp_d} optimized ${assimp}
-debug ${zlib_d} optimized ${zlib}
 )
+
+if (ENABLE_3D_MODULE)
+    set(VENDOR
+        ${VENDOR}
+        debug ${assimp_d} optimized ${assimp}
+        debug ${zlib_d} optimized ${zlib}
+    )
+endif()
 
 target_link_libraries(${LIBRARY_NAME} ${STATIC_THIRD_PARTY_LIBRARIES} ${VENDOR})
 

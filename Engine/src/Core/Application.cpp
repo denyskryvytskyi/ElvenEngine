@@ -20,6 +20,12 @@
 
 #include <Resources/AudioManager.h>
 
+#if ENABLE_3D_MODULE
+#    include <assimp/Importer.hpp>
+#    include <assimp/postprocess.h>
+#    include <assimp/scene.h>
+#endif
+
 namespace elv {
 
 Application* Application::s_instance = nullptr;
@@ -30,6 +36,10 @@ Application::Application()
     , m_windowCloseCallback([this](const events::WindowCloseEvent& e) { OnWindowClose(e); })
     , m_windowResizeCallback([this](const events::WindowResizeEvent& e) { OnWindowResize(e); })
 {
+#if ENABLE_3D_MODULE
+    Assimp::Importer importer;
+#endif
+
     EL_CORE_ASSERT(!s_instance, "Application already exists!");
     s_instance = this;
 
