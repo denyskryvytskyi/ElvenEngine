@@ -96,6 +96,7 @@ void TextRenderer::RenderText(std::string_view text, const std::string& fontName
     s_data.topGlyphOffsetY = glyphs.at(topGlyph).offset.y * s_data.pixelToCamera.y;
     s_data.shader->Bind();
     s_data.shader->SetVector4f("textColor", color);
+    s_data.shader->SetInteger("u_texture", 0);
 
     const lia::vec2 convertedPos = FromUiToCameraPos(pos, s_data.cameraBounds);
     float currentGlyphPosX = convertedPos.x;

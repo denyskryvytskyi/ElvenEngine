@@ -1,6 +1,8 @@
-#include "LightCastersSandbox.h"
+#include "MeshModelSandbox.h"
 
 #include <Events/TextureEvent.h>
+#include <Renderer/Mesh.h>
+#include <Renderer/Primitives/Cube.h>
 
 #if EDITOR_MODE
 #    include <ImGui/EditorHelpers.h>
@@ -42,7 +44,7 @@ struct EnvironmentMaterials {
     elv::DirectionalLight dirLight;
     SpotLightEnvironmentSetting spotLight;
 
-    lia::vec3 pointLightColors[kPointLightsAmount];
+    lia::vec3 pointLightColors[meshModel::kPointLightsAmount];
 };
 
 const EnvironmentMaterials kEnvironmenMaterials[kEnvironments] = {
@@ -145,84 +147,11 @@ const EnvironmentMaterials kEnvironmenMaterials[kEnvironments] = {
             { 0.4f, 0.7f, 0.1f } } }
 };
 
-LightCastersSandbox::LightCastersSandbox()
+MeshModelSandbox::MeshModelSandbox()
     : m_cameraController(45.0f, 1280.0f / 720.0f, 0.1f, 100.0f)
-    , m_vao(elv::VertexArray::Create())
-    , m_lightVao(elv::VertexArray::Create())
+    , m_lightCubeMesh(elv::MakeUniquePtr<elv::Cube>())
     , m_textureLoadedCallback([this](const elv::events::TextureLoadedEvent& e) { OnTextureLoaded(e); })
 {
-    // cube vertices
-    // clang-format off
-    float vertices[] = {
-        // front          // normals         // uv
-        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 1.0f,  0.0, 0.0,
-        0.5f, -0.5f, 0.5f,   0.0f, 0.0f, 1.0f,  1.0, 0.0,
-        0.5f, 0.5f, 0.5f,    0.0f, 0.0f, 1.0f,  1.0, 1.0,
-        -0.5f, 0.5f, 0.5f,   0.0f, 0.0f, 1.0f,  0.0, 1.0,
-        // top            // normals         // uv
-        -0.5f, 0.5f, 0.5f,   0.0f, 1.0f, 0.0f,  0.0, 0.0,
-        0.5f, 0.5f, 0.5f,    0.0f, 1.0f, 0.0f,  1.0, 0.0,
-        0.5f, 0.5f, -0.5f,   0.0f, 1.0f, 0.0f,  1.0, 1.0,
-        -0.5f, 0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  0.0, 1.0,
-        // back           // normals         // uv
-        0.5f, -0.5f, -0.5f,  0.0f, 0.0f, -1.0f, 0.0, 0.0,
-        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0, 0.0,
-        -0.5f, 0.5f, -0.5f,  0.0f, 0.0f, -1.0f, 1.0, 1.0,
-        0.5f, 0.5f, -0.5f,   0.0f, 0.0f, -1.0f, 0.0, 1.0,
-        // bottom         // normals         // uv
-        -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 0.0, 0.0,
-        0.5f, -0.5f, -0.5f,  0.0f, -1.0f, 0.0f, 1.0, 0.0,
-        0.5f, -0.5f, 0.5f,   0.0f, -1.0f, 0.0f, 1.0, 1.0,
-        -0.5f, -0.5f, 0.5f,  0.0f, -1.0f, 0.0f, 0.0, 1.0,
-        // left           // normals         // uv
-        -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 0.0, 0.0,
-        -0.5f, -0.5f, 0.5f,  -1.0f, 0.0f, 0.0f, 1.0, 0.0,
-        -0.5f, 0.5f, 0.5f,   -1.0f, 0.0f, 0.0f, 1.0, 1.0,
-        -0.5f, 0.5f, -0.5f,  -1.0f, 0.0f, 0.0f, 0.0, 1.0,
-        // right          // normals         // uv
-        0.5f, -0.5f, 0.5f,   1.0f, 0.0f, 0.0f,  0.0, 0.0,
-        0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  1.0, 0.0,
-        0.5f, 0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  1.0, 1.0,
-        0.5f, 0.5f, 0.5f,    1.0f, 0.0f, 0.0f,  0.0, 1.0
-    };
-    // clang-format on
-
-    elv::SharedPtr<elv::VertexBuffer> vbo = elv::VertexBuffer::Create(vertices, sizeof(vertices));
-    vbo->SetLayout({ { elv::BufferAttributeType::Float3 },    // pos
-                     { elv::BufferAttributeType::Float3 },    // normal
-                     { elv::BufferAttributeType::Float2 } }); // uv
-
-    m_vao->AddVertexBuffer(vbo);
-
-    // clang-format off
-     unsigned int indices[] = {
-         // front
-         0,  1,  2,
-         2,  3,  0,
-         // top
-         4,  5,  6,
-         6,  7,  4,
-         // back
-          8,  9, 10,
-         10, 11,  8,
-         // bottom
-         12, 13, 14,
-         14, 15, 12,
-         // left
-         16, 17, 18,
-         18, 19, 16,
-         // right
-         20, 21, 22,
-         22, 23, 20,
-     };
-    // clang-format on
-
-    elv::SharedPtr<elv::IndexBuffer> ebo = elv::IndexBuffer::Create(indices, sizeof(indices) / sizeof(unsigned int));
-
-    m_vao->SetIndexBuffer(ebo);
-
-    m_shader = elv::ShaderManager::Load("textured_cube", "textured_cube.vert", "textured_cube_with_light_casters.frag");
-
     // load textures
     const uint64_t hash = elv::string_id("wooden_container");
     elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hash);
@@ -236,49 +165,13 @@ LightCastersSandbox::LightCastersSandbox()
     elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hashMatrix);
     elv::textures::Load("matrix", "matrix.jpg");
 
-    // Lights
-    float lightCubeVertices[] = {
-        // front
-        -0.5f, -0.5f, 0.5f,
-        0.5f, -0.5f, 0.5f,
-        0.5f, 0.5f, 0.5f,
-        -0.5f, 0.5f, 0.5f,
-        // top
-        -0.5f, 0.5f, 0.5f,
-        0.5f, 0.5f, 0.5f,
-        0.5f, 0.5f, -0.5f,
-        -0.5f, 0.5f, -0.5f,
-        // back
-        0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, 0.5f, -0.5f,
-        0.5f, 0.5f, -0.5f,
-        // bottom
-        -0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, 0.5f,
-        -0.5f, -0.5f, 0.5f,
-        // left
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, 0.5f,
-        -0.5f, 0.5f, 0.5f,
-        -0.5f, 0.5f, -0.5f,
-        // right
-        0.5f, -0.5f, 0.5f,
-        0.5f, -0.5f, -0.5f,
-        0.5f, 0.5f, -0.5f,
-        0.5f, 0.5f, 0.5f
-    };
-    elv::SharedPtr<elv::VertexBuffer> lVbo = elv::VertexBuffer::Create(lightCubeVertices, sizeof(lightCubeVertices));
-    lVbo->SetLayout({ { elv::BufferAttributeType::Float3 } });
-    m_lightVao->AddVertexBuffer(lVbo);
+    // cube shader
+    m_shader = elv::ShaderManager::Load("textured_cube", "textured_cube.vert", "mesh.frag");
 
-    elv::SharedPtr<elv::IndexBuffer> lEbo = elv::IndexBuffer::Create(indices, sizeof(indices) / sizeof(unsigned int));
-    m_lightVao->SetIndexBuffer(lEbo);
-
+    // light setup
     m_lightShader = elv::ShaderManager::Load("light_shader", "light_cube.vert", "light_cube.frag");
 
-    for (size_t i = 0; i < kPointLightsAmount; i++) {
+    for (size_t i = 0; i < meshModel::kPointLightsAmount; i++) {
         m_pointLights[i].position = kPointLightPositions[i];
     }
 
@@ -286,12 +179,12 @@ LightCastersSandbox::LightCastersSandbox()
     SetEnvironment(0);
 }
 
-void LightCastersSandbox::OnUpdate(float dt)
+void MeshModelSandbox::OnUpdate(float dt)
 {
     m_cameraController.OnUpdate(dt);
 }
 
-void LightCastersSandbox::OnRender(float dt)
+void MeshModelSandbox::OnRender(float dt)
 {
     if (!m_texturesIsReady)
         return;
@@ -317,9 +210,9 @@ void LightCastersSandbox::OnRender(float dt)
     texture->BindToUnit(2);
 
     // cube material
-    m_shader->SetInteger("u_Material.diffuse", 0);  // diffuse map binding
-    m_shader->SetInteger("u_Material.specular", 1); // specular map binding
-    m_shader->SetInteger("u_Material.emission", 2); // emission map binding
+    // m_shader->SetInteger("u_Material.diffuse", 0);  // diffuse map binding
+    // m_shader->SetInteger("u_Material.specular", 1); // specular map binding
+    // m_shader->SetInteger("u_Material.emission", 2); // emission map binding
     m_shader->SetInteger("u_Material.enableEmission", 0);
     m_shader->SetFloat("u_Material.shininess", m_cubeShininess);
 
@@ -335,7 +228,7 @@ void LightCastersSandbox::OnRender(float dt)
     // point light
     m_shader->SetInteger("u_PointLightEnabled", m_PointLightEnabled);
     if (m_PointLightEnabled) {
-        for (size_t i = 0; i < kPointLightsAmount; ++i) {
+        for (size_t i = 0; i < meshModel::kPointLightsAmount; ++i) {
             m_shader->SetVector3f(fmt::format("u_PointLights[{}].position", i), m_pointLights[i].position);
             m_shader->SetVector3f(fmt::format("u_PointLights[{}].ambient", i), m_pointLights[i].ambient);
             m_shader->SetVector3f(fmt::format("u_PointLights[{}].diffuse", i), m_pointLights[i].diffuse);
@@ -374,20 +267,20 @@ void LightCastersSandbox::OnRender(float dt)
             * lia::translate({ 1.0f }, kCubePositions[i]);
 
         m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(model));
-        elv::Renderer::Submit(m_shader, m_vao, model);
+        elv::Renderer::Submit(m_shader, m_cubeMesh, model);
     }
 
     // render point lights
     if (m_PointLightEnabled) {
         m_lightShader->Bind();
-        for (size_t i = 0; i < kPointLightsAmount; ++i) {
+        for (size_t i = 0; i < meshModel::kPointLightsAmount; ++i) {
             m_lightShader->SetVector3f("u_Color.ambient", m_pointLights[i].ambient);
             m_lightShader->SetVector3f("u_Color.diffuse", m_pointLights[i].diffuse);
 
             lia::mat4 lightModel(1.0f);
             lightModel = lia::scale(lightModel, lia::vec3(0.2f)) * lia::translate({ 1.0f }, m_pointLights[i].position);
 
-            elv::Renderer::Submit(m_lightShader, m_lightVao, lightModel);
+            elv::Renderer::Submit(m_lightShader, m_lightCubeMesh, lightModel);
         }
     }
 
@@ -395,7 +288,7 @@ void LightCastersSandbox::OnRender(float dt)
 }
 
 #if EDITOR_MODE
-void LightCastersSandbox::OnImguiRender()
+void MeshModelSandbox::OnImguiRender()
 {
     ImGui::Begin("Editor");
 
@@ -440,7 +333,7 @@ void LightCastersSandbox::OnImguiRender()
     if (ImGui::CollapsingHeader("Point Lights")) {
         ImGui::Checkbox("Enable Point Lights", &m_PointLightEnabled);
         ImGui::Separator();
-        for (size_t i = 0; i < kPointLightsAmount; ++i) {
+        for (size_t i = 0; i < meshModel::kPointLightsAmount; ++i) {
             if (ImGui::TreeNode(fmt::format("Point light {}", i).c_str())) {
                 elv::editor::DrawVec3Control(fmt::format("point_light_pos_{}", i), "Position", m_pointLights[i].position);
                 ImGui::Separator();
@@ -470,16 +363,17 @@ void LightCastersSandbox::OnImguiRender()
 }
 #endif
 
-void LightCastersSandbox::OnTextureLoaded(const elv::events::TextureLoadedEvent& e)
+void MeshModelSandbox::OnTextureLoaded(const elv::events::TextureLoadedEvent& e)
 {
     ++m_texturesLoaded;
 
     if (m_texturesToLoad == m_texturesLoaded) {
         m_texturesIsReady = true;
+        SetupCubeMesh();
     }
 }
 
-void LightCastersSandbox::SetEnvironment(const int envIndex)
+void MeshModelSandbox::SetEnvironment(const int envIndex)
 {
     const auto& env = kEnvironmenMaterials[envIndex];
 
@@ -489,9 +383,23 @@ void LightCastersSandbox::SetEnvironment(const int envIndex)
     m_flashlight.diffuse = env.spotLight.diffuse;
     m_flashlight.specular = env.spotLight.specular;
 
-    for (size_t i = 0; i < kPointLightsAmount; ++i) {
+    for (size_t i = 0; i < meshModel::kPointLightsAmount; ++i) {
         m_pointLights[i].ambient = env.pointLightColors[i] * 0.1f;
         m_pointLights[i].diffuse = env.pointLightColors[i];
         m_pointLights[i].specular = env.pointLightColors[i];
     }
+}
+
+void MeshModelSandbox::SetupCubeMesh()
+{
+    auto texture = elv::textures::Get("wooden_container");
+    auto texture1 = elv::textures::Get("wooden_container_specular");
+
+    std::vector<elv::MeshTexture> meshTextures = {
+        { elv::MeshTextureType::Diffuse, texture },
+        { elv::MeshTextureType::Specular, texture1 }
+    };
+
+    m_cubeMesh = elv::MakeUniquePtr<elv::Cube>();
+    m_cubeMesh->SetTextures(meshTextures);
 }

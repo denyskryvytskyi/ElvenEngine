@@ -52,6 +52,11 @@ void OpenGLTexture2D::BindToUnit(std::uint32_t unit)
     glBindTextureUnit(unit, m_id);
 }
 
+void OpenGLTexture2D::Unbind()
+{
+    glBindTextureUnit(m_slot, 0);
+}
+
 void OpenGLTexture2D::SetData(void* data, bool generateMipmap /* = true */)
 {
     if (generateMipmap) {

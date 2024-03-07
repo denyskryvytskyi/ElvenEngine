@@ -10,11 +10,13 @@ public:
     ~OpenGLTexture2D();
 
     void BindToUnit(std::uint32_t unit) override;
+    void Unbind() override;
     void SetData(void* data, bool generateMipmap = true) override;
     void SetWrappingMode(const TextureWrappingMode wrappingMode) override;
 
 private:
     uint32_t m_id { 0 };
+    uint32_t m_slot { 0 };
     uint32_t m_width { 0 };
     uint32_t m_height { 0 };
     unsigned int m_internalFormat { 0 };

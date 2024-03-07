@@ -6,6 +6,8 @@
 
 namespace elv {
 
+class Mesh;
+
 class Renderer {
 public:
     static void Init();
@@ -15,6 +17,7 @@ public:
     static void EndScene();
 
     static void Submit(const SharedPtr<Shader>& shader, const SharedPtr<VertexArray>& vertexArray, const lia::mat4& modelMatrix = lia::mat4(1.0f));
+    static void Submit(const SharedPtr<Shader>& shader, const UniquePtr<Mesh>& mesh, const lia::mat4& modelMatrix = lia::mat4(1.0f));
 
     static void OnWindowResize(std::uint32_t width, std::uint32_t height);
 

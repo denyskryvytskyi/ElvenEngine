@@ -1,7 +1,6 @@
 #version 450 core
 
-layout (binding = 0) uniform sampler2D u_texture;
-
+uniform sampler2D u_texture;
 uniform vec4 textColor;
 in vec2 v_uv;
 

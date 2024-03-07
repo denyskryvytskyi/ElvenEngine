@@ -30,8 +30,8 @@ struct Renderer2DData {
     SharedPtr<Shader> shader;
 
     // quad batching
-    SharedPtr<VertexArray> quadVAO;
-    SharedPtr<VertexBuffer> quadVBO;
+    SharedPtr<VertexArray> quadVAO { nullptr };
+    SharedPtr<VertexBuffer> quadVBO { nullptr };
     QuadVertex* quadVerticesBegin { nullptr };
     QuadVertex* quadVerticesCurrent { nullptr };
     uint32_t quadIndexCount = 0;
@@ -93,7 +93,6 @@ void Renderer2D::Init()
     SharedPtr<Texture2D> whiteTexture = textures::Load("white", 1, 1);
     std::uint32_t whiteTextureData = 0xffffffff;
     whiteTexture->SetData(&whiteTextureData, false);
-    whiteTexture->BindToUnit(0);
 
     s_data.textures[0] = std::move(whiteTexture);
 }
@@ -108,7 +107,6 @@ void Renderer2D::BeginScene(const Camera& camera)
     s_telemetry = { 0 };
 
     s_data.viewProjectionMat = camera.GetViewProjectionMatrix();
-    s_data.textures[0]->BindToUnit(0); // rebind white texture to unit 0
 
     StartBatch();
 }
@@ -125,7 +123,7 @@ void Renderer2D::Flush()
     s_data.shader->Bind();
     s_data.shader->SetMatrix4("u_ViewProjection", s_data.viewProjectionMat);
 
-    for (std::uint32_t i = 1; i < s_data.usedTextureSlots; ++i) {
+    for (std::uint32_t i = 0; i < s_data.usedTextureSlots; ++i) {
         s_data.textures[i]->BindToUnit(i);
     }
 
