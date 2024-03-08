@@ -6,58 +6,53 @@
 
 namespace elv {
 
-struct SceneNodeComponent {
-    std::vector<UniquePtr<SceneNodeComponent>> m_childs;
-    ecs::Entity m_entityId;
-};
-
 class Scene {
 public:
-    Scene();
+    // Scene node is responsible to handle Scene Graph logic
+    class SceneNode {
+    public:
+        SceneNode(ecs::Entity entity);
 
+        void UpdateTransform(Scene* scene, bool isParentDirty);
+        void AddChild(SharedPtr<SceneNode> child);
+        void RemoveChild(ecs::Entity entity);
+
+    public:
+        ecs::Entity entityId;
+        SharedPtr<SceneNode> parent { nullptr };
+        std::vector<SharedPtr<SceneNode>> children;
+    };
+
+    struct EntityInfo {
+        ecs::ComponentMask mask;
+        SharedPtr<SceneNode> node { nullptr };
+    };
+
+public:
     void OnInit();
     void OnShutdown();
     void OnUpdate(float dt);
     void OnRender(float dt);
 
     //------------- ECS INTERFACE -------------------
-    ecs::Entity CreateEntity()
-    {
-        const ecs::Entity id = ecs::GenerateEntityId();
-        m_entities.insert({ id, ecs::ComponentMask() });
+    ecs::Entity CreateEntity();
+    ecs::Entity CreateChildEntity(ecs::Entity parentEntity);
+    void DestroyEntity(ecs::Entity entity);
 
-        return id;
-    }
-
-    const std::unordered_map<ecs::Entity, ecs::ComponentMask>& GetEntities() const
+    const std::unordered_map<ecs::Entity, EntityInfo>& GetEntities() const
     {
         return m_entities;
     }
 
-    void DestroyEntity(ecs::Entity entity)
+    bool IsEntityAlive(ecs::Entity entity) const
     {
-        auto entityIt = m_entities.find(entity);
-
-        if (entityIt != m_entities.end()) {
-            const auto& componentMask = entityIt->second;
-            for (size_t i = 0; i < componentMask.size(); ++i) {
-                if (componentMask.test(i)) {
-                    m_componentPools[i]->RemoveComponent(entity);
-                }
-            }
-            m_entities.erase(entityIt);
-        }
+        return m_entities.find(entity) != m_entities.end();
     }
 
     // entity will be destroyed at the end of current game loop
     void MarkToDestroyEntity(ecs::Entity entity)
     {
         m_entitiesToDestroy.emplace_back(entity);
-    }
-
-    bool IsEntityAlive(ecs::Entity entity) const
-    {
-        return m_entities.find(entity) != m_entities.end();
     }
 
     template<typename ComponentType>
@@ -82,7 +77,7 @@ public:
 
         auto entityIt = m_entities.find(entity);
         EL_CORE_ASSERT(entityIt != m_entities.end(), "The entity isn't found.");
-        entityIt->second.set(componentTypeId);
+        entityIt->second.mask.set(componentTypeId);
 
         auto pool = std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(it->second);
         if (sizeof...(args) > 0) {
@@ -102,7 +97,7 @@ public:
 
         auto entityIt = m_entities.find(entity);
         EL_CORE_ASSERT(entityIt != m_entities.end(), "The entity isn't found.");
-        entityIt->second.set(componentTypeId);
+        entityIt->second.mask.set(componentTypeId);
 
         return std::static_pointer_cast<ecs::ComponentPool<ComponentType>>(it->second)->AddComponent(entity, std::forward<ComponentType>(component));
     };
@@ -117,7 +112,7 @@ public:
         auto it = m_componentPools.find(componentTypeId);
         EL_CORE_ASSERT(it != m_componentPools.end(), "Failed to remove component. Component type isn't registered");
 
-        entityIt->second.set(componentTypeId, false);
+        entityIt->second.mask.set(componentTypeId, false);
         it->second->RemoveComponent(entity);
     };
 
@@ -128,7 +123,7 @@ public:
         EL_CORE_ASSERT(entityIt != m_entities.end(), "The entity isn't found");
 
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
-        return entityIt->second.test(componentTypeId);
+        return entityIt->second.mask.test(componentTypeId);
     }
 
     template<typename ComponentType>
@@ -138,7 +133,7 @@ public:
         EL_CORE_ASSERT(entityIt != m_entities.end(), "The entity isn't found");
 
         const ecs::ComponentTypeId componentTypeId = ecs::GetComponentTypeId<ComponentType>();
-        EL_CORE_ASSERT(entityIt->second.test(componentTypeId), "The entity hasn't component of this type.")
+        EL_CORE_ASSERT(entityIt->second.mask.test(componentTypeId), "The entity hasn't component of this type.")
 
         auto it = m_componentPools.find(componentTypeId);
         EL_CORE_ASSERT(it != m_componentPools.end(), "Failed to get component. Component type isn't registered.")
@@ -193,11 +188,11 @@ public:
     }
 
 private:
-    SceneNodeComponent root;
+    SharedPtr<SceneNode> m_root { nullptr };
 
     std::unordered_map<ecs::ComponentTypeId, SharedPtr<ecs::IComponentPool>> m_componentPools;
     std::vector<UniquePtr<ecs::IComponentSystem>> m_systems;
-    std::unordered_map<ecs::Entity, ecs::ComponentMask> m_entities;
+    std::unordered_map<ecs::Entity, EntityInfo> m_entities;
 
     std::vector<ecs::Entity> m_entitiesToDestroy;
 };

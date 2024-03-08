@@ -120,10 +120,15 @@ SimpleLightSandbox::SimpleLightSandbox()
     m_lightVao->SetIndexBuffer(lEbo);
 
     m_lightShader = elv::ShaderManager::Load("light_shader", "light_cube.vert", "light_cube.frag");
-}
 
-void SimpleLightSandbox::OnCreate()
-{
+    // scene setup
+    auto& scene = elv::GetScene();
+
+    m_cubeEntity = scene.CreateEntity();
+    auto& cubeTransformComponent = scene.AddComponent<elv::TransformComponent>(m_cubeEntity);
+
+    m_lightEntity = scene.CreateChildEntity(m_cubeEntity);
+    auto& lightTransform = scene.AddComponent<elv::TransformComponent>(m_lightEntity, m_light.position, lia::vec3(0.2f));
 }
 
 void SimpleLightSandbox::OnUpdate(float dt)
@@ -136,10 +141,12 @@ void SimpleLightSandbox::OnRender(float dt)
     auto& camera = m_cameraController.GetCamera();
     elv::Renderer::BeginScene(camera);
 
+    auto& scene = elv::GetScene();
+    auto& cubeTransformComponent = scene.GetComponent<elv::TransformComponent>(m_cubeEntity);
+    auto& lightTransform = scene.GetComponent<elv::TransformComponent>(m_lightEntity);
+
     // render cubes
     m_shader->Bind();
-
-    elv::RenderCommand::DrawIndexed(m_vao);
 
     m_shader->SetVector3f("u_ViewPos", camera.GetPosition());
 
@@ -154,30 +161,20 @@ void SimpleLightSandbox::OnRender(float dt)
         m_light.position.y = sin(m_timer.Elapsed() / 2.0f) * 1.0f;
     }
 
-    m_shader->SetVector3f("u_Light.position", m_light.position);
+    m_shader->SetVector3f("u_Light.position", lightTransform.pos);
     m_shader->SetVector3f("u_Light.ambient", m_light.ambient);
     m_shader->SetVector3f("u_Light.diffuse", m_light.diffuse);
     m_shader->SetVector3f("u_Light.specular", m_light.specular);
 
-    lia::mat4 model(1.0f);
-    model = lia::scale(model, lia::vec3(m_cubeScale.x, m_cubeScale.y, m_cubeScale.z))
-        * lia::rotateX({ 1.0f }, lia::radians(m_cubeRotation.x))
-        * lia::rotateY({ 1.0f }, lia::radians(m_cubeRotation.y))
-        * lia::rotateZ({ 1.0f }, lia::radians(m_cubeRotation.z))
-        * lia::translate({ 1.0f }, m_cubePosition);
-
-    m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(model));
-    elv::Renderer::Submit(m_shader, m_vao, model);
+    m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(cubeTransformComponent.modelMatrix));
+    elv::Renderer::Submit(m_shader, m_vao, cubeTransformComponent.modelMatrix);
 
     // render light
     m_lightShader->Bind();
     m_lightShader->SetVector3f("u_Color.ambient", m_light.ambient);
     m_lightShader->SetVector3f("u_Color.diffuse", m_light.diffuse);
 
-    lia::mat4 lightModel(1.0f);
-    lightModel = lia::scale(lightModel, lia::vec3(0.2f)) * lia::translate({ 1.0f }, m_light.position);
-
-    elv::Renderer::Submit(m_lightShader, m_vao, lightModel);
+    elv::Renderer::Submit(m_lightShader, m_vao, lightTransform.modelMatrix);
 
     elv::Renderer::EndScene();
 }
@@ -185,13 +182,24 @@ void SimpleLightSandbox::OnRender(float dt)
 #if EDITOR_MODE
 void SimpleLightSandbox::OnImguiRender()
 {
+    auto& scene = elv::GetScene();
+
     ImGui::Begin("Scene properties");
 
     ImGui::Text("Cube Transform");
     ImGui::Separator();
-    elv::editor::DrawVec3Control("cube_pos", "Position", m_cubePosition);
-    elv::editor::DrawVec3Control("cube_rotation", "Rotation", m_cubeRotation);
-    elv::editor::DrawVec3Control("cube_scale", "Scale", m_cubeScale);
+
+    auto& cubeTransformComponent = scene.GetComponent<elv::TransformComponent>(m_cubeEntity);
+    if (elv::editor::DrawVec3Control("cube_pos", "Position", cubeTransformComponent.pos)) {
+        cubeTransformComponent.isDirty = true;
+    }
+
+    if (elv::editor::DrawVec3Control("cube_rotation", "Rotation", cubeTransformComponent.rotation)) {
+        cubeTransformComponent.isDirty = true;
+    }
+    if (elv::editor::DrawVec3Control("cube_scale", "Scale", cubeTransformComponent.scale)) {
+        cubeTransformComponent.isDirty = true;
+    }
     ImGui::Separator();
 
     ImGui::Text("Cube Material");
@@ -201,7 +209,10 @@ void SimpleLightSandbox::OnImguiRender()
     elv::editor::DrawSliderFloat("shininess", 1.0f, 256.0f, m_cubeMaterial.shininess);
     ImGui::Separator();
 
-    elv::editor::DrawVec3Control("light_pos", "Light Position", m_light.position);
+    auto& lightTransform = scene.GetComponent<elv::TransformComponent>(m_lightEntity);
+    if (elv::editor::DrawVec3Control("light_pos", "Light Position", lightTransform.pos)) {
+        lightTransform.isDirty = true;
+    }
     ImGui::Separator();
 
     ImGui::Text("Light Material");

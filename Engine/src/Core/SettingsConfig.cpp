@@ -15,7 +15,9 @@ void LoadSetting(const std::string& name, T& setting, nlohmann::json& j)
     try {
         j.at(name).get_to(setting);
     } catch (nlohmann::json_abi_v3_11_2::detail::out_of_range e) {
-        EL_CORE_WARN("Failed to load setting: {}", e.what());
+        EL_CORE_WARN("Failed to load setting: {}. Error: {}", name, e.what());
+    } catch (...) {
+        EL_CORE_WARN("Failed to load setting: {}", name);
     }
 }
 
@@ -26,13 +28,18 @@ void SettingsConfig::LoadSettings()
     EL_CORE_INFO("Settings loading...");
     json j;
     {
-        std::ifstream in(engineSettingsFile.data());
-        if (in.is_open()) {
-            in >> j;
-        } else {
-            EL_CORE_WARN("Failed to load engine settings config {0}. Will be created new one with default values.", engineSettingsFile);
-            SaveSettings();
-            return;
+        try {
+            std::ifstream in(engineSettingsFile.data());
+
+            if (in.is_open()) {
+                in >> j;
+            } else {
+                EL_CORE_WARN("Failed to load engine settings config {0}. Will be created new one with default values.", engineSettingsFile);
+                SaveSettings();
+                return;
+            }
+        } catch (...) {
+            EL_CORE_ERROR("Failed to load settings. Check file {}", engineSettingsFile);
         }
     }
 
@@ -48,6 +55,7 @@ void SettingsConfig::LoadSettings()
     LoadSetting("enable_vsync", enableVSync, j);
     LoadSetting("enable_fps_counter", enableFpsCounter, j);
     LoadSetting("enable_z_sorting", enableZSorting, j);
+    LoadSetting("enable_scene_graph", enableSceneGraph, j);
 
     EL_CORE_INFO("Settings loaded");
 }
@@ -66,6 +74,7 @@ void SettingsConfig::SaveSettings()
     j["enable_vsync"] = enableVSync;
     j["enable_fps_counter"] = enableFpsCounter;
     j["enable_z_sorting"] = enableZSorting;
+    j["enable_scene_graph"] = enableSceneGraph;
 
     std::ofstream out(engineSettingsFile.data());
     out << std::setfill(' ') << std::setw(2) << j;

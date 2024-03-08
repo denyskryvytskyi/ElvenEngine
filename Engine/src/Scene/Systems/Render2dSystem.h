@@ -2,6 +2,7 @@
 
 #include "Scene/ComponentSystem.h"
 #include "Scene/Components/SceneComponents.h"
+#include "Scene/Components/TransformComponent.h"
 
 #include "Renderer/OrthographicCameraController.h"
 

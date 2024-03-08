@@ -5,6 +5,7 @@
 #include "SceneSerializer.h"
 
 #include "Components/SceneComponents.h"
+#include "Components/TransformComponent.h"
 #include "Core/FileSystem.h"
 
 namespace elv {
@@ -81,30 +82,30 @@ void SceneSerializer::LoadEntity(ecs::Entity entity, const nlohmann::json& jObj)
     m_pScene->AddComponent(entity, std::move(text));
 }
 
-bool SceneSerializer::SaveEntity(std::pair<ecs::Entity, ecs::ComponentMask> entityInfo, nlohmann::json& jObj)
+bool SceneSerializer::SaveEntity(std::pair<ecs::Entity, Scene::EntityInfo> entityInfo, nlohmann::json& jObj)
 {
     bool isEntityHasComponents = false;
-    if (entityInfo.second.test(ecs::GetComponentTypeId<TransformComponent>())) {
+    if (entityInfo.second.mask.test(ecs::GetComponentTypeId<TransformComponent>())) {
 
         jObj["Transform"] = m_pScene->GetComponent<TransformComponent>(entityInfo.first);
         isEntityHasComponents = true;
     }
-    if (entityInfo.second.test(ecs::GetComponentTypeId<QuadComponent>())) {
+    if (entityInfo.second.mask.test(ecs::GetComponentTypeId<QuadComponent>())) {
 
         jObj["Quad"] = m_pScene->GetComponent<QuadComponent>(entityInfo.first);
         isEntityHasComponents = true;
     }
-    if (entityInfo.second.test(ecs::GetComponentTypeId<SpriteComponent>())) {
+    if (entityInfo.second.mask.test(ecs::GetComponentTypeId<SpriteComponent>())) {
 
         jObj["Sprite"] = m_pScene->GetComponent<SpriteComponent>(entityInfo.first);
         isEntityHasComponents = true;
     }
-    if (entityInfo.second.test(ecs::GetComponentTypeId<RectTransformComponent>())) {
+    if (entityInfo.second.mask.test(ecs::GetComponentTypeId<RectTransformComponent>())) {
 
         jObj["RectTransform"] = m_pScene->GetComponent<RectTransformComponent>(entityInfo.first);
         isEntityHasComponents = true;
     }
-    if (entityInfo.second.test(ecs::GetComponentTypeId<TextComponent>())) {
+    if (entityInfo.second.mask.test(ecs::GetComponentTypeId<TextComponent>())) {
         jObj["Text"] = m_pScene->GetComponent<TextComponent>(entityInfo.first);
         isEntityHasComponents = true;
     }

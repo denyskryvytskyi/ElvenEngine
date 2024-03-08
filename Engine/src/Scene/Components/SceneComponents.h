@@ -7,22 +7,6 @@
 #include "Renderer/Camera.h"
 
 namespace elv {
-struct TransformComponent {
-    TransformComponent() = default;
-    TransformComponent(const lia::vec3& pos_, const lia::vec3& scale_ = { 1.0f }, const lia::vec3& rotation_ = { 0.0f })
-        : pos(pos_)
-        , scale(scale_)
-        , rotation(rotation_)
-    { }
-
-public:
-    lia::vec3 pos;
-    lia::vec3 scale { 1.0f };
-    lia::vec3 rotation;
-};
-void to_json(nlohmann::json& j, const TransformComponent& t);
-void from_json(const nlohmann::json& j, TransformComponent& t);
-
 struct QuadComponent {
     QuadComponent() = default;
     QuadComponent(const lia::vec4 color_)
@@ -145,9 +129,9 @@ public:
     }
 
 public:
+    bool isEnabled { true };
     std::unique_ptr<ecs::IBehavior> behavior;
     std::function<std::unique_ptr<ecs::IBehavior>()> instantiateBehavior;
-    bool isEnabled { true };
 };
 
 struct CameraComponent {

@@ -43,6 +43,7 @@
 
 #include "Scene/Behavior.h"
 #include "Scene/Components/SceneComponents.h"
+#include "Scene/Components/TransformComponent.h"
 #include "Scene/SceneManager.h"
 
 ///////////////////////////////////////////////////

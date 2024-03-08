@@ -3,6 +3,8 @@
 #include "Events/EventManager.h"
 #include "Events/PhysicsEvent.h"
 
+#include "Scene/Components/TransformComponent.h"
+
 namespace elv {
 void Physics2dSystem::OnInit()
 {

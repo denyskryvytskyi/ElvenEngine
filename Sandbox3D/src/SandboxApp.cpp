@@ -5,5 +5,5 @@
 
 elv::Application* elv::CreateApplication()
 {
-    return new MeshModelSandbox();
+    return new SimpleLightSandbox();
 }

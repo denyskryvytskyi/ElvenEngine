@@ -23,9 +23,9 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
 
 ### Windows
 1. Configure and build third-party libraries: `scripts/setup-vendor.bat`
-2. Configure Visual Studio solution for the Engine and Game/Example projects: `scripts/configure-vs2022`.
-    
+2. Configure Visual Studio solution for the Engine and Game/Example projects: `scripts/configure-vs2022`. **IMPORTANT**: There is definition for a preprocessor `ENABLE_3D_MODULE=ON` that is used to link assimp library to the engine (ON - only Sandbox3D project will be configured, OFF - only Sandbox2D and Games projects will be configured).
     2.1. Or run a command from the build directory with your generator and architecture: `cmake -G "Visual Studio Generator 17 2022" -A x64`
+
 3. Build a solution (if you want to build using cmake) for both Debug and Release config (pass it as an argument): `scripts/build.bat`
 
 ## Features

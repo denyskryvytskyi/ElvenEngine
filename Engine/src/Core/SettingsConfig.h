@@ -18,6 +18,7 @@ public:
     bool enableVSync { false };
     bool enableFpsCounter { false };
     bool enableZSorting { false };
+    bool enableSceneGraph { false };
 
     // orthographic camera
     float orthographicCameraSize { 100 };

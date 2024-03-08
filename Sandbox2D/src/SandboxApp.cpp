@@ -25,12 +25,12 @@ public:
 
     void OnUpdate(float dt) override
     {
-        EL_INFO("OnUpdate of Behavior component...");
+        // EL_INFO("OnUpdate of Behavior component...");
     }
 
     void OnRender(float dt) override
     {
-        EL_INFO("OnRender of Behavior component...");
+        // EL_INFO("OnRender of Behavior component...");
     }
 };
 
@@ -110,8 +110,8 @@ void Sandbox2D::OnTextureLoaded(const elv::events::TextureLoadedEvent& e)
 
         const elv::SharedPtr<elv::Texture2D> texture = elv::textures::Get("wizard_fire");
 
-        for (size_t i = 0; i < 100; ++i) {
-            for (size_t j = 0; j < 100; ++j) {
+        for (size_t i = 0; i < 200; ++i) {
+            for (size_t j = 0; j < 200; ++j) {
                 const elv::ecs::Entity entityQuad = scene.CreateEntity();
 
                 auto& transform = scene.AddComponent<elv::TransformComponent>(

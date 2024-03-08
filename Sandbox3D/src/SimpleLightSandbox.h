@@ -16,7 +16,6 @@ class SimpleLightSandbox : public elv::Application {
 public:
     SimpleLightSandbox();
 
-    virtual void OnCreate();
     virtual void OnUpdate(float dt);
     virtual void OnRender(float dt);
 #if EDITOR_MODE
@@ -27,7 +26,7 @@ private:
     elv::EditorCameraController m_cameraController;
     elv::Timer m_timer;
 
-    // objects
+    // cube
     elv::SharedPtr<elv::VertexArray> m_vao;
     elv::SharedPtr<elv::Shader> m_shader;
     elv::SharedPtr<elv::Texture2D> m_texture;
@@ -38,9 +37,13 @@ private:
 
     elv::Material m_cubeMaterial;
 
+    elv::ecs::Entity m_cubeEntity;
+
     // light
     elv::SharedPtr<elv::VertexArray> m_lightVao;
     elv::SharedPtr<elv::Shader> m_lightShader;
+
+    elv::ecs::Entity m_lightEntity;
 
     Light m_light;
 

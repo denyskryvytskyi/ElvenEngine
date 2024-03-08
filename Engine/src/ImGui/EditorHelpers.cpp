@@ -10,8 +10,9 @@ const float kResetValue = 0.0f;
 const float kColumnWidth = 130.0f;
 } // namespace
 
-void DrawVec3Control(const std::string& id, const std::string& label, lia::vec3& properties)
+bool DrawVec3Control(const std::string& id, const std::string& label, lia::vec3& properties)
 {
+    bool changed = false;
 
     ImGuiIO& io = ImGui::GetIO();
     auto boldFont = io.Fonts->Fonts[0];
@@ -39,7 +40,9 @@ void DrawVec3Control(const std::string& id, const std::string& label, lia::vec3&
     ImGui::PopStyleColor(3);
 
     ImGui::SameLine();
-    ImGui::DragFloat("##X", &properties.x, 0.1f, 0.0f, 0.0f, "%.2f");
+    if (ImGui::DragFloat("##X", &properties.x, 0.1f, 0.0f, 0.0f, "%.2f")) {
+        changed = true;
+    }
     ImGui::PopItemWidth();
     ImGui::SameLine();
 
@@ -53,7 +56,9 @@ void DrawVec3Control(const std::string& id, const std::string& label, lia::vec3&
     ImGui::PopStyleColor(3);
 
     ImGui::SameLine();
-    ImGui::DragFloat("##Y", &properties.y, 0.1f, 0.0f, 0.0f, "%.2f");
+    if (ImGui::DragFloat("##Y", &properties.y, 0.1f, 0.0f, 0.0f, "%.2f")) {
+        changed = true;
+    }
     ImGui::PopItemWidth();
     ImGui::SameLine();
 
@@ -67,7 +72,9 @@ void DrawVec3Control(const std::string& id, const std::string& label, lia::vec3&
     ImGui::PopStyleColor(3);
 
     ImGui::SameLine();
-    ImGui::DragFloat("##Z", &properties.z, 0.1f, 0.0f, 0.0f, "%.2f");
+    if (ImGui::DragFloat("##Z", &properties.z, 0.1f, 0.0f, 0.0f, "%.2f")) {
+        changed = true;
+    }
     ImGui::PopItemWidth();
 
     ImGui::PopStyleVar();
@@ -75,21 +82,23 @@ void DrawVec3Control(const std::string& id, const std::string& label, lia::vec3&
     ImGui::Columns(1);
 
     ImGui::PopID();
+
+    return changed;
 }
 
-void DrawSliderFloat(const std::string& label, const float min, const float max, float& property)
+bool DrawSliderFloat(const std::string& label, const float min, const float max, float& property)
 {
-    ImGui::SliderFloat(label.c_str(), &property, min, max, "value = %.3f");
+    return ImGui::SliderFloat(label.c_str(), &property, min, max, "value = %.3f");
 }
 
-void DrawRGBColorControl(const std::string& label, lia::vec3& colorProperty)
+bool DrawRGBColorControl(const std::string& label, lia::vec3& colorProperty)
 {
-    ImGui::ColorEdit3(label.c_str(), colorProperty.elementsPtr());
+    return ImGui::ColorEdit3(label.c_str(), colorProperty.elementsPtr());
 }
 
-void DrawRGBAColorControl(const std::string& label, lia::vec4& colorProperty)
+bool DrawRGBAColorControl(const std::string& label, lia::vec4& colorProperty)
 {
-    ImGui::ColorEdit4(label.c_str(), colorProperty.elementsPtr());
+    return ImGui::ColorEdit4(label.c_str(), colorProperty.elementsPtr());
 }
 
 } // namespace elv::editor
