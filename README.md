@@ -1,12 +1,11 @@
 <h1 align="center"> Elven Engine 
 <br/>
-  
+
 [![Build](https://github.com/denyskryvytskyi/ElvenEngine/actions/workflows/cmake.yml/badge.svg)](https://github.com/denyskryvytskyi/ElvenEngine/actions/workflows/cmake.yml)
 [![CodeQL](https://github.com/denyskryvytskyi/ElvenEngine/actions/workflows/codeql.yml/badge.svg)](https://github.com/denyskryvytskyi/ElvenEngine/actions/workflows/codeql.yml)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/denyskryvytskyi/ElvenEngine/blob/master/LICENSE)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/493f09fda55b43f68886f52be5240d27)](https://www.codacy.com/gh/denyskryvytskyi/ElvenEngine/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=denyskryvytskyi/ElvenEngine&amp;utm_campaign=Badge_Grade)
 
-  
 </h1>
 
 Elven Engine is primarily a 2D/3D game engine that is being developed from scratch.
@@ -23,10 +22,18 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
 
 ### Windows
 1. Configure and build third-party libraries: `scripts/setup-vendor.bat`
-2. Configure Visual Studio solution for the Engine and Game/Example projects: `scripts/configure-vs2022`. **IMPORTANT**: There is definition for a preprocessor `ENABLE_3D_MODULE=ON` that is used to link assimp library to the engine (ON - only Sandbox3D project will be configured, OFF - only Sandbox2D and Games projects will be configured).
-    2.1. Or run a command from the build directory with your generator and architecture: `cmake -G "Visual Studio Generator 17 2022" -A x64`
+2. Configure Visual Studio solution for the Engine and Game/Example projects: `scripts/configure-vs2022`. 
+3. Build a solution using one of the following ways:
+   - cmake-based script `scripts/build.bat` (pass Debug/Release as an argument)
+   - Visual Studio (`ElvenEngine.sln` file is placed in the `build` directory).
 
-3. Build a solution (if you want to build using cmake) for both Debug and Release config (pass it as an argument): `scripts/build.bat`
+### CMake build options
+You can modify configure file to enable/disable the following cmake options:
+- BUILD_SANDBOX (default ON): Enable Sandbox2D and Sandbox3D projects build
+- BUILD_GAMES (default ON): Enable Games build
+- PROFILE_MODE (default ON): Enable Profiling (`PROFILE_MODE` preprocessor definition will be added)
+- EDITOR_MODE (default ON): Enable Editor (`EDITOR_MODE` preprocessor definition will be added)
+- ASSIMP_MODE (default ON): Enable Assimp library for 3D model loading (`ASSIMP_MODE` preprocessor definition will be added). **IMPORTANT**: ON - only Sandbox3D project will be configured, OFF - only Sandbox2D and Games projects will be configured.
 
 ## Features
 + [x] Logging system
@@ -47,11 +54,13 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
   - [ ] Spritesheet animation
 + [x] ECS (investigated different techniques and my particular architecture in the [article](https://denyskryvytskyi.github.io/ecs))
   - [x] Data-oriented cache-friendly components system architecture
-  - [x] In-Engine components: Transform, Sprite, Text, Quad, Camera, RectTransform
+  - [x] In-Engine components: Transform, Sprite, Text, Quad, Camera, RectTransform, AABB, Tag
   - [x] Components serialization
   - [x] Behavior component as the entity brain
   - [x] Optional Systems for usability
-  - [x] Scene as the ECS coordinator
++ [x] Scene
+  - [x] Interface to work with ECS
+  - [x] Scene Graph based on SceneNodeComponent
   - [x] Scene serialization
 + [x] Data-driven architecture
   - [x] Load/Save engine settings from/to JSON files
@@ -62,8 +71,9 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
   - [x] Orthographic camera controller (OrthographicCameraController), that can be used if needed
   - [x] Fly(FPS-like) 3D camera support (CameraController)
 + [ ] 3D Renderer (IN PROGRESS)
-  - [x] Lighting: spotlight, directional and point light
-  - [ ] Mesh/Model system
+  - [x] Phong Lighting
+  - [x] Multiple light casters: spotlight, directional, and point light
+  - [ ] Mesh-Material system
   - [ ] Primitives: cube, sphere, plane
   - [ ] Model loading (Assimp)
 + [ ] In-engine editor (based on ImGui)

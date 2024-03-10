@@ -125,10 +125,10 @@ SimpleLightSandbox::SimpleLightSandbox()
     auto& scene = elv::GetScene();
 
     m_cubeEntity = scene.CreateEntity();
-    auto& cubeTransformComponent = scene.AddComponent<elv::TransformComponent>(m_cubeEntity);
+    scene.AddComponent<elv::TransformComponent>(m_cubeEntity);
 
     m_lightEntity = scene.CreateChildEntity(m_cubeEntity);
-    auto& lightTransform = scene.AddComponent<elv::TransformComponent>(m_lightEntity, m_light.position, lia::vec3(0.2f));
+    scene.AddComponent<elv::TransformComponent>(m_lightEntity, m_light.position, lia::vec3(0.2f));
 }
 
 void SimpleLightSandbox::OnUpdate(float dt)
@@ -166,15 +166,15 @@ void SimpleLightSandbox::OnRender(float dt)
     m_shader->SetVector3f("u_Light.diffuse", m_light.diffuse);
     m_shader->SetVector3f("u_Light.specular", m_light.specular);
 
-    m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(cubeTransformComponent.modelMatrix));
-    elv::Renderer::Submit(m_shader, m_vao, cubeTransformComponent.modelMatrix);
+    m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(cubeTransformComponent.worldMatrix));
+    elv::Renderer::Submit(m_shader, m_vao, cubeTransformComponent.worldMatrix);
 
     // render light
     m_lightShader->Bind();
     m_lightShader->SetVector3f("u_Color.ambient", m_light.ambient);
     m_lightShader->SetVector3f("u_Color.diffuse", m_light.diffuse);
 
-    elv::Renderer::Submit(m_lightShader, m_vao, lightTransform.modelMatrix);
+    elv::Renderer::Submit(m_lightShader, m_vao, lightTransform.worldMatrix);
 
     elv::Renderer::EndScene();
 }

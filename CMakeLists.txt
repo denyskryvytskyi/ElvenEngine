@@ -14,7 +14,7 @@ option(BUILD_SANDBOX "build sandbox projects" ON)
 option(BUILD_GAMES "build games" ON)
 option(EDITOR_MODE "Enable ImGUI editor overlay" ON)
 option(PROFILE_MODE "Enable functions profiling" ON)
-option(ENABLE_3D_MODULE "Enable 3D module with Assimp support" ON)
+option(ASSIMP_MODE "Enable 3D module with Assimp support" ON)
 
 if(WIN32)
     add_compile_definitions(
@@ -33,8 +33,8 @@ if (PROFILE_MODE)
     add_compile_definitions(PROFILE_MODE)
 endif()
 
-if (ENABLE_3D_MODULE)
-    add_compile_definitions(ENABLE_3D_MODULE)
+if (ASSIMP_MODE)
+    add_compile_definitions(ASSIMP_MODE)
 endif()
 
 add_subdirectory(Engine)
@@ -43,7 +43,7 @@ set(ElvenEngine_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 
 if (BUILD_SANDBOX)
-    if (ENABLE_3D_MODULE)
+    if (ASSIMP_MODE)
         add_subdirectory(Sandbox3D)
         set(STARTUP_PROJECT_NAME "Sandbox3D")
     else()

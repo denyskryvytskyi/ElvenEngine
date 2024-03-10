@@ -57,6 +57,7 @@ set(ENGINE_HEADERS
 "src/Scene/ComponentSystem.h"
 "src/Scene/SceneManager.h"
 "src/Scene/SceneSerializer.h"
+"src/Scene/SceneGraph.h"
 "src/Scene/Components/ComponentSerializerHelper.h"
 "src/Scene/Components/SceneComponents.h"
 "src/Scene/Components/TransformComponent.h"
@@ -114,6 +115,7 @@ set(ENGINE_SOURCES
 "src/Scene/Scene.cpp"
 "src/Scene/SceneManager.cpp"
 "src/Scene/SceneSerializer.cpp"
+"src/Scene/SceneGraph.cpp"
 "src/Scene/Components/ComponentSerializerHelper.cpp"
 "src/Scene/Components/SceneComponents.cpp"
 "src/Scene/Components/TransformComponent.cpp"
@@ -218,7 +220,7 @@ debug ${irrklang} optimized ${irrklang}
 debug ${fmt_d} optimized ${fmt}
 )
 
-if (ENABLE_3D_MODULE)
+if (ASSIMP_MODE)
     set(VENDOR
         ${VENDOR}
         debug ${assimp_d} optimized ${assimp}
