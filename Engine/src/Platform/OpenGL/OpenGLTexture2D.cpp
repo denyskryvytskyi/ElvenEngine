@@ -28,7 +28,7 @@ OpenGLTexture2D::OpenGLTexture2D(std::uint32_t width, std::uint32_t height, std:
     } else if (nrChannels == 3) {
         m_internalFormat = GL_RGB8;
         m_dataFormat = GL_RGB;
-    } else { // for text textures
+    } else {
         m_internalFormat = GL_R8;
         m_dataFormat = GL_RED;
     }
@@ -49,6 +49,7 @@ OpenGLTexture2D::~OpenGLTexture2D()
 
 void OpenGLTexture2D::BindToUnit(std::uint32_t unit)
 {
+    m_slot = unit;
     glBindTextureUnit(unit, m_id);
 }
 

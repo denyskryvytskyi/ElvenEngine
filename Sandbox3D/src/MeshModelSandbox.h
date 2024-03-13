@@ -3,6 +3,8 @@
 #include <Elven.h>
 #include <Renderer/VertexArray.h>
 
+#include <Renderer/Model.h>
+
 // forward declarations
 namespace elv::events {
 class TextureLoadedEvent;
@@ -41,15 +43,14 @@ private:
     int m_texturesLoaded { 0 };
     bool m_texturesIsReady { false };
 
-    bool m_DirLightEnabled { false };
+    bool m_DirLightEnabled { true };
     bool m_PointLightEnabled { false };
     bool m_SpotLightEnabled { false };
 
     // objects
-    lia::vec3 m_cubeRotation;
-    lia::vec3 m_cubeScale { 1.0f };
+    std::vector<elv::ecs::Entity> m_cubes;
 
-    float m_cubeShininess { 32.0f };
+    float m_cubeShininess { 1.0f };
 
     elv::SharedPtr<elv::Shader> m_shader { nullptr };
 
@@ -64,4 +65,8 @@ private:
     /*elv::SharedPtr<elv::VertexArray> m_lightVao { nullptr };*/
     elv::UniquePtr<elv::Mesh> m_lightCubeMesh { nullptr };
     elv::SharedPtr<elv::Shader> m_lightShader { nullptr };
+
+    // Model
+    elv::Model m_model;
+    elv::ecs::Entity m_backpack;
 };

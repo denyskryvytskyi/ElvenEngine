@@ -93,6 +93,9 @@ void Application::Run()
     OnCreate();
 
     Timer timer;
+
+    Timer timerFpsCounter; // to update fps counter
+
     while (m_running) {
 
         if (m_isPaused) {
@@ -103,11 +106,17 @@ void Application::Run()
         const float elapsedTime = timer.Elapsed();
         timer.Restart();
 
-        s_telemetry.frameTime = elapsedTime * 1000.0f;
-        s_telemetry.fps = 1.0f / elapsedTime;
+        if (timerFpsCounter.ElapsedMs() > 100.0f) {
+            s_telemetry.frameTime = elapsedTime * 1000.0f;
+
+            s_telemetry.fps = 1.0f / elapsedTime;
+
+            timerFpsCounter.Restart();
+        }
 
         if (gEngineSettings.enableFpsCounter) {
-            GetScene().GetComponent<elv::TextComponent>(m_fpsCounterEntityId).text = std::to_string(static_cast<int>(std::floor(s_telemetry.fps)));
+            GetScene().GetComponent<elv::TextComponent>(m_fpsCounterEntityId).text
+                = fmt::format("{:0.3f} ms ({} FPS)", s_telemetry.frameTime, static_cast<int>(std::floor(s_telemetry.fps)));
         }
 
         /// Update step ////////////////////

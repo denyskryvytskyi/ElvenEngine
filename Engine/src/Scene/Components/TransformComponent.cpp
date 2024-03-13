@@ -12,9 +12,9 @@ TransformComponent::TransformComponent(const lia::vec3& pos, const lia::vec3& sc
 {
 }
 
-lia::mat4 TransformComponent::GetLocalMatrix()
+void TransformComponent::UpdateLocalMatrix()
 {
-    return lia::scale({ 1.0f }, lia::vec3(scale.x, scale.y, scale.z))
+    localMatrix = lia::scale({ 1.0f }, lia::vec3(scale.x, scale.y, scale.z))
         * lia::rotateX({ 1.0f }, lia::radians(rotation.x))
         * lia::rotateY({ 1.0f }, lia::radians(rotation.y))
         * lia::rotateZ({ 1.0f }, lia::radians(rotation.z))

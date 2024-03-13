@@ -60,7 +60,7 @@ void Sandbox2D::OnCreate()
         };
 
         for (size_t i = 0; i < texturesLoadList.size(); i++) {
-            elv::textures::Load(texturesLoadList[i].first, texturesLoadList[i].second);
+            elv::textures::Load(texturesLoadList[i].first, fmt::format("{}{}", elv::fileSystem::IMAGES_PATH, texturesLoadList[i].second));
         }
         return;
     }
@@ -110,8 +110,8 @@ void Sandbox2D::OnTextureLoaded(const elv::events::TextureLoadedEvent& e)
 
         const elv::SharedPtr<elv::Texture2D> texture = elv::textures::Get("wizard_fire");
 
-        for (size_t i = 0; i < 200; ++i) {
-            for (size_t j = 0; j < 200; ++j) {
+        for (size_t i = 0; i < 100; ++i) {
+            for (size_t j = 0; j < 100; ++j) {
                 const elv::ecs::Entity entityQuad = scene.CreateEntity();
 
                 auto& transform = scene.AddComponent<elv::TransformComponent>(

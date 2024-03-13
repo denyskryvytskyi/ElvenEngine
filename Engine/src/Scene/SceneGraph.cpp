@@ -12,7 +12,7 @@ void SceneGraph::OnInit(Scene* scene)
 
 void SceneGraph::OnUpdate(Scene* scene)
 {
-    PROFILE("Scene graph updated in: ");
+    // PROFILE("Scene graph updated in: ");
     /*
      * 1. Iterate all scene nodes and check if any parent is dirty
      * 2. Update worldMatrix if node or any parent is dirty
@@ -61,6 +61,7 @@ void SceneGraph::OnUpdate(Scene* scene)
             auto& transform = m_transformsPool->GetComponent(entity);
 
             if (transform.isDirty || node.isParentDirty) {
+                transform.UpdateLocalMatrix();
                 transform.worldMatrix = transform.GetLocalMatrix();
 
                 ecs::Entity parentId = node.parent;
@@ -69,7 +70,7 @@ void SceneGraph::OnUpdate(Scene* scene)
                         break;
                     }
                     const auto& parentTransform = m_transformsPool->GetComponent(parentId);
-                    transform.worldMatrix = transform.worldMatrix * parentTransform.worldMatrix;
+                    transform.worldMatrix = transform.worldMatrix * parentTransform.GetLocalMatrix();
 
                     const auto& parentNode = m_sceneNodesPool->GetComponent(parentId);
                     parentId = parentNode.parent;

@@ -23,7 +23,7 @@ public:
     const TextureManager& operator=(const TextureManager&) = delete;
 
     // async load from file
-    void Load(const std::string& textureName, std::string_view filename);
+    void Load(const std::string& textureName, const std::string& filePath);
 
     // just create texture for specific texture implementation
     SharedPtr<Texture2D> Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels);
@@ -47,9 +47,9 @@ extern TextureManager gTextureManager;
 
 namespace textures {
 
-inline void Load(const std::string& textureName, std::string_view filename)
+inline void Load(const std::string& textureName, const std::string& filePath)
 {
-    gTextureManager.Load(textureName, filename);
+    gTextureManager.Load(textureName, filePath);
 }
 
 inline SharedPtr<Texture2D> Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels = 3)

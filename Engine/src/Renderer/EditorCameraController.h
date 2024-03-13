@@ -12,6 +12,7 @@ public:
 
 private:
     void ProcessInput(float dt) override;
+    void OnMouseScrolled(const events::MouseScrolledEvent& e) override;
 
     void OnMouseButtonPressed(const events::MouseButtonPressedEvent& e);
     void OnMouseButtonRelease(const events::MouseButtonReleasedEvent& e);

@@ -22,12 +22,12 @@ public:
 
 protected:
     virtual void ProcessInput(float dt);
-    virtual void OnMouseMoved(const events::MouseMovedEvent& e);
+    virtual void OnMouseScrolled(const events::MouseScrolledEvent& e);
 
     void UpdateFront();
 
 private:
-    void OnMouseScrolled(const events::MouseScrolledEvent& e);
+    void OnMouseMoved(const events::MouseMovedEvent& e);
     void OnWindowResized(const events::WindowResizeEvent& e);
 
 protected:
@@ -46,6 +46,8 @@ protected:
 
     float m_yaw { -90.0f };
     float m_pitch { 0.0f };
+
+    float m_cameraMovementSpeed { 5.0f };
 
     bool m_mouseLastPosInited { false };
     bool m_isFlyEnabled { false };

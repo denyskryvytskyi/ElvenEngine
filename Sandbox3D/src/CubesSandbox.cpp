@@ -80,7 +80,7 @@ CubesSandbox::CubesSandbox()
 
     const uint64_t hash = elv::string_id("wall");
     elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hash);
-    elv::textures::Load("wall", "wall.png");
+    elv::textures::Load("wall", fmt::format("{}{}", elv::fileSystem::IMAGES_PATH, "wall.png"));
 
     m_cubes = {
         lia::vec3(0.0f, 0.0f, 0.0f),

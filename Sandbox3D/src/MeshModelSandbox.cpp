@@ -1,15 +1,18 @@
 #include "MeshModelSandbox.h"
 
+#include <Core/Profiler.h>
 #include <Events/TextureEvent.h>
 #include <Renderer/Mesh.h>
 #include <Renderer/Primitives/Cube.h>
+
+#include "Renderer/Model.h"
 
 #if EDITOR_MODE
 #    include <ImGui/EditorHelpers.h>
 #    include <imgui.h>
 #endif
 
-const int kCubesAmount = 10;
+const int kCubesAmount = 500;
 const int kEnvironments = 4;
 
 const lia::vec3 kPointLightPositions[] = {
@@ -148,22 +151,23 @@ const EnvironmentMaterials kEnvironmenMaterials[kEnvironments] = {
 };
 
 MeshModelSandbox::MeshModelSandbox()
-    : m_cameraController(45.0f, 1280.0f / 720.0f, 0.1f, 100.0f)
+    : m_cameraController(45.0f, 1280.0f / 720.0f, 0.1f, 1000.0f)
     , m_lightCubeMesh(elv::MakeUniquePtr<elv::Cube>())
     , m_textureLoadedCallback([this](const elv::events::TextureLoadedEvent& e) { OnTextureLoaded(e); })
+    , m_model(elv::Model("assets/models/cerberus/cerberus.fbx"))
 {
     // load textures
     const uint64_t hash = elv::string_id("wooden_container");
     elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hash);
-    elv::textures::Load("wooden_container", "wooden_container.png");
+    elv::textures::Load("wooden_container", fmt::format("{}{}", elv::fileSystem::IMAGES_PATH, "wooden_container.png"));
 
     const uint64_t hashSpecular = elv::string_id("wooden_container_specular");
     elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hashSpecular);
-    elv::textures::Load("wooden_container_specular", "wooden_container_specular.png");
+    elv::textures::Load("wooden_container_specular", fmt::format("{}{}", elv::fileSystem::IMAGES_PATH, "wooden_container_specular.png"));
 
     const uint64_t hashMatrix = elv::string_id("matrix");
     elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hashMatrix);
-    elv::textures::Load("matrix", "matrix.jpg");
+    elv::textures::Load("matrix", fmt::format("{}{}", elv::fileSystem::IMAGES_PATH, "matrix.jpg"));
 
     // cube shader
     m_shader = elv::ShaderManager::Load("textured_cube", "textured_cube.vert", "mesh.frag");
@@ -177,6 +181,14 @@ MeshModelSandbox::MeshModelSandbox()
 
     // default environment
     SetEnvironment(0);
+
+    // model loading
+    auto& scene = elv::GetScene();
+
+    m_backpack = scene.CreateEntity();
+
+    auto& transform = scene.AddComponent<elv::TransformComponent>(m_backpack);
+    transform.scale = lia::vec3(0.1f);
 }
 
 void MeshModelSandbox::OnUpdate(float dt)
@@ -200,19 +212,7 @@ void MeshModelSandbox::OnRender(float dt)
 
     m_shader->SetVector3f("u_ViewPos", camera.GetPosition());
 
-    auto texture = elv::textures::Get("wooden_container");
-    texture->BindToUnit(0);
-
-    auto texture1 = elv::textures::Get("wooden_container_specular");
-    texture->BindToUnit(1);
-
-    auto texture2 = elv::textures::Get("matrix");
-    texture->BindToUnit(2);
-
     // cube material
-    // m_shader->SetInteger("u_Material.diffuse", 0);  // diffuse map binding
-    // m_shader->SetInteger("u_Material.specular", 1); // specular map binding
-    // m_shader->SetInteger("u_Material.emission", 2); // emission map binding
     m_shader->SetInteger("u_Material.enableEmission", 0);
     m_shader->SetFloat("u_Material.shininess", m_cubeShininess);
 
@@ -257,18 +257,28 @@ void MeshModelSandbox::OnRender(float dt)
         m_shader->SetFloat("u_SpotLight.quadratic", m_flashlight.quadratic);
     }
 
+    auto& scene = elv::GetScene();
     // render cubes
-    for (size_t i = 0; i < kCubesAmount; ++i) {
-        lia::mat4 model(1.0f);
-        model = lia::scale(model, lia::vec3(m_cubeScale.x, m_cubeScale.y, m_cubeScale.z))
-            * lia::rotateX({ 1.0f }, lia::radians(m_cubeRotation.x))
-            * lia::rotateY({ 1.0f }, lia::radians(m_cubeRotation.y))
-            * lia::rotateZ({ 1.0f }, lia::radians(m_cubeRotation.z))
-            * lia::translate({ 1.0f }, kCubePositions[i]);
 
-        m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(model));
-        elv::Renderer::Submit(m_shader, m_cubeMesh, model);
-    }
+    // auto texture = elv::textures::Get("wooden_container");
+    // texture->BindToUnit(0);
+
+    // auto texture1 = elv::textures::Get("wooden_container_specular");
+    // texture1->BindToUnit(1);
+
+    ///*auto texture2 = elv::textures::Get("matrix");
+    // texture->BindToUnit(2);*/
+    // for (auto cube : m_cubes) {
+    //    auto& transform = scene.GetComponent<elv::TransformComponent>(cube);
+
+    //    m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(transform.worldMatrix));
+    //    elv::Renderer::Submit(m_shader, m_cubeMesh, transform.worldMatrix);
+    //}
+
+    // render model
+    auto& transform = scene.GetComponent<elv::TransformComponent>(m_backpack);
+    m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(transform.worldMatrix));
+    elv::Renderer::Submit(m_shader, m_model, transform.worldMatrix);
 
     // render point lights
     if (m_PointLightEnabled) {
@@ -316,7 +326,44 @@ void MeshModelSandbox::OnImguiRender()
     }
 
     if (ImGui::CollapsingHeader("Cube")) {
-        elv::editor::DrawSliderFloat("Cube shininess", 1.0f, 256.0f, m_cubeShininess);
+        elv::editor::DrawSliderFloat("Shininess", 1.0f, 256.0f, m_cubeShininess);
+
+        if (m_cubes.size() > 0) {
+            ImGui::Text("Transform:");
+
+            auto& scene = elv::GetScene();
+            auto& cubeTransformComponent = scene.GetComponent<elv::TransformComponent>(m_cubes.at(0));
+            if (elv::editor::DrawVec3Control("cube_pos", "Position", cubeTransformComponent.pos)) {
+                cubeTransformComponent.isDirty = true;
+            }
+
+            if (elv::editor::DrawVec3Control("cube_rotation", "Rotation", cubeTransformComponent.rotation)) {
+                cubeTransformComponent.isDirty = true;
+            }
+            if (elv::editor::DrawVec3Control("cube_scale", "Scale", cubeTransformComponent.scale)) {
+                cubeTransformComponent.isDirty = true;
+            }
+            ImGui::Separator();
+        }
+    }
+
+    if (ImGui::CollapsingHeader("Backpack")) {
+
+        ImGui::Text("Transform:");
+
+        auto& scene = elv::GetScene();
+        auto& backpackTransformComponent = scene.GetComponent<elv::TransformComponent>(m_backpack);
+        if (elv::editor::DrawVec3Control("backpack_pos", "Position", backpackTransformComponent.pos)) {
+            backpackTransformComponent.isDirty = true;
+        }
+
+        if (elv::editor::DrawVec3Control("backpack_rotation", "Rotation", backpackTransformComponent.rotation)) {
+            backpackTransformComponent.isDirty = true;
+        }
+        if (elv::editor::DrawVec3Control("backpack_scale", "Scale", backpackTransformComponent.scale)) {
+            backpackTransformComponent.isDirty = true;
+        }
+        ImGui::Separator();
     }
 
     if (ImGui::CollapsingHeader("Directional Light")) {
@@ -396,10 +443,27 @@ void MeshModelSandbox::SetupCubeMesh()
     auto texture1 = elv::textures::Get("wooden_container_specular");
 
     std::vector<elv::MeshTexture> meshTextures = {
-        { elv::MeshTextureType::Diffuse, texture },
-        { elv::MeshTextureType::Specular, texture1 }
+        { elv::MeshTextureType::Diffuse, "1", texture },
+        { elv::MeshTextureType::Specular, "2", texture1 }
     };
 
     m_cubeMesh = elv::MakeUniquePtr<elv::Cube>();
-    m_cubeMesh->SetTextures(meshTextures);
+    m_cubeMesh->SetTextures(std::move(meshTextures));
+
+    // setup cubes
+    auto& scene = elv::GetScene();
+
+    auto mainCube = scene.CreateEntity();
+    m_cubes.emplace_back(mainCube);
+
+    auto& transform = scene.AddComponent<elv::TransformComponent>(mainCube);
+
+    for (size_t i = 1; i < kCubesAmount; ++i) {
+
+        auto cube = scene.CreateChildEntity(mainCube);
+        m_cubes.emplace_back(cube);
+
+        auto& transform = scene.AddComponent<elv::TransformComponent>(cube);
+        transform.pos = lia::vec3(1.0f * i);
+    }
 }

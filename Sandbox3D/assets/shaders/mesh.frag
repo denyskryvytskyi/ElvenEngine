@@ -2,12 +2,10 @@
 #version 450 core
 
 struct Material {
-    sampler2D texture_diffuse1;
-    sampler2D texture_diffuse2;
-    sampler2D texture_diffuse3;
-    sampler2D texture_specular1;
-    sampler2D texture_specular2;
-    sampler2D emission;
+    sampler2D texture_diffuse;
+    sampler2D texture_specular;
+    sampler2D texture_emission;
+    sampler2D texture_opacity;
     float shininess;
     bool enableEmission;
 };
@@ -93,6 +91,11 @@ void main()
         result += CalcSpotLight(u_SpotLight, normal, viewDir);
     }
 
+    if(texture(u_Material.texture_diffuse, v_UV).a <= 0.5) 
+    {
+        discard;
+    }
+
     FragColor = vec4(result, 1.0);
 }
 
@@ -102,24 +105,24 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
     vec3 reflectDir = reflect(-lightDir, normal);
 
     // ambient
-    vec3 diffuseMap = texture(u_Material.texture_diffuse1, v_UV).rgb;
+    vec3 diffuseMap = texture(u_Material.texture_diffuse, v_UV).rgb;
     vec3 ambient = light.ambient * diffuseMap;
 
     // diffuse
     float diff = max(dot(normal, lightDir), 0.0f);
-    vec3 diffuse = light.diffuse * diff * texture(u_Material.texture_diffuse1, v_UV).rgb;
+    vec3 diffuse = light.diffuse * diff * diffuseMap;
 
     // specular
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
-    vec3 specularMap = texture(u_Material.texture_specular1, v_UV).rgb;
-    vec3 specular = light.specular * spec * specularMap; 
+    vec3 specularMap = vec3(texture(u_Material.texture_specular, v_UV));
+    vec3 specular = light.specular * spec * specularMap.r;
 
     // emission
     vec3 emission = vec3(0.0f);
 
-    if (u_Material.enableEmission && specularMap == vec3(0.0f))
+    if (u_Material.enableEmission)
     {
-        emission = texture(u_Material.emission, v_UV).rgb;
+        emission = texture(u_Material.texture_emission, v_UV).rgb;
     }
 
     return (ambient + diffuse + specular + emission);
@@ -131,24 +134,24 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 viewDir)
     vec3 reflectDir = reflect(-lightDir, normal);
 
     // ambient
-    vec3 diffuseMap = texture(u_Material.texture_diffuse1, v_UV).rgb;
+    vec3 diffuseMap = texture(u_Material.texture_diffuse, v_UV).rgb;
     vec3 ambient = light.ambient * diffuseMap;
 
     // diffuse
     float diff = max(dot(normal, lightDir), 0.0f);
-    vec3 diffuse = light.diffuse * diff * texture(u_Material.texture_diffuse1, v_UV).rgb;
+    vec3 diffuse = light.diffuse * diff * texture(u_Material.texture_diffuse, v_UV).rgb;
 
     // specular
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
-    vec3 specularMap = texture(u_Material.texture_specular1, v_UV).rgb;
-    vec3 specular = light.specular * spec * specularMap; 
+    vec3 specularMap = texture(u_Material.texture_specular, v_UV).rgb;
+    vec3 specular = light.specular * spec * specularMap.r; 
 
     // emission
     vec3 emission = vec3(0.0f);
 
-    if (u_Material.enableEmission && specularMap == vec3(0.0f))
+    if (u_Material.enableEmission)
     {
-        emission = texture(u_Material.emission, v_UV).rgb;
+        emission = texture(u_Material.texture_emission, v_UV).rgb;
     }
 
     // attenuation
@@ -168,24 +171,24 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 viewDir)
     vec3 reflectDir = reflect(-lightDir, normal);
 
     // ambient
-    vec3 diffuseMap = texture(u_Material.texture_diffuse1, v_UV).rgb;
+    vec3 diffuseMap = texture(u_Material.texture_diffuse, v_UV).rgb;
     vec3 ambient = light.ambient * diffuseMap;
 
     // diffuse
     float diff = max(dot(normal, lightDir), 0.0f);
-    vec3 diffuse = light.diffuse * diff * texture(u_Material.texture_diffuse1, v_UV).rgb;
+    vec3 diffuse = light.diffuse * diff * texture(u_Material.texture_diffuse, v_UV).rgb;
 
     // specular
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
-    vec3 specularMap = texture(u_Material.texture_specular1, v_UV).rgb;
-    vec3 specular = light.specular * spec * specularMap; 
+    vec3 specularMap = texture(u_Material.texture_specular, v_UV).rgb;
+    vec3 specular = light.specular * spec * specularMap.r;
 
     // emission
     vec3 emission = vec3(0.0f);
 
-    if (u_Material.enableEmission && specularMap == vec3(0.0f))
+    if (u_Material.enableEmission)
     {
-        emission = texture(u_Material.emission, v_UV).rgb;
+        emission = texture(u_Material.texture_emission, v_UV).rgb;
     }
 
     // spotlight with soft edges

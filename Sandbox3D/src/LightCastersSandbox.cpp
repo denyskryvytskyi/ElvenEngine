@@ -226,15 +226,15 @@ LightCastersSandbox::LightCastersSandbox()
     // load textures
     const uint64_t hash = elv::string_id("wooden_container");
     elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hash);
-    elv::textures::Load("wooden_container", "wooden_container.png");
+    elv::textures::Load("wooden_container", fmt::format("{}{}", elv::fileSystem::IMAGES_PATH, "wooden_container.png"));
 
     const uint64_t hashSpecular = elv::string_id("wooden_container_specular");
     elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hashSpecular);
-    elv::textures::Load("wooden_container_specular", "wooden_container_specular.png");
+    elv::textures::Load("wooden_container_specular", fmt::format("{}{}", elv::fileSystem::IMAGES_PATH, "wooden_container_specular.png"));
 
     const uint64_t hashMatrix = elv::string_id("matrix");
     elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hashMatrix);
-    elv::textures::Load("matrix", "matrix.jpg");
+    elv::textures::Load("matrix", fmt::format("{}{}", elv::fileSystem::IMAGES_PATH, "matrix.jpg"));
 
     // Lights
     float lightCubeVertices[] = {

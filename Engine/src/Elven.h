@@ -8,6 +8,7 @@
 
 #include "Core/Application.h"
 #include "Core/EntryPoint.h"
+#include "Core/FileSystem.h"
 #include "Core/Input.h"
 #include "Core/Log.h"
 #include "Core/SettingsConfig.h"

@@ -1,6 +1,5 @@
 #include "TextureManager.h"
 
-#include "Core/FileSystem.h"
 #include "Core/StringId.h"
 #include "Events/EventManager.h"
 #include "Events/TextureEvent.h"
@@ -40,7 +39,7 @@ static void LoadTextureFromFile(std::vector<TextureManager::LoadedTextureInfo>& 
 }
 } // namespace
 
-void TextureManager::Load(const std::string& textureName, std::string_view filename)
+void TextureManager::Load(const std::string& textureName, const std::string& filePath)
 {
     // check whether we already loaded this texture
     auto it = m_textures.find(textureName);
@@ -52,8 +51,7 @@ void TextureManager::Load(const std::string& textureName, std::string_view filen
         if (inProgressTexture == m_textureLoadingInProgress.end()) {
             if (it == m_textures.end()) {
                 m_textureLoadingInProgress.insert(textureName);
-                const std::string filepath = fmt::format("{}{}", fileSystem::IMAGES_PATH, filename);
-                m_futures.push_back(std::async(std::launch::async, LoadTextureFromFile, std::ref(m_loadedInfo), textureName, filepath));
+                m_futures.push_back(std::async(std::launch::async, LoadTextureFromFile, std::ref(m_loadedInfo), textureName, filePath));
             } else {
                 EL_CORE_INFO("Texture {0} is already loaded.", textureName);
             }

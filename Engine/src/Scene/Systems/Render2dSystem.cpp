@@ -1,6 +1,7 @@
 #include "Render2dSystem.h"
 
 #include "Core/Application.h"
+#include "Core/Profiler.h"
 #include "Core/SettingsConfig.h"
 #include "Events/EventManager.h"
 #include "Events/TextureEvent.h"

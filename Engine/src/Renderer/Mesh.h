@@ -14,25 +14,32 @@ struct MeshVertex {
 
 enum class MeshTextureType {
     Diffuse,
-    Specular
+    Specular,
+    Emission,
+    Opacity
 };
 
 struct MeshTexture {
     MeshTextureType type;
-    SharedPtr<Texture2D> texture { nullptr };
+    std::string textureName;
+    SharedPtr<Texture2D> texturePtr;
+
+    void LoadTexture(const std::string& textureDir);
 };
 
 class Mesh {
 public:
     Mesh();
     Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices);
-    Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices, const std::vector<MeshTexture>& textures);
+    Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices, std::vector<MeshTexture>&& textures);
 
     virtual ~Mesh() = default;
 
-    void Draw(const SharedPtr<elv::Shader>& shader);
+    void Draw(const SharedPtr<elv::Shader>& shader) const;
 
-    void SetTextures(const std::vector<MeshTexture>& textures);
+    void SetTextures(std::vector<MeshTexture>&& textures);
+
+    void LoadTexturesAsync(const std::string& dir);
 
 protected:
     void SetupMesh();

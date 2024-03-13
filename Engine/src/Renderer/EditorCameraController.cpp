@@ -46,6 +46,13 @@ void EditorCameraController::ProcessInput(float dt)
     }
 }
 
+void EditorCameraController::OnMouseScrolled(const events::MouseScrolledEvent& e)
+{
+    if (m_isMoveEnabled) {
+        m_cameraMovementSpeed += e.yOffset;
+    }
+}
+
 void EditorCameraController::OnMouseButtonPressed(const events::MouseButtonPressedEvent& e)
 {
     if (e.button == Mouse::ButtonRight) {

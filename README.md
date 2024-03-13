@@ -29,11 +29,11 @@ Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for
 
 ### CMake build options
 You can modify configure file to enable/disable the following cmake options:
-- BUILD_SANDBOX (default ON): Enable Sandbox2D and Sandbox3D projects build
-- BUILD_GAMES (default ON): Enable Games build
-- PROFILE_MODE (default ON): Enable Profiling (`PROFILE_MODE` preprocessor definition will be added)
-- EDITOR_MODE (default ON): Enable Editor (`EDITOR_MODE` preprocessor definition will be added)
-- ASSIMP_MODE (default ON): Enable Assimp library for 3D model loading (`ASSIMP_MODE` preprocessor definition will be added). **IMPORTANT**: ON - only Sandbox3D project will be configured, OFF - only Sandbox2D and Games projects will be configured.
+- **BUILD_SANDBOX** (default ON): Enable Sandbox2D and Sandbox3D projects build
+- **BUILD_GAMES** (default ON): Enable Games build
+- **PROFILE_MODE** (default ON): Enable Profiling (`PROFILE_MODE` preprocessor definition will be added)
+- **EDITOR_MODE** (default ON): Enable Editor (`EDITOR_MODE` preprocessor definition will be added)
+- **ASSIMP_MODE** (default ON): Enable Assimp library for 3D model loading (`ASSIMP_MODE` preprocessor definition will be added). **IMPORTANT**: ON - only Sandbox3D project will be configured, OFF - only Sandbox2D and Games projects will be configured.
 
 ## Features
 + [x] Logging system
@@ -114,3 +114,4 @@ https://github.com/denyskryvytskyi/ElvenEngine/assets/25298585/f0d32c8b-1ed2-44e
 | [irrKlang](https://www.ambiera.com/irrklang/) | sound library |
 | [fmt](https://github.com/fmtlib/fmt) | formatting library |
 | [freetype](https://freetype.org/) | fonts rendering |
+| [assimp](https://github.com/assimp/assimp) | 3D moodel loading |

@@ -141,6 +141,8 @@ void TextRenderer::RenderText(std::string_view text, const std::string& fontName
 
         RenderCommand::DrawIndexed(s_data.vao, quadIndexCount);
 
+        glyph.texture->Unbind();
+
         // now advance cursors for next glyph
         currentGlyphPosX += s_data.pixelToCamera.x * scale.x * static_cast<float>(glyph.advance >> 6); // bitshift by 6 to get value in pixels (1/64th times 2^6 = 64)
     }

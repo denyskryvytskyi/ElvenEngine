@@ -7,6 +7,7 @@
 #include "Scene/Behavior.h"
 
 // SpriteComponent
+#include "Core/FileSystem.h"
 #include "Core/StringId.h"
 #include "Events/EventManager.h"
 #include "Events/TextureEvent.h"
@@ -44,7 +45,7 @@ void SpriteComponent::LoadTexture()
         } else if (texturePath.empty()) {
             EL_CORE_WARN("Failed to set texture to the Sprite component, texturePath is missed");
         } else {
-            textures::Load(textureName, texturePath);
+            textures::Load(textureName, fmt::format("{}{}", fileSystem::IMAGES_PATH, texturePath));
 
             events::Subscribe<events::TextureLoadedEvent>([&](const events::TextureLoadedEvent& e) {
                 if (e.textureName == textureName) {
