@@ -67,7 +67,7 @@ Application::Application()
     // fps counter
     if (gEngineSettings.enableFpsCounter) {
         m_fpsCounterEntityId = scene.CreateEntity();
-        scene.AddComponent<elv::RectTransformComponent>(m_fpsCounterEntityId, lia::vec2(0.0f, 100.0f), lia::vec2(0.6f, 0.6f));
+        scene.AddComponent<elv::RectTransformComponent>(m_fpsCounterEntityId, lia::vec2(0.5f, 97.0f), lia::vec2(0.4f, 0.4f));
         scene.AddComponent<elv::TextComponent>(m_fpsCounterEntityId, "0");
     }
 }
@@ -116,7 +116,7 @@ void Application::Run()
 
         if (gEngineSettings.enableFpsCounter) {
             GetScene().GetComponent<elv::TextComponent>(m_fpsCounterEntityId).text
-                = fmt::format("{:0.3f} ms ({} FPS)", s_telemetry.frameTime, static_cast<int>(std::floor(s_telemetry.fps)));
+                = fmt::format("{:0.3f} ms ({} fps)", s_telemetry.frameTime, static_cast<int>(std::floor(s_telemetry.fps)));
         }
 
         /// Update step ////////////////////

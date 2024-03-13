@@ -125,8 +125,10 @@ void TextRenderer::RenderText(std::string_view text, const std::string& fontName
 
         const float xpos = currentGlyphPosX + glyph.offset.x * scale.x;
 
-        float ypos = convertedPos.y - (s_data.topGlyphOffsetY + glyph.size.y - glyph.offset.y) * scale.y;
-        ypos = std::max(s_data.cameraBounds.bottom, ypos);
+        const float delta = glyph.size.y - glyph.offset.y; // glyph height - bearing
+        float ypos = convertedPos.y - (s_data.topGlyphOffsetY + delta) * scale.y;
+        // clamp to the camera bottom
+        ypos = std::max(s_data.cameraBounds.bottom - delta * scale.y, ypos);
 
         const float vertices[4][4] = {
             { xpos, ypos + h, 0.0f, 0.0f },
