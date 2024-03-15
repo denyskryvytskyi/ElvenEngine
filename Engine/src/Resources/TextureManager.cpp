@@ -39,7 +39,7 @@ static void LoadTextureFromFile(std::vector<TextureManager::LoadedTextureInfo>& 
 }
 } // namespace
 
-void TextureManager::Load(const std::string& textureName, const std::string& filePath)
+void TextureManager::Load(const std::string& textureName, const std::string& filePath, const bool isAsync)
 {
     // check whether we already loaded this texture
     auto it = m_textures.find(textureName);
@@ -49,14 +49,17 @@ void TextureManager::Load(const std::string& textureName, const std::string& fil
         auto inProgressTexture = m_textureLoadingInProgress.find(textureName);
 
         if (inProgressTexture == m_textureLoadingInProgress.end()) {
-            if (it == m_textures.end()) {
-                m_textureLoadingInProgress.insert(textureName);
+            m_textureLoadingInProgress.insert(textureName);
+            if (isAsync) {
                 m_futures.push_back(std::async(std::launch::async, LoadTextureFromFile, std::ref(m_loadedInfo), textureName, filePath));
             } else {
-                EL_CORE_INFO("Texture {0} is already loaded.", textureName);
+                LoadTextureFromFile(m_loadedInfo, textureName, filePath);
             }
         }
+        return;
     }
+
+    EL_CORE_INFO("Texture {0} is already loaded.", textureName);
 }
 
 SharedPtr<Texture2D> TextureManager::Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels)

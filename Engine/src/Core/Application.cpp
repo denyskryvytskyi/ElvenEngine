@@ -11,6 +11,7 @@
 #include "Renderer/Renderer2D.h"
 #include "Renderer/TextRenderer.h"
 
+#include "Resources/MeshLibrary.h"
 #include "Resources/TextureManager.h"
 
 #include "Events/EventManager.h"
@@ -82,6 +83,7 @@ Application::~Application()
 
     gAudioManager.Shutdown();
     events::gEventManager.Shutdown();
+    gMeshLibrary.Shutdown();
     gSceneManager.Shutdown();
     gTextureManager.Shutdown();
     Renderer::Shutdown();
@@ -121,6 +123,7 @@ void Application::Run()
 
         /// Update step ////////////////////
 
+        gMeshLibrary.OnUpdate();
         gTextureManager.OnUpdate();
         gSceneManager.Update(elapsedTime);
 

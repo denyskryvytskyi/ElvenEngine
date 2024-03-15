@@ -5,39 +5,11 @@
 #include "Texture2D.h"
 #include "VertexArray.h"
 
-#include "Core/StringId.h"
-#include "Events/EventManager.h"
-#include "Events/TextureEvent.h"
-#include "Resources/TextureManager.h"
-
 namespace elv {
-
-std::pair<const char*, int> GetTextureBindInfo(const MeshTextureType& type)
-{
-    switch (type) {
-    case MeshTextureType::Specular:
-        return std::make_pair<const char*, int>("texture_specular", 1);
-    case MeshTextureType::Emission:
-        return std::make_pair<const char*, int>("texture_emission", 2);
-    case MeshTextureType::Opacity:
-        return std::make_pair<const char*, int>("texture_opacity", 3);
-    }
-
-    return std::make_pair<const char*, int>("texture_diffuse", 0);
-}
 
 Mesh::Mesh()
     : m_vao(elv::VertexArray::Create())
 {
-}
-
-void Mesh::LoadTexturesAsync(const std::string& dir)
-{
-    for (auto& t : m_textures) {
-        if (!t.texturePtr) {
-            t.LoadTexture(dir);
-        }
-    }
 }
 
 Mesh::Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices)
@@ -48,44 +20,39 @@ Mesh::Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint3
     SetupMesh();
 }
 
-Mesh::Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices, std::vector<MeshTexture>&& textures)
+Mesh::Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices, const std::vector<MeshTexture>& texturesInfo)
     : m_vertices(vertices)
     , m_indices(indices)
-    , m_textures(textures)
     , m_vao(elv::VertexArray::Create())
 {
     SetupMesh();
+    SetupMaterial(texturesInfo);
+}
+
+void Mesh::LoadTextures(const std::string& dir, const bool async)
+{
+    m_material.LoadTextures(dir, async);
+    for (auto& submesh : m_submeshes) {
+        submesh.LoadTextures(dir, async);
+    }
+}
+
+void Mesh::AddSubmesh(Mesh&& submesh)
+{
+    m_submeshes.emplace_back(std::move(submesh));
 }
 
 void Mesh::Draw(const SharedPtr<Shader>& shader) const
 {
-    int textureUnit = 0;
-    for (auto& meshTexture : m_textures) {
-        if (!meshTexture.texturePtr)
-            continue;
-
-        const auto info = GetTextureBindInfo(meshTexture.type);
-
-        meshTexture.texturePtr->BindToUnit(info.second);
-
-        shader->SetInteger(fmt::format("u_Material.{}", info.first), info.second);
-        ++textureUnit;
-    }
-
     m_vao->Bind();
+    m_material.ApplyMaterial(shader);
     RenderCommand::DrawIndexed(m_vao);
+    m_material.ResetMaterial();
 
-    for (auto& meshTexture : m_textures) {
-        if (!meshTexture.texturePtr)
-            continue;
-
-        meshTexture.texturePtr->Unbind();
+    // draw submeshes
+    for (auto& submesh : m_submeshes) {
+        submesh.Draw(shader);
     }
-}
-
-void Mesh::SetTextures(std::vector<MeshTexture>&& textures)
-{
-    m_textures = std::move(textures);
 }
 
 void Mesh::SetupMesh()
@@ -101,23 +68,10 @@ void Mesh::SetupMesh()
     m_vao->SetIndexBuffer(ebo);
 }
 
-void MeshTexture::LoadTexture(const std::string& textureDir)
+void Mesh::SetupMaterial(const std::vector<MeshTexture>& texturesInfo)
 {
-    if (texturePtr)
-        return;
-
-    auto readyTexturePtr = textures::Get(textureName);
-    if (readyTexturePtr) {
-        texturePtr = readyTexturePtr;
-    } else {
-        textures::Load(textureName, fmt::format("{}/{}", textureDir, textureName));
-
-        events::Subscribe<events::TextureLoadedEvent>([&](const events::TextureLoadedEvent& e) mutable {
-            if (e.textureName == textureName) {
-                texturePtr = textures::Get(textureName);
-            }
-        },
-                                                      string_id(textureName));
+    for (const auto& textureInfo : texturesInfo) {
+        m_material.SetTexture(textureInfo.slotType, textureInfo.name);
     }
 }
 } // namespace elv

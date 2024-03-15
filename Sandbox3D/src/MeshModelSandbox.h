@@ -1,17 +1,12 @@
 #pragma once
 
 #include <Elven.h>
-#include <Renderer/VertexArray.h>
 
-#include <Renderer/Model.h>
+#include "Helpers/EnvironmentSettings.h"
 
 // forward declarations
 namespace elv::events {
 class TextureLoadedEvent;
-}
-
-namespace meshModel {
-const int kPointLightsAmount = 4;
 }
 
 class MeshModelSandbox : public elv::Application {
@@ -55,18 +50,16 @@ private:
     elv::SharedPtr<elv::Shader> m_shader { nullptr };
 
     // mesh
-    elv::UniquePtr<elv::Mesh> m_cubeMesh { nullptr };
+    elv::SharedPtr<elv::Mesh> m_cubeMesh { nullptr };
 
     // light
-    elv::PointLight m_pointLights[meshModel::kPointLightsAmount];
+    elv::PointLight m_pointLights[kPointLightsAmount];
     elv::DirectionalLight m_dirLight;
     elv::SpotLight m_flashlight;
 
-    /*elv::SharedPtr<elv::VertexArray> m_lightVao { nullptr };*/
-    elv::UniquePtr<elv::Mesh> m_lightCubeMesh { nullptr };
+    elv::SharedPtr<elv::Mesh> m_lightCubeMesh { nullptr };
     elv::SharedPtr<elv::Shader> m_lightShader { nullptr };
 
-    // Model
-    elv::Model m_model;
-    elv::ecs::Entity m_backpack;
+    // Models
+    std::vector<elv::ecs::Entity> m_models;
 };

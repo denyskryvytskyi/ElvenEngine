@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Material.h"
+
 namespace elv {
 
 class Shader;
@@ -12,45 +14,41 @@ struct MeshVertex {
     lia::vec2 UV;
 };
 
-enum class MeshTextureType {
-    Diffuse,
-    Specular,
-    Emission,
-    Opacity
-};
-
 struct MeshTexture {
-    MeshTextureType type;
-    std::string textureName;
-    SharedPtr<Texture2D> texturePtr;
-
-    void LoadTexture(const std::string& textureDir);
+    Material::TextureSlot slotType;
+    std::string name;
 };
 
 class Mesh {
 public:
     Mesh();
     Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices);
-    Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices, std::vector<MeshTexture>&& textures);
+    Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices, const std::vector<MeshTexture>& texturesInfo);
 
     virtual ~Mesh() = default;
 
     void Draw(const SharedPtr<elv::Shader>& shader) const;
 
-    void SetTextures(std::vector<MeshTexture>&& textures);
+    void LoadTextures(const std::string& dir, const bool async);
 
-    void LoadTexturesAsync(const std::string& dir);
+    void AddSubmesh(Mesh&& submesh);
+
+    Material& GetMaterial() { return m_material; }
 
 protected:
     void SetupMesh();
 
+private:
+    void SetupMaterial(const std::vector<MeshTexture>& texturesInfo);
+
 protected:
     std::vector<MeshVertex> m_vertices;
     std::vector<std::uint32_t> m_indices;
-    std::vector<MeshTexture> m_textures;
+    Material m_material;
 
 private:
     SharedPtr<VertexArray> m_vao { nullptr };
+    std::vector<Mesh> m_submeshes;
 };
 
 } // namespace elv

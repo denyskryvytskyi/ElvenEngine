@@ -25,6 +25,7 @@ set(ENGINE_HEADERS
 "src/Events/MouseEvent.h"
 "src/Events/TextureEvent.h"
 "src/Events/PhysicsEvent.h"
+"src/Events/MeshEvent.h"
 "src/Renderer/Buffer.h"
 "src/Renderer/GraphicsContext.h"
 "src/Renderer/Camera.h"
@@ -42,7 +43,6 @@ set(ENGINE_HEADERS
 "src/Renderer/Material.h"
 "src/Renderer/Light.h"
 "src/Renderer/Mesh.h"
-"src/Renderer/Model.h"
 "src/Renderer/Primitives/Cube.h"
 "src/Platform/Windows/WindowsWindow.h"
 "src/Platform/OpenGL/OpenGLBuffer.h"
@@ -62,12 +62,15 @@ set(ENGINE_HEADERS
 "src/Scene/Components/ComponentSerializerHelper.h"
 "src/Scene/Components/SceneComponents.h"
 "src/Scene/Components/TransformComponent.h"
+"src/Scene/Components/StaticMeshComponent.h"
 "src/Scene/Systems/Render2dSystem.h"
 "src/Scene/Systems/BehaviorSystem.h"
 "src/Scene/Systems/Physics2dSystem.h"
 "src/Resources/TextureManager.h"
 "src/Resources/AudioManager.h"
 "src/Resources/FontManager.h"
+"src/Resources/MeshLibrary.h"
+"src/Resources/ModelImporter.h"
 )
 
 #editor stuff
@@ -101,7 +104,7 @@ set(ENGINE_SOURCES
 "src/Renderer/VertexArray.cpp"
 "src/Renderer/TextRenderer.cpp"
 "src/Renderer/Mesh.cpp"
-"src/Renderer/Model.cpp"
+"src/Renderer/Material.cpp"
 "src/Renderer/Primitives/Cube.cpp"
 "src/Platform/OpenGL/OpenGLBuffer.cpp"
 "src/Platform/OpenGL/OpenGLContext.cpp"
@@ -121,12 +124,15 @@ set(ENGINE_SOURCES
 "src/Scene/Components/ComponentSerializerHelper.cpp"
 "src/Scene/Components/SceneComponents.cpp"
 "src/Scene/Components/TransformComponent.cpp"
+"src/Scene/Components/StaticMeshComponent.cpp"
 "src/Scene/Systems/Render2dSystem.cpp"
 "src/Scene/Systems/BehaviorSystem.cpp"
 "src/Scene/Systems/Physics2dSystem.cpp"
 "src/Resources/TextureManager.cpp"
 "src/Resources/AudioManager.cpp"
 "src/Resources/FontManager.cpp"
+"src/Resources/MeshLibrary.cpp"
+"src/Resources/ModelImporter.cpp"
 ${ENGINE_HEADERS}
 )
 

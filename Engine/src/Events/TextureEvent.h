@@ -5,7 +5,7 @@ namespace elv::events {
 
 class TextureLoadedEvent : public Event {
 public:
-    TextureLoadedEvent(std::string_view texture_name)
+    TextureLoadedEvent(const std::string& texture_name)
         : textureName(texture_name) {};
 
     EVENT_TYPE("TextureLoadedEvent")
@@ -16,7 +16,7 @@ public:
     }
 
 public:
-    std::string_view textureName;
+    std::string textureName;
 };
 
 } // namespace elv::events

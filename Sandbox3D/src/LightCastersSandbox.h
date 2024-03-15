@@ -3,12 +3,12 @@
 #include <Elven.h>
 #include <Renderer/VertexArray.h>
 
+#include "Helpers/EnvironmentSettings.h"
+
 // forward declarations
 namespace elv::events {
 class TextureLoadedEvent;
 }
-
-static const int kPointLightsAmount = 4;
 
 class LightCastersSandbox : public elv::Application {
 public:

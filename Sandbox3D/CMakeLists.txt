@@ -8,6 +8,7 @@ set(SANDBOX_SOURCES
     "src/LightCastersSandbox.cpp"
     "src/MeshModelSandbox.h"
     "src/MeshModelSandbox.cpp"
+    "src/Helpers/EnvironmentSettings.h"
     "assets/shaders/default.frag"
     "assets/shaders/default.vert"
     "assets/shaders/colors.frag"

@@ -5,156 +5,19 @@
 #include <Renderer/Mesh.h>
 #include <Renderer/Primitives/Cube.h>
 
-#include "Renderer/Model.h"
+#include <Scene/Components/StaticMeshComponent.h>
 
 #if EDITOR_MODE
 #    include <ImGui/EditorHelpers.h>
 #    include <imgui.h>
 #endif
 
-const int kCubesAmount = 500;
-const int kEnvironments = 4;
-
-const lia::vec3 kPointLightPositions[] = {
-    lia::vec3(0.0f, 0.8f, 1.2f),
-    lia::vec3(2.3f, -3.3f, -4.0f),
-    lia::vec3(-4.0f, 2.0f, -12.0f),
-    lia::vec3(0.0f, 0.0f, -3.0f)
-};
-
-const lia::vec3 kCubePositions[] = {
-    lia::vec3(0.0f, 0.0f, 0.0f),
-    lia::vec3(2.0f, 5.0f, -15.0f),
-    lia::vec3(-1.5f, -2.2f, -2.5f),
-    lia::vec3(-3.8f, -2.0f, -12.3f),
-    lia::vec3(2.4f, -0.4f, -3.5f),
-    lia::vec3(-1.7f, 3.0f, -7.5f),
-    lia::vec3(1.3f, -2.0f, -2.5f),
-    lia::vec3(1.5f, 2.0f, -2.5f),
-    lia::vec3(1.5f, 0.2f, -1.5f),
-    lia::vec3(-1.3f, 1.0f, -1.5f)
-};
-
-struct SpotLightEnvironmentSetting {
-    lia::vec3 ambient;
-    lia::vec3 diffuse;
-    lia::vec3 specular;
-};
-
-struct EnvironmentMaterials {
-    lia::vec4 clearColor;
-
-    elv::DirectionalLight dirLight;
-    SpotLightEnvironmentSetting spotLight;
-
-    lia::vec3 pointLightColors[meshModel::kPointLightsAmount];
-};
-
-const EnvironmentMaterials kEnvironmenMaterials[kEnvironments] = {
-    // ============== DESERT ================
-    {
-
-        // clear color
-        { 0.75f, 0.52f, 0.3f, 1.0f },
-        // dir light
-        {
-            { -0.2f, -1.0f, -0.3f }, // direction
-            { 0.3f, 0.24f, 0.14f },  // ambient
-            { 0.7f, 0.42f, 0.26f },  // deffuse
-            { 0.5f, 0.5f, 0.5f },    // specular
-        },
-        // spot light
-        {
-            { 0.0f, 0.0f, 0.0f }, // ambient
-            { 0.8f, 0.8f, 0.0f }, // deffuse
-            { 0.8f, 0.8f, 0.0f }, // specular
-        },
-        // point lights
-        {
-            { 1.0f, 0.6f, 0.0f },
-            { 1.0f, 0.0f, 0.0f },
-            { 1.0f, 1.0f, 0.0f },
-            { 0.2f, 0.2f, 1.0f } } },
-    // ============== FACTORY ================
-    {
-
-        // clear color
-        { 0.1f, 0.1f, 0.1f, 1.0f },
-        // dir light
-        {
-            { -0.2f, -1.0f, -0.3f }, // direction
-            { 0.05f, 0.05f, 0.1f },  // ambient
-            { 0.2f, 0.2f, 0.7f },    // deffuse
-            { 0.7f, 0.7f, 0.7f },    // specular
-        },
-        // spot light
-        {
-            { 0.0f, 0.0f, 0.0f }, // ambient
-            { 1.0f, 1.0f, 1.0f }, // deffuse
-            { 1.0f, 1.0f, 1.0f }, // specular
-        },
-        // point lights
-        {
-            { 0.2f, 0.2f, 0.6f },
-            { 0.3f, 0.3f, 0.7f },
-            { 0.0f, 0.0f, 0.3f },
-            { 0.4f, 0.4f, 0.4f } } },
-    // ============== HORROR ================
-    {
-
-        // clear color
-        { 0.0f, 0.0f, 0.0f, 1.0f },
-        // dir light
-        {
-            { -0.2f, -1.0f, -0.3f }, // direction
-            { 0.0f, 0.0f, 0.0f },    // ambient
-            { 0.05f, 0.05f, 0.05f }, // deffuse
-            { 0.2f, 0.2f, 0.2f },    // specular
-        },
-        // spot light
-        {
-            { 0.0f, 0.0f, 0.0f }, // ambient
-            { 1.0f, 1.0f, 1.0f }, // deffuse
-            { 1.0f, 1.0f, 1.0f }, // specular
-        },
-        // point lights
-        {
-
-            { 0.1f, 0.1f, 0.1f },
-            { 0.1f, 0.1f, 0.1f },
-            { 0.1f, 0.1f, 0.1f },
-            { 0.3f, 0.1f, 0.1f } } },
-    // ============== BIOCHEMICAL LAB ================
-    {
-
-        // clear color
-        { 0.9f, 0.9f, 0.9f, 1.0f },
-        // dir light
-        {
-            { -0.2f, -1.0f, -0.3f }, // direction
-            { 0.5f, 0.5f, 0.5f },    // ambient
-            { 1.0f, 1.0f, 1.0f },    // deffuse
-            { 1.0f, 1.0f, 1.0f },    // specular
-        },
-        // spot light
-        {
-            { 0.0f, 0.0f, 0.0f }, // ambient
-            { 0.0f, 1.0f, 0.0f }, // deffuse
-            { 0.0f, 1.0f, 0.0f }, // specular
-        },
-        // point lights
-        {
-            { 0.4f, 0.7f, 0.1f },
-            { 0.4f, 0.7f, 0.1f },
-            { 0.4f, 0.7f, 0.1f },
-            { 0.4f, 0.7f, 0.1f } } }
-};
+const int kCubesAmount = 1;
 
 MeshModelSandbox::MeshModelSandbox()
     : m_cameraController(45.0f, 1280.0f / 720.0f, 0.1f, 1000.0f)
-    , m_lightCubeMesh(elv::MakeUniquePtr<elv::Cube>())
+    , m_lightCubeMesh(elv::MakeSharedPtr<elv::Cube>())
     , m_textureLoadedCallback([this](const elv::events::TextureLoadedEvent& e) { OnTextureLoaded(e); })
-    , m_model(elv::Model("assets/models/cerberus/cerberus.fbx"))
 {
     // load textures
     const uint64_t hash = elv::string_id("wooden_container");
@@ -175,7 +38,7 @@ MeshModelSandbox::MeshModelSandbox()
     // light setup
     m_lightShader = elv::ShaderManager::Load("light_shader", "light_cube.vert", "light_cube.frag");
 
-    for (size_t i = 0; i < meshModel::kPointLightsAmount; i++) {
+    for (size_t i = 0; i < kPointLightsAmount; i++) {
         m_pointLights[i].position = kPointLightPositions[i];
     }
 
@@ -185,10 +48,15 @@ MeshModelSandbox::MeshModelSandbox()
     // model loading
     auto& scene = elv::GetScene();
 
-    m_backpack = scene.CreateEntity();
+    const auto entity = scene.CreateEntity();
+    m_models.emplace_back(entity);
+    scene.AddComponent<elv::TransformComponent>(entity, lia::vec3(0.0f, 5.0f, 0.0f), lia::vec3(0.01f));
+    scene.AddComponent<elv::StaticMeshComponent>(entity, "cerberus", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "cerberus/cerberus.fbx"));
 
-    auto& transform = scene.AddComponent<elv::TransformComponent>(m_backpack);
-    transform.scale = lia::vec3(0.1f);
+    const auto sponza = scene.CreateEntity();
+    m_models.emplace_back(sponza);
+    scene.AddComponent<elv::TransformComponent>(sponza, lia::vec3(0.0f), lia::vec3(0.01f));
+    scene.AddComponent<elv::StaticMeshComponent>(sponza, "sponza", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "sponza/sponza.obj"));
 }
 
 void MeshModelSandbox::OnUpdate(float dt)
@@ -228,7 +96,7 @@ void MeshModelSandbox::OnRender(float dt)
     // point light
     m_shader->SetInteger("u_PointLightEnabled", m_PointLightEnabled);
     if (m_PointLightEnabled) {
-        for (size_t i = 0; i < meshModel::kPointLightsAmount; ++i) {
+        for (size_t i = 0; i < kPointLightsAmount; ++i) {
             m_shader->SetVector3f(fmt::format("u_PointLights[{}].position", i), m_pointLights[i].position);
             m_shader->SetVector3f(fmt::format("u_PointLights[{}].ambient", i), m_pointLights[i].ambient);
             m_shader->SetVector3f(fmt::format("u_PointLights[{}].diffuse", i), m_pointLights[i].diffuse);
@@ -258,32 +126,32 @@ void MeshModelSandbox::OnRender(float dt)
     }
 
     auto& scene = elv::GetScene();
+
     // render cubes
+    for (auto cube : m_cubes) {
+        auto& transform = scene.GetComponent<elv::TransformComponent>(cube);
 
-    // auto texture = elv::textures::Get("wooden_container");
-    // texture->BindToUnit(0);
-
-    // auto texture1 = elv::textures::Get("wooden_container_specular");
-    // texture1->BindToUnit(1);
-
-    ///*auto texture2 = elv::textures::Get("matrix");
-    // texture->BindToUnit(2);*/
-    // for (auto cube : m_cubes) {
-    //    auto& transform = scene.GetComponent<elv::TransformComponent>(cube);
-
-    //    m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(transform.worldMatrix));
-    //    elv::Renderer::Submit(m_shader, m_cubeMesh, transform.worldMatrix);
-    //}
+        m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(transform.worldMatrix));
+        elv::Renderer::Submit(m_shader, m_cubeMesh, transform.worldMatrix);
+    }
 
     // render model
-    auto& transform = scene.GetComponent<elv::TransformComponent>(m_backpack);
-    m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(transform.worldMatrix));
-    elv::Renderer::Submit(m_shader, m_model, transform.worldMatrix);
+    for (const auto modelEntity : m_models) {
+        const auto& transform = scene.GetComponent<elv::TransformComponent>(modelEntity);
+        m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(transform.worldMatrix));
+
+        const auto& staticMesh = scene.GetComponent<elv::StaticMeshComponent>(modelEntity);
+
+        const auto& meshPtr = staticMesh.GetMeshPtr();
+        if (meshPtr) {
+            elv::Renderer::Submit(m_shader, staticMesh.GetMeshPtr(), transform.worldMatrix);
+        }
+    }
 
     // render point lights
     if (m_PointLightEnabled) {
         m_lightShader->Bind();
-        for (size_t i = 0; i < meshModel::kPointLightsAmount; ++i) {
+        for (size_t i = 0; i < kPointLightsAmount; ++i) {
             m_lightShader->SetVector3f("u_Color.ambient", m_pointLights[i].ambient);
             m_lightShader->SetVector3f("u_Color.diffuse", m_pointLights[i].diffuse);
 
@@ -347,21 +215,21 @@ void MeshModelSandbox::OnImguiRender()
         }
     }
 
-    if (ImGui::CollapsingHeader("Backpack")) {
+    if (ImGui::CollapsingHeader("Model")) {
 
         ImGui::Text("Transform:");
 
         auto& scene = elv::GetScene();
-        auto& backpackTransformComponent = scene.GetComponent<elv::TransformComponent>(m_backpack);
-        if (elv::editor::DrawVec3Control("backpack_pos", "Position", backpackTransformComponent.pos)) {
-            backpackTransformComponent.isDirty = true;
+        auto& modelTransformComponent = scene.GetComponent<elv::TransformComponent>(m_models.at(0));
+        if (elv::editor::DrawVec3Control("model_pos", "Position", modelTransformComponent.pos)) {
+            modelTransformComponent.isDirty = true;
         }
 
-        if (elv::editor::DrawVec3Control("backpack_rotation", "Rotation", backpackTransformComponent.rotation)) {
-            backpackTransformComponent.isDirty = true;
+        if (elv::editor::DrawVec3Control("model_rotation", "Rotation", modelTransformComponent.rotation)) {
+            modelTransformComponent.isDirty = true;
         }
-        if (elv::editor::DrawVec3Control("backpack_scale", "Scale", backpackTransformComponent.scale)) {
-            backpackTransformComponent.isDirty = true;
+        if (elv::editor::DrawVec3Control("model_scale", "Scale", modelTransformComponent.scale)) {
+            modelTransformComponent.isDirty = true;
         }
         ImGui::Separator();
     }
@@ -380,7 +248,7 @@ void MeshModelSandbox::OnImguiRender()
     if (ImGui::CollapsingHeader("Point Lights")) {
         ImGui::Checkbox("Enable Point Lights", &m_PointLightEnabled);
         ImGui::Separator();
-        for (size_t i = 0; i < meshModel::kPointLightsAmount; ++i) {
+        for (size_t i = 0; i < kPointLightsAmount; ++i) {
             if (ImGui::TreeNode(fmt::format("Point light {}", i).c_str())) {
                 elv::editor::DrawVec3Control(fmt::format("point_light_pos_{}", i), "Position", m_pointLights[i].position);
                 ImGui::Separator();
@@ -430,7 +298,7 @@ void MeshModelSandbox::SetEnvironment(const int envIndex)
     m_flashlight.diffuse = env.spotLight.diffuse;
     m_flashlight.specular = env.spotLight.specular;
 
-    for (size_t i = 0; i < meshModel::kPointLightsAmount; ++i) {
+    for (size_t i = 0; i < kPointLightsAmount; ++i) {
         m_pointLights[i].ambient = env.pointLightColors[i] * 0.1f;
         m_pointLights[i].diffuse = env.pointLightColors[i];
         m_pointLights[i].specular = env.pointLightColors[i];
@@ -439,16 +307,18 @@ void MeshModelSandbox::SetEnvironment(const int envIndex)
 
 void MeshModelSandbox::SetupCubeMesh()
 {
-    auto texture = elv::textures::Get("wooden_container");
-    auto texture1 = elv::textures::Get("wooden_container_specular");
+    auto diffuse = elv::textures::Get("wooden_container");
+    auto specular = elv::textures::Get("wooden_container_specular");
 
     std::vector<elv::MeshTexture> meshTextures = {
-        { elv::MeshTextureType::Diffuse, "1", texture },
-        { elv::MeshTextureType::Specular, "2", texture1 }
+        { elv::Material::TextureSlot::Diffuse, "1" },
+        { elv::Material::TextureSlot::Specular, "2" }
     };
 
-    m_cubeMesh = elv::MakeUniquePtr<elv::Cube>();
-    m_cubeMesh->SetTextures(std::move(meshTextures));
+    m_cubeMesh = elv::MakeSharedPtr<elv::Cube>();
+    auto& material = m_cubeMesh->GetMaterial();
+    material.SetTexture(elv::Material::TextureSlot::Diffuse, "texture_diffuse", diffuse);
+    material.SetTexture(elv::Material::TextureSlot::Specular, "texture_specular", specular);
 
     // setup cubes
     auto& scene = elv::GetScene();
@@ -458,12 +328,12 @@ void MeshModelSandbox::SetupCubeMesh()
 
     auto& transform = scene.AddComponent<elv::TransformComponent>(mainCube);
 
-    for (size_t i = 1; i < kCubesAmount; ++i) {
+    for (size_t i = 0; i < kCubesAmount; ++i) {
 
         auto cube = scene.CreateChildEntity(mainCube);
         m_cubes.emplace_back(cube);
 
         auto& transform = scene.AddComponent<elv::TransformComponent>(cube);
-        transform.pos = lia::vec3(1.0f * i);
+        transform.pos = kCubePositions[i];
     }
 }

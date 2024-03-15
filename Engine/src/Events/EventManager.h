@@ -30,9 +30,9 @@ private:
 extern EventManager gEventManager;
 
 template<typename EventType>
-inline void Subscribe(const EventHandler<EventType>& callback, HandlerId handlerId = 0)
+inline void Subscribe(const EventHandler<EventType>& callback, HandlerId handlerId = 0, const bool unsubscribeOnSuccess = false)
 {
-    UniquePtr<IEventHandlerWrapper> handler = MakeUniquePtr<EventHandlerWrapper<EventType>>(callback);
+    UniquePtr<IEventHandlerWrapper> handler = MakeUniquePtr<EventHandlerWrapper<EventType>>(callback, unsubscribeOnSuccess);
     gEventManager.Subscribe(EventType::GetStaticEventType(), std::move(handler), handlerId);
 }
 

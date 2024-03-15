@@ -8,6 +8,7 @@ struct Material {
     sampler2D texture_opacity;
     float shininess;
     bool enableEmission;
+    bool enableTextureOpacity;
 };
 
 struct DirLight {
@@ -96,7 +97,13 @@ void main()
         discard;
     }
 
-    FragColor = vec4(result, 1.0);
+    float alpha = 1.0;
+    if (u_Material.enableTextureOpacity)
+    {
+        alpha = texture(u_Material.texture_opacity, v_UV).r;
+    }
+
+    FragColor = vec4(result, alpha);
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)

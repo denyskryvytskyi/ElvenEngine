@@ -67,7 +67,7 @@ public:
 void to_json(nlohmann::json& j, const SpriteComponent& t);
 void from_json(const nlohmann::json& j, SpriteComponent& t);
 
-// spritesheet animation
+// TODO: spritesheet animation
 struct SriteAnimation {
     SriteAnimation(int frames_count, float time_per_frame)
         : framesCount(frames_count)

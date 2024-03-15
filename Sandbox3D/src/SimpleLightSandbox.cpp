@@ -151,10 +151,10 @@ void SimpleLightSandbox::OnRender(float dt)
     m_shader->SetVector3f("u_ViewPos", camera.GetPosition());
 
     // cube material
-    m_shader->SetVector3f("u_Material.ambient", m_cubeMaterial.ambient);
-    m_shader->SetVector3f("u_Material.diffuse", m_cubeMaterial.diffuse);
-    m_shader->SetVector3f("u_Material.specular", m_cubeMaterial.specular);
-    m_shader->SetFloat("u_Material.shininess", m_cubeMaterial.shininess);
+    m_shader->SetVector3f("u_Material.ambient", m_cubeMaterial.GetAmbientColor());
+    m_shader->SetVector3f("u_Material.diffuse", m_cubeMaterial.GetDiffuseColor());
+    m_shader->SetVector3f("u_Material.specular", m_cubeMaterial.GetSpecularColor());
+    m_shader->SetFloat("u_Material.shininess", m_cubeMaterial.GetShininess());
 
     if (m_lightDemoRotationEnabled) {
         m_light.position.x = sin(m_timer.Elapsed()) * 2.0f;
@@ -203,10 +203,16 @@ void SimpleLightSandbox::OnImguiRender()
     ImGui::Separator();
 
     ImGui::Text("Cube Material");
-    elv::editor::DrawRGBColorControl("ambient", m_cubeMaterial.ambient);
-    elv::editor::DrawRGBColorControl("diffuse", m_cubeMaterial.diffuse);
-    elv::editor::DrawRGBColorControl("specular", m_cubeMaterial.specular);
-    elv::editor::DrawSliderFloat("shininess", 1.0f, 256.0f, m_cubeMaterial.shininess);
+    auto ambient = m_cubeMaterial.GetAmbientColor();
+    auto diffuse = m_cubeMaterial.GetDiffuseColor();
+    auto specular = m_cubeMaterial.GetSpecularColor();
+    auto shininess = m_cubeMaterial.GetShininess();
+
+    elv::editor::DrawRGBColorControl("ambient", ambient);
+    elv::editor::DrawRGBColorControl("diffuse", diffuse);
+    elv::editor::DrawRGBColorControl("specular", specular);
+    elv::editor::DrawSliderFloat("shininess", 1.0f, 256.0f, shininess);
+
     ImGui::Separator();
 
     auto& lightTransform = scene.GetComponent<elv::TransformComponent>(m_lightEntity);

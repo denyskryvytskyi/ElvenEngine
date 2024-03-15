@@ -19,6 +19,7 @@ public:
     }
 
     virtual std::string GetType() const = 0;
+    virtual bool IsDestroyOnSuccess() const = 0;
 
 private:
     virtual void Call(const Event& e) = 0;
@@ -27,9 +28,11 @@ private:
 template<typename EventType>
 class EventHandlerWrapper : public IEventHandlerWrapper {
 public:
-    explicit EventHandlerWrapper(const EventHandler<EventType>& handler)
+    explicit EventHandlerWrapper(const EventHandler<EventType>& handler, const bool destroyOnSuccess = false)
         : m_handler(handler)
-        , m_handlerType(m_handler.target_type().name()) {};
+        , m_handlerType(m_handler.target_type().name())
+        , m_destroyOnSuccess(destroyOnSuccess)
+    { }
 
 private:
     void Call(const Event& e) override
@@ -40,8 +43,10 @@ private:
     }
 
     std::string GetType() const override { return m_handlerType; }
+    bool IsDestroyOnSuccess() const { return m_destroyOnSuccess; }
 
     EventHandler<EventType> m_handler;
     const std::string m_handlerType;
+    bool m_destroyOnSuccess { false };
 };
 } // namespace elv::events

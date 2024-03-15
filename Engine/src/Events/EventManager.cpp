@@ -81,8 +81,15 @@ void EventManager::TriggerEvent(const Event& event_, HandlerId handlerId)
     auto& handlersMap = m_subscribersByHandlerId[event_.GetEventType()];
     auto handlers = handlersMap.find(handlerId);
     if (handlers != handlersMap.end()) {
-        for (auto& handler : handlers->second) {
+        auto& callbacks = handlers->second;
+        for (auto it = callbacks.begin(); it != callbacks.end();) {
+            auto& handler = *it;
             handler->Exec(event_);
+            if (handler->IsDestroyOnSuccess()) {
+                it = callbacks.erase(it);
+            } else {
+                ++it;
+            }
         }
     }
 }

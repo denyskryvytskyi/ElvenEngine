@@ -33,7 +33,7 @@ void Renderer::Submit(const SharedPtr<Shader>& shader, const SharedPtr<VertexArr
     RenderCommand::DrawIndexed(vertexArray);
 }
 
-void Renderer::Submit(const SharedPtr<Shader>& shader, const UniquePtr<Mesh>& mesh, const lia::mat4& modelMatrix)
+void Renderer::Submit(const SharedPtr<Shader>& shader, const SharedPtr<Mesh>& mesh, const lia::mat4& modelMatrix)
 {
     shader->SetMatrix4("u_ViewProjection", m_sceneData->ViewProjectionMatrix);
     shader->SetMatrix4("u_Model", modelMatrix);
@@ -42,13 +42,13 @@ void Renderer::Submit(const SharedPtr<Shader>& shader, const UniquePtr<Mesh>& me
 }
 
 #if ASSIMP_MODE
-void Renderer::Submit(const SharedPtr<Shader>& shader, const Model& model, const lia::mat4& modelMatrix)
-{
-    shader->SetMatrix4("u_ViewProjection", m_sceneData->ViewProjectionMatrix);
-    shader->SetMatrix4("u_Model", modelMatrix);
-
-    model.Draw(shader);
-}
+// void Renderer::Submit(const SharedPtr<Shader>& shader, const Model& model, const lia::mat4& modelMatrix)
+//{
+//     shader->SetMatrix4("u_ViewProjection", m_sceneData->ViewProjectionMatrix);
+//     shader->SetMatrix4("u_Model", modelMatrix);
+//
+//     model.Draw(shader);
+// }
 #endif
 
 void Renderer::OnWindowResize(std::uint32_t width, std::uint32_t height)
