@@ -27,6 +27,12 @@ Elven Engine is primarily a 2D/3D game engine that is being developed from scrat
   - [x] Batch rendering (quad and texture)
   - [x] Text Rendering
   - [ ] Spritesheet animation
++ [ ] 3D Renderer (IN PROGRESS)
+  - [x] Phong Lighting
+  - [x] Multiple light casters: spotlight, directional, and point light
+  - [x] Mesh-Material system (Static mesh support with one material slot per mesh/submesh for now)
+  - [x] Primitives: cube, sphere, plane
+  - [x] Async 3D model loading and async material textures loading
 + [x] ECS (investigated different techniques and my particular architecture in the [article](https://denyskryvytskyi.github.io/ecs))
   - [x] Data-oriented cache-friendly components system architecture
   - [x] In-Engine components: Transform, Sprite, Text, Quad, Camera, RectTransform, AABB, Tag
@@ -45,12 +51,7 @@ Elven Engine is primarily a 2D/3D game engine that is being developed from scrat
 + [x] Just cool stuff
   - [x] Orthographic camera controller (OrthographicCameraController), that can be used if needed
   - [x] Fly(FPS-like) 3D camera support (CameraController)
-+ [ ] 3D Renderer (IN PROGRESS)
-  - [x] Phong Lighting
-  - [x] Multiple light casters: spotlight, directional, and point light
-  - [x] Mesh-Material system (Static mesh support with one material slot per mesh/submesh for now)
-  - [x] Primitives: cube, sphere, plane
-  - [x] Model loading (Assimp)
+  - [x] Editor camera controller to move on the scene in editor mode.
 + [ ] In-engine editor (based on ImGui)
   - [ ] Scene hierarchy
   - [ ] Properties: transform,
@@ -73,6 +74,7 @@ https://github.com/denyskryvytskyi/ElvenEngine/assets/25298585/f0d32c8b-1ed2-44e
 
 ### 3D rendering
 <img src=".github/demo/models.png">
+
 | Lighting environments with spotlight, directional, and point lights | Cube transformation and simple light |
 | --- | --- | 
 | <img src=".github/demo/light_casters_demo.gif"> | <img src=".github/demo/cube_light_demo.gif"> |
