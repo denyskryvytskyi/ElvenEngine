@@ -10,31 +10,6 @@
 
 Elven Engine is primarily a 2D/3D game engine that is being developed from scratch.
 
-## Getting Started
-
-Windows platform only support for now (Linux and MacOS platforms are for future support)
-
-You can clone the repository using git (**`--recursive`** is required to fetch all of the submodules):
-
-`git clone --recursive https://github.com/kryvytskyidenys/ElvenEngine`
-
-Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for VS 2022 support).
-
-### Windows
-1. Configure and build third-party libraries: `scripts/setup-vendor.bat`
-2. Configure Visual Studio solution for the Engine and Game/Example projects: `scripts/configure-vs2022`. 
-3. Build a solution using one of the following ways:
-   - cmake-based script `scripts/build.bat` (pass Debug/Release as an argument)
-   - Visual Studio (`ElvenEngine.sln` file is placed in the `build` directory).
-
-### CMake build options
-You can modify configure file to enable/disable the following cmake options:
-- **BUILD_SANDBOX** (default ON): Enable Sandbox2D and Sandbox3D projects build
-- **BUILD_GAMES** (default ON): Enable Games build
-- **PROFILE_MODE** (default ON): Enable Profiling (`PROFILE_MODE` preprocessor definition will be added)
-- **EDITOR_MODE** (default ON): Enable Editor (`EDITOR_MODE` preprocessor definition will be added)
-- **ASSIMP_MODE** (default ON): Enable Assimp library for 3D model loading (`ASSIMP_MODE` preprocessor definition will be added). **IMPORTANT**: ON - only Sandbox3D project will be configured, OFF - only Sandbox2D and Games projects will be configured.
-
 ## Features
 + [x] Logging system
 + [x] Event system (non-blocking event queue-based system, described architecture in the [article](https://denyskryvytskyi.github.io/event-system))
@@ -73,12 +48,13 @@ You can modify configure file to enable/disable the following cmake options:
 + [ ] 3D Renderer (IN PROGRESS)
   - [x] Phong Lighting
   - [x] Multiple light casters: spotlight, directional, and point light
-  - [ ] Mesh-Material system
-  - [ ] Primitives: cube, sphere, plane
-  - [ ] Model loading (Assimp)
+  - [x] Mesh-Material system (Static mesh support with one material slot per mesh/submesh for now)
+  - [x] Primitives: cube, sphere, plane
+  - [x] Model loading (Assimp)
 + [ ] In-engine editor (based on ImGui)
   - [ ] Scene hierarchy
-  - [ ] Properties: entity components
+  - [ ] Properties: transform,
+  - [ ] Telemetry: performance panel
   - [ ] Graphics stats
 + [ ] Multithreading support
   - [ ] Thread pool
@@ -96,9 +72,35 @@ https://github.com/denyskryvytskyi/ElvenEngine/assets/25298585/f0d32c8b-1ed2-44e
 | <img src=".github/demo/pong.gif"> | <img src=".github/demo/wizards.gif"> |
 
 ### 3D rendering
+<img src=".github/demo/models.png">
 | Lighting environments with spotlight, directional, and point lights | Cube transformation and simple light |
 | --- | --- | 
 | <img src=".github/demo/light_casters_demo.gif"> | <img src=".github/demo/cube_light_demo.gif"> |
+
+## Getting Started
+
+Windows platform only support for now (Linux and MacOS platforms are for future support)
+
+You can clone the repository using git (**`--recursive`** is required to fetch all of the submodules):
+
+`git clone --recursive https://github.com/kryvytskyidenys/ElvenEngine`
+
+Firstly you need to install [cmake](https://cmake.org/) 3.10+ version (3.21+ for VS 2022 support).
+
+### Windows
+1. Configure and build third-party libraries: `scripts/setup-vendor.bat`
+2. Configure Visual Studio solution for the Engine and Game/Example projects: `scripts/configure-vs2022`. 
+3. Build a solution using one of the following ways:
+   - cmake-based script `scripts/build.bat` (pass Debug/Release as an argument)
+   - Visual Studio (`ElvenEngine.sln` file is placed in the `build` directory).
+
+### CMake build options
+You can modify configure file to enable/disable the following cmake options:
+- **BUILD_SANDBOX** (default ON): Enable Sandbox2D and Sandbox3D projects build
+- **BUILD_GAMES** (default ON): Enable Games build
+- **PROFILE_MODE** (default ON): Enable Profiling (`PROFILE_MODE` preprocessor definition will be added)
+- **EDITOR_MODE** (default ON): Enable Editor (`EDITOR_MODE` preprocessor definition will be added)
+- **ASSIMP_MODE** (default ON): Enable Assimp library for 3D model loading (`ASSIMP_MODE` preprocessor definition will be added). **IMPORTANT**: ON - only Sandbox3D project will be configured, OFF - only Sandbox2D and Games projects will be configured.
 
 ## Third-party libraries
 | Lib |  |

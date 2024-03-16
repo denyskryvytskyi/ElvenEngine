@@ -80,11 +80,7 @@ void Material::ApplyMaterial(const SharedPtr<Shader>& shader) const
         }
     }
 
-    shader->SetVector3f("u_Material.ambientColor", m_ambientColor);
-    shader->SetVector3f("u_Material.diffuseColor", m_diffuseColor);
-    shader->SetVector3f("u_Material.specularColor", m_specularColor);
-    shader->SetVector3f("u_Material.emissionColor", m_emissionColor);
-    shader->SetVector3f("u_Material.shininess", m_shininess);
+    shader->SetFloat("u_Material.shininess", m_shininess);
 }
 
 void Material::ResetMaterial() const

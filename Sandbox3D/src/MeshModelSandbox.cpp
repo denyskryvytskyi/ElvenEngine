@@ -89,6 +89,10 @@ void MeshModelSandbox::OnRender(float dt)
 
     m_shader->SetVector3f("u_ViewPos", camera.GetPosition());
 
+    // cube material
+    m_shader->SetInteger("u_Material.enableEmission", 0);
+    m_shader->SetFloat("u_Material.shininess", m_cubeShininess);
+
     // directional light
     m_shader->SetInteger("u_DirLightEnabled", m_DirLightEnabled);
     if (m_DirLightEnabled) {
@@ -144,9 +148,10 @@ void MeshModelSandbox::OnRender(float dt)
     // render models
     for (const auto modelEntity : m_models) {
         const auto& transform = scene.GetComponent<elv::TransformComponent>(modelEntity);
+        m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(transform.worldMatrix));
+
         const auto& staticMesh = scene.GetComponent<elv::StaticMeshComponent>(modelEntity);
 
-        m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(transform.worldMatrix));
         const auto& meshPtr = staticMesh.GetMeshPtr();
         if (meshPtr) {
             elv::Renderer::Submit(m_shader, staticMesh.GetMeshPtr(), transform.worldMatrix);
