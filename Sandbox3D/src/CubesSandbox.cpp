@@ -97,10 +97,6 @@ CubesSandbox::CubesSandbox()
     };
 }
 
-void CubesSandbox::OnCreate()
-{
-}
-
 void CubesSandbox::OnUpdate(float dt)
 {
     m_cameraController.OnUpdate(dt);
@@ -124,8 +120,9 @@ void CubesSandbox::OnRender(float dt)
     elv::Renderer::EndScene();
 }
 
-void CubesSandbox::OnDestroy()
+void CubesSandbox::OnProcessInput(float dt)
 {
+    m_cameraController.OnProcessInput(dt);
 }
 
 void CubesSandbox::OnTextureLoaded(const elv::events::TextureLoadedEvent& e)

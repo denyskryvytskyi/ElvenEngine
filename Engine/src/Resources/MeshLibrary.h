@@ -7,12 +7,15 @@ class Mesh;
 
 class MeshLibrary {
 public:
-    MeshLibrary();
+    MeshLibrary() = default;
+    MeshLibrary(const MeshLibrary&) = delete;
+    const MeshLibrary& operator=(const MeshLibrary&) = delete;
+
+    void Init();
+    void Update();
+    void Shutdown();
 
     void LoadMesh(const std::string& name, const std::string& path);
-
-    void OnUpdate();
-    void Shutdown();
 
     SharedPtr<Mesh> GetMesh(const std::string& name) const;
 

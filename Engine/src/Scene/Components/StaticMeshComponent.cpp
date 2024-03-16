@@ -10,12 +10,14 @@
 #include "Events/MeshEvent.h"
 
 namespace elv {
-void StaticMeshComponent::LoadMesh()
+#pragma optimize("", off)
+void StaticMeshComponent::LoadMesh(const RenderTopology topology)
 {
     if (!m_meshName.empty()) {
         auto meshPtr = gMeshLibrary.GetMesh(m_meshName);
         if (meshPtr) {
             m_meshPtr = meshPtr;
+            m_meshPtr->SetTopology(topology);
         } else if (m_meshPath.empty()) {
             EL_CORE_WARN("Failed to set mesh to the Static Mesh Component, mesh path is empty");
         } else {
@@ -27,6 +29,7 @@ void StaticMeshComponent::LoadMesh()
                     // load textures async
                     const std::string directory = m_meshPath.substr(0, m_meshPath.find_last_of('/'));
                     if (m_meshPtr) {
+                        m_meshPtr->SetTopology(topology);
                         m_meshPtr->LoadTextures(directory, true);
                     }
                 }

@@ -14,6 +14,7 @@ public:
     virtual ~CameraController() = default;
 
     void OnUpdate(float dt);
+    void OnProcessInput(float dt);
 
     Camera& GetCamera() { return m_camera; }
     const Camera& GetCamera() const { return m_camera; }

@@ -13,10 +13,11 @@ class MeshModelSandbox : public elv::Application {
 public:
     MeshModelSandbox();
 
-    virtual void OnUpdate(float dt);
-    virtual void OnRender(float dt);
+    void OnUpdate(float dt) override;
+    void OnRender(float dt) override;
+    void OnProcessInput(float dt) override;
 #if EDITOR_MODE
-    virtual void OnImguiRender();
+    void OnImguiRender() override;
 #endif
 
 private:

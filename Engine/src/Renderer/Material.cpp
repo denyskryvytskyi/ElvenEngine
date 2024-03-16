@@ -10,8 +10,13 @@
 
 namespace elv {
 
-static int counter = 0;
-static int loadedCounter = 0;
+constexpr const char* kDefaultTextureMapNames[Material::TextureSlot::Count] = {
+    "texture_diffuse",
+    "texture_specular",
+    "texture_normal",
+    "texture_emission",
+    "texture_transparency"
+};
 
 void Material::SetTexture(const TextureSlot slot, const std::string& name, const SharedPtr<Texture2D>& texture)
 {
@@ -67,8 +72,11 @@ void Material::ApplyMaterial(const SharedPtr<Shader>& shader) const
         const auto& textureMap = m_textures[i];
         if (textureMap.texturePtr) {
             textureMap.texturePtr->BindToUnit(i);
-
-            shader->SetInteger(fmt::format("u_Material.{}", textureMap.name), i);
+            shader->SetInteger(fmt::format("u_Material.{}", kDefaultTextureMapNames[i]), i);
+            // TODO: Need to implement white texture binding instead "enabled" flags after PBR implemenetation
+            shader->SetInteger(fmt::format("u_Material.{}_enabled", kDefaultTextureMapNames[i]), 1);
+        } else {
+            shader->SetInteger(fmt::format("u_Material.{}_enabled", kDefaultTextureMapNames[i]), 0);
         }
     }
 
@@ -76,6 +84,7 @@ void Material::ApplyMaterial(const SharedPtr<Shader>& shader) const
     shader->SetVector3f("u_Material.diffuseColor", m_diffuseColor);
     shader->SetVector3f("u_Material.specularColor", m_specularColor);
     shader->SetVector3f("u_Material.emissionColor", m_emissionColor);
+    shader->SetVector3f("u_Material.shininess", m_shininess);
 }
 
 void Material::ResetMaterial() const
@@ -95,7 +104,7 @@ void Material::LoadTexture(const std::string& dir, const bool async, Material::T
     if (readyTexturePtr) {
         map.texturePtr = readyTexturePtr;
     } else {
-        textures::Load(map.name, fmt::format("{}/{}", dir, map.name), false);
+        textures::Load(map.name, fmt::format("{}/{}", dir, map.name), async);
 
         events::Subscribe<events::TextureLoadedEvent>([&map](const events::TextureLoadedEvent& e) {
             if (!map.name.empty()) {

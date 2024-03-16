@@ -127,7 +127,12 @@ SimpleLightSandbox::SimpleLightSandbox()
     m_cubeEntity = scene.CreateEntity();
     scene.AddComponent<elv::TransformComponent>(m_cubeEntity);
 
-    m_lightEntity = scene.CreateChildEntity(m_cubeEntity);
+    m_cubeMaterial.SetAmbientColor({ 1.0f, 0.5f, 0.31f });
+    m_cubeMaterial.SetDiffuseColor({ 1.0f, 0.5f, 0.31f });
+    m_cubeMaterial.SetSpecularColor({ 0.5f });
+    m_cubeMaterial.SetShininess(32.0f);
+
+    m_lightEntity = scene.CreateEntity();
     scene.AddComponent<elv::TransformComponent>(m_lightEntity, m_light.position, lia::vec3(0.2f));
 }
 
@@ -179,6 +184,11 @@ void SimpleLightSandbox::OnRender(float dt)
     elv::Renderer::EndScene();
 }
 
+void SimpleLightSandbox::OnProcessInput(float dt)
+{
+    m_cameraController.OnProcessInput(dt);
+}
+
 #if EDITOR_MODE
 void SimpleLightSandbox::OnImguiRender()
 {
@@ -208,10 +218,18 @@ void SimpleLightSandbox::OnImguiRender()
     auto specular = m_cubeMaterial.GetSpecularColor();
     auto shininess = m_cubeMaterial.GetShininess();
 
-    elv::editor::DrawRGBColorControl("ambient", ambient);
-    elv::editor::DrawRGBColorControl("diffuse", diffuse);
-    elv::editor::DrawRGBColorControl("specular", specular);
-    elv::editor::DrawSliderFloat("shininess", 1.0f, 256.0f, shininess);
+    if (elv::editor::DrawRGBColorControl("ambient", ambient)) {
+        m_cubeMaterial.SetAmbientColor(ambient);
+    }
+    if (elv ::editor::DrawRGBColorControl("diffuse", diffuse)) {
+        m_cubeMaterial.SetDiffuseColor(diffuse);
+    }
+    if (elv::editor::DrawRGBColorControl("specular", specular)) {
+        m_cubeMaterial.SetSpecularColor(specular);
+    }
+    if (elv::editor::DrawSliderFloat("shininess", 1.0f, 256.0f, shininess)) {
+        m_cubeMaterial.SetShininess(shininess);
+    }
 
     ImGui::Separator();
 

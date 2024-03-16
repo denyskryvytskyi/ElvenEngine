@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Material.h"
+#include "RenderTopology.h"
 
 namespace elv {
 
@@ -22,7 +23,7 @@ struct MeshTexture {
 class Mesh {
 public:
     Mesh();
-    Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices);
+    Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices, const RenderTopology topology = RenderTopology::Triangles);
     Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices, const std::vector<MeshTexture>& texturesInfo);
 
     virtual ~Mesh() = default;
@@ -35,18 +36,18 @@ public:
 
     Material& GetMaterial() { return m_material; }
 
-protected:
-    void SetupMesh();
+    void SetTopology(const RenderTopology topology) { m_topology = topology; }
 
 private:
+    void SetupMesh();
     void SetupMaterial(const std::vector<MeshTexture>& texturesInfo);
 
-protected:
+private:
+    RenderTopology m_topology { RenderTopology::Triangles };
     std::vector<MeshVertex> m_vertices;
     std::vector<std::uint32_t> m_indices;
     Material m_material;
 
-private:
     SharedPtr<VertexArray> m_vao { nullptr };
     std::vector<Mesh> m_submeshes;
 };

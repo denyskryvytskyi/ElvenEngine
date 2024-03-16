@@ -85,7 +85,14 @@ SharedPtr<Texture2D> TextureManager::Load(const std::string& textureName, std::u
     return nullptr;
 }
 
-void TextureManager::OnUpdate()
+void TextureManager::Init()
+{
+    SharedPtr<Texture2D> whiteTexture = Load("white", 1, 1, 3);
+    unsigned char whiteData[] = { 255, 255, 255 }; // RGB format
+    whiteTexture->SetData(&whiteData, false);
+}
+
+void TextureManager::Update()
 {
     // create texture with already loaded data
     if (texturesMutex.try_lock()) {

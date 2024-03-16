@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Renderer/RenderTopology.h"
+
 namespace elv {
 class Mesh;
 
@@ -13,25 +15,24 @@ public:
      * @param name Static mesh name to store in mesh library
      * @param filePath Relative path to the file
      */
-    StaticMeshComponent(const std::string& name, const std::string& filePath)
+    StaticMeshComponent(const std::string& name, const std::string& filePath, const RenderTopology topology = RenderTopology::Triangles)
         : m_meshName(name)
         , m_meshPath(filePath)
     {
-        LoadMesh();
+        LoadMesh(topology);
     }
 
     // Load primitive mesh by name: cube, sphere, conus, teapot, torus
-    StaticMeshComponent(const std::string& primitiveName)
+    StaticMeshComponent(const std::string& primitiveName, const RenderTopology topology = RenderTopology::Triangles)
         : m_meshName(primitiveName)
     {
-
-        LoadMesh();
+        LoadMesh(topology);
     }
 
     const SharedPtr<Mesh>& GetMeshPtr() const { return m_meshPtr; }
 
 private:
-    void LoadMesh();
+    void LoadMesh(const RenderTopology topology);
 
 private:
     SharedPtr<Mesh> m_meshPtr { nullptr };

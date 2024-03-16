@@ -13,4 +13,4 @@ illum 2
 map_Kd diffuse.jpg
 map_Ks specular.jpeg
 map_Ke emission.jpeg
-map_Bump normal.png
+map_Bump normal.jpg

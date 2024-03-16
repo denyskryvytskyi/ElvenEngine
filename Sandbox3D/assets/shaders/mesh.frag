@@ -5,10 +5,11 @@ struct Material {
     sampler2D texture_diffuse;
     sampler2D texture_specular;
     sampler2D texture_emission;
-    sampler2D texture_opacity;
+    sampler2D texture_transparency;
     float shininess;
-    bool enableEmission;
-    bool enableTextureOpacity;
+    bool texture_specular_enabled;
+    bool texture_emission_enabled;
+    bool texture_transparency_enabled;
 };
 
 struct DirLight {
@@ -63,12 +64,24 @@ in vec2 v_UV;
 
 out vec4 FragColor;
 
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 viewDir);
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 viewDir);
+vec3 CalcDirLight(DirLight light, vec3 diffuseMap, vec3 specularMap, vec3 emissionMap, vec3 normal, vec3 viewDir);
+vec3 CalcPointLight(PointLight light,vec3 diffuseMap, vec3 specularMap, vec3 emissionMap, vec3 normal, vec3 viewDir);
+vec3 CalcSpotLight(SpotLight light,vec3 diffuseMap, vec3 specularMap, vec3 emissionMap, vec3 normal, vec3 viewDir);
 
 void main()
 {
+    // check base texture alpha
+    vec4 diffuseMapWithAlpha = texture(u_Material.texture_diffuse, v_UV).rgba;
+    if (diffuseMapWithAlpha.a < 0.5)
+    {
+        discard;
+    }
+
+    // maps
+    vec3 diffuseMap = diffuseMapWithAlpha.rgb;
+    vec3 specularMap = texture(u_Material.texture_specular, v_UV).rgb;
+    vec3 emissionMap = texture(u_Material.texture_emission, v_UV).rgb;
+
     // output color
     vec3 result = vec3(0.0);
 
@@ -78,41 +91,40 @@ void main()
     // lights calculation
     if (u_DirLightEnabled)
     {
-        result += CalcDirLight(u_DirLight, normal, viewDir);
+        result += CalcDirLight(u_DirLight, diffuseMap, specularMap, emissionMap, normal, viewDir);
     }
 
     if (u_PointLightEnabled)
     {
         for (int i = 0; i < NR_POINT_LIGHTS; ++i)
-            result += CalcPointLight(u_PointLights[i], normal, viewDir);
+            result += CalcPointLight(u_PointLights[i], diffuseMap, specularMap, emissionMap, normal, viewDir);
     }
 
     if (u_SpotLightEnabled)
     {
-        result += CalcSpotLight(u_SpotLight, normal, viewDir);
+        result += CalcSpotLight(u_SpotLight, diffuseMap, specularMap, emissionMap, normal, viewDir);
     }
 
-    if(texture(u_Material.texture_diffuse, v_UV).a <= 0.5) 
+    if(texture(u_Material.texture_diffuse, v_UV).a <= 0.5)
     {
         discard;
     }
 
-    float alpha = 1.0;
-    if (u_Material.enableTextureOpacity)
+    float alpha = 1.0f;
+    if (u_Material.texture_transparency_enabled)
     {
-        alpha = texture(u_Material.texture_opacity, v_UV).r;
+        alpha = texture(u_Material.texture_transparency, v_UV).r;
     }
 
     FragColor = vec4(result, alpha);
 }
 
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
+vec3 CalcDirLight(DirLight light, vec3 diffuseMap, vec3 specularMap, vec3 emissionMap, vec3 normal, vec3 viewDir)
 {
     vec3 lightDir = normalize(-light.direction);
     vec3 reflectDir = reflect(-lightDir, normal);
 
     // ambient
-    vec3 diffuseMap = texture(u_Material.texture_diffuse, v_UV).rgb;
     vec3 ambient = light.ambient * diffuseMap;
 
     // diffuse
@@ -121,27 +133,24 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 
     // specular
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
-    vec3 specularMap = vec3(texture(u_Material.texture_specular, v_UV));
     vec3 specular = light.specular * spec * specularMap.r;
 
     // emission
-    vec3 emission = vec3(0.0f);
-
-    if (u_Material.enableEmission)
+    vec3 emission = vec3(0.0);
+    if (u_Material.texture_emission_enabled)
     {
-        emission = texture(u_Material.texture_emission, v_UV).rgb;
+        emission = emissionMap;
     }
 
-    return (ambient + diffuse + specular + emission);
+    return ambient + diffuse + specular + emission;
 }
 
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 viewDir)
+vec3 CalcPointLight(PointLight light, vec3 diffuseMap, vec3 specularMap, vec3 emissionMap, vec3 normal, vec3 viewDir)
 {
     vec3 lightDir = normalize(light.position - v_FragPos);
     vec3 reflectDir = reflect(-lightDir, normal);
 
     // ambient
-    vec3 diffuseMap = texture(u_Material.texture_diffuse, v_UV).rgb;
     vec3 ambient = light.ambient * diffuseMap;
 
     // diffuse
@@ -150,15 +159,13 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 viewDir)
 
     // specular
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
-    vec3 specularMap = texture(u_Material.texture_specular, v_UV).rgb;
-    vec3 specular = light.specular * spec * specularMap.r; 
+    vec3 specular = light.specular * spec * specularMap.r;
 
     // emission
-    vec3 emission = vec3(0.0f);
-
-    if (u_Material.enableEmission)
+    vec3 emission = vec3(0.0);
+    if (u_Material.texture_emission_enabled)
     {
-        emission = texture(u_Material.texture_emission, v_UV).rgb;
+        emission = emissionMap;
     }
 
     // attenuation
@@ -172,13 +179,12 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 viewDir)
     return (ambient + diffuse + specular + emission);
 }
 
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 viewDir)
+vec3 CalcSpotLight(SpotLight light, vec3 diffuseMap, vec3 specularMap, vec3 emissionMap, vec3 normal, vec3 viewDir)
 {
     vec3 lightDir = normalize(light.position - v_FragPos);
     vec3 reflectDir = reflect(-lightDir, normal);
 
     // ambient
-    vec3 diffuseMap = texture(u_Material.texture_diffuse, v_UV).rgb;
     vec3 ambient = light.ambient * diffuseMap;
 
     // diffuse
@@ -187,15 +193,13 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 viewDir)
 
     // specular
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
-    vec3 specularMap = texture(u_Material.texture_specular, v_UV).rgb;
     vec3 specular = light.specular * spec * specularMap.r;
 
     // emission
-    vec3 emission = vec3(0.0f);
-
-    if (u_Material.enableEmission)
+    vec3 emission = vec3(0.0);
+    if (u_Material.texture_emission_enabled)
     {
-        emission = texture(u_Material.texture_emission, v_UV).rgb;
+        emission = emissionMap;
     }
 
     // spotlight with soft edges
@@ -212,5 +216,5 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 viewDir)
     diffuse *= attenuation;
     specular *= attenuation;
 
-    return (ambient + diffuse + specular + emission);
+    return ambient + diffuse + specular + emission;
 }

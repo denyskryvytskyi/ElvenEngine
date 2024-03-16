@@ -36,7 +36,7 @@ public:
 
     const lia::vec3& GetAmbientColor() const { return m_ambientColor; }
     const lia::vec3& GetDiffuseColor() const { return m_diffuseColor; }
-    const lia::vec3& GetSpecularColor() const { return m_emissionColor; }
+    const lia::vec3& GetSpecularColor() const { return m_specularColor; }
     const lia::vec3& GetEmissionColor() const { return m_emissionColor; }
     float GetShininess() const { return m_shininess; }
 

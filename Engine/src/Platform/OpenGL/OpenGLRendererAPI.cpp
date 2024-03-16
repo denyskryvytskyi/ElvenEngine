@@ -24,6 +24,20 @@ void OpenGLMessageCallback(unsigned int source, unsigned int type, unsigned int 
     EL_CORE_ASSERT(false, "Unknown severity level!");
 }
 
+GLenum GetTopology(const RenderTopology topology)
+{
+    switch (topology) {
+    case RenderTopology::TriangleStrip:
+        return GL_TRIANGLE_STRIP;
+    case RenderTopology::Lines:
+        return GL_LINES;
+    case RenderTopology::LineStrip:
+        return GL_LINE_STRIP;
+    }
+
+    return GL_TRIANGLES;
+}
+
 ////////////////////////////////////////////////////////
 
 void OpenGLRendererAPI::Init()
@@ -80,11 +94,11 @@ void OpenGLRendererAPI::DisableByteAlignment()
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 }
 
-void OpenGLRendererAPI::DrawIndexed(const SharedPtr<VertexArray>& vertexArray, std::uint32_t indexCount)
+void OpenGLRendererAPI::DrawIndexed(const SharedPtr<VertexArray>& vertexArray, const std::uint32_t indexCount, const RenderTopology topology)
 {
     const std::uint32_t count = indexCount ? indexCount : vertexArray->GetIndexCount();
     vertexArray->Bind();
-    glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GetTopology(topology), count, GL_UNSIGNED_INT, nullptr);
 }
 
 } // namespace elv

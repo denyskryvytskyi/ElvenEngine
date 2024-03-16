@@ -12,10 +12,9 @@ class CubesSandbox : public elv::Application {
 public:
     CubesSandbox();
 
-    virtual void OnCreate();
-    virtual void OnUpdate(float dt);
-    virtual void OnRender(float dt);
-    virtual void OnDestroy();
+    void OnUpdate(float dt) override;
+    void OnRender(float dt) override;
+    void OnProcessInput(float dt) override;
 
 private:
     void OnTextureLoaded(const elv::events::TextureLoadedEvent& e);

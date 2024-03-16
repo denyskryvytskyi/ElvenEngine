@@ -3,9 +3,11 @@
 #include <Core/Profiler.h>
 #include <Events/TextureEvent.h>
 #include <Renderer/Mesh.h>
-#include <Renderer/Primitives/Cube.h>
 
 #include <Scene/Components/StaticMeshComponent.h>
+
+#include <Renderer/RenderTopology.h>
+#include <Resources/MeshLibrary.h>
 
 #if EDITOR_MODE
 #    include <ImGui/EditorHelpers.h>
@@ -16,7 +18,7 @@ const int kCubesAmount = 1;
 
 MeshModelSandbox::MeshModelSandbox()
     : m_cameraController(45.0f, 1280.0f / 720.0f, 0.1f, 1000.0f)
-    , m_lightCubeMesh(elv::MakeSharedPtr<elv::Cube>())
+    , m_lightCubeMesh(elv::gMeshLibrary.GetMesh("sphere"))
     , m_textureLoadedCallback([this](const elv::events::TextureLoadedEvent& e) { OnTextureLoaded(e); })
 {
     // load textures
@@ -50,13 +52,23 @@ MeshModelSandbox::MeshModelSandbox()
 
     const auto entity = scene.CreateEntity();
     m_models.emplace_back(entity);
-    scene.AddComponent<elv::TransformComponent>(entity, lia::vec3(0.0f, 5.0f, 0.0f), lia::vec3(0.01f));
+    scene.AddComponent<elv::TransformComponent>(entity, lia::vec3(2.0f, 2.0f, 0.0f), lia::vec3(0.01f));
     scene.AddComponent<elv::StaticMeshComponent>(entity, "cerberus", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "cerberus/cerberus.fbx"));
 
     const auto sponza = scene.CreateEntity();
     m_models.emplace_back(sponza);
     scene.AddComponent<elv::TransformComponent>(sponza, lia::vec3(0.0f), lia::vec3(0.01f));
     scene.AddComponent<elv::StaticMeshComponent>(sponza, "sponza", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "sponza/sponza.obj"));
+
+    /* const auto tank = scene.CreateEntity();
+     m_models.emplace_back(tank);
+     scene.AddComponent<elv::TransformComponent>(tank, lia::vec3(10.0f, 0.0f, 0.0f), lia::vec3(1.0f));
+     scene.AddComponent<elv::StaticMeshComponent>(tank, "tank", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "tank/tank.fbx"));
+
+     const auto robot = scene.CreateEntity();
+     m_models.emplace_back(robot);
+     scene.AddComponent<elv::TransformComponent>(robot, lia::vec3(20.0f, 0.0f, 0.0f), lia::vec3(1.0f));
+     scene.AddComponent<elv::StaticMeshComponent>(robot, "robot", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "robot/robot.obj"));*/
 }
 
 void MeshModelSandbox::OnUpdate(float dt)
@@ -66,23 +78,16 @@ void MeshModelSandbox::OnUpdate(float dt)
 
 void MeshModelSandbox::OnRender(float dt)
 {
-    if (!m_texturesIsReady)
-        return;
-
+    elv::PROFILE("APP renderer: ");
     elv::RenderCommand::SetClearColor(m_clearColor);
     elv::RenderCommand::Clear();
 
     auto& camera = m_cameraController.GetCamera();
     elv::Renderer::BeginScene(camera);
 
-    // render cubes
     m_shader->Bind();
 
     m_shader->SetVector3f("u_ViewPos", camera.GetPosition());
-
-    // cube material
-    m_shader->SetInteger("u_Material.enableEmission", 0);
-    m_shader->SetFloat("u_Material.shininess", m_cubeShininess);
 
     // directional light
     m_shader->SetInteger("u_DirLightEnabled", m_DirLightEnabled);
@@ -130,18 +135,18 @@ void MeshModelSandbox::OnRender(float dt)
     // render cubes
     for (auto cube : m_cubes) {
         auto& transform = scene.GetComponent<elv::TransformComponent>(cube);
+        auto& cubeMesh = scene.GetComponent<elv::StaticMeshComponent>(cube);
 
         m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(transform.worldMatrix));
-        elv::Renderer::Submit(m_shader, m_cubeMesh, transform.worldMatrix);
+        elv::Renderer::Submit(m_shader, cubeMesh.GetMeshPtr(), transform.worldMatrix);
     }
 
-    // render model
+    // render models
     for (const auto modelEntity : m_models) {
         const auto& transform = scene.GetComponent<elv::TransformComponent>(modelEntity);
-        m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(transform.worldMatrix));
-
         const auto& staticMesh = scene.GetComponent<elv::StaticMeshComponent>(modelEntity);
 
+        m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(transform.worldMatrix));
         const auto& meshPtr = staticMesh.GetMeshPtr();
         if (meshPtr) {
             elv::Renderer::Submit(m_shader, staticMesh.GetMeshPtr(), transform.worldMatrix);
@@ -163,6 +168,11 @@ void MeshModelSandbox::OnRender(float dt)
     }
 
     elv::Renderer::EndScene();
+}
+
+void MeshModelSandbox::OnProcessInput(float dt)
+{
+    m_cameraController.OnProcessInput(dt);
 }
 
 #if EDITOR_MODE
@@ -310,30 +320,28 @@ void MeshModelSandbox::SetupCubeMesh()
     auto diffuse = elv::textures::Get("wooden_container");
     auto specular = elv::textures::Get("wooden_container_specular");
 
-    std::vector<elv::MeshTexture> meshTextures = {
-        { elv::Material::TextureSlot::Diffuse, "1" },
-        { elv::Material::TextureSlot::Specular, "2" }
-    };
-
-    m_cubeMesh = elv::MakeSharedPtr<elv::Cube>();
-    auto& material = m_cubeMesh->GetMaterial();
-    material.SetTexture(elv::Material::TextureSlot::Diffuse, "texture_diffuse", diffuse);
-    material.SetTexture(elv::Material::TextureSlot::Specular, "texture_specular", specular);
-
-    // setup cubes
     auto& scene = elv::GetScene();
 
     auto mainCube = scene.CreateEntity();
     m_cubes.emplace_back(mainCube);
 
     auto& transform = scene.AddComponent<elv::TransformComponent>(mainCube);
+    transform.pos = lia::vec3(0.0f, 0.5f, 0.0f);
+
+    auto& mesh = scene.AddComponent<elv::StaticMeshComponent>(mainCube, "cube");
+    auto& material = mesh.GetMeshPtr()->GetMaterial();
+    material.SetTexture(elv::Material::TextureSlot::Diffuse, "texture_diffuse", diffuse);
+    material.SetTexture(elv::Material::TextureSlot::Specular, "texture_specular", specular);
 
     for (size_t i = 0; i < kCubesAmount; ++i) {
 
         auto cube = scene.CreateChildEntity(mainCube);
         m_cubes.emplace_back(cube);
 
-        auto& transform = scene.AddComponent<elv::TransformComponent>(cube);
-        transform.pos = kCubePositions[i];
+        auto& transform = scene.AddComponent<elv::TransformComponent>(cube, kCubePositions[i], lia::vec3(0.5f));
+        auto& childMesh = scene.AddComponent<elv::StaticMeshComponent>(cube, "cube");
+        auto& childMaterial = childMesh.GetMeshPtr()->GetMaterial();
+        childMaterial.SetTexture(elv::Material::TextureSlot::Diffuse, "texture_diffuse", diffuse);
+        childMaterial.SetTexture(elv::Material::TextureSlot::Specular, "texture_specular", specular);
     }
 }

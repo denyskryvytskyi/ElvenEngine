@@ -14,10 +14,11 @@ class LightCastersSandbox : public elv::Application {
 public:
     LightCastersSandbox();
 
-    virtual void OnUpdate(float dt);
-    virtual void OnRender(float dt);
+    void OnUpdate(float dt) override;
+    void OnRender(float dt) override;
+    void OnProcessInput(float dt) override;
 #if EDITOR_MODE
-    virtual void OnImguiRender();
+    void OnImguiRender() override;
 #endif
 
 private:
@@ -37,7 +38,7 @@ private:
     int m_texturesLoaded { 0 };
     bool m_texturesIsReady { false };
 
-    bool m_DirLightEnabled { false };
+    bool m_DirLightEnabled { true };
     bool m_PointLightEnabled { false };
     bool m_SpotLightEnabled { false };
 

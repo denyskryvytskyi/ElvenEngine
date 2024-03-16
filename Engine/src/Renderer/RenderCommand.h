@@ -35,9 +35,9 @@ public:
         s_RendererAPI->EnableDepthTesting(enable);
     }
 
-    static void DrawIndexed(const SharedPtr<VertexArray>& vertexArray, std::uint32_t indexCount = 0)
+    static void DrawIndexed(const SharedPtr<VertexArray>& vertexArray, std::uint32_t indexCount = 0, const RenderTopology topology = RenderTopology::Triangles)
     {
-        s_RendererAPI->DrawIndexed(vertexArray, indexCount);
+        s_RendererAPI->DrawIndexed(vertexArray, indexCount, topology);
     }
 
     static void DisableByteAlignment()

@@ -28,7 +28,8 @@ public:
     // just create texture for specific texture implementation
     SharedPtr<Texture2D> Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels);
 
-    void OnUpdate();
+    void Init();
+    void Update();
     void Shutdown();
 
     SharedPtr<Texture2D> Get(std::string_view textureName);

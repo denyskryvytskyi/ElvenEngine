@@ -12,8 +12,9 @@ Mesh::Mesh()
 {
 }
 
-Mesh::Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices)
-    : m_vertices(vertices)
+Mesh::Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices, const RenderTopology topology)
+    : m_topology(topology)
+    , m_vertices(vertices)
     , m_indices(indices)
     , m_vao(elv::VertexArray::Create())
 {
@@ -46,7 +47,7 @@ void Mesh::Draw(const SharedPtr<Shader>& shader) const
 {
     m_vao->Bind();
     m_material.ApplyMaterial(shader);
-    RenderCommand::DrawIndexed(m_vao);
+    RenderCommand::DrawIndexed(m_vao, 0, m_topology);
     m_material.ResetMaterial();
 
     // draw submeshes

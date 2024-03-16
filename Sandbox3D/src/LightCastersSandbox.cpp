@@ -258,6 +258,11 @@ void LightCastersSandbox::OnRender(float dt)
     elv::Renderer::EndScene();
 }
 
+void LightCastersSandbox::OnProcessInput(float dt)
+{
+    m_cameraController.OnProcessInput(dt);
+}
+
 #if EDITOR_MODE
 void LightCastersSandbox::OnImguiRender()
 {

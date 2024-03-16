@@ -16,7 +16,7 @@ class OpenGLRendererAPI : public RendererAPI {
 
     void DisableByteAlignment() override;
 
-    void DrawIndexed(const SharedPtr<VertexArray>& vertexArray, std::uint32_t indexCount = 0) override;
+    void DrawIndexed(const SharedPtr<VertexArray>& vertexArray, const std::uint32_t indexCount = 0, const RenderTopology topology = RenderTopology::Triangles) override;
 };
 
 } // namespace elv

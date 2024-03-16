@@ -90,10 +90,7 @@ void Renderer2D::Init()
     s_data.shader = ShaderManager::Load("texture_shader", "texture_shader.vert", "texture_shader.frag");
 
     // Textures
-    SharedPtr<Texture2D> whiteTexture = textures::Load("white", 1, 1);
-    std::uint32_t whiteTextureData = 0xffffffff;
-    whiteTexture->SetData(&whiteTextureData, false);
-
+    SharedPtr<Texture2D> whiteTexture = textures::Get("white");
     s_data.textures[0] = std::move(whiteTexture);
 }
 

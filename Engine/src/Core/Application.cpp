@@ -48,6 +48,8 @@ Application::Application()
     m_orthoCameraEntity = scene.CreateEntity();
 
     // Init renderers
+    gTextureManager.Init();
+    gMeshLibrary.Init();
     elv::Renderer::Init();
     Renderer2D::Init();
     TextRenderer::Init();
@@ -95,11 +97,9 @@ void Application::Run()
     OnCreate();
 
     Timer timer;
-
-    Timer timerFpsCounter; // to update fps counter
+    Timer timerFpsCounter; // for fps counter update
 
     while (m_running) {
-
         if (m_isPaused) {
             // Window update only to catch maximized event
             m_window->OnUpdate();
@@ -121,17 +121,19 @@ void Application::Run()
                 = fmt::format("{:0.3f} ms ({} fps)", s_telemetry.frameTime, static_cast<int>(std::floor(s_telemetry.fps)));
         }
 
-        /// Update step ////////////////////
+        // ============== Process input step  ==============
 
-        gMeshLibrary.OnUpdate();
-        gTextureManager.OnUpdate();
+        OnProcessInput(elapsedTime);
+
+        // ============== Update step  ==============
+
+        gMeshLibrary.Update();
+        gTextureManager.Update();
         gSceneManager.Update(elapsedTime);
 
         OnUpdate(elapsedTime);
 
-        /////////////////////////////////////
-
-        /// Rendering Step ///////////////////
+        // ============== Rendering Step ==============
         elv::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
         elv::RenderCommand::Clear();
 
@@ -140,7 +142,6 @@ void Application::Run()
 
 #if EDITOR_MODE
         if (gEngineSettings.enableEditor) {
-            // ImGui overlay rendering
             m_imGuiOverlay.Begin();
             m_imGuiOverlay.ImGuiRender();
             OnImguiRender();
@@ -148,12 +149,10 @@ void Application::Run()
         }
 #endif
 
-        // Window update
+        // ============== Window update step ==============
         m_window->OnUpdate();
 
-        /////////////////////////////////////
-
-        // Dispatch queued events
+        // ============== Dispatch queued events ==============
         events::gEventManager.DispatchEvents();
     }
 }

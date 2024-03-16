@@ -23,8 +23,6 @@ CameraController::CameraController(float fov, float aspectRatio, float near_, fl
 
 void CameraController::OnUpdate(float dt)
 {
-    ProcessInput(dt);
-
     if (m_updateLookAt) {
         if (!m_isFlyEnabled) {
             m_position.y = 0;
@@ -33,6 +31,11 @@ void CameraController::OnUpdate(float dt)
         m_camera.LookAt(m_position, m_front, m_up);
         m_updateLookAt = false;
     }
+}
+
+void CameraController::OnProcessInput(float dt)
+{
+    ProcessInput(dt);
 }
 
 void CameraController::ProcessInput(float dt)
