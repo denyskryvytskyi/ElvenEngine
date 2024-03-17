@@ -87,7 +87,8 @@ void ProcessNode(aiNode* node, const aiScene* scene, LoadedMeshesInfo& loadedMes
 
 void ImportModel(const std::string& path, LoadedMeshesInfo& info)
 {
-    PROFILE(fmt::format("ImportMesh {} : ", path));
+    EL_CORE_INFO("Model {} loading...", path);
+    PROFILE(fmt::format("Model {} is loaded: ", path));
 
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate);
@@ -98,7 +99,7 @@ void ImportModel(const std::string& path, LoadedMeshesInfo& info)
     }
 
     {
-        PROFILE_SCOPE("Process nodes in: ");
+        PROFILE_SCOPE(fmt::format("Process model {} nodes: ", path));
         ProcessNode(scene->mRootNode, scene, info);
     }
 }

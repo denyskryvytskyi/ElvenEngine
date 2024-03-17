@@ -118,4 +118,4 @@ You can modify configure file to enable/disable the following cmake options:
 | [irrKlang](https://www.ambiera.com/irrklang/) | sound library |
 | [fmt](https://github.com/fmtlib/fmt) | formatting library |
 | [freetype](https://freetype.org/) | fonts rendering |
-| [assimp](https://github.com/assimp/assimp) | 3D moodel loading |
+| [assimp](https://github.com/assimp/assimp) | 3D model loading |

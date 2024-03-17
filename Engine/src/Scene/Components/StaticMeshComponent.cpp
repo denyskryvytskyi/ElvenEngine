@@ -10,7 +10,6 @@
 #include "Events/MeshEvent.h"
 
 namespace elv {
-#pragma optimize("", off)
 void StaticMeshComponent::LoadMesh(const RenderTopology topology)
 {
     if (!m_meshName.empty()) {
@@ -21,7 +20,11 @@ void StaticMeshComponent::LoadMesh(const RenderTopology topology)
         } else if (m_meshPath.empty()) {
             EL_CORE_WARN("Failed to set mesh to the Static Mesh Component, mesh path is empty");
         } else {
-            gMeshLibrary.LoadMesh(m_meshName, m_meshPath);
+            m_meshPtr = MakeSharedPtr<Mesh>();
+            m_meshPtr->SetTopology(topology);
+
+            gMeshLibrary.LoadMesh(m_meshName, m_meshPath, m_meshPtr);
+
             events::Subscribe<events::MeshLoadedEvent>([&](const events::MeshLoadedEvent& e) {
                 if (e.meshName == m_meshName) {
                     m_meshPtr = gMeshLibrary.GetMesh(m_meshName);
@@ -37,5 +40,11 @@ void StaticMeshComponent::LoadMesh(const RenderTopology topology)
                                                        string_id(m_meshName), true);
         }
     }
+}
+
+void StaticMeshComponent::AddMaterialTexture(const Material::TextureSlot slot, const std::string& name, const std::string& path, bool async)
+{
+    auto& material = m_meshPtr->GetMaterial();
+    material.SetTexture(slot, name, path, async);
 }
 } // namespace elv

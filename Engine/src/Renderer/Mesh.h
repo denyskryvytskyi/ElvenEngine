@@ -28,15 +28,15 @@ public:
 
     virtual ~Mesh() = default;
 
+    void SetInfo(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices, const std::vector<MeshTexture>& texturesInfo);
     void Draw(const SharedPtr<elv::Shader>& shader) const;
+    void AddSubmesh(Mesh&& submesh);
 
     void LoadTextures(const std::string& dir, const bool async);
 
-    void AddSubmesh(Mesh&& submesh);
+    void SetTopology(const RenderTopology topology) { m_topology = topology; }
 
     Material& GetMaterial() { return m_material; }
-
-    void SetTopology(const RenderTopology topology) { m_topology = topology; }
 
 private:
     void SetupMesh();

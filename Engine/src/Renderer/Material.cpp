@@ -18,7 +18,7 @@ constexpr const char* kDefaultTextureMapNames[Material::TextureSlot::Count] = {
     "texture_transparency"
 };
 
-void Material::SetTexture(const TextureSlot slot, const std::string& name, const SharedPtr<Texture2D>& texture)
+void Material::SetTexture(const TextureSlot slot, const std::string& name, SharedPtr<Texture2D> texture)
 {
     auto& map = m_textures[slot];
     map.name = name;
@@ -27,8 +27,26 @@ void Material::SetTexture(const TextureSlot slot, const std::string& name, const
 
 void Material::SetTexture(const TextureSlot slot, const std::string& name)
 {
+    if (name.empty()) {
+        EL_CORE_ERROR("Failed to set material texture, texture name is empty.");
+        return;
+    }
+
     auto& map = m_textures[slot];
     map.name = name;
+}
+
+void Material::SetTexture(const TextureSlot slot, const std::string& name, const std::string& dir, bool async)
+{
+    if (name.empty()) {
+        EL_CORE_ERROR("Failed to set material texture, texture name is empty.");
+        return;
+    }
+
+    auto& map = m_textures[slot];
+    map.name = name;
+
+    LoadTexture(dir, async, map, slot);
 }
 
 void Material::LoadTextures(const std::string& dir, const bool async)
@@ -81,17 +99,6 @@ void Material::ApplyMaterial(const SharedPtr<Shader>& shader) const
     }
 
     shader->SetFloat("u_Material.shininess", m_shininess);
-}
-
-void Material::ResetMaterial() const
-{
-    // Unbind textures
-    for (auto& textureMap : m_textures) {
-        if (!textureMap.texturePtr)
-            continue;
-
-        textureMap.texturePtr->Unbind();
-    }
 }
 
 void Material::LoadTexture(const std::string& dir, const bool async, Material::TextureMap& map, Material::TextureSlot slot)

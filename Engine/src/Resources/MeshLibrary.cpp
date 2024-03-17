@@ -20,11 +20,11 @@ constexpr float PI = 3.14159265359f;
 constexpr float TAU = 6.28318530717f;
 //
 
-static void LoadMeshFromFile(std::vector<LoadedMeshesInfo>& loadedMeshesInfo, const std::string& meshName, const std::string& meshPath)
+static void LoadMeshFromFile(std::vector<LoadedMeshesInfo>& loadedMeshesInfo, const std::string& meshName, const std::string& meshPath, SharedPtr<Mesh> root)
 {
     LoadedMeshesInfo info;
     info.name = meshName;
-    info.texturesDir = meshPath;
+    info.root = root;
 
     ImportModel(meshPath, info);
 
@@ -57,7 +57,7 @@ void MeshLibrary::Shutdown()
     m_futures.clear();
 }
 
-void MeshLibrary::LoadMesh(const std::string& name, const std::string& path)
+void MeshLibrary::LoadMesh(const std::string& name, const std::string& path, SharedPtr<Mesh> root)
 {
     // check whether we already loaded this mesh
     auto it = m_meshes.find(name);
@@ -69,7 +69,7 @@ void MeshLibrary::LoadMesh(const std::string& name, const std::string& path)
         if (inProgressIt == m_meshLoadingInProgress.end()) {
             m_meshLoadingInProgress.insert(name);
 
-            m_futures.emplace_back(std::async(std::launch::async, LoadMeshFromFile, std::ref(m_loadedMeshes), name, path));
+            m_futures.emplace_back(std::async(std::launch::async, LoadMeshFromFile, std::ref(m_loadedMeshes), name, path, root));
         }
         return;
     }
@@ -86,13 +86,14 @@ SharedPtr<Mesh> MeshLibrary::GetMesh(const std::string& name) const
 void MeshLibrary::ProcessMeshInfo(const LoadedMeshesInfo& meshesInfo)
 {
     // process mesh and submeshes
-    SharedPtr<Mesh> root = nullptr;
+    bool rootInited = false;
     for (auto meshInfo : meshesInfo.meshes) {
-        if (root) {
-            root->AddSubmesh({ meshInfo.vertices, meshInfo.indices, meshInfo.textures });
+        if (rootInited) {
+            meshesInfo.root->AddSubmesh({ meshInfo.vertices, meshInfo.indices, meshInfo.textures });
         } else {
-            root = MakeSharedPtr<Mesh>(meshInfo.vertices, meshInfo.indices, std::move(meshInfo.textures));
-            m_meshes.insert({ meshesInfo.name, root });
+            meshesInfo.root->SetInfo(meshInfo.vertices, meshInfo.indices, std::move(meshInfo.textures));
+            m_meshes.insert({ meshesInfo.name, meshesInfo.root });
+            rootInited = true;
         }
     }
     events::TriggerEvent(events::MeshLoadedEvent { meshesInfo.name }, string_id(meshesInfo.name));

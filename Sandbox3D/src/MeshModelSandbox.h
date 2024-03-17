@@ -4,11 +4,6 @@
 
 #include "Helpers/EnvironmentSettings.h"
 
-// forward declarations
-namespace elv::events {
-class TextureLoadedEvent;
-}
-
 class MeshModelSandbox : public elv::Application {
 public:
     MeshModelSandbox();
@@ -21,23 +16,16 @@ public:
 #endif
 
 private:
-    void OnTextureLoaded(const elv::events::TextureLoadedEvent& e);
-
     void SetEnvironment(const int envIndex);
 
-    void SetupCubeMesh();
+    void SetupCubes();
 
 private:
     elv::EditorCameraController m_cameraController;
-    elv::events::EventHandler<elv::events::TextureLoadedEvent> m_textureLoadedCallback;
 
     elv::Timer m_timer;
 
     lia::vec4 m_clearColor { 0.2f, 0.2f, 0.2f, 1.0f };
-
-    int m_texturesToLoad { 3 };
-    int m_texturesLoaded { 0 };
-    bool m_texturesIsReady { false };
 
     bool m_DirLightEnabled { true };
     bool m_PointLightEnabled { false };

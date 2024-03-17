@@ -1,13 +1,10 @@
 #include "MeshModelSandbox.h"
 
 #include <Core/Profiler.h>
-#include <Events/TextureEvent.h>
 #include <Renderer/Mesh.h>
-
-#include <Scene/Components/StaticMeshComponent.h>
-
 #include <Renderer/RenderTopology.h>
 #include <Resources/MeshLibrary.h>
+#include <Scene/Components/StaticMeshComponent.h>
 
 #if EDITOR_MODE
 #    include <ImGui/EditorHelpers.h>
@@ -19,22 +16,8 @@ const int kCubesAmount = 1;
 MeshModelSandbox::MeshModelSandbox()
     : m_cameraController(45.0f, 1280.0f / 720.0f, 0.1f, 1000.0f)
     , m_lightCubeMesh(elv::gMeshLibrary.GetMesh("sphere"))
-    , m_textureLoadedCallback([this](const elv::events::TextureLoadedEvent& e) { OnTextureLoaded(e); })
 {
-    // load textures
-    const uint64_t hash = elv::string_id("wooden_container");
-    elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hash);
-    elv::textures::Load("wooden_container", fmt::format("{}{}", elv::fileSystem::IMAGES_PATH, "wooden_container.png"));
-
-    const uint64_t hashSpecular = elv::string_id("wooden_container_specular");
-    elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hashSpecular);
-    elv::textures::Load("wooden_container_specular", fmt::format("{}{}", elv::fileSystem::IMAGES_PATH, "wooden_container_specular.png"));
-
-    const uint64_t hashMatrix = elv::string_id("matrix");
-    elv::events::Subscribe<elv::events::TextureLoadedEvent>(m_textureLoadedCallback, hashMatrix);
-    elv::textures::Load("matrix", fmt::format("{}{}", elv::fileSystem::IMAGES_PATH, "matrix.jpg"));
-
-    // cube shader
+    // mesh shader
     m_shader = elv::ShaderManager::Load("textured_cube", "textured_cube.vert", "mesh.frag");
 
     // light setup
@@ -53,22 +36,25 @@ MeshModelSandbox::MeshModelSandbox()
     const auto entity = scene.CreateEntity();
     m_models.emplace_back(entity);
     scene.AddComponent<elv::TransformComponent>(entity, lia::vec3(2.0f, 2.0f, 0.0f), lia::vec3(0.01f));
-    scene.AddComponent<elv::StaticMeshComponent>(entity, "cerberus", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "cerberus/cerberus.fbx"));
+    auto& cerberusMesh = scene.AddComponent<elv::StaticMeshComponent>(entity, "cerberus", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "cerberus/cerberus.fbx"));
+    cerberusMesh.AddMaterialTexture(elv::Material::TextureSlot::Specular, "Cerberus_M.tga", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "cerberus/Textures"));
 
     const auto sponza = scene.CreateEntity();
     m_models.emplace_back(sponza);
     scene.AddComponent<elv::TransformComponent>(sponza, lia::vec3(0.0f), lia::vec3(0.01f));
     scene.AddComponent<elv::StaticMeshComponent>(sponza, "sponza", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "sponza/sponza.obj"));
 
-    /* const auto tank = scene.CreateEntity();
-     m_models.emplace_back(tank);
-     scene.AddComponent<elv::TransformComponent>(tank, lia::vec3(10.0f, 0.0f, 0.0f), lia::vec3(1.0f));
-     scene.AddComponent<elv::StaticMeshComponent>(tank, "tank", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "tank/tank.fbx"));
+    // const auto tank = scene.CreateEntity();
+    // m_models.emplace_back(tank);
+    // scene.AddComponent<elv::TransformComponent>(tank, lia::vec3(10.0f, 0.0f, 0.0f), lia::vec3(1.0f));
+    // scene.AddComponent<elv::StaticMeshComponent>(tank, "tank", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "tank/tank.fbx"));
 
-     const auto robot = scene.CreateEntity();
-     m_models.emplace_back(robot);
-     scene.AddComponent<elv::TransformComponent>(robot, lia::vec3(20.0f, 0.0f, 0.0f), lia::vec3(1.0f));
-     scene.AddComponent<elv::StaticMeshComponent>(robot, "robot", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "robot/robot.obj"));*/
+    // const auto robot = scene.CreateEntity();
+    // m_models.emplace_back(robot);
+    // scene.AddComponent<elv::TransformComponent>(robot, lia::vec3(20.0f, 0.0f, 0.0f), lia::vec3(1.0f));
+    // scene.AddComponent<elv::StaticMeshComponent>(robot, "robot", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "robot/robot.obj"));
+
+    SetupCubes();
 }
 
 void MeshModelSandbox::OnUpdate(float dt)
@@ -78,7 +64,7 @@ void MeshModelSandbox::OnUpdate(float dt)
 
 void MeshModelSandbox::OnRender(float dt)
 {
-    elv::PROFILE("APP renderer: ");
+    // elv::PROFILE("APP renderer: ");
     elv::RenderCommand::SetClearColor(m_clearColor);
     elv::RenderCommand::Clear();
 
@@ -88,10 +74,6 @@ void MeshModelSandbox::OnRender(float dt)
     m_shader->Bind();
 
     m_shader->SetVector3f("u_ViewPos", camera.GetPosition());
-
-    // cube material
-    m_shader->SetInteger("u_Material.enableEmission", 0);
-    m_shader->SetFloat("u_Material.shininess", m_cubeShininess);
 
     // directional light
     m_shader->SetInteger("u_DirLightEnabled", m_DirLightEnabled);
@@ -148,10 +130,9 @@ void MeshModelSandbox::OnRender(float dt)
     // render models
     for (const auto modelEntity : m_models) {
         const auto& transform = scene.GetComponent<elv::TransformComponent>(modelEntity);
-        m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(transform.worldMatrix));
-
         const auto& staticMesh = scene.GetComponent<elv::StaticMeshComponent>(modelEntity);
 
+        m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(transform.worldMatrix));
         const auto& meshPtr = staticMesh.GetMeshPtr();
         if (meshPtr) {
             elv::Renderer::Submit(m_shader, staticMesh.GetMeshPtr(), transform.worldMatrix);
@@ -293,16 +274,6 @@ void MeshModelSandbox::OnImguiRender()
 }
 #endif
 
-void MeshModelSandbox::OnTextureLoaded(const elv::events::TextureLoadedEvent& e)
-{
-    ++m_texturesLoaded;
-
-    if (m_texturesToLoad == m_texturesLoaded) {
-        m_texturesIsReady = true;
-        SetupCubeMesh();
-    }
-}
-
 void MeshModelSandbox::SetEnvironment(const int envIndex)
 {
     const auto& env = kEnvironmenMaterials[envIndex];
@@ -320,11 +291,8 @@ void MeshModelSandbox::SetEnvironment(const int envIndex)
     }
 }
 
-void MeshModelSandbox::SetupCubeMesh()
+void MeshModelSandbox::SetupCubes()
 {
-    auto diffuse = elv::textures::Get("wooden_container");
-    auto specular = elv::textures::Get("wooden_container_specular");
-
     auto& scene = elv::GetScene();
 
     auto mainCube = scene.CreateEntity();
@@ -334,9 +302,8 @@ void MeshModelSandbox::SetupCubeMesh()
     transform.pos = lia::vec3(0.0f, 0.5f, 0.0f);
 
     auto& mesh = scene.AddComponent<elv::StaticMeshComponent>(mainCube, "cube");
-    auto& material = mesh.GetMeshPtr()->GetMaterial();
-    material.SetTexture(elv::Material::TextureSlot::Diffuse, "texture_diffuse", diffuse);
-    material.SetTexture(elv::Material::TextureSlot::Specular, "texture_specular", specular);
+    mesh.AddMaterialTexture(elv::Material::TextureSlot::Diffuse, "wooden_container.png", "assets/images/");
+    mesh.AddMaterialTexture(elv::Material::TextureSlot::Specular, "wooden_container_specular.png", "assets/images/");
 
     for (size_t i = 0; i < kCubesAmount; ++i) {
 
@@ -346,7 +313,7 @@ void MeshModelSandbox::SetupCubeMesh()
         auto& transform = scene.AddComponent<elv::TransformComponent>(cube, kCubePositions[i], lia::vec3(0.5f));
         auto& childMesh = scene.AddComponent<elv::StaticMeshComponent>(cube, "cube");
         auto& childMaterial = childMesh.GetMeshPtr()->GetMaterial();
-        childMaterial.SetTexture(elv::Material::TextureSlot::Diffuse, "texture_diffuse", diffuse);
-        childMaterial.SetTexture(elv::Material::TextureSlot::Specular, "texture_specular", specular);
+        childMesh.AddMaterialTexture(elv::Material::TextureSlot::Diffuse, "wooden_container.png", "assets/images/");
+        childMesh.AddMaterialTexture(elv::Material::TextureSlot::Specular, "wooden_container_specular.png", "assets/images/");
     }
 }

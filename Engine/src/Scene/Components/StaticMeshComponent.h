@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Renderer/Material.h"
 #include "Renderer/RenderTopology.h"
 
 namespace elv {
@@ -30,6 +31,8 @@ public:
     }
 
     const SharedPtr<Mesh>& GetMeshPtr() const { return m_meshPtr; }
+
+    void AddMaterialTexture(const Material::TextureSlot slot, const std::string& name, const std::string& path, bool async = true);
 
 private:
     void LoadMesh(const RenderTopology topology);

@@ -23,9 +23,34 @@ private:
     };
 
 public:
-    void SetTexture(const TextureSlot slot, const std::string& name, const SharedPtr<Texture2D>& texture);
+    /**
+     * Set already loaded texture texture to the slot
+     *
+     * @param slot Texture slot
+     * @param name Texture name
+     * @param texture already loaded texture pointer
+     */
+    void SetTexture(const TextureSlot slot, const std::string& name, SharedPtr<Texture2D> texture);
+
+    /**
+     * Set texture info to the slot, texture will be loaded on LoadTextures function call
+     *
+     * @param slot Texture slot
+     * @param name Texture name
+     */
     void SetTexture(const TextureSlot slot, const std::string& name);
 
+    /**
+     * Set texture info to the slot and immediately call loading
+     *
+     * @param slot Texture slot
+     * @param name Texture name
+     * @param dir Texture path
+     * @param async Async texture loading (true by default)
+     */
+    void SetTexture(const TextureSlot slot, const std::string& name, const std::string& dir, bool async);
+
+    // Load all textures
     void LoadTextures(const std::string& dir, const bool async);
 
     void SetAmbientColor(const lia::vec3& color);
@@ -41,7 +66,6 @@ public:
     float GetShininess() const { return m_shininess; }
 
     void ApplyMaterial(const SharedPtr<Shader>& shader) const;
-    void ResetMaterial() const;
 
 private:
     void LoadTexture(const std::string& dir, const bool async, TextureMap& map, TextureSlot slot);
@@ -53,7 +77,7 @@ private:
     lia::vec3 m_specularColor;
     lia::vec3 m_emissionColor;
 
-    float m_shininess { 1.0f };
+    float m_shininess { 32.0f };
 };
 
 } // namespace elv

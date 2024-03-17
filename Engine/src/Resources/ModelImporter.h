@@ -12,8 +12,7 @@ struct LoadedMeshInfo {
 
 struct LoadedMeshesInfo {
     std::string name;
-    std::string texturesDir;
-
+    SharedPtr<Mesh> root;
     std::vector<LoadedMeshInfo> meshes;
 };
 

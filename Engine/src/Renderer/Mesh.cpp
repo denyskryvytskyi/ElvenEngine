@@ -30,6 +30,20 @@ Mesh::Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint3
     SetupMaterial(texturesInfo);
 }
 
+void Mesh::SetInfo(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices, const std::vector<MeshTexture>& texturesInfo)
+{
+    m_vertices = vertices;
+    m_indices = indices;
+
+    SetupMesh();
+    SetupMaterial(texturesInfo);
+}
+
+void Mesh::AddSubmesh(Mesh&& submesh)
+{
+    m_submeshes.emplace_back(std::move(submesh));
+}
+
 void Mesh::LoadTextures(const std::string& dir, const bool async)
 {
     m_material.LoadTextures(dir, async);
@@ -38,17 +52,11 @@ void Mesh::LoadTextures(const std::string& dir, const bool async)
     }
 }
 
-void Mesh::AddSubmesh(Mesh&& submesh)
-{
-    m_submeshes.emplace_back(std::move(submesh));
-}
-
 void Mesh::Draw(const SharedPtr<Shader>& shader) const
 {
     m_vao->Bind();
     m_material.ApplyMaterial(shader);
     RenderCommand::DrawIndexed(m_vao, 0, m_topology);
-    m_material.ResetMaterial();
 
     // draw submeshes
     for (auto& submesh : m_submeshes) {

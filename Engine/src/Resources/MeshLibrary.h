@@ -15,7 +15,7 @@ public:
     void Update();
     void Shutdown();
 
-    void LoadMesh(const std::string& name, const std::string& path);
+    void LoadMesh(const std::string& name, const std::string& path, SharedPtr<Mesh> root);
 
     SharedPtr<Mesh> GetMesh(const std::string& name) const;
 
