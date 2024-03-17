@@ -73,7 +73,7 @@ https://github.com/denyskryvytskyi/ElvenEngine/assets/25298585/f0d32c8b-1ed2-44e
 | <img src=".github/demo/pong.gif"> | <img src=".github/demo/wizards.gif"> |
 
 ### 3D rendering
-<img src=".github/demo/models.png">
+<img src=".github/demo/models_1.png">
 
 | Lighting environments with spotlight, directional, and point lights | Cube transformation and simple light |
 | --- | --- | 
