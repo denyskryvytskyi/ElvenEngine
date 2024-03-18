@@ -13,7 +13,7 @@ flat out int v_TextureUnit;
 
 void main()
 {
-    gl_Position = u_ViewProjection * a_Position;
+    gl_Position = a_Position * u_ViewProjection;
     v_UV = a_UV;
     v_Color = a_Color;
     v_TextureUnit = int(a_TextureUnit);

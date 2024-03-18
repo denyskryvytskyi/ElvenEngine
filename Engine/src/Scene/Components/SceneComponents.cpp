@@ -52,7 +52,7 @@ void SpriteComponent::LoadTexture()
                     texture = textures::Get(textureName);
                 }
             },
-                                                          string_id(textureName));
+                                                          string_id(textureName), true);
         }
     } else {
         EL_CORE_WARN("Texture loading is failed. Please call SetTexture function first or set members using ctor.")

@@ -33,9 +33,35 @@ MeshModelSandbox::MeshModelSandbox()
     // model loading
     auto& scene = elv::GetScene();
 
+    if (false) {
+
+        const auto robot = scene.CreateEntity();
+        m_models.emplace_back(robot);
+        scene.AddComponent<elv::TransformComponent>(robot, lia::vec3(20.0f, 0.0f, 0.0f), lia::vec3(1.0f));
+        scene.AddComponent<elv::StaticMeshComponent>(robot, "robot", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "robot/robot.obj"));
+    }
+
+    if (true) {
+
+        const auto walle = scene.CreateEntity();
+        m_models.emplace_back(walle);
+        scene.AddComponent<elv::TransformComponent>(walle, lia::vec3(3.0f, 0.55f, 0.0f), lia::vec3(1.0f));
+        scene.AddComponent<elv::StaticMeshComponent>(walle, "walle", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "walle/walle.obj"));
+    }
+
+    if (false) {
+
+        const auto test = scene.CreateEntity();
+        m_models.emplace_back(test);
+        scene.AddComponent<elv::TransformComponent>(test, lia::vec3(0.0f, 0.0f, 0.0f), lia::vec3(0.01f));
+        auto& backpackMesh = scene.AddComponent<elv::StaticMeshComponent>(test, "test", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "backpack/backpack.fbx"));
+        backpackMesh.AddMaterialTexture(elv::Material::TextureSlot::Diffuse, "albedo.jpg", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "backpack"));
+        backpackMesh.AddMaterialTexture(elv::Material::TextureSlot::Specular, "metallic.jpg", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "backpack"));
+    }
+
     const auto entity = scene.CreateEntity();
     m_models.emplace_back(entity);
-    scene.AddComponent<elv::TransformComponent>(entity, lia::vec3(2.0f, 2.0f, 0.0f), lia::vec3(0.01f));
+    scene.AddComponent<elv::TransformComponent>(entity, lia::vec3(-2.0f, 2.0f, 0.0f), lia::vec3(0.01f));
     auto& cerberusMesh = scene.AddComponent<elv::StaticMeshComponent>(entity, "cerberus", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "cerberus/cerberus.fbx"));
     cerberusMesh.AddMaterialTexture(elv::Material::TextureSlot::Specular, "Cerberus_M.tga", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "cerberus/Textures"));
 
@@ -44,17 +70,15 @@ MeshModelSandbox::MeshModelSandbox()
     scene.AddComponent<elv::TransformComponent>(sponza, lia::vec3(0.0f), lia::vec3(0.01f));
     scene.AddComponent<elv::StaticMeshComponent>(sponza, "sponza", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "sponza/sponza.obj"));
 
-    // const auto tank = scene.CreateEntity();
-    // m_models.emplace_back(tank);
-    // scene.AddComponent<elv::TransformComponent>(tank, lia::vec3(10.0f, 0.0f, 0.0f), lia::vec3(1.0f));
-    // scene.AddComponent<elv::StaticMeshComponent>(tank, "tank", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "tank/tank.fbx"));
-
-    // const auto robot = scene.CreateEntity();
-    // m_models.emplace_back(robot);
-    // scene.AddComponent<elv::TransformComponent>(robot, lia::vec3(20.0f, 0.0f, 0.0f), lia::vec3(1.0f));
-    // scene.AddComponent<elv::StaticMeshComponent>(robot, "robot", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "robot/robot.obj"));
-
     SetupCubes();
+
+    const auto sphere = scene.CreateEntity();
+    m_cubes.emplace_back(sphere);
+
+    auto& transform = scene.AddComponent<elv::TransformComponent>(sphere);
+    transform.pos = lia::vec3(-2.0f, 0.5f, 0.0f);
+    auto& sphereMesh = scene.AddComponent<elv::StaticMeshComponent>(sphere, "sphere");
+    sphereMesh.AddMaterialTexture(elv::Material::TextureSlot::Diffuse, "sphere.jpg", "assets/images");
 }
 
 void MeshModelSandbox::OnUpdate(float dt)
@@ -146,8 +170,7 @@ void MeshModelSandbox::OnRender(float dt)
             m_lightShader->SetVector3f("u_Color.ambient", m_pointLights[i].ambient);
             m_lightShader->SetVector3f("u_Color.diffuse", m_pointLights[i].diffuse);
 
-            lia::mat4 lightModel(1.0f);
-            lightModel = lia::scale(lightModel, lia::vec3(0.2f)) * lia::translate({ 1.0f }, m_pointLights[i].position);
+            const lia::mat4 lightModel = lia::scale({ 1.0f }, lia::vec3(0.2f)) * lia::translate({ 1.0f }, m_pointLights[i].position);
 
             elv::Renderer::Submit(m_lightShader, m_lightCubeMesh, lightModel);
         }

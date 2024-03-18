@@ -1,0 +1,64 @@
+# Blender MTL File: 'walle.blend'
+# Material Count: 4
+
+newmtl Hand
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures/Hand_albedo.jpg
+map_Ks textures/Hand_metallic.jpg
+map_bump textures/Hand_normal.png
+map_Ns textures/Hand_roughness.jpg
+refl textures/Hand_metallic.jpg
+
+newmtl Head
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures/Head_albedo.jpg
+map_Ks textures/Head_metallic.jpg
+map_bump textures/Head_normal.png
+map_Ns textures/Head_roughness.jpg
+map_d textures/Head_opacity.jpg
+refl textures/Head_metallic.jpg
+
+newmtl Tors
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_bump textures/Tors_normal.png
+map_Kd textures/Tors_albedo.jpg
+map_Ks textures/Tors_metallic.jpg
+map_Ke textures/Tors_emissive.jpg
+map_Ns textures/Tors_roughness.jpg
+refl textures/Tors_metallic.jpg
+
+newmtl Track
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_bump textures/Track_normal.png
+map_Kd textures/Track_albedo.jpg
+map_Ks textures/Track_metallic.jpg
+map_Ns textures/Track_roughness.jpg
+refl textures/Track_metallic.jpg

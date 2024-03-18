@@ -518,7 +518,7 @@ void Invaders::OnCreate()
     elv::gAudioManager.AddSound("powerup", "powerup.wav");
 
     // Preload textures
-    elv::gTextureManager.Load("shield", "Effects/shield1.png");
+    elv::textures::Load("shield", "assets/images/Effects/shield1.png");
 
     auto& scene = elv::GetScene();
 

@@ -24,14 +24,16 @@ void LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const Material::T
     }
 }
 
-void ProcessMesh(aiMesh* mesh, const aiScene* scene, LoadedMeshInfo& info)
+void ProcessMesh(aiMesh* mesh, const aiScene* scene, lia::mat4 worldMatrix, LoadedMeshInfo& info)
 {
     for (size_t i = 0; i < mesh->mNumVertices; ++i) {
-        // process vertix position, normal and UV
+        // process vertex position, normal and UV
+
+        const lia::vec4 finalNodePos = worldMatrix * lia::vec4(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z, 1.0f);
         MeshVertex vertex;
-        vertex.Position.x = mesh->mVertices[i].x;
-        vertex.Position.y = mesh->mVertices[i].y;
-        vertex.Position.z = mesh->mVertices[i].z;
+        vertex.Position.x = finalNodePos.x;
+        vertex.Position.y = finalNodePos.y;
+        vertex.Position.z = finalNodePos.z;
 
         if (mesh->mNormals) {
             vertex.Normal.x = mesh->mNormals[i].x;
@@ -59,29 +61,32 @@ void ProcessMesh(aiMesh* mesh, const aiScene* scene, LoadedMeshInfo& info)
     // process textures
     if (mesh->mMaterialIndex >= 0) {
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-
         LoadMaterialTextures(material, aiTextureType_DIFFUSE, Material::TextureSlot::Diffuse, info.textures);
         LoadMaterialTextures(material, aiTextureType_SPECULAR, Material::TextureSlot::Specular, info.textures);
         LoadMaterialTextures(material, aiTextureType_EMISSIVE, Material::TextureSlot::Emission, info.textures);
         LoadMaterialTextures(material, aiTextureType_NORMALS, Material::TextureSlot::Normal, info.textures);
+        LoadMaterialTextures(material, aiTextureType_HEIGHT, Material::TextureSlot::Normal, info.textures);
         LoadMaterialTextures(material, aiTextureType_OPACITY, Material::TextureSlot::Transparency, info.textures);
     }
 }
 
-void ProcessNode(aiNode* node, const aiScene* scene, LoadedMeshesInfo& loadedMeshesInfo)
+void ProcessNode(aiNode* node, const aiScene* scene, lia::mat4 worldMatrix, LoadedMeshesInfo& loadedMeshesInfo)
 {
+    auto m = node->mTransformation;
+    worldMatrix = worldMatrix * lia::mat4(m.a1, m.a2, m.a3, m.a4, m.b1, m.b2, m.b3, m.b4, m.c1, m.c2, m.c3, m.c4, m.d1, m.d2, m.d3, m.d4);
+
     // process meshes
     for (size_t i = 0; i < node->mNumMeshes; ++i) {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 
         LoadedMeshInfo meshInfo;
-        ProcessMesh(mesh, scene, meshInfo);
+        ProcessMesh(mesh, scene, worldMatrix, meshInfo);
         loadedMeshesInfo.meshes.emplace_back(std::move(meshInfo));
     }
 
     // process children
     for (size_t i = 0; i < node->mNumChildren; ++i) {
-        ProcessNode(node->mChildren[i], scene, loadedMeshesInfo);
+        ProcessNode(node->mChildren[i], scene, worldMatrix, loadedMeshesInfo);
     }
 }
 
@@ -100,7 +105,7 @@ void ImportModel(const std::string& path, LoadedMeshesInfo& info)
 
     {
         PROFILE_SCOPE(fmt::format("Process model {} nodes: ", path));
-        ProcessNode(scene->mRootNode, scene, info);
+        ProcessNode(scene->mRootNode, scene, lia::mat4(), info);
     }
 }
 

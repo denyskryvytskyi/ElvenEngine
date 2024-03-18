@@ -94,7 +94,6 @@ void TextRenderer::RenderText(std::string_view text, const std::string& fontName
     const auto& glyphs = gFontManager.GetGlyphs(fontName);
 
     s_data.topGlyphOffsetY = glyphs.at(topGlyph).offset.y * s_data.pixelToCamera.y;
-    s_data.shader->Bind();
     s_data.shader->SetVector4f("textColor", color);
     s_data.shader->SetInteger("u_texture", 0);
 
@@ -142,8 +141,6 @@ void TextRenderer::RenderText(std::string_view text, const std::string& fontName
         glyph.texture->BindToUnit(0);
 
         RenderCommand::DrawIndexed(s_data.vao, quadIndexCount);
-
-        glyph.texture->Unbind();
 
         // now advance cursors for next glyph
         currentGlyphPosX += s_data.pixelToCamera.x * scale.x * static_cast<float>(glyph.advance >> 6); // bitshift by 6 to get value in pixels (1/64th times 2^6 = 64)

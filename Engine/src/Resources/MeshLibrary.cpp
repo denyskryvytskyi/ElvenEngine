@@ -26,7 +26,9 @@ static void LoadMeshFromFile(std::vector<LoadedMeshesInfo>& loadedMeshesInfo, co
     info.name = meshName;
     info.root = root;
 
+#ifdef ASSIMP_MODE
     ImportModel(meshPath, info);
+#endif
 
     std::lock_guard<std::mutex> lock(meshLoadingMutex);
     loadedMeshesInfo.emplace_back(info);
@@ -169,9 +171,9 @@ void MeshLibrary::LoadPrimitives()
             for (std::uint32_t x = 0; x <= xSegmentsSphere; ++x) {
                 float xSegment = static_cast<float>(x) / static_cast<float>(xSegmentsSphere);
                 float ySegment = static_cast<float>(y) / static_cast<float>(ySegmentsSphere);
-                float xPos = std::cos(xSegment * TAU) * std::sin(ySegment * PI); // TAU is 2PI
-                float yPos = std::cos(ySegment * PI);
-                float zPos = std::sin(xSegment * TAU) * std::sin(ySegment * PI);
+                float xPos = std::cos(xSegment * TAU) * std::sin(ySegment * PI) / 2.0f; // TAU is 2PI
+                float yPos = std::cos(ySegment * PI) / 2.0f;
+                float zPos = std::sin(xSegment * TAU) * std::sin(ySegment * PI) / 2.0f;
 
                 MeshVertex vertex;
                 vertex.Position = { xPos, yPos, zPos };

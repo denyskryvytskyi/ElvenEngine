@@ -102,6 +102,5 @@ void Render2dSystem::OnRender(float dt)
             elv::TextRenderer::RenderText(textComponent.text, textComponent.fontName, rectTransform.pos, rectTransform.scale, textComponent.color);
         }
     }
-    //
 }
 } // namespace elv
