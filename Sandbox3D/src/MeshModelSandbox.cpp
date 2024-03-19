@@ -4,6 +4,7 @@
 #include <Renderer/Mesh.h>
 #include <Renderer/RenderTopology.h>
 #include <Resources/MeshLibrary.h>
+#include <Scene/Components/LightComponent.h>
 #include <Scene/Components/StaticMeshComponent.h>
 
 #if EDITOR_MODE
@@ -23,15 +24,24 @@ MeshModelSandbox::MeshModelSandbox()
     // light setup
     m_lightShader = elv::ShaderManager::Load("light_shader", "light_cube.vert", "light_cube.frag");
 
-    for (size_t i = 0; i < kPointLightsAmount; i++) {
-        m_pointLights[i].position = kPointLightPositions[i];
+    // models
+    auto& scene = elv::GetScene();
+
+    if (true) {
+
+        const auto walle = scene.CreateEntity();
+        m_models.emplace_back(walle);
+        scene.AddComponent<elv::TransformComponent>(walle, lia::vec3(8.0f, 0.55f, 0.0f), lia::vec3(1.0f));
+        scene.AddComponent<elv::StaticMeshComponent>(walle, "walle", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "adam/adamHead.gltf"));
     }
 
-    // default environment
-    SetEnvironment(0);
+    if (false) {
 
-    // model loading
-    auto& scene = elv::GetScene();
+        const auto test = scene.CreateEntity();
+        m_models.emplace_back(test);
+        scene.AddComponent<elv::TransformComponent>(test, lia::vec3(3.0f, 0.0f, 0.0f), lia::vec3(0.01f));
+        auto& backpackMesh = scene.AddComponent<elv::StaticMeshComponent>(test, "test", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "backpack_gltf/scene.gltf"));
+    }
 
     if (false) {
 
@@ -39,24 +49,6 @@ MeshModelSandbox::MeshModelSandbox()
         m_models.emplace_back(robot);
         scene.AddComponent<elv::TransformComponent>(robot, lia::vec3(20.0f, 0.0f, 0.0f), lia::vec3(1.0f));
         scene.AddComponent<elv::StaticMeshComponent>(robot, "robot", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "robot/robot.obj"));
-    }
-
-    if (true) {
-
-        const auto walle = scene.CreateEntity();
-        m_models.emplace_back(walle);
-        scene.AddComponent<elv::TransformComponent>(walle, lia::vec3(3.0f, 0.55f, 0.0f), lia::vec3(1.0f));
-        scene.AddComponent<elv::StaticMeshComponent>(walle, "walle", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "walle/walle.obj"));
-    }
-
-    if (false) {
-
-        const auto test = scene.CreateEntity();
-        m_models.emplace_back(test);
-        scene.AddComponent<elv::TransformComponent>(test, lia::vec3(0.0f, 0.0f, 0.0f), lia::vec3(0.01f));
-        auto& backpackMesh = scene.AddComponent<elv::StaticMeshComponent>(test, "test", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "backpack/backpack.fbx"));
-        backpackMesh.AddMaterialTexture(elv::Material::TextureSlot::Diffuse, "albedo.jpg", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "backpack"));
-        backpackMesh.AddMaterialTexture(elv::Material::TextureSlot::Specular, "metallic.jpg", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "backpack"));
     }
 
     const auto entity = scene.CreateEntity();
@@ -67,18 +59,43 @@ MeshModelSandbox::MeshModelSandbox()
 
     const auto sponza = scene.CreateEntity();
     m_models.emplace_back(sponza);
-    scene.AddComponent<elv::TransformComponent>(sponza, lia::vec3(0.0f), lia::vec3(0.01f));
+    scene.AddComponent<elv::TransformComponent>(sponza, lia::vec3(0.0f), lia::vec3(0.1f));
     scene.AddComponent<elv::StaticMeshComponent>(sponza, "sponza", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "sponza/sponza.obj"));
 
+    // cubes
     SetupCubes();
 
+    // sphere
     const auto sphere = scene.CreateEntity();
-    m_cubes.emplace_back(sphere);
+    m_primitives.emplace_back(sphere);
 
     auto& transform = scene.AddComponent<elv::TransformComponent>(sphere);
     transform.pos = lia::vec3(-2.0f, 0.5f, 0.0f);
     auto& sphereMesh = scene.AddComponent<elv::StaticMeshComponent>(sphere, "sphere");
-    sphereMesh.AddMaterialTexture(elv::Material::TextureSlot::Diffuse, "sphere.jpg", "assets/images");
+    auto& sphereMaterial = sphereMesh.GetMaterial();
+    sphereMaterial.SetAmbientColor(lia::vec3(0.0f, 1.0f, 0.0f));
+    sphereMaterial.SetDiffuseColor(lia::vec3(0.0f, 1.0f, 0.0f));
+    sphereMaterial.SetSpecularColor(lia::vec3(0.0f, 1.0f, 0.0f));
+    sphereMesh.AddMaterialTexture(elv::Material::TextureSlot::Specular, "white", "");
+    //  sphereMesh.AddMaterialTexture(elv::Material::TextureSlot::Diffuse, "sphere.jpg", "assets/images");
+
+    // =================== LIGHT =======================
+    m_dirLightEntity = scene.CreateEntity();
+    scene.AddComponent<elv::TransformComponent>(m_dirLightEntity);
+    scene.AddComponent<elv::DirectionalLightComponent>(m_dirLightEntity);
+
+    m_spotLightEntity = scene.CreateEntity();
+    scene.AddComponent<elv::TransformComponent>(m_spotLightEntity);
+    scene.AddComponent<elv::SpotLightComponent>(m_spotLightEntity);
+
+    for (size_t i = 0; i < kPointLightsAmount; ++i) {
+        m_pointLightEntities[i] = scene.CreateEntity();
+        scene.AddComponent<elv::PointLightComponent>(m_pointLightEntities[i]);
+        scene.AddComponent<elv::TransformComponent>(m_pointLightEntities[i], kPointLightPositions[i]);
+    }
+
+    // default environment
+    SetEnvironment(0);
 }
 
 void MeshModelSandbox::OnUpdate(float dt)
@@ -96,59 +113,70 @@ void MeshModelSandbox::OnRender(float dt)
     elv::Renderer::BeginScene(camera);
 
     m_shader->Bind();
-
     m_shader->SetVector3f("u_ViewPos", camera.GetPosition());
+
+    auto& scene = elv::GetScene();
+    // ================== LIGHT ===========================
 
     // directional light
     m_shader->SetInteger("u_DirLightEnabled", m_DirLightEnabled);
     if (m_DirLightEnabled) {
-        m_shader->SetVector3f("u_DirLight.direction", m_dirLight.direction);
-        m_shader->SetVector3f("u_DirLight.ambient", m_dirLight.ambient);
-        m_shader->SetVector3f("u_DirLight.diffuse", m_dirLight.diffuse);
-        m_shader->SetVector3f("u_DirLight.specular", m_dirLight.specular);
+        auto& dirLight = scene.GetComponent<elv::DirectionalLightComponent>(m_dirLightEntity);
+        auto& dirLightTr = scene.GetComponent<elv::TransformComponent>(m_dirLightEntity);
+
+        m_shader->SetVector3f("u_DirLight.direction", dirLightTr.rotation);
+        m_shader->SetVector3f("u_DirLight.ambient", dirLight.ambient);
+        m_shader->SetVector3f("u_DirLight.diffuse", dirLight.diffuse);
+        m_shader->SetVector3f("u_DirLight.specular", dirLight.specular);
     }
 
     // point light
     m_shader->SetInteger("u_PointLightEnabled", m_PointLightEnabled);
     if (m_PointLightEnabled) {
         for (size_t i = 0; i < kPointLightsAmount; ++i) {
-            m_shader->SetVector3f(fmt::format("u_PointLights[{}].position", i), m_pointLights[i].position);
-            m_shader->SetVector3f(fmt::format("u_PointLights[{}].ambient", i), m_pointLights[i].ambient);
-            m_shader->SetVector3f(fmt::format("u_PointLights[{}].diffuse", i), m_pointLights[i].diffuse);
-            m_shader->SetVector3f(fmt::format("u_PointLights[{}].specular", i), m_pointLights[i].specular);
-            m_shader->SetFloat(fmt::format("u_PointLights[{}].constant", i), m_pointLights[i].constant);
-            m_shader->SetFloat(fmt::format("u_PointLights[{}].linear", i), m_pointLights[i].linear);
-            m_shader->SetFloat(fmt::format("u_PointLights[{}].quadratic", i), m_pointLights[i].quadratic);
+            auto& pointLight = scene.GetComponent<elv::PointLightComponent>(m_pointLightEntities[i]);
+            auto& pointLightTr = scene.GetComponent<elv::TransformComponent>(m_pointLightEntities[i]);
+
+            m_shader->SetVector3f(fmt::format("u_PointLights[{}].position", i), pointLightTr.pos);
+            m_shader->SetVector3f(fmt::format("u_PointLights[{}].ambient", i), pointLight.ambient);
+            m_shader->SetVector3f(fmt::format("u_PointLights[{}].diffuse", i), pointLight.diffuse);
+            m_shader->SetVector3f(fmt::format("u_PointLights[{}].specular", i), pointLight.specular);
+            m_shader->SetFloat(fmt::format("u_PointLights[{}].constant", i), pointLight.constant);
+            m_shader->SetFloat(fmt::format("u_PointLights[{}].linear", i), pointLight.linear);
+            m_shader->SetFloat(fmt::format("u_PointLights[{}].quadratic", i), pointLight.quadratic);
         }
     }
 
     // spotlight (flashlight in this example with camera position and view direction)
     m_shader->SetInteger("u_SpotLightEnabled", m_SpotLightEnabled);
     if (m_SpotLightEnabled) {
-        m_flashlight.position = camera.GetPosition();
-        m_flashlight.direction = m_cameraController.GetFront();
+        auto& flashLight = scene.GetComponent<elv::SpotLightComponent>(m_spotLightEntity);
+        auto& flashLightTr = scene.GetComponent<elv::TransformComponent>(m_spotLightEntity);
 
-        m_shader->SetVector3f("u_SpotLight.position", m_flashlight.position);
-        m_shader->SetVector3f("u_SpotLight.direction", m_flashlight.direction);
-        m_shader->SetVector3f("u_SpotLight.ambient", m_flashlight.ambient);
-        m_shader->SetVector3f("u_SpotLight.diffuse", m_flashlight.diffuse);
-        m_shader->SetVector3f("u_SpotLight.specular", m_flashlight.specular);
-        m_shader->SetFloat("u_SpotLight.cutOff", cos(lia::radians(m_flashlight.cutOff)));
-        m_shader->SetFloat("u_SpotLight.outerCutOff", cos(lia::radians(m_flashlight.outerCutOff)));
-        m_shader->SetFloat("u_SpotLight.constant", m_flashlight.constant);
-        m_shader->SetFloat("u_SpotLight.linear", m_flashlight.linear);
-        m_shader->SetFloat("u_SpotLight.quadratic", m_flashlight.quadratic);
+        flashLightTr.pos = camera.GetPosition();
+        flashLightTr.rotation = m_cameraController.GetFront();
+
+        m_shader->SetVector3f("u_SpotLight.position", flashLightTr.pos);
+        m_shader->SetVector3f("u_SpotLight.direction", flashLightTr.rotation);
+        m_shader->SetVector3f("u_SpotLight.ambient", flashLight.ambient);
+        m_shader->SetVector3f("u_SpotLight.diffuse", flashLight.diffuse);
+        m_shader->SetVector3f("u_SpotLight.specular", flashLight.specular);
+        m_shader->SetFloat("u_SpotLight.cutOff", cos(lia::radians(flashLight.cutOff)));
+        m_shader->SetFloat("u_SpotLight.outerCutOff", cos(lia::radians(flashLight.outerCutOff)));
+        m_shader->SetFloat("u_SpotLight.constant", flashLight.constant);
+        m_shader->SetFloat("u_SpotLight.linear", flashLight.linear);
+        m_shader->SetFloat("u_SpotLight.quadratic", flashLight.quadratic);
     }
 
-    auto& scene = elv::GetScene();
+    // ===================================================
 
-    // render cubes
-    for (auto cube : m_cubes) {
-        auto& transform = scene.GetComponent<elv::TransformComponent>(cube);
-        auto& cubeMesh = scene.GetComponent<elv::StaticMeshComponent>(cube);
+    // render primitives
+    for (auto primitive : m_primitives) {
+        auto& transform = scene.GetComponent<elv::TransformComponent>(primitive);
+        auto& primitiveMesh = scene.GetComponent<elv::StaticMeshComponent>(primitive);
 
         m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(transform.worldMatrix));
-        elv::Renderer::Submit(m_shader, cubeMesh.GetMeshPtr(), transform.worldMatrix);
+        elv::Renderer::Submit(m_shader, primitiveMesh.GetMeshPtr(), transform.worldMatrix);
     }
 
     // render models
@@ -167,12 +195,13 @@ void MeshModelSandbox::OnRender(float dt)
     if (m_PointLightEnabled) {
         m_lightShader->Bind();
         for (size_t i = 0; i < kPointLightsAmount; ++i) {
-            m_lightShader->SetVector3f("u_Color.ambient", m_pointLights[i].ambient);
-            m_lightShader->SetVector3f("u_Color.diffuse", m_pointLights[i].diffuse);
+            auto& pointLight = scene.GetComponent<elv::PointLightComponent>(m_pointLightEntities[i]);
+            auto& pointLightTr = scene.GetComponent<elv::TransformComponent>(m_pointLightEntities[i]);
 
-            const lia::mat4 lightModel = lia::scale({ 1.0f }, lia::vec3(0.2f)) * lia::translate({ 1.0f }, m_pointLights[i].position);
+            m_lightShader->SetVector3f("u_Color.ambient", pointLight.ambient);
+            m_lightShader->SetVector3f("u_Color.diffuse", pointLight.diffuse);
 
-            elv::Renderer::Submit(m_lightShader, m_lightCubeMesh, lightModel);
+            elv::Renderer::Submit(m_lightShader, m_lightCubeMesh, pointLightTr.worldMatrix);
         }
     }
 
@@ -187,6 +216,8 @@ void MeshModelSandbox::OnProcessInput(float dt)
 #if EDITOR_MODE
 void MeshModelSandbox::OnImguiRender()
 {
+    auto& scene = elv::GetScene();
+
     ImGui::Begin("Editor");
 
     if (ImGui::CollapsingHeader("Scene properties")) {
@@ -213,13 +244,11 @@ void MeshModelSandbox::OnImguiRender()
     }
 
     if (ImGui::CollapsingHeader("Cube")) {
-        elv::editor::DrawSliderFloat("Shininess", 1.0f, 256.0f, m_cubeShininess);
-
-        if (m_cubes.size() > 0) {
+        if (m_primitives.size() > 0) {
             ImGui::Text("Transform:");
 
             auto& scene = elv::GetScene();
-            auto& cubeTransformComponent = scene.GetComponent<elv::TransformComponent>(m_cubes.at(0));
+            auto& cubeTransformComponent = scene.GetComponent<elv::TransformComponent>(m_primitives.at(0));
             if (elv::editor::DrawVec3Control("cube_pos", "Position", cubeTransformComponent.pos)) {
                 cubeTransformComponent.isDirty = true;
             }
@@ -234,11 +263,30 @@ void MeshModelSandbox::OnImguiRender()
         }
     }
 
+    if (ImGui::CollapsingHeader("Cube child")) {
+        if (m_primitives.size() > 0) {
+            ImGui::Text("Transform:");
+
+            auto& scene = elv::GetScene();
+            auto& cubeTransformComponent = scene.GetComponent<elv::TransformComponent>(m_primitives.at(1));
+            if (elv::editor::DrawVec3Control("cube_pos#child", "Position", cubeTransformComponent.pos)) {
+                cubeTransformComponent.isDirty = true;
+            }
+
+            if (elv::editor::DrawVec3Control("cube_rotation#child", "Rotation", cubeTransformComponent.rotation)) {
+                cubeTransformComponent.isDirty = true;
+            }
+            if (elv::editor::DrawVec3Control("cube_scale#child", "Scale", cubeTransformComponent.scale)) {
+                cubeTransformComponent.isDirty = true;
+            }
+            ImGui::Separator();
+        }
+    }
+
     if (ImGui::CollapsingHeader("Model")) {
 
         ImGui::Text("Transform:");
 
-        auto& scene = elv::GetScene();
         auto& modelTransformComponent = scene.GetComponent<elv::TransformComponent>(m_models.at(0));
         if (elv::editor::DrawVec3Control("model_pos", "Position", modelTransformComponent.pos)) {
             modelTransformComponent.isDirty = true;
@@ -256,12 +304,17 @@ void MeshModelSandbox::OnImguiRender()
     if (ImGui::CollapsingHeader("Directional Light")) {
         ImGui::Checkbox("Enable Directional Light", &m_DirLightEnabled);
         ImGui::Separator();
-        elv::editor::DrawVec3Control("dir_light_dir", "Direction", m_dirLight.direction);
+
+        auto& dirLight = scene.GetComponent<elv::DirectionalLightComponent>(m_dirLightEntity);
+        auto& dirLightTr = scene.GetComponent<elv::TransformComponent>(m_dirLightEntity);
+
+        elv::editor::DrawVec3Control("dir_light_dir", "Direction", dirLightTr.rotation);
         ImGui::Separator();
+
         ImGui::Text("Material:");
-        elv::editor::DrawRGBColorControl("ambient##dir", m_dirLight.ambient);
-        elv::editor::DrawRGBColorControl("diffuse##dir", m_dirLight.diffuse);
-        elv::editor::DrawRGBColorControl("specular##dir", m_dirLight.specular);
+        elv::editor::DrawRGBColorControl("ambient##dir", dirLight.ambient);
+        elv::editor::DrawRGBColorControl("diffuse##dir", dirLight.diffuse);
+        elv::editor::DrawRGBColorControl("specular##dir", dirLight.specular);
     }
 
     if (ImGui::CollapsingHeader("Point Lights")) {
@@ -269,12 +322,18 @@ void MeshModelSandbox::OnImguiRender()
         ImGui::Separator();
         for (size_t i = 0; i < kPointLightsAmount; ++i) {
             if (ImGui::TreeNode(fmt::format("Point light {}", i).c_str())) {
-                elv::editor::DrawVec3Control(fmt::format("point_light_pos_{}", i), "Position", m_pointLights[i].position);
+                auto& pointLight = scene.GetComponent<elv::PointLightComponent>(m_pointLightEntities[i]);
+                auto& pointLightTr = scene.GetComponent<elv::TransformComponent>(m_pointLightEntities[i]);
+
+                if (elv::editor::DrawVec3Control(fmt::format("point_light_pos_{}", i), "Position", pointLightTr.pos)) {
+                    pointLightTr.isDirty = true;
+                }
                 ImGui::Separator();
+
                 ImGui::Text("Point Light Material:");
-                elv::editor::DrawRGBColorControl(fmt::format("ambient##point{}", i), m_pointLights[i].ambient);
-                elv::editor::DrawRGBColorControl(fmt::format("diffuse##point{}", i), m_pointLights[i].diffuse);
-                elv::editor::DrawRGBColorControl(fmt::format("specular##point{}", i), m_pointLights[i].specular);
+                elv::editor::DrawRGBColorControl(fmt::format("ambient##point{}", i), pointLight.ambient);
+                elv::editor::DrawRGBColorControl(fmt::format("diffuse##point{}", i), pointLight.diffuse);
+                elv::editor::DrawRGBColorControl(fmt::format("specular##point{}", i), pointLight.specular);
 
                 ImGui::TreePop();
             }
@@ -284,13 +343,16 @@ void MeshModelSandbox::OnImguiRender()
     if (ImGui::CollapsingHeader("Spot Light")) {
         ImGui::Checkbox("Enable Spot Light", &m_SpotLightEnabled);
         ImGui::Separator();
-        elv::editor::DrawSliderFloat("Cut off angle", 0.0f, 180.0f, m_flashlight.cutOff);
-        elv::editor::DrawSliderFloat("Outer cut off angle", 0.0f, 180.0f, m_flashlight.outerCutOff);
+
+        auto& flashLight = scene.GetComponent<elv::SpotLightComponent>(m_spotLightEntity);
+
+        elv::editor::DrawSliderFloat("Cut off angle", 0.0f, 180.0f, flashLight.cutOff);
+        elv::editor::DrawSliderFloat("Outer cut off angle", 0.0f, 180.0f, flashLight.outerCutOff);
         ImGui::Separator();
         ImGui::Text("Material:");
-        elv::editor::DrawRGBColorControl("ambient##spot", m_flashlight.ambient);
-        elv::editor::DrawRGBColorControl("diffuse##spot", m_flashlight.diffuse);
-        elv::editor::DrawRGBColorControl("specular##spot", m_flashlight.specular);
+        elv::editor::DrawRGBColorControl("ambient##spot", flashLight.ambient);
+        elv::editor::DrawRGBColorControl("diffuse##spot", flashLight.diffuse);
+        elv::editor::DrawRGBColorControl("specular##spot", flashLight.specular);
     }
 
     ImGui::End();
@@ -299,18 +361,32 @@ void MeshModelSandbox::OnImguiRender()
 
 void MeshModelSandbox::SetEnvironment(const int envIndex)
 {
+    auto& scene = elv::GetScene();
+
     const auto& env = kEnvironmenMaterials[envIndex];
 
     m_clearColor = env.clearColor;
-    m_dirLight = env.dirLight;
-    m_flashlight.ambient = env.spotLight.ambient;
-    m_flashlight.diffuse = env.spotLight.diffuse;
-    m_flashlight.specular = env.spotLight.specular;
 
+    // directional
+    auto& dirLight = scene.GetComponent<elv::DirectionalLightComponent>(m_dirLightEntity);
+    auto& dirLightTr = scene.GetComponent<elv::TransformComponent>(m_dirLightEntity);
+    dirLight.ambient = env.dirLight.ambient;
+    dirLight.diffuse = env.dirLight.diffuse;
+    dirLight.specular = env.dirLight.specular;
+    dirLightTr.rotation = env.dirLight.direction;
+
+    // flashlight
+    auto& flashLight = scene.GetComponent<elv::SpotLightComponent>(m_spotLightEntity);
+    flashLight.ambient = env.spotLight.ambient;
+    flashLight.diffuse = env.spotLight.diffuse;
+    flashLight.specular = env.spotLight.specular;
+
+    // point lights
     for (size_t i = 0; i < kPointLightsAmount; ++i) {
-        m_pointLights[i].ambient = env.pointLightColors[i] * 0.1f;
-        m_pointLights[i].diffuse = env.pointLightColors[i];
-        m_pointLights[i].specular = env.pointLightColors[i];
+        auto& pointLight = scene.GetComponent<elv::PointLightComponent>(m_pointLightEntities[i]);
+        pointLight.ambient = env.pointLightColors[i] * 0.1f;
+        pointLight.diffuse = env.pointLightColors[i];
+        pointLight.specular = env.pointLightColors[i];
     }
 }
 
@@ -319,7 +395,7 @@ void MeshModelSandbox::SetupCubes()
     auto& scene = elv::GetScene();
 
     auto mainCube = scene.CreateEntity();
-    m_cubes.emplace_back(mainCube);
+    m_primitives.emplace_back(mainCube);
 
     auto& transform = scene.AddComponent<elv::TransformComponent>(mainCube);
     transform.pos = lia::vec3(0.0f, 0.5f, 0.0f);
@@ -331,11 +407,11 @@ void MeshModelSandbox::SetupCubes()
     for (size_t i = 0; i < kCubesAmount; ++i) {
 
         auto cube = scene.CreateChildEntity(mainCube);
-        m_cubes.emplace_back(cube);
+        m_primitives.emplace_back(cube);
 
         auto& transform = scene.AddComponent<elv::TransformComponent>(cube, kCubePositions[i], lia::vec3(0.5f));
         auto& childMesh = scene.AddComponent<elv::StaticMeshComponent>(cube, "cube");
-        auto& childMaterial = childMesh.GetMeshPtr()->GetMaterial();
+        auto& childMaterial = childMesh.GetMaterial();
         childMesh.AddMaterialTexture(elv::Material::TextureSlot::Diffuse, "wooden_container.png", "assets/images/");
         childMesh.AddMaterialTexture(elv::Material::TextureSlot::Specular, "wooden_container_specular.png", "assets/images/");
     }

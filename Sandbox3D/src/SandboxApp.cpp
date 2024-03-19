@@ -1,7 +1,5 @@
-#include "CubesSandbox.h"
-#include "LightCastersSandbox.h"
 #include "MeshModelSandbox.h"
-#include "SimpleLightSandbox.h"
+#include "PrimitivesSandbox.h"
 
 elv::Application* elv::CreateApplication()
 {

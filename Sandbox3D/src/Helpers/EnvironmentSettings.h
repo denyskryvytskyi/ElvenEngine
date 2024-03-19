@@ -1,7 +1,5 @@
 #pragma once
 
-#include <Renderer/Light.h>
-
 constexpr int kEnvironments = 4;
 constexpr int kPointLightsAmount = 4;
 
@@ -31,10 +29,17 @@ struct SpotLightEnvironmentSetting {
     lia::vec3 specular;
 };
 
+struct DirectionalLightEnvironmentSetting {
+    lia::vec3 direction;
+    lia::vec3 ambient;
+    lia::vec3 diffuse;
+    lia::vec3 specular;
+};
+
 struct EnvironmentMaterials {
     lia::vec4 clearColor;
 
-    elv::DirectionalLight dirLight;
+    DirectionalLightEnvironmentSetting dirLight;
     SpotLightEnvironmentSetting spotLight;
 
     lia::vec3 pointLightColors[kPointLightsAmount];

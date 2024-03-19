@@ -63,6 +63,7 @@ void ProcessMesh(aiMesh* mesh, const aiScene* scene, lia::mat4 worldMatrix, Load
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
         LoadMaterialTextures(material, aiTextureType_DIFFUSE, Material::TextureSlot::Diffuse, info.textures);
         LoadMaterialTextures(material, aiTextureType_SPECULAR, Material::TextureSlot::Specular, info.textures);
+        LoadMaterialTextures(material, aiTextureType_METALNESS, Material::TextureSlot::Specular, info.textures);
         LoadMaterialTextures(material, aiTextureType_EMISSIVE, Material::TextureSlot::Emission, info.textures);
         LoadMaterialTextures(material, aiTextureType_NORMALS, Material::TextureSlot::Normal, info.textures);
         LoadMaterialTextures(material, aiTextureType_HEIGHT, Material::TextureSlot::Normal, info.textures);

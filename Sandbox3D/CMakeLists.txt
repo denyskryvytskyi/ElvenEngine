@@ -1,11 +1,7 @@
 set(SANDBOX_SOURCES
     "src/SandboxApp.cpp"
-    "src/CubesSandbox.h"
-    "src/CubesSandbox.cpp"
-    "src/SimpleLightSandbox.h"
-    "src/SimpleLightSandbox.cpp"
-    "src/LightCastersSandbox.h"
-    "src/LightCastersSandbox.cpp"
+    "src/PrimitivesSandbox.h"
+    "src/PrimitivesSandbox.cpp"
     "src/MeshModelSandbox.h"
     "src/MeshModelSandbox.cpp"
     "src/Helpers/EnvironmentSettings.h"

@@ -33,9 +33,13 @@ Elven Engine is primarily a 2D/3D game engine that is being developed from scrat
   - [x] Mesh-Material system (Static mesh support with one material slot per mesh/submesh for now)
   - [x] Primitives: cube, sphere, plane
   - [x] Async 3D model loading and async material textures loading
+  - [ ] Uniform buffer
+  - [ ] Framebuffer
+  - [ ] Cubemap
+  - [ ] Shadows
 + [x] ECS (investigated different techniques and my particular architecture in the [article](https://denyskryvytskyi.github.io/ecs))
   - [x] Data-oriented cache-friendly components system architecture
-  - [x] In-Engine components: Transform, Sprite, Text, Quad, Camera, RectTransform, AABB, Tag
+  - [x] In-Engine components: Transform, Sprite, Text, Quad, StaticMesh, Camera, RectTransform, AABB, Tag
   - [x] Components serialization
   - [x] Behavior component as the entity brain
   - [x] Optional Systems for usability

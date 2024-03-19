@@ -19,14 +19,10 @@ struct SpriteSortingInfo {
     float zOrder { 0.0f };
 };
 
-Render2dSystem::Render2dSystem()
-    : ecs::IComponentSystem()
-{
-    m_orthoCameraEntity = Application::Get().GetOrthographicCameraEntity();
-}
-
 void Render2dSystem::OnInit()
 {
+    m_orthoCameraEntity = Application::Get().GetOrthographicCameraEntity();
+
     gFontManager.Load("arial", "assets/fonts/arial.ttf");
 
     m_spritesPool = m_pScene->GetComponentPool<SpriteComponent>();

@@ -31,6 +31,7 @@ public:
     }
 
     const SharedPtr<Mesh>& GetMeshPtr() const { return m_meshPtr; }
+    Material& GetMaterial();
 
     void AddMaterialTexture(const Material::TextureSlot slot, const std::string& name, const std::string& path, bool async = true);
 

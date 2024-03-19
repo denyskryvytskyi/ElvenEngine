@@ -13,8 +13,8 @@ out vec3 v_FragPos;
 
 void main()
 {
-    vec4 worldPos = vec4(a_Position, 1.0) * u_Model;
-    gl_Position = worldPos * u_ViewProjection;
+    vec4 worldPos = u_Model * vec4(a_Position, 1.0);
+    gl_Position = u_ViewProjection * worldPos;
     v_FragPos = vec3(worldPos);
     v_Normal = mat3(transpose(u_InversedNormalModel)) * a_Normal;
 }

@@ -6,6 +6,7 @@
 
 #include "Core/Profiler.h"
 
+#include "Components/LightComponent.h"
 #include "Components/SceneComponents.h"
 #include "Components/StaticMeshComponent.h"
 #include "Systems/BehaviorSystem.h"
@@ -27,6 +28,9 @@ void Scene::OnInit()
     RegisterComponent<RectTransformComponent>();
     RegisterComponent<AABBComponent>();
     RegisterComponent<TagComponent>();
+    RegisterComponent<PointLightComponent>();
+    RegisterComponent<DirectionalLightComponent>();
+    RegisterComponent<SpotLightComponent>();
     RegisterComponent<StaticMeshComponent>();
     if (gEngineSettings.enableSceneGraph) {
         RegisterComponent<SceneNodeComponent>();

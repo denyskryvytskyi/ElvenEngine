@@ -44,6 +44,11 @@ void Mesh::AddSubmesh(Mesh&& submesh)
     m_submeshes.emplace_back(std::move(submesh));
 }
 
+void Mesh::AddMaterialTexture(const Material::TextureSlot slot, const std::string& name, const std::string& path, bool async)
+{
+    m_material.SetTexture(slot, name, path, async);
+}
+
 void Mesh::LoadTextures(const std::string& dir, const bool async)
 {
     m_material.LoadTextures(dir, async);

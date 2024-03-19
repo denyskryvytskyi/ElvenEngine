@@ -32,19 +32,13 @@ private:
     bool m_SpotLightEnabled { false };
 
     // objects
-    std::vector<elv::ecs::Entity> m_cubes;
-
-    float m_cubeShininess { 1.0f };
-
+    std::vector<elv::ecs::Entity> m_primitives;
     elv::SharedPtr<elv::Shader> m_shader { nullptr };
 
-    // mesh
-    elv::SharedPtr<elv::Mesh> m_cubeMesh { nullptr };
-
     // light
-    elv::PointLight m_pointLights[kPointLightsAmount];
-    elv::DirectionalLight m_dirLight;
-    elv::SpotLight m_flashlight;
+    elv::ecs::Entity m_dirLightEntity;
+    elv::ecs::Entity m_spotLightEntity;
+    elv::ecs::Entity m_pointLightEntities[kPointLightsAmount];
 
     elv::SharedPtr<elv::Mesh> m_lightCubeMesh { nullptr };
     elv::SharedPtr<elv::Shader> m_lightShader { nullptr };

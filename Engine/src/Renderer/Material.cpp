@@ -18,6 +18,20 @@ constexpr const char* kDefaultTextureMapNames[Material::TextureSlot::Count] = {
     "texture_transparency"
 };
 
+Material::Material()
+{
+    // set default textures
+    m_textures[TextureSlot::Diffuse].name = "white";
+    m_textures[TextureSlot::Specular].name = "black";
+    m_textures[TextureSlot::Emission].name = "black";
+    m_textures[TextureSlot::Transparency].name = "white";
+
+    LoadTexture("", false, m_textures[TextureSlot::Diffuse]);
+    LoadTexture("", false, m_textures[TextureSlot::Specular]);
+    LoadTexture("", false, m_textures[TextureSlot::Emission]);
+    LoadTexture("", false, m_textures[TextureSlot::Transparency]);
+}
+
 void Material::SetTexture(const TextureSlot slot, const std::string& name, SharedPtr<Texture2D> texture)
 {
     auto& map = m_textures[slot];
@@ -34,6 +48,7 @@ void Material::SetTexture(const TextureSlot slot, const std::string& name)
 
     auto& map = m_textures[slot];
     map.name = name;
+    map.needReload = true;
 }
 
 void Material::SetTexture(const TextureSlot slot, const std::string& name, const std::string& dir, bool async)
@@ -46,15 +61,16 @@ void Material::SetTexture(const TextureSlot slot, const std::string& name, const
     auto& map = m_textures[slot];
     map.name = name;
 
-    LoadTexture(dir, async, map, slot);
+    LoadTexture(dir, async, map);
 }
 
 void Material::LoadTextures(const std::string& dir, const bool async)
 {
     for (int i = 0; i < TextureSlot::Count; ++i) {
         auto& textureMap = m_textures[i];
-        if (!textureMap.texturePtr && !textureMap.name.empty()) {
-            LoadTexture(dir, async, textureMap, static_cast<TextureSlot>(i));
+        if (textureMap.needReload || (!textureMap.texturePtr && !textureMap.name.empty())) {
+            LoadTexture(dir, async, textureMap);
+            textureMap.needReload = false;
         }
     }
 }
@@ -76,7 +92,7 @@ void Material::SetSpecularColor(const lia::vec3& color)
 
 void Material::SetEmissionColor(const lia::vec3& color)
 {
-    m_emissionColor = color;
+    m_emissiveColor = color;
 }
 
 void Material::SetShininess(const float shininess)
@@ -91,17 +107,17 @@ void Material::ApplyMaterial(const SharedPtr<Shader>& shader) const
         if (textureMap.texturePtr) {
             textureMap.texturePtr->BindToUnit(i);
             shader->SetInteger(fmt::format("u_Material.{}", kDefaultTextureMapNames[i]), i);
-            // TODO: Need to implement white texture binding instead "enabled" flags after PBR implemenetation
-            shader->SetInteger(fmt::format("u_Material.{}_enabled", kDefaultTextureMapNames[i]), 1);
-        } else {
-            shader->SetInteger(fmt::format("u_Material.{}_enabled", kDefaultTextureMapNames[i]), 0);
         }
     }
 
+    shader->SetVector3f("u_Material.ambientColor", m_ambientColor);
+    shader->SetVector3f("u_Material.diffuseColor", m_diffuseColor);
+    shader->SetVector3f("u_Material.specularColor", m_specularColor);
+    shader->SetVector3f("u_Material.emissionColor", m_emissiveColor);
     shader->SetFloat("u_Material.shininess", m_shininess);
 }
 
-void Material::LoadTexture(const std::string& dir, const bool async, Material::TextureMap& map, Material::TextureSlot slot)
+void Material::LoadTexture(const std::string& dir, const bool async, Material::TextureMap& map)
 {
     auto readyTexturePtr = textures::Get(map.name);
     if (readyTexturePtr) {

@@ -42,9 +42,15 @@ void StaticMeshComponent::LoadMesh(const RenderTopology topology)
     }
 }
 
+Material& StaticMeshComponent::GetMaterial()
+{
+    EL_ASSERT(m_meshPtr, "Failed to get material: mesh is empty");
+
+    return m_meshPtr->GetMaterial();
+}
+
 void StaticMeshComponent::AddMaterialTexture(const Material::TextureSlot slot, const std::string& name, const std::string& path, bool async)
 {
-    auto& material = m_meshPtr->GetMaterial();
-    material.SetTexture(slot, name, path, async);
+    m_meshPtr->AddMaterialTexture(slot, name, path, async);
 }
 } // namespace elv

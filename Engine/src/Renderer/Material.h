@@ -18,11 +18,14 @@ public:
 
 private:
     struct TextureMap {
+        bool needReload { false };
         std::string name;
         SharedPtr<Texture2D> texturePtr { nullptr };
     };
 
 public:
+    Material();
+
     /**
      * Set already loaded texture texture to the slot
      *
@@ -62,20 +65,28 @@ public:
     const lia::vec3& GetAmbientColor() const { return m_ambientColor; }
     const lia::vec3& GetDiffuseColor() const { return m_diffuseColor; }
     const lia::vec3& GetSpecularColor() const { return m_specularColor; }
-    const lia::vec3& GetEmissionColor() const { return m_emissionColor; }
+    const lia::vec3& GetEmissionColor() const { return m_emissiveColor; }
     float GetShininess() const { return m_shininess; }
 
     void ApplyMaterial(const SharedPtr<Shader>& shader) const;
 
 private:
-    void LoadTexture(const std::string& dir, const bool async, TextureMap& map, TextureSlot slot);
+    void LoadTexture(const std::string& dir, const bool async, TextureMap& map);
 
 private:
     TextureMap m_textures[TextureSlot::Count];
-    lia::vec3 m_ambientColor;
-    lia::vec3 m_diffuseColor;
-    lia::vec3 m_specularColor;
-    lia::vec3 m_emissionColor;
+
+    // Ambient & diffuse color is enabled by default
+    lia::vec3 m_ambientColor { 1.0f };
+    lia::vec3 m_diffuseColor { 1.0f };
+
+    // Enabled by default but texture is disabled for properly calculating specular texture color.
+    // To enable: set white texture to the specular texture slot
+    lia::vec3 m_specularColor { 1.0f };
+
+    // Enabled by default but texture is disabled for properly calculating emission texture color.
+    // To enable: set white texture to the emission texture slot
+    lia::vec3 m_emissiveColor { 1.0f };
 
     float m_shininess { 32.0f };
 };

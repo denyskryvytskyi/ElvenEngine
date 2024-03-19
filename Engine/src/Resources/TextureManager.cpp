@@ -90,6 +90,10 @@ void TextureManager::Init()
     SharedPtr<Texture2D> whiteTexture = Load("white", 1, 1, 3);
     unsigned char whiteData[] = { 255, 255, 255 }; // RGB format
     whiteTexture->SetData(&whiteData, false);
+
+    SharedPtr<Texture2D> blackTexture = Load("black", 1, 1, 3);
+    unsigned char blackData[] = { 0, 0, 0 }; // RGB format
+    blackTexture->SetData(&blackData, false);
 }
 
 void TextureManager::Update()

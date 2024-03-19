@@ -47,7 +47,6 @@ Application::Application()
     auto& scene = gSceneManager.GetScene();
     m_orthoCameraEntity = scene.CreateEntity();
 
-    // Init renderers
     gTextureManager.Init();
     gMeshLibrary.Init();
     elv::Renderer::Init();

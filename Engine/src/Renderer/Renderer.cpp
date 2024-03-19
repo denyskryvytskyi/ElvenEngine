@@ -19,6 +19,7 @@ void Renderer::Shutdown()
 void Renderer::BeginScene(Camera& camera)
 {
     m_sceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
+    RenderCommand::EnableDepthTesting(true); // may be turned off in text rendering
 }
 
 void Renderer::EndScene()
@@ -35,10 +36,15 @@ void Renderer::Submit(const SharedPtr<Shader>& shader, const SharedPtr<VertexArr
 
 void Renderer::Submit(const SharedPtr<Shader>& shader, const SharedPtr<Mesh>& mesh, const lia::mat4& modelMatrix)
 {
-    shader->SetMatrix4("u_ViewProjection", m_sceneData->ViewProjectionMatrix);
-    shader->SetMatrix4("u_Model", modelMatrix);
+    if (mesh) {
 
-    mesh->Draw(shader);
+        shader->SetMatrix4("u_ViewProjection", m_sceneData->ViewProjectionMatrix);
+        shader->SetMatrix4("u_Model", modelMatrix);
+
+        mesh->Draw(shader);
+    } else {
+        EL_CORE_ERROR("Failed to render mesh: is empty");
+    }
 }
 
 void Renderer::OnWindowResize(std::uint32_t width, std::uint32_t height)

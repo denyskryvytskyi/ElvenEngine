@@ -31,6 +31,7 @@ public:
     void SetInfo(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices, const std::vector<MeshTexture>& texturesInfo);
     void Draw(const SharedPtr<elv::Shader>& shader) const;
     void AddSubmesh(Mesh&& submesh);
+    void AddMaterialTexture(const Material::TextureSlot slot, const std::string& name, const std::string& path, bool async);
 
     void LoadTextures(const std::string& dir, const bool async);
 

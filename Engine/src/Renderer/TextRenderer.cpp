@@ -87,6 +87,8 @@ void TextRenderer::PreRender(const Camera& camera)
 
     s_data.cameraBounds = GetScene().GetComponent<elv::CameraComponent>(Application::Get().GetOrthographicCameraEntity()).camera.GetOrthographicsBounds();
     s_data.pixelToCamera = GetPixelToCameraVec(s_data.cameraBounds);
+
+    RenderCommand::EnableDepthTesting(false);
 }
 
 void TextRenderer::RenderText(std::string_view text, const std::string& fontName, const lia::vec2& pos, const lia::vec2& scale, lia::vec4 color)
