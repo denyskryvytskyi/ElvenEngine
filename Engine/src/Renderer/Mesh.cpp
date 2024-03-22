@@ -8,7 +8,7 @@
 namespace elv {
 
 Mesh::Mesh()
-    : m_vao(elv::VertexArray::Create())
+    : m_vao(VertexArray::Create())
 {
 }
 
@@ -16,7 +16,7 @@ Mesh::Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint3
     : m_topology(topology)
     , m_vertices(vertices)
     , m_indices(indices)
-    , m_vao(elv::VertexArray::Create())
+    , m_vao(VertexArray::Create())
 {
     SetupMesh();
 }
@@ -24,7 +24,7 @@ Mesh::Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint3
 Mesh::Mesh(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices, const std::vector<MeshTexture>& texturesInfo)
     : m_vertices(vertices)
     , m_indices(indices)
-    , m_vao(elv::VertexArray::Create())
+    , m_vao(VertexArray::Create())
 {
     SetupMesh();
     SetupMaterial(texturesInfo);
@@ -71,14 +71,14 @@ void Mesh::Draw(const SharedPtr<Shader>& shader) const
 
 void Mesh::SetupMesh()
 {
-    elv::SharedPtr<elv::VertexBuffer> vbo = elv::VertexBuffer::Create((float*)&m_vertices[0], static_cast<std::uint32_t>(m_vertices.size()) * static_cast<std::uint32_t>(sizeof(MeshVertex)));
-    vbo->SetLayout({ { elv::BufferAttributeType::Float3 },    // pos
-                     { elv::BufferAttributeType::Float3 },    // normal
-                     { elv::BufferAttributeType::Float2 } }); // uv
+    SharedPtr<VertexBuffer> vbo = VertexBuffer::Create((float*)&m_vertices[0], static_cast<std::uint32_t>(m_vertices.size()) * static_cast<std::uint32_t>(sizeof(MeshVertex)));
+    vbo->SetLayout({ { BufferAttributeType::Float3 },    // pos
+                     { BufferAttributeType::Float3 },    // normal
+                     { BufferAttributeType::Float2 } }); // uv
 
     m_vao->AddVertexBuffer(vbo);
 
-    elv::SharedPtr<elv::IndexBuffer> ebo = elv::IndexBuffer::Create(&m_indices[0], static_cast<std::uint32_t>(m_indices.size()));
+    SharedPtr<IndexBuffer> ebo = IndexBuffer::Create(&m_indices[0], static_cast<std::uint32_t>(m_indices.size()));
     m_vao->SetIndexBuffer(ebo);
 }
 

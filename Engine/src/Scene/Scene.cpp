@@ -12,6 +12,7 @@
 #include "Systems/BehaviorSystem.h"
 #include "Systems/Physics2dSystem.h"
 #include "Systems/Render2dSystem.h"
+#include "Systems/RenderSystem.h"
 
 #include "Core/SettingsConfig.h"
 
@@ -38,6 +39,9 @@ void Scene::OnInit()
 
     // Engine systems register
     RegisterSystem<BehaviorSystem>();
+#if ASSIMP_MODE
+    RegisterSystem<RenderSystem>();
+#endif
     RegisterSystem<Render2dSystem>();
     RegisterSystem<Physics2dSystem>();
 
@@ -46,6 +50,7 @@ void Scene::OnInit()
 
         m_sceneGraphRoot = CreateEntity();
         AddComponent<SceneNodeComponent>(m_sceneGraphRoot);
+        AddComponent<TagComponent>(m_sceneGraphRoot, "Root");
     }
 }
 

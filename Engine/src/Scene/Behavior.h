@@ -29,6 +29,6 @@ public:
 
 protected:
     Entity m_entity { 0 };
-    elv::Scene* p_Scene { nullptr };
+    Scene* p_Scene { nullptr };
 };
 } // namespace elv::ecs

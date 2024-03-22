@@ -4,6 +4,7 @@
 
 namespace elv {
 UniquePtr<Renderer::SceneData> Renderer::m_sceneData = MakeUniquePtr<Renderer::SceneData>();
+lia::vec4 Renderer::m_clearColor { 0.2f, 0.2f, 0.2f, 1.0f };
 
 void Renderer::Init()
 {
@@ -19,7 +20,6 @@ void Renderer::Shutdown()
 void Renderer::BeginScene(Camera& camera)
 {
     m_sceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
-    RenderCommand::EnableDepthTesting(true); // may be turned off in text rendering
 }
 
 void Renderer::EndScene()

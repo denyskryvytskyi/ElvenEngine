@@ -27,7 +27,7 @@ Elven Engine is primarily a 2D/3D game engine that is being developed from scrat
   - [x] Batch rendering (quad and texture)
   - [x] Text Rendering
   - [ ] Spritesheet animation
-+ [ ] 3D Renderer (IN PROGRESS)
++ [ ] 3D Renderer (WIP)
   - [x] Phong Lighting
   - [x] Multiple light casters: spotlight, directional, and point light
   - [x] Mesh-Material system (Static mesh support with one material slot per mesh/submesh for now)
@@ -46,21 +46,23 @@ Elven Engine is primarily a 2D/3D game engine that is being developed from scrat
 + [x] Scene
   - [x] Interface to work with ECS
   - [x] Scene Graph based on SceneNodeComponent
-  - [x] Scene serialization
+  - [x] Scene serialization (not all of the components now)
 + [x] Data-driven architecture
   - [x] Load/Save engine settings from/to JSON files
 + [x] Sound engine
   - [x] Support formats: mp3, wav, ogg, flac etc.
   - [x] Add/Play/Pause/Stop functionality
++ [ ] In-engine editor (WIP; based on ImGui)
+  - [x] Editor Camera (holding RMB): WASD movement, QE up/down, ZX rotation
+  - [x] Scene hierarchy
+  - [x] Properties: Transform, Static Mesh material, Point/Directional/Spot light, UI tranform, Text
+  - [x] Settings: fullscreen, VSync, MSAA
+  - [ ] Telemetry: performance panel
+  - [ ] Graphics stats
 + [x] Just cool stuff
   - [x] Orthographic camera controller (OrthographicCameraController), that can be used if needed
   - [x] Fly(FPS-like) 3D camera support (CameraController)
   - [x] Editor camera controller to move on the scene in editor mode.
-+ [ ] In-engine editor (based on ImGui)
-  - [ ] Scene hierarchy
-  - [ ] Properties: transform,
-  - [ ] Telemetry: performance panel
-  - [ ] Graphics stats
 + [ ] Multithreading support
   - [ ] Thread pool
 

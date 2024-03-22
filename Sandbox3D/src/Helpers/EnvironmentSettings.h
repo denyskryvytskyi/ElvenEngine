@@ -1,6 +1,6 @@
 #pragma once
 
-constexpr int kEnvironments = 4;
+constexpr int kEnvironments = 5;
 constexpr int kPointLightsAmount = 4;
 
 static const lia::vec3 kPointLightPositions[] = {
@@ -46,6 +46,30 @@ struct EnvironmentMaterials {
 };
 
 static const EnvironmentMaterials kEnvironmenMaterials[kEnvironments] = {
+    // ============== DEFAULT ================
+    {
+
+        // clear color
+        { 0.3f, 0.5f, 0.8f, 1.0f },
+        // dir light
+        {
+            { -0.2f, -1.0f, -0.3f }, // direction
+            { 0.7f, 0.7f, 0.7f },    // ambient
+            { 0.7f, 0.7f, 0.7f },    // deffuse
+            { 0.7f, 0.7f, 0.7f },    // specular
+        },
+        // spot light
+        {
+            { 0.0f, 0.0f, 0.0f }, // ambient
+            { 0.7f, 0.7f, 0.7f }, // deffuse
+            { 0.7f, 0.7f, 0.7f }, // specular
+        },
+        // point lights
+        {
+            { 1.0f, 0.5f, 0.0f },
+            { 0.0f, 1.0f, 0.5f },
+            { 0.0f, 0.5f, 1.0f },
+            { 0.5f, 1.0f, 0.0f } } },
     // ============== DESERT ================
     {
 

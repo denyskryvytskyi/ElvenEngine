@@ -21,8 +21,6 @@ struct SpriteSortingInfo {
 
 void Render2dSystem::OnInit()
 {
-    m_orthoCameraEntity = Application::Get().GetOrthographicCameraEntity();
-
     gFontManager.Load("arial", "assets/fonts/arial.ttf");
 
     m_spritesPool = m_pScene->GetComponentPool<SpriteComponent>();
@@ -34,7 +32,8 @@ void Render2dSystem::OnInit()
 
 void Render2dSystem::OnRender(float dt)
 {
-    auto& camera = m_pScene->GetComponent<CameraComponent>(m_orthoCameraEntity).camera;
+    const ecs::Entity orthoCameraEntity = Application::Get().GetOrthographicCameraEntity();
+    auto& camera = m_pScene->GetComponent<CameraComponent>(orthoCameraEntity).camera;
     Renderer2D::BeginScene(camera);
 
     // Sprites
@@ -56,7 +55,7 @@ void Render2dSystem::OnRender(float dt)
             auto& spriteComponent = m_spritesPool->GetComponent(info.entity);
             auto& transformComponent = m_trasformsPool->GetComponent(info.entity);
             if (spriteComponent.texture != nullptr) {
-                elv::Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, spriteComponent.color);
+                Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, spriteComponent.color);
             }
         }
     } else {
@@ -67,7 +66,7 @@ void Render2dSystem::OnRender(float dt)
             auto& spriteComponent = spriteComponents[index];
             auto& transformComponent = m_trasformsPool->GetComponent(entity);
             if (spriteComponent.texture != nullptr) {
-                elv::Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, spriteComponent.color);
+                Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, spriteComponent.color);
             }
         }
     }
@@ -81,12 +80,13 @@ void Render2dSystem::OnRender(float dt)
 
         auto& quadComponent = quadComponents[index];
         auto& transformComponent = m_trasformsPool->GetComponent(entity);
-        elv::Renderer2D::DrawQuad(transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, quadComponent.color);
+        Renderer2D::DrawQuad(transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, quadComponent.color);
     }
     //
     Renderer2D::EndScene();
 
     // Text
+    RenderCommand::EnableDepthTesting(false);
     TextRenderer::PreRender(camera);
     auto& textComponents = m_textsPool->GetComponents();
     for (uint32_t i = 0; i < textComponents.size(); ++i) {
@@ -95,8 +95,10 @@ void Render2dSystem::OnRender(float dt)
         auto& textComponent = textComponents[i];
         if (textComponent.isVisible) {
             auto& rectTransform = m_rectTransformPool->GetComponent(entity);
-            elv::TextRenderer::RenderText(textComponent.text, textComponent.fontName, rectTransform.pos, rectTransform.scale, textComponent.color);
+            TextRenderer::RenderText(textComponent.text, textComponent.fontName, rectTransform.pos, rectTransform.scale, textComponent.color);
         }
     }
+
+    RenderCommand::EnableDepthTesting(true);
 }
 } // namespace elv

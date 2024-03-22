@@ -87,7 +87,7 @@ void Renderer2D::Init()
     s_data.quadVAO->SetIndexBuffer(quadEBO);
     delete[] quadIndices;
 
-    s_data.shader = ShaderManager::Load("texture_shader", "texture_shader.vert", "texture_shader.frag");
+    s_data.shader = ShaderManager::Load("sprite", "sprite.vert", "sprite.frag");
 
     // Textures
     SharedPtr<Texture2D> whiteTexture = textures::Get("white");

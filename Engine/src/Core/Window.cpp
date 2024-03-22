@@ -6,7 +6,7 @@
 
 namespace elv {
 
-UniquePtr<Window> elv::Window::Create(const WindowProps& props)
+UniquePtr<Window> Window::Create(const WindowProps& props)
 {
 #ifdef EL_PLATFORM_WINDOWS
     return MakeUniquePtr<WindowsWindow>(props);

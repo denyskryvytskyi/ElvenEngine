@@ -5,12 +5,15 @@
 #include "Scene/Entity.h"
 
 #if EDITOR_MODE
-#    include "ImGui/ImGuiOverlay.h"
+#    include "Editor/Editor.h"
+#    include "Editor/ImGuiOverlay.h"
 #endif
 
 namespace elv {
 
 class Window;
+class CameraController;
+
 class Application {
 private:
     struct Telemetry {
@@ -33,6 +36,8 @@ public:
 
     ecs::Entity GetOrthographicCameraEntity() const { return m_orthoCameraEntity; }
 
+    SharedPtr<CameraController> GetCameraController() const { return m_cameraController; }
+
 protected:
     virtual void OnCreate() {};
     virtual void OnUpdate(float dt) {};
@@ -53,6 +58,8 @@ protected:
     ecs::Entity m_orthoCameraEntity { ecs::INVALID_ENTITY_ID };
     bool m_running { false };
 
+    SharedPtr<CameraController> m_cameraController { nullptr };
+
 private:
     static Application* s_instance;
     static Telemetry s_telemetry;
@@ -63,6 +70,7 @@ private:
 
 #if EDITOR_MODE
     ImGuiOverlay m_imGuiOverlay;
+    editor::Editor m_editor;
 #endif
 
     events::EventHandler<events::WindowResizeEvent> m_windowResizeCallback;

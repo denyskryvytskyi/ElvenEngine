@@ -5,12 +5,6 @@ set(SANDBOX_SOURCES
     "src/MeshModelSandbox.h"
     "src/MeshModelSandbox.cpp"
     "src/Helpers/EnvironmentSettings.h"
-    "assets/shaders/default.frag"
-    "assets/shaders/default.vert"
-    "assets/shaders/colors.frag"
-    "assets/shaders/colors.vert"
-    "assets/shaders/light_cube.frag"
-    "assets/shaders/light_cube.vert"
 )
 
 set(PROJECT_INCLUDE_DIRECTORIES
@@ -62,9 +56,15 @@ else()
   message("This is not supported platform for now!")
 endif()
 
+set(RES_COMMON_PATH ${PROJECT_SOURCE_DIR}/Engine/res)
+
 add_custom_command(TARGET ${APP_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/assets
+        ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/assets
+
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${RES_COMMON_PATH}
         ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/assets
 
         COMMAND ${CMAKE_COMMAND} -E copy

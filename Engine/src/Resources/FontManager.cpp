@@ -54,7 +54,7 @@ void FontManager::Load(const std::string& fontName, const std::string& fontPath)
 
             const std::string textureName = fmt::format("{}{}{}", fontName, "text2d_glyph_", c);
             texture = textures::Load(textureName, face->glyph->bitmap.width, face->glyph->bitmap.rows, 1);
-            texture->SetWrappingMode(elv::TextureWrappingMode::ClampToBorder);
+            texture->SetWrappingMode(TextureWrappingMode::ClampToBorder);
             texture->SetData(face->glyph->bitmap.buffer);
         }
 

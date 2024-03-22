@@ -6,6 +6,7 @@
 #include "Timer.h"
 #include "Window.h"
 
+#include "Renderer/CameraController.h"
 #include "Renderer/OrthographicCameraController.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/Renderer2D.h"
@@ -31,7 +32,6 @@ Application::Application()
     , m_windowCloseCallback([this](const events::WindowCloseEvent& e) { OnWindowClose(e); })
     , m_windowResizeCallback([this](const events::WindowResizeEvent& e) { OnWindowResize(e); })
 {
-
     EL_CORE_ASSERT(!s_instance, "Application already exists!");
     s_instance = this;
 
@@ -43,25 +43,26 @@ Application::Application()
     m_window = Window::Create({ "ElvenEngine", gEngineSettings.windowWidth, gEngineSettings.windowHeight, gEngineSettings.enableFullscreen, gEngineSettings.enableVSync });
     RenderCommand::SetViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
 
-    // Create cameras entity before other inits, because this entity could be used by them
-    auto& scene = gSceneManager.GetScene();
-    m_orthoCameraEntity = scene.CreateEntity();
-
     gTextureManager.Init();
     gMeshLibrary.Init();
-    elv::Renderer::Init();
+    Renderer::Init();
     Renderer2D::Init();
     TextRenderer::Init();
-    gSceneManager.Init();
     gAudioManager.Init();
+    gSceneManager.Init();
 
 #if EDITOR_MODE
     m_imGuiOverlay.Init();
+    m_editor.OnInit();
 #endif
 
     events::Subscribe<events::WindowCloseEvent>(m_windowCloseCallback);
     events::Subscribe<events::WindowResizeEvent>(m_windowResizeCallback);
 
+    // orthographic camera
+    auto& scene = gSceneManager.GetScene();
+    m_orthoCameraEntity = scene.CreateEntity();
+    scene.AddComponent<TagComponent>(m_orthoCameraEntity, "Ortho camera");
     auto& cameraComponent = scene.AddComponent<CameraComponent>(m_orthoCameraEntity, false);
     const float aspectRatio = static_cast<float>(gEngineSettings.windowWidth) / static_cast<float>(gEngineSettings.windowHeight);
     cameraComponent.camera.SetProjection(-aspectRatio * gEngineSettings.orthographicCameraSize, aspectRatio * gEngineSettings.orthographicCameraSize, -gEngineSettings.orthographicCameraSize, gEngineSettings.orthographicCameraSize, -10.0f, 10.0f);
@@ -69,8 +70,9 @@ Application::Application()
     // fps counter
     if (gEngineSettings.enableFpsCounter) {
         m_fpsCounterEntityId = scene.CreateEntity();
-        scene.AddComponent<elv::RectTransformComponent>(m_fpsCounterEntityId, lia::vec2(0.5f, 97.0f), lia::vec2(0.4f, 0.4f));
-        scene.AddComponent<elv::TextComponent>(m_fpsCounterEntityId, "0");
+        scene.AddComponent<TagComponent>(m_fpsCounterEntityId, "FPS text");
+        scene.AddComponent<RectTransformComponent>(m_fpsCounterEntityId, lia::vec2(0.5f, 97.0f), lia::vec2(0.4f, 0.4f));
+        scene.AddComponent<TextComponent>(m_fpsCounterEntityId, "0");
     }
 }
 
@@ -116,16 +118,22 @@ void Application::Run()
         }
 
         if (gEngineSettings.enableFpsCounter) {
-            GetScene().GetComponent<elv::TextComponent>(m_fpsCounterEntityId).text
+            GetScene().GetComponent<TextComponent>(m_fpsCounterEntityId).text
                 = fmt::format("{:0.3f} ms ({} fps)", s_telemetry.frameTime, static_cast<int>(std::floor(s_telemetry.fps)));
         }
 
         // ============== Process input step  ==============
 
+        if (m_cameraController) {
+            m_cameraController->OnProcessInput(elapsedTime);
+        }
         OnProcessInput(elapsedTime);
 
         // ============== Update step  ==============
 
+        if (m_cameraController) {
+            m_cameraController->OnUpdate(elapsedTime);
+        }
         gMeshLibrary.Update();
         gTextureManager.Update();
         gSceneManager.Update(elapsedTime);
@@ -133,16 +141,16 @@ void Application::Run()
         OnUpdate(elapsedTime);
 
         // ============== Rendering Step ==============
-        elv::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
-        elv::RenderCommand::Clear();
+        RenderCommand::SetClearColor(Renderer::GetClearColor());
+        RenderCommand::Clear();
 
-        OnRender(elapsedTime);
         gSceneManager.Render(elapsedTime);
+        OnRender(elapsedTime);
 
 #if EDITOR_MODE
         if (gEngineSettings.enableEditor) {
             m_imGuiOverlay.Begin();
-            m_imGuiOverlay.ImGuiRender();
+            m_editor.OnImGuiRender();
             OnImguiRender();
             m_imGuiOverlay.End();
         }
@@ -175,7 +183,7 @@ void Application::OnWindowResize(const events::WindowResizeEvent& e)
         auto& cameraComponent = GetScene().GetComponent<CameraComponent>(m_orthoCameraEntity);
         const float aspectRatio = static_cast<float>(e.width) / static_cast<float>(e.height);
 
-        auto& camera = GetScene().GetComponent<CameraComponent>(m_orthoCameraEntity).camera;
+        auto& camera = cameraComponent.camera;
         camera.SetProjection(-aspectRatio * gEngineSettings.orthographicCameraSize,
                              aspectRatio * gEngineSettings.orthographicCameraSize,
                              -gEngineSettings.orthographicCameraSize,

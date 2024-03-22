@@ -1,8 +1,6 @@
 set(APP_SOURCES
     "src/TRON.h"
     "src/TRON.cpp"
-    "assets/shaders/texture_shader.frag"
-    "assets/shaders/texture_shader.vert"
 )
 
 set(PROJECT_INCLUDE_DIRECTORIES
@@ -50,7 +48,13 @@ else()
   message("This is not supported platform for now!")
 endif()
 
+set(RES_COMMON_PATH ${PROJECT_SOURCE_DIR}/Engine/res)
+
 add_custom_command(TARGET ${APP_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${RES_COMMON_PATH}
+        ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/assets
+
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/assets
         ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/assets

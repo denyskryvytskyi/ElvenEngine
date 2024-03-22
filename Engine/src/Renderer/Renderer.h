@@ -23,12 +23,16 @@ public:
 
     static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 
+    static void SetClearColor(const lia::vec4& color) { m_clearColor = color; }
+    static const lia::vec4& GetClearColor() { return m_clearColor; }
+
 private:
     struct SceneData {
         lia::mat4 ViewProjectionMatrix;
     };
 
     static UniquePtr<SceneData> m_sceneData;
+    static lia::vec4 m_clearColor;
 };
 
 } // namespace elv

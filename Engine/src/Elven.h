@@ -20,7 +20,9 @@
 
 #include "Events/EventManager.h"
 
-#include "ImGui/ImGuiOverlay.h"
+#if EDITOR_MODE
+#    include "Editor/ImGuiOverlay.h"
+#endif
 
 /// Renderer ////////////////////////////////////
 

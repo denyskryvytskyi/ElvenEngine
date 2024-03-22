@@ -24,12 +24,12 @@ constexpr float uiRectMax = 100.0f;
 constexpr float uiRange = uiRectMax - uiRectMin;
 
 struct Data {
-    elv::SharedPtr<elv::Shader> shader;
+    SharedPtr<Shader> shader;
 
-    elv::SharedPtr<elv::VertexArray> vao;
-    elv::SharedPtr<elv::VertexBuffer> vbo;
+    SharedPtr<VertexArray> vao;
+    SharedPtr<VertexBuffer> vbo;
 
-    elv::OrthoCameraBounds cameraBounds;
+    OrthoCameraBounds cameraBounds;
 
     lia::vec2 pixelToCamera;
     float topGlyphOffsetY { 0.0f };
@@ -38,7 +38,7 @@ struct Data {
 } // namespace
 
 // Convert from pixel size to camera space size
-static lia::vec2 GetPixelToCameraVec(const elv::OrthoCameraBounds& cameraBounds)
+static lia::vec2 GetPixelToCameraVec(const OrthoCameraBounds& cameraBounds)
 {
     return {
         (cameraBounds.right - cameraBounds.left) / static_cast<float>(Application::Get().GetWindow()->GetWidth()),
@@ -46,7 +46,7 @@ static lia::vec2 GetPixelToCameraVec(const elv::OrthoCameraBounds& cameraBounds)
     };
 }
 
-static lia::vec2 FromUiToCameraPos(const lia::vec2& pos, const elv::OrthoCameraBounds cameraBounds)
+static lia::vec2 FromUiToCameraPos(const lia::vec2& pos, const OrthoCameraBounds cameraBounds)
 {
     const float cameraRangeX = cameraBounds.right - cameraBounds.left;
     const float cameraRangeY = cameraBounds.top - cameraBounds.bottom;
@@ -85,10 +85,8 @@ void TextRenderer::PreRender(const Camera& camera)
     s_data.shader->Bind();
     s_data.shader->SetMatrix4("projection", camera.GetProjectionMatrix());
 
-    s_data.cameraBounds = GetScene().GetComponent<elv::CameraComponent>(Application::Get().GetOrthographicCameraEntity()).camera.GetOrthographicsBounds();
+    s_data.cameraBounds = GetScene().GetComponent<CameraComponent>(Application::Get().GetOrthographicCameraEntity()).camera.GetOrthographicsBounds();
     s_data.pixelToCamera = GetPixelToCameraVec(s_data.cameraBounds);
-
-    RenderCommand::EnableDepthTesting(false);
 }
 
 void TextRenderer::RenderText(std::string_view text, const std::string& fontName, const lia::vec2& pos, const lia::vec2& scale, lia::vec4 color)

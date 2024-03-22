@@ -68,36 +68,34 @@ void to_json(nlohmann::json& j, const SpriteComponent& t);
 void from_json(const nlohmann::json& j, SpriteComponent& t);
 
 // TODO: spritesheet animation
-struct SriteAnimation {
-    SriteAnimation(int frames_count, float time_per_frame)
-        : framesCount(frames_count)
-        , timePerFrame(time_per_frame)
-    { }
-
-    void AddTextures(std::string_view sprite_sheet_name, const std::string_view sprite_sheet_path)
-    {
-        /*textures = std::move(textures_);
-        LoadTextures(pathToTextures);*/
-    }
-
-    void Update(float elapsed)
-    {
-
-        elapsedTime += elapsed;
-    }
-
-private:
-    void LoadTextures(const std::string& pathToTextures);
-
-public:
-    int framesCount { 0 };
-    float timePerFrame { 0.0f };  // time while one frame is active
-    int currentTextureName { 0 }; // name of the current frame texture
-    float elapsedTime { 0.0f };   // internal usage
-    std::vector<std::string> textures;
-};
-
-// anim with the spritesheet
+// struct SriteAnimation {
+//    SriteAnimation(int frames_count, float time_per_frame)
+//        : framesCount(frames_count)
+//        , timePerFrame(time_per_frame)
+//    { }
+//
+//    void AddTextures(std::string_view sprite_sheet_name, const std::string_view sprite_sheet_path)
+//    {
+//        /*textures = std::move(textures_);
+//        LoadTextures(pathToTextures);*/
+//    }
+//
+//    void Update(float elapsed)
+//    {
+//
+//        elapsedTime += elapsed;
+//    }
+//
+// private:
+//    void LoadTextures(const std::string& pathToTextures);
+//
+// public:
+//    int framesCount { 0 };
+//    float timePerFrame { 0.0f };  // time while one frame is active
+//    int currentTextureName { 0 }; // name of the current frame texture
+//    float elapsedTime { 0.0f };   // internal usage
+//    std::vector<std::string> textures;
+//};
 
 struct BehaviorComponent {
 public:
@@ -202,7 +200,7 @@ public:
     std::string text;
     lia::vec4 color { 1.0f };
     bool isVisible { true };
-    std::string fontName = "arial";
+    std::string fontName { "arial" };
 };
 
 void to_json(nlohmann::json& j, const TextComponent& t);

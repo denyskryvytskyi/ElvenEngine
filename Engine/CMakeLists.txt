@@ -66,6 +66,7 @@ set(ENGINE_HEADERS
 "src/Scene/Systems/Render2dSystem.h"
 "src/Scene/Systems/BehaviorSystem.h"
 "src/Scene/Systems/Physics2dSystem.h"
+"src/Scene/Systems/RenderSystem.h"
 "src/Resources/TextureManager.h"
 "src/Resources/AudioManager.h"
 "src/Resources/FontManager.h"
@@ -77,8 +78,10 @@ set(ENGINE_HEADERS
 if (EDITOR_MODE)
     set(ENGINE_HEADERS
     ${ENGINE_HEADERS}
-    "src/ImGui/ImGuiOverlay.h"
-    "src/Imgui/EditorHelpers.h"
+    "src/Editor/ImGuiOverlay.h"
+    "src/Editor/EditorHelpers.h"
+    "src/Editor/Editor.h"
+    "src/Editor/Panels/SceneHierarchyPanel.h"
     )
 endif()
 
@@ -128,6 +131,7 @@ set(ENGINE_SOURCES
 "src/Scene/Systems/Render2dSystem.cpp"
 "src/Scene/Systems/BehaviorSystem.cpp"
 "src/Scene/Systems/Physics2dSystem.cpp"
+"src/Scene/Systems/RenderSystem.cpp"
 "src/Resources/TextureManager.cpp"
 "src/Resources/AudioManager.cpp"
 "src/Resources/FontManager.cpp"
@@ -139,8 +143,10 @@ ${ENGINE_HEADERS}
 if (EDITOR_MODE)
     set(ENGINE_SOURCES
     ${ENGINE_SOURCES}
-    "src/ImGui/ImGuiOverlay.cpp"
-    "src/Imgui/EditorHelpers.cpp"
+    "src/Editor/ImGuiOverlay.cpp"
+    "src/Editor/EditorHelpers.cpp"
+    "src/Editor/Editor.cpp"
+    "src/Editor/Panels/SceneHierarchyPanel.cpp"
     )
 endif()
 

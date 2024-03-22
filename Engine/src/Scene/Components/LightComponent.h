@@ -4,9 +4,10 @@
 
 namespace elv {
 struct PointLightComponent {
-    lia::vec3 ambient;
-    lia::vec3 diffuse;
-    lia::vec3 specular;
+    bool enabled { false };
+    lia::vec3 ambient { 0.7f, 0.7f, 0.7f };
+    lia::vec3 diffuse { 0.7f, 0.7f, 0.7f };
+    lia::vec3 specular { 0.7f, 0.7f, 0.7f };
 
     // distance 50
     float constant { 1.0f };
@@ -15,15 +16,18 @@ struct PointLightComponent {
 };
 
 struct DirectionalLightComponent {
-    lia::vec3 ambient;
-    lia::vec3 diffuse;
-    lia::vec3 specular;
+    bool enabled { false };
+    lia::vec3 direction { 0.0f, 1.0f, 0.0f };
+    lia::vec3 ambient { 0.7f, 0.7f, 0.7f };
+    lia::vec3 diffuse { 0.7f, 0.7f, 0.7f };
+    lia::vec3 specular { 0.7f, 0.7f, 0.7f };
 };
 
 struct SpotLightComponent {
-    lia::vec3 ambient;
-    lia::vec3 diffuse;
-    lia::vec3 specular;
+    bool enabled { false };
+    lia::vec3 ambient { 0.7f, 0.7f, 0.7f };
+    lia::vec3 diffuse { 0.7f, 0.7f, 0.7f };
+    lia::vec3 specular { 0.7f, 0.7f, 0.7f };
 
     float cutOff { 12.5f };
     float outerCutOff { 17.5f };
