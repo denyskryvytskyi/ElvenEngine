@@ -13,12 +13,17 @@ public:
     void OnImGuiRender();
 
 private:
-    void DrawEntity(const ecs::Entity parentEntity, Scene& scene);
-    void DrawProperties(Scene& scene);
+    void DrawEntity(const ecs::Entity parentEntity);
+    void DrawProperties();
+
+    template<typename T>
+    void DisplayAddComponentEntry(const std::string& name);
 
 private:
     ecs::Entity m_selectedEntity { ecs::INVALID_ENTITY_ID };
     int m_entityNameCounter { 0 };
+
+    Scene* m_context { nullptr };
 
     SharedPtr<ecs::ComponentPool<SceneNodeComponent>> m_nodesPool { nullptr };
     SharedPtr<ecs::ComponentPool<TagComponent>> m_tagsPool { nullptr };

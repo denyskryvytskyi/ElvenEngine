@@ -68,6 +68,8 @@ public:
     const lia::vec3& GetEmissionColor() const { return m_emissiveColor; }
     float GetShininess() const { return m_shininess; }
 
+    const std::string& GetTextureName(TextureSlot slot) const { return m_textures[slot].name; }
+
     void ApplyMaterial(const SharedPtr<Shader>& shader) const;
 
 private:

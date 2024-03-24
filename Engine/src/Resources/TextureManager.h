@@ -26,13 +26,15 @@ public:
     void Load(const std::string& textureName, const std::string& filePath, const bool isAsync);
 
     // just create texture for specific texture implementation
-    SharedPtr<Texture2D> Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels);
+    SharedPtr<Texture2D> Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels, bool AddToPool = true);
 
     void Init();
     void Update();
     void Shutdown();
 
     SharedPtr<Texture2D> Get(std::string_view textureName);
+
+    std::vector<std::string> GetTextureNames() const;
 
 private:
     void CreateTexture(const LoadedTextureInfo& info);
@@ -56,6 +58,11 @@ inline void Load(const std::string& textureName, const std::string& filePath, co
 inline SharedPtr<Texture2D> Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels = 3)
 {
     return gTextureManager.Load(textureName, width, height, nrChannels);
+}
+
+inline SharedPtr<Texture2D> LoadUnique(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels = 3)
+{
+    return gTextureManager.Load(textureName, width, height, nrChannels, false);
 }
 
 inline SharedPtr<Texture2D> Get(std::string_view textureName)

@@ -19,6 +19,9 @@ public:
 
     SharedPtr<Mesh> GetMesh(const std::string& name) const;
 
+    // return list of names of all meshes
+    std::vector<std::string> GetMeshes() const;
+
 private:
     void ProcessMeshInfo(const LoadedMeshesInfo& meshInfo);
     void LoadPrimitives();

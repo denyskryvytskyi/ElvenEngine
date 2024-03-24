@@ -24,11 +24,11 @@ PrimitivesSandbox::PrimitivesSandbox()
         scene.AddComponent<elv::TransformComponent>(cube);
         scene.AddComponent<elv::TagComponent>(cube, "Cube");
         auto& cubeMesh = scene.AddComponent<elv::StaticMeshComponent>(cube, "cube");
-        auto& cubeMaterial = cubeMesh.GetMaterial();
-        cubeMaterial.SetAmbientColor(lia::vec3(0.0f, 1.0f, 1.0f));
-        cubeMaterial.SetDiffuseColor(lia::vec3(0.0f, 1.0f, 1.0f));
-        cubeMaterial.SetSpecularColor(lia::vec3(0.0f, 1.0f, 1.0f));
-        cubeMesh.AddMaterialTexture(elv::Material::TextureSlot::Specular, "white", "");
+        auto cubeMaterial = cubeMesh.GetMaterial();
+        cubeMaterial->SetAmbientColor(lia::vec3(0.0f, 1.0f, 1.0f));
+        cubeMaterial->SetDiffuseColor(lia::vec3(0.0f, 1.0f, 1.0f));
+        cubeMaterial->SetSpecularColor(lia::vec3(0.0f, 1.0f, 1.0f));
+        cubeMesh.SetMaterialTexture(elv::Material::TextureSlot::Specular, "white", "");
     }
 
     // child cube
@@ -37,11 +37,11 @@ PrimitivesSandbox::PrimitivesSandbox()
         scene.AddComponent<elv::TransformComponent>(childCube, lia::vec3(1.5f, 1.0f, 0.0f), lia::vec3(0.5f));
         scene.AddComponent<elv::TagComponent>(childCube, "Cube small");
         auto& cubeMesh = scene.AddComponent<elv::StaticMeshComponent>(childCube, "cube");
-        auto& cubeMaterial = cubeMesh.GetMaterial();
-        cubeMaterial.SetAmbientColor(lia::vec3(0.0f, 1.0f, 1.0f));
-        cubeMaterial.SetDiffuseColor(lia::vec3(0.0f, 1.0f, 1.0f));
-        cubeMaterial.SetSpecularColor(lia::vec3(0.0f, 1.0f, 1.0f));
-        cubeMesh.AddMaterialTexture(elv::Material::TextureSlot::Specular, "white", "");
+        auto cubeMaterial = cubeMesh.GetMaterial();
+        cubeMaterial->SetAmbientColor(lia::vec3(0.0f, 1.0f, 1.0f));
+        cubeMaterial->SetDiffuseColor(lia::vec3(0.0f, 1.0f, 1.0f));
+        cubeMaterial->SetSpecularColor(lia::vec3(0.0f, 1.0f, 1.0f));
+        cubeMesh.SetMaterialTexture(elv::Material::TextureSlot::Specular, "white", "");
     }
 
     // sphere
@@ -50,11 +50,11 @@ PrimitivesSandbox::PrimitivesSandbox()
     auto& sphereTransform = scene.AddComponent<elv::TransformComponent>(sphere);
     sphereTransform.pos = lia::vec3(-1.5f, 0.0f, 0.0f);
     auto& sphereMesh = scene.AddComponent<elv::StaticMeshComponent>(sphere, "sphere");
-    auto& sphereMaterial = sphereMesh.GetMaterial();
-    sphereMaterial.SetAmbientColor(lia::vec3(0.5f, 0.5f, 0.5f));
-    sphereMaterial.SetDiffuseColor(lia::vec3(0.5f, 0.5f, 0.5f));
-    sphereMaterial.SetSpecularColor(lia::vec3(0.5f, 0.5f, 0.5f));
-    sphereMesh.AddMaterialTexture(elv::Material::TextureSlot::Specular, "white", "");
+    auto sphereMaterial = sphereMesh.GetMaterial();
+    sphereMaterial->SetAmbientColor(lia::vec3(0.5f, 0.5f, 0.5f));
+    sphereMaterial->SetDiffuseColor(lia::vec3(0.5f, 0.5f, 0.5f));
+    sphereMaterial->SetSpecularColor(lia::vec3(0.5f, 0.5f, 0.5f));
+    sphereMesh.SetMaterialTexture(elv::Material::TextureSlot::Specular, "white", "");
 
     // plane
     const auto plane = scene.CreateEntity();
@@ -65,11 +65,11 @@ PrimitivesSandbox::PrimitivesSandbox()
     planeTransform.rotation = lia::vec3(-90.0f, 0.0f, 1.0f);
     planeTransform.scale = lia::vec3(3.0f, 3.0f, 1.0f);
     auto& planeMesh = scene.AddComponent<elv::StaticMeshComponent>(plane, "plane", elv::RenderTopology::TriangleStrip);
-    auto& planeMaterial = planeMesh.GetMaterial();
-    planeMaterial.SetAmbientColor(lia::vec3(1.0f, 1.0f, 0.0f));
-    planeMaterial.SetDiffuseColor(lia::vec3(1.0f, 1.0f, 0.0f));
-    planeMaterial.SetSpecularColor(lia::vec3(1.0f, 1.0f, 0.0f));
-    planeMesh.AddMaterialTexture(elv::Material::TextureSlot::Specular, "white", "");
+    auto planeMaterial = planeMesh.GetMaterial();
+    planeMaterial->SetAmbientColor(lia::vec3(1.0f, 1.0f, 0.0f));
+    planeMaterial->SetDiffuseColor(lia::vec3(1.0f, 1.0f, 0.0f));
+    planeMaterial->SetSpecularColor(lia::vec3(1.0f, 1.0f, 0.0f));
+    planeMesh.SetMaterialTexture(elv::Material::TextureSlot::Specular, "white", "");
 
     // =================== LIGHT =======================
     m_dirLightEntity = scene.CreateEntity();

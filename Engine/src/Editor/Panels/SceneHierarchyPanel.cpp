@@ -6,32 +6,64 @@
 #include "Scene/Components/StaticMeshComponent.h"
 #include "Scene/SceneManager.h"
 
+#include "Resources/MeshLibrary.h"
+#include "Resources/TextureManager.h"
+
 #include <imgui.h>
+#include <imgui_internal.h>
 
 namespace elv::editor {
+
+const char* kMaterialMaps[] = { "Diffuse map",
+                                "Specular map",
+                                "Normal map",
+                                "Emission map",
+                                "Transparency map" };
 
 template<typename ComponentType, typename UIFunction>
 static void DrawComponent(const std::string& title,
                           const ecs::Entity entity,
-                          Scene& scene,
+                          Scene* scene,
                           UIFunction uiFunc)
 {
 
-    if (scene.HasComponent<ComponentType>(entity)) {
+    if (scene->HasComponent<ComponentType>(entity)) {
         const ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen
             | ImGuiTreeNodeFlags_Framed
             | ImGuiTreeNodeFlags_SpanAvailWidth
             | ImGuiTreeNodeFlags_AllowItemOverlap
             | ImGuiTreeNodeFlags_FramePadding;
 
+        ImVec2 contentRegionAvailable = ImGui::GetContentRegionAvail();
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2 { 4, 4 });
+
         const bool opened = ImGui::TreeNodeEx(title.c_str(), flags);
+        ImGui::PopStyleVar();
+
+        const float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+        ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
+        if (ImGui::Button("...", ImVec2 { lineHeight, lineHeight })) {
+            ImGui::OpenPopup("ComponentSettings");
+        }
+
+        bool removeComponent = false;
+        if (ImGui::BeginPopup("ComponentSettings")) {
+            if (ImGui::MenuItem("Remove component"))
+                removeComponent = true;
+
+            ImGui::EndPopup();
+        }
 
         if (opened) {
-            auto& component = scene.GetComponent<ComponentType>(entity);
+            auto& component = scene->GetComponent<ComponentType>(entity);
 
             uiFunc(component);
 
             ImGui::TreePop();
+        }
+
+        if (removeComponent) {
+            scene->RemoveComponent<ComponentType>(entity);
         }
     }
 }
@@ -49,9 +81,10 @@ static bool HasChildren(const ecs::Entity entity, const std::vector<SceneNodeCom
 
 void SceneHierarchyPanel::OnInit()
 {
-    auto& scene = GetScene();
-    m_nodesPool = scene.GetComponentPool<SceneNodeComponent>();
-    m_tagsPool = scene.GetComponentPool<TagComponent>();
+    m_context = &GetScene();
+
+    m_nodesPool = m_context->GetComponentPool<SceneNodeComponent>();
+    m_tagsPool = m_context->GetComponentPool<TagComponent>();
 
     if (!m_nodesPool || !m_tagsPool) {
         EL_CORE_CRITICAL("Failed to get one of the components pool");
@@ -65,18 +98,25 @@ void SceneHierarchyPanel::OnImGuiRender()
     }
 
     m_entityNameCounter = 0;
-    auto& scene = GetScene();
 
     ImGui::Begin("Scene");
-    DrawEntity(ecs::INVALID_ENTITY_ID, scene);
+    DrawEntity(ecs::INVALID_ENTITY_ID);
+
+    // Context menu
+    if (ImGui::BeginPopupContextWindow(0, 1, false)) {
+        if (ImGui::MenuItem("Create Entity"))
+            m_context->CreateEntity();
+
+        ImGui::EndPopup();
+    }
     ImGui::End();
 
     ImGui::Begin("Properties");
-    DrawProperties(scene);
+    DrawProperties();
     ImGui::End();
 }
 
-void SceneHierarchyPanel::DrawEntity(const ecs::Entity parentEntity, Scene& scene)
+void SceneHierarchyPanel::DrawEntity(const ecs::Entity parentEntity)
 {
     auto& nodes = m_nodesPool->GetComponents();
 
@@ -113,7 +153,7 @@ void SceneHierarchyPanel::DrawEntity(const ecs::Entity parentEntity, Scene& scen
 
         // draw entity
         std::string nodeName;
-        if (scene.HasComponent<TagComponent>(nodeEntity)) {
+        if (m_context->HasComponent<TagComponent>(nodeEntity)) {
             nodeName = m_tagsPool->GetComponent(nodeEntity).tag;
         } else {
             nodeName = fmt::format("Entity_{}", m_entityNameCounter++);
@@ -124,25 +164,61 @@ void SceneHierarchyPanel::DrawEntity(const ecs::Entity parentEntity, Scene& scen
             m_selectedEntity = nodeEntity;
         }
 
+        // Context menu
+        bool isEntityToDelete = false;
+        if (ImGui::BeginPopupContextItem(fmt::format("Entity menu{}", nodeEntity).c_str())) {
+            if (ImGui::MenuItem("Create Child Entity"))
+                m_context->CreateChildEntity(nodeEntity);
+            if (ImGui::MenuItem("Delete Entity"))
+                isEntityToDelete = true;
+            ImGui::EndPopup();
+        }
+
         if (opened && hasChildren) {
-            DrawEntity(nodeEntity, scene);
+            DrawEntity(nodeEntity);
             ImGui::TreePop();
+        }
+
+        if (isEntityToDelete) {
+            // make it always invalid because we can destroy child entity that was selected
+            m_selectedEntity = ecs::INVALID_ENTITY_ID;
+
+            m_context->DestroyEntity(nodeEntity);
         }
     }
 }
 
-void SceneHierarchyPanel::DrawProperties(Scene& scene)
+void SceneHierarchyPanel::DrawProperties()
 {
     if (!m_selectedEntity)
         return;
+
+    ImGui::PushItemWidth(-1);
+
+    if (ImGui::Button("Add Component"))
+        ImGui::OpenPopup("AddComponent");
+
+    if (ImGui::BeginPopup("AddComponent")) {
+        DisplayAddComponentEntry<TransformComponent>("Transform");
+        DisplayAddComponentEntry<StaticMeshComponent>("Static Mesh");
+        DisplayAddComponentEntry<PointLightComponent>("Point Light");
+        DisplayAddComponentEntry<SpotLightComponent>("Spotlight");
+        DisplayAddComponentEntry<TextComponent>("Text");
+        DisplayAddComponentEntry<RectTransformComponent>("UI Transform");
+        DisplayAddComponentEntry<SpriteComponent>("Sprite");
+
+        ImGui::EndPopup();
+    }
+
+    ImGui::PopItemWidth();
 
     // ====== TAG ======
     {
         char buffer[256];
         memset(buffer, 0, sizeof(buffer));
 
-        if (scene.HasComponent<TagComponent>(m_selectedEntity)) {
-            auto& tag = scene.GetComponent<TagComponent>(m_selectedEntity).tag;
+        if (m_context->HasComponent<TagComponent>(m_selectedEntity)) {
+            auto& tag = m_context->GetComponent<TagComponent>(m_selectedEntity).tag;
 
             strncpy_s(buffer, sizeof(buffer), tag.c_str(), sizeof(buffer));
 
@@ -152,14 +228,14 @@ void SceneHierarchyPanel::DrawProperties(Scene& scene)
         } else {
             // add input and add tagComponent when value is set
             if (ImGui::InputText("Tag", buffer, IM_ARRAYSIZE(buffer))) {
-                auto& tagComponent = scene.AddComponent<TagComponent>(m_selectedEntity);
+                auto& tagComponent = m_context->AddComponent<TagComponent>(m_selectedEntity);
                 tagComponent.tag = buffer;
             }
         }
     }
 
     // ====== TRANSFORM ======
-    DrawComponent<TransformComponent>("Transform", m_selectedEntity, scene, [](TransformComponent& component) {
+    DrawComponent<TransformComponent>("Transform", m_selectedEntity, m_context, [](TransformComponent& component) {
         if (DrawVec3Control("model_pos", "Position", component.pos)) {
             component.isDirty = true;
         }
@@ -173,42 +249,152 @@ void SceneHierarchyPanel::DrawProperties(Scene& scene)
     });
 
     // ====== STATIC MESH ======
-    DrawComponent<StaticMeshComponent>("Static Mesh", m_selectedEntity, scene, [](StaticMeshComponent& component) {
-        auto& material = component.GetMaterial();
+    DrawComponent<StaticMeshComponent>("Static Mesh", m_selectedEntity, m_context, [](StaticMeshComponent& component) {
+        // Mesh name
+        const auto names = gMeshLibrary.GetMeshes();
 
-        const ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen
-            | ImGuiTreeNodeFlags_Framed
-            | ImGuiTreeNodeFlags_SpanAvailWidth
-            | ImGuiTreeNodeFlags_AllowItemOverlap
-            | ImGuiTreeNodeFlags_FramePadding;
+        static int currentMeshIndex = 0;
+        const bool isMeshSet = component.GetMeshPtr() != nullptr;
+        std::string comboLabel;
 
-        const bool opened = ImGui::TreeNodeEx("Material", flags);
+        if (isMeshSet) {
+            auto it = std::find(names.begin(), names.end(), component.GetMeshName());
 
-        if (opened) {
-            auto ambient = material.GetAmbientColor();
-            auto diffuse = material.GetDiffuseColor();
-            auto specular = material.GetSpecularColor();
-            auto shininess = material.GetShininess();
-
-            if (editor::DrawRGBColorControl("ambient", ambient)) {
-                material.SetAmbientColor(ambient);
+            if (it != names.end()) {
+                currentMeshIndex = std::distance(names.begin(), it);
+                comboLabel = names[currentMeshIndex];
             }
-            if (editor::DrawRGBColorControl("diffuse", diffuse)) {
-                material.SetDiffuseColor(diffuse);
+        } else {
+            comboLabel = "cube";
+            auto it = std::find(names.begin(), names.end(), comboLabel);
+            if (it != names.end()) {
+                currentMeshIndex = std::distance(names.begin(), it);
             }
-            if (editor::DrawRGBColorControl("specular", specular)) {
-                material.SetSpecularColor(specular);
-            }
-            if (editor::DrawSliderFloat("shininess", 1.0f, 256.0f, shininess)) {
-                material.SetShininess(shininess);
-            }
+            component.ResetMesh(comboLabel);
+            component.SetName(comboLabel);
+        }
 
-            ImGui::TreePop();
+        if (ImGui::BeginCombo("Mesh", comboLabel.c_str())) {
+            for (int i = 0; i < names.size(); ++i) {
+                const bool is_selected = (currentMeshIndex == i);
+                if (ImGui::Selectable(names[i].c_str(), is_selected)) {
+                    currentMeshIndex = i;
+                    comboLabel = names[currentMeshIndex];
+                    component.ResetMesh(comboLabel);
+                    component.SetName(comboLabel);
+                }
+
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+
+        // Render Topology
+        const char* items[] = { "Triangles", "Triangle strip", "Lines", "Lines strip" };
+        static int currentTopologyIndex = 0;
+
+        if (isMeshSet) {
+            const RenderTopology currentTopology = component.GetRenderTopology();
+            currentTopologyIndex = static_cast<int>(currentTopology);
+        }
+
+        const char* topologyStr = items[currentTopologyIndex];
+        if (ImGui::BeginCombo("Render topology", topologyStr)) {
+            for (int i = 0; i < IM_ARRAYSIZE(items); ++i) {
+                const bool is_selected = (currentTopologyIndex == i);
+                if (ImGui::Selectable(items[i], is_selected)) {
+                    currentTopologyIndex = i;
+                    topologyStr = items[currentTopologyIndex];
+                    const RenderTopology topology = static_cast<RenderTopology>(currentTopologyIndex);
+                    component.SetTopology(topology);
+                }
+
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+
+        // Material
+        if (Material* material = component.GetMaterial()) {
+            const ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen
+                | ImGuiTreeNodeFlags_Framed
+                | ImGuiTreeNodeFlags_SpanAvailWidth
+                | ImGuiTreeNodeFlags_AllowItemOverlap
+                | ImGuiTreeNodeFlags_FramePadding;
+
+            const bool opened = ImGui::TreeNodeEx("Material", flags);
+
+            if (opened) {
+                lia::vec3 ambient = material->GetAmbientColor();
+                lia::vec3 diffuse = material->GetDiffuseColor();
+                lia::vec3 specular = material->GetSpecularColor();
+                lia::vec3 emissive = material->GetEmissionColor();
+                float shininess = material->GetShininess();
+
+                if (editor::DrawRGBColorControl("ambient", ambient)) {
+                    material->SetAmbientColor(ambient);
+                }
+                if (editor::DrawRGBColorControl("diffuse", diffuse)) {
+                    material->SetDiffuseColor(diffuse);
+                }
+                if (editor::DrawRGBColorControl("specular", specular)) {
+                    material->SetSpecularColor(specular);
+                }
+                if (editor::DrawRGBColorControl("emissive", emissive)) {
+                    material->SetEmissionColor(emissive);
+                }
+                if (editor::DrawSliderFloat("shininess", 1.0f, 256.0f, shininess)) {
+                    material->SetShininess(shininess);
+                }
+
+                // Textures
+                if (Material* material = component.GetMaterial()) {
+                    const auto textures = gTextureManager.GetTextureNames();
+                    static int mapIndices[Material::TextureSlot::Count];
+
+                    for (int i = 0; i < Material::TextureSlot::Count; ++i) {
+
+                        const Material::TextureSlot slot = static_cast<Material::TextureSlot>(i);
+                        const std::string currentMapName = material->GetTextureName(slot);
+
+                        std::string texture;
+
+                        if (!currentMapName.empty()) {
+                            auto it = std::find(textures.begin(), textures.end(), currentMapName);
+                            if (it != textures.end()) {
+                                mapIndices[i] = std::distance(textures.begin(), it);
+                            }
+
+                            texture = textures[mapIndices[i]];
+                        }
+
+                        if (ImGui::BeginCombo(kMaterialMaps[i], texture.c_str())) {
+                            for (int j = 0; j < textures.size(); ++j) {
+                                const bool is_selected = (mapIndices[i] == j);
+                                if (ImGui::Selectable(textures[j].c_str(), is_selected)) {
+                                    mapIndices[i] = j;
+                                    texture = textures[j];
+                                    material->SetTexture(slot, texture, "", true);
+                                }
+
+                                if (is_selected)
+                                    ImGui::SetItemDefaultFocus();
+                            }
+                            ImGui::EndCombo();
+                        }
+                    }
+                }
+                //
+
+                ImGui::TreePop();
+            }
         }
     });
 
     // ====== LIGHT ======
-    DrawComponent<DirectionalLightComponent>("Directional Light", m_selectedEntity, scene, [](DirectionalLightComponent& component) {
+    DrawComponent<DirectionalLightComponent>("Directional Light", m_selectedEntity, m_context, [](DirectionalLightComponent& component) {
         ImGui::Checkbox("Enabled", &component.enabled);
 
         editor::DrawVec3Control("direction", "direction", component.direction);
@@ -217,7 +403,7 @@ void SceneHierarchyPanel::DrawProperties(Scene& scene)
         editor::DrawRGBColorControl("specular", component.specular);
     });
 
-    DrawComponent<SpotLightComponent>("Spot Light", m_selectedEntity, scene, [](SpotLightComponent& component) {
+    DrawComponent<SpotLightComponent>("Spot Light", m_selectedEntity, m_context, [](SpotLightComponent& component) {
         ImGui::Checkbox("Enabled", &component.enabled);
 
         editor::DrawSliderFloat("Cut off angle", 0.0f, 180.0f, component.cutOff);
@@ -228,7 +414,7 @@ void SceneHierarchyPanel::DrawProperties(Scene& scene)
         editor::DrawRGBColorControl("specular", component.specular);
     });
 
-    DrawComponent<PointLightComponent>("Point Light", m_selectedEntity, scene, [](PointLightComponent& component) {
+    DrawComponent<PointLightComponent>("Point Light", m_selectedEntity, m_context, [](PointLightComponent& component) {
         ImGui::Checkbox("Enabled", &component.enabled);
 
         editor::DrawRGBColorControl("ambient", component.ambient);
@@ -237,7 +423,7 @@ void SceneHierarchyPanel::DrawProperties(Scene& scene)
     });
 
     // ====== TEXT ======
-    DrawComponent<TextComponent>("Text", m_selectedEntity, scene, [](TextComponent& component) {
+    DrawComponent<TextComponent>("Text", m_selectedEntity, m_context, [](TextComponent& component) {
         ImGui::Checkbox("Is visible##textVisible", &component.isVisible);
         char buffer[256];
         memset(buffer, 0, sizeof(buffer));
@@ -250,9 +436,25 @@ void SceneHierarchyPanel::DrawProperties(Scene& scene)
         editor::DrawRGBAColorControl("color##text", component.color);
     });
 
-    DrawComponent<RectTransformComponent>("UI Transform", m_selectedEntity, scene, [](RectTransformComponent& component) {
+    DrawComponent<RectTransformComponent>("UI Transform", m_selectedEntity, m_context, [](RectTransformComponent& component) {
         editor::DrawVec2Control("Position", "pos", component.pos);
         editor::DrawVec2Control("Scale", "scale", component.scale);
     });
+
+    // ====== SPRITE ======
+    DrawComponent<SpriteComponent>("Sprite", m_selectedEntity, m_context, [](SpriteComponent& component) {
+        editor::DrawRGBAColorControl("color##sprite", component.color);
+    });
+}
+
+template<typename ComponentType>
+void SceneHierarchyPanel::DisplayAddComponentEntry(const std::string& name)
+{
+    if (!m_context->HasComponent<ComponentType>(m_selectedEntity)) {
+        if (ImGui::MenuItem(name.c_str())) {
+            m_context->AddComponent<ComponentType>(m_selectedEntity);
+            ImGui::CloseCurrentPopup();
+        }
+    }
 }
 } // namespace elv::editor

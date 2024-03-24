@@ -62,7 +62,7 @@ void TextureManager::Load(const std::string& textureName, const std::string& fil
     EL_CORE_INFO("Texture {0} is already loaded.", textureName);
 }
 
-SharedPtr<Texture2D> TextureManager::Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels)
+SharedPtr<Texture2D> TextureManager::Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels, bool addToPool)
 {
     // check whether we already loaded this texture
     auto it = m_textures.find(textureName);
@@ -71,7 +71,9 @@ SharedPtr<Texture2D> TextureManager::Load(const std::string& textureName, std::u
         switch (Renderer::GetAPI()) {
         case RendererAPI::API::OpenGL: {
             SharedPtr<Texture2D> texture = MakeSharedPtr<OpenGLTexture2D>(width, height, nrChannels);
-            m_textures.insert({ textureName, texture });
+            if (addToPool) {
+                m_textures.insert({ textureName, texture });
+            }
             return texture;
         }
         default:
@@ -132,6 +134,17 @@ SharedPtr<Texture2D> TextureManager::Get(std::string_view textureName)
 {
     auto it = m_textures.find(textureName.data());
     return it != m_textures.end() ? it->second : nullptr;
+}
+
+std::vector<std::string> TextureManager::GetTextureNames() const
+{
+    std::vector<std::string> names;
+
+    for (const auto texture : m_textures) {
+        names.emplace_back(texture.first);
+    }
+
+    return names;
 }
 
 void TextureManager::CreateTexture(const LoadedTextureInfo& info)

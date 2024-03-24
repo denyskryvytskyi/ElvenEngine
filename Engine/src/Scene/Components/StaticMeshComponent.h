@@ -30,10 +30,16 @@ public:
         LoadMesh(topology);
     }
 
-    const SharedPtr<Mesh>& GetMeshPtr() const { return m_meshPtr; }
-    Material& GetMaterial();
+    void ResetMesh(const std::string& newMeshName, const RenderTopology topology = RenderTopology::Triangles);
+    void SetMaterialTexture(const Material::TextureSlot slot, const std::string& name, const std::string& path, bool async = true);
+    void SetTopology(const RenderTopology topology);
+    void SetName(const std::string& name) { m_meshName = name; }
 
-    void AddMaterialTexture(const Material::TextureSlot slot, const std::string& name, const std::string& path, bool async = true);
+    const SharedPtr<Mesh>& GetMeshPtr() const { return m_meshPtr; }
+    const std::string& GetMeshName() const { return m_meshName; }
+    const std::string& GetMeshPath() const { return m_meshPath; }
+    Material* GetMaterial();
+    RenderTopology GetRenderTopology() const;
 
 private:
     void LoadMesh(const RenderTopology topology);

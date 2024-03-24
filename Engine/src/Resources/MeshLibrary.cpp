@@ -85,6 +85,17 @@ SharedPtr<Mesh> MeshLibrary::GetMesh(const std::string& name) const
     return it != m_meshes.end() ? it->second : nullptr;
 }
 
+std::vector<std::string> MeshLibrary::GetMeshes() const
+{
+    std::vector<std::string> names;
+
+    for (const auto& mesh : m_meshes) {
+        names.emplace_back(mesh.first);
+    }
+
+    return names;
+}
+
 void MeshLibrary::ProcessMeshInfo(const LoadedMeshesInfo& meshesInfo)
 {
     // process mesh and submeshes

@@ -63,10 +63,12 @@ void Render2dSystem::OnRender(float dt)
         for (uint32_t index = 0; index < spriteComponents.size(); ++index) {
             const ecs::Entity entity = m_spritesPool->GetEntity(index);
 
-            auto& spriteComponent = spriteComponents[index];
-            auto& transformComponent = m_trasformsPool->GetComponent(entity);
-            if (spriteComponent.texture != nullptr) {
-                Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, spriteComponent.color);
+            if (m_pScene->HasComponent<TransformComponent>(entity)) {
+                auto& spriteComponent = spriteComponents[index];
+                auto& transformComponent = m_trasformsPool->GetComponent(entity);
+                if (spriteComponent.texture != nullptr) {
+                    Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, spriteComponent.color);
+                }
             }
         }
     }
@@ -94,8 +96,11 @@ void Render2dSystem::OnRender(float dt)
 
         auto& textComponent = textComponents[i];
         if (textComponent.isVisible) {
-            auto& rectTransform = m_rectTransformPool->GetComponent(entity);
-            TextRenderer::RenderText(textComponent.text, textComponent.fontName, rectTransform.pos, rectTransform.scale, textComponent.color);
+
+            if (m_pScene->HasComponent<RectTransformComponent>(entity)) {
+                auto& rectTransform = m_rectTransformPool->GetComponent(entity);
+                TextRenderer::RenderText(textComponent.text, textComponent.fontName, rectTransform.pos, rectTransform.scale, textComponent.color);
+            }
         }
     }
 

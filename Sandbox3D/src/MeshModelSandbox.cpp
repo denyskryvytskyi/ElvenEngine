@@ -25,7 +25,7 @@ MeshModelSandbox::MeshModelSandbox()
         const auto walle = scene.CreateEntity();
         m_models.emplace_back(walle);
         scene.AddComponent<elv::TagComponent>(walle, "Walle");
-        scene.AddComponent<elv::TransformComponent>(walle, lia::vec3(8.0f, 0.55f, 0.0f), lia::vec3(1.0f));
+        scene.AddComponent<elv::TransformComponent>(walle, lia::vec3(0.0f, 0.0f, 0.0f), lia::vec3(1.0f));
         scene.AddComponent<elv::StaticMeshComponent>(walle, "walle", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "walle/walle.obj"));
     }
 
@@ -50,7 +50,7 @@ MeshModelSandbox::MeshModelSandbox()
     scene.AddComponent<elv::TagComponent>(entity, "Cerberus");
     scene.AddComponent<elv::TransformComponent>(entity, lia::vec3(-2.0f, 2.0f, 0.0f), lia::vec3(0.01f));
     auto& cerberusMesh = scene.AddComponent<elv::StaticMeshComponent>(entity, "cerberus", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "cerberus/cerberus.fbx"));
-    cerberusMesh.AddMaterialTexture(elv::Material::TextureSlot::Specular, "Cerberus_M.tga", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "cerberus/Textures"));
+    cerberusMesh.SetMaterialTexture(elv::Material::TextureSlot::Specular, "Cerberus_M.tga", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "cerberus/Textures"));
 
     const auto sponza = scene.CreateEntity();
     m_models.emplace_back(sponza);
@@ -69,12 +69,12 @@ MeshModelSandbox::MeshModelSandbox()
     auto& transform = scene.AddComponent<elv::TransformComponent>(sphere);
     transform.pos = lia::vec3(-2.0f, 0.5f, 0.0f);
     auto& sphereMesh = scene.AddComponent<elv::StaticMeshComponent>(sphere, "sphere");
-    auto& sphereMaterial = sphereMesh.GetMaterial();
-    sphereMaterial.SetAmbientColor(lia::vec3(0.0f, 1.0f, 0.0f));
-    sphereMaterial.SetDiffuseColor(lia::vec3(0.0f, 1.0f, 0.0f));
-    sphereMaterial.SetSpecularColor(lia::vec3(0.0f, 1.0f, 0.0f));
-    sphereMesh.AddMaterialTexture(elv::Material::TextureSlot::Specular, "white", "");
-    //  sphereMesh.AddMaterialTexture(elv::Material::TextureSlot::Diffuse, "sphere.jpg", "assets/images");
+    auto sphereMaterial = sphereMesh.GetMaterial();
+    sphereMaterial->SetAmbientColor(lia::vec3(0.0f, 1.0f, 0.0f));
+    sphereMaterial->SetDiffuseColor(lia::vec3(0.0f, 1.0f, 0.0f));
+    sphereMaterial->SetSpecularColor(lia::vec3(0.0f, 1.0f, 0.0f));
+    sphereMesh.SetMaterialTexture(elv::Material::TextureSlot::Specular, "white", "");
+    //  sphereMesh.SetMaterialTexture(elv::Material::TextureSlot::Diffuse, "sphere.jpg", "assets/images");
 
     // =================== LIGHT =======================
     m_dirLightEntity = scene.CreateEntity();
@@ -106,10 +106,13 @@ void MeshModelSandbox::OnUpdate(float dt)
     if (m_cameraController) {
         auto& scene = elv::GetScene();
 
-        auto& flashLightTr = scene.GetComponent<elv::TransformComponent>(m_flashLightEntity);
+        if (scene.HasComponent<elv::TransformComponent>(m_flashLightEntity)) {
 
-        flashLightTr.pos = m_cameraController->GetCamera().GetPosition();
-        flashLightTr.rotation = m_cameraController->GetFront();
+            auto& flashLightTr = scene.GetComponent<elv::TransformComponent>(m_flashLightEntity);
+
+            flashLightTr.pos = m_cameraController->GetCamera().GetPosition();
+            flashLightTr.rotation = m_cameraController->GetFront();
+        }
     }
 }
 
@@ -191,8 +194,8 @@ void MeshModelSandbox::SetupCubes()
     transform.pos = lia::vec3(0.0f, 0.5f, 0.0f);
 
     auto& mesh = scene.AddComponent<elv::StaticMeshComponent>(mainCube, "cube");
-    mesh.AddMaterialTexture(elv::Material::TextureSlot::Diffuse, "wooden_container.png", "assets/images/");
-    mesh.AddMaterialTexture(elv::Material::TextureSlot::Specular, "wooden_container_specular.png", "assets/images/");
+    mesh.SetMaterialTexture(elv::Material::TextureSlot::Diffuse, "wooden_container.png", "assets/images/");
+    mesh.SetMaterialTexture(elv::Material::TextureSlot::Specular, "wooden_container_specular.png", "assets/images/");
 
     for (size_t i = 0; i < kCubesAmount; ++i) {
 
@@ -202,8 +205,7 @@ void MeshModelSandbox::SetupCubes()
 
         auto& transform = scene.AddComponent<elv::TransformComponent>(cube, kCubePositions[i], lia::vec3(0.5f));
         auto& childMesh = scene.AddComponent<elv::StaticMeshComponent>(cube, "cube");
-        auto& childMaterial = childMesh.GetMaterial();
-        childMesh.AddMaterialTexture(elv::Material::TextureSlot::Diffuse, "wooden_container.png", "assets/images/");
-        childMesh.AddMaterialTexture(elv::Material::TextureSlot::Specular, "wooden_container_specular.png", "assets/images/");
+        childMesh.SetMaterialTexture(elv::Material::TextureSlot::Diffuse, "wooden_container.png", "assets/images/");
+        childMesh.SetMaterialTexture(elv::Material::TextureSlot::Specular, "wooden_container_specular.png", "assets/images/");
     }
 }

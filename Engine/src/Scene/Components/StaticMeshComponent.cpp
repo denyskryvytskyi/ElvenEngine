@@ -15,7 +15,8 @@ void StaticMeshComponent::LoadMesh(const RenderTopology topology)
     if (!m_meshName.empty()) {
         auto meshPtr = gMeshLibrary.GetMesh(m_meshName);
         if (meshPtr) {
-            m_meshPtr = meshPtr;
+            // make new instance of cube mesh to be able to change material only for this entity
+            m_meshPtr = MakeSharedPtr<Mesh>(*meshPtr);
             m_meshPtr->SetTopology(topology);
         } else if (m_meshPath.empty()) {
             EL_CORE_WARN("Failed to set mesh to the Static Mesh Component, mesh path is empty");
@@ -32,7 +33,6 @@ void StaticMeshComponent::LoadMesh(const RenderTopology topology)
                     // load textures async
                     const std::string directory = m_meshPath.substr(0, m_meshPath.find_last_of('/'));
                     if (m_meshPtr) {
-                        m_meshPtr->SetTopology(topology);
                         m_meshPtr->LoadTextures(directory, true);
                     }
                 }
@@ -42,15 +42,48 @@ void StaticMeshComponent::LoadMesh(const RenderTopology topology)
     }
 }
 
-Material& StaticMeshComponent::GetMaterial()
+void StaticMeshComponent::ResetMesh(const std::string& newMeshName, const RenderTopology topology)
 {
-    EL_ASSERT(m_meshPtr, "Failed to get material: mesh is empty");
-
-    return m_meshPtr->GetMaterial();
+    if (!newMeshName.empty()) {
+        auto meshPtr = gMeshLibrary.GetMesh(newMeshName);
+        if (meshPtr) {
+            m_meshPtr = MakeSharedPtr<Mesh>(*meshPtr);
+            m_meshPtr->SetTopology(topology);
+        } else {
+            EL_CORE_WARN("Failed to reset mesh: mesh {} isn't imported", newMeshName.c_str());
+        }
+    }
 }
 
-void StaticMeshComponent::AddMaterialTexture(const Material::TextureSlot slot, const std::string& name, const std::string& path, bool async)
+void StaticMeshComponent::SetTopology(const RenderTopology topology)
 {
-    m_meshPtr->AddMaterialTexture(slot, name, path, async);
+    if (m_meshPtr) {
+        m_meshPtr->SetTopology(topology);
+    }
+}
+
+Material* StaticMeshComponent::GetMaterial()
+{
+    if (m_meshPtr) {
+        return &m_meshPtr->GetMaterial();
+    }
+
+    EL_CORE_ERROR("Failed to get material: mesh is empty");
+
+    return nullptr;
+}
+
+RenderTopology StaticMeshComponent::GetRenderTopology() const
+{
+    if (m_meshPtr) {
+        return m_meshPtr->GetRenderTopology();
+    }
+
+    return RenderTopology::Triangles;
+}
+
+void StaticMeshComponent::SetMaterialTexture(const Material::TextureSlot slot, const std::string& name, const std::string& path, bool async)
+{
+    m_meshPtr->SetMaterialTexture(slot, name, path, async);
 }
 } // namespace elv
