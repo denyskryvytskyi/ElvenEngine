@@ -5,10 +5,11 @@
 namespace elv {
 struct PointLightComponent {
     bool enabled { false };
+    bool debugRender { false };
+
     lia::vec3 ambient { 0.7f, 0.7f, 0.7f };
     lia::vec3 diffuse { 0.7f, 0.7f, 0.7f };
     lia::vec3 specular { 0.7f, 0.7f, 0.7f };
-
     // distance 50
     float constant { 1.0f };
     float linear { 0.09f };
@@ -25,6 +26,9 @@ struct DirectionalLightComponent {
 
 struct SpotLightComponent {
     bool enabled { false };
+    bool flashlightMode { false }; // follow camera
+    bool debugRender { false };
+
     lia::vec3 ambient { 0.7f, 0.7f, 0.7f };
     lia::vec3 diffuse { 0.7f, 0.7f, 0.7f };
     lia::vec3 specular { 0.7f, 0.7f, 0.7f };

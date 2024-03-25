@@ -201,6 +201,7 @@ void SceneHierarchyPanel::DrawProperties()
     if (ImGui::BeginPopup("AddComponent")) {
         DisplayAddComponentEntry<TransformComponent>("Transform");
         DisplayAddComponentEntry<StaticMeshComponent>("Static Mesh");
+        DisplayAddComponentEntry<DirectionalLightComponent>("Directional Light");
         DisplayAddComponentEntry<PointLightComponent>("Point Light");
         DisplayAddComponentEntry<SpotLightComponent>("Spotlight");
         DisplayAddComponentEntry<TextComponent>("Text");
@@ -253,7 +254,7 @@ void SceneHierarchyPanel::DrawProperties()
         // Mesh name
         const auto names = gMeshLibrary.GetMeshes();
 
-        static int currentMeshIndex = 0;
+        static std::uint64_t currentMeshIndex = 0;
         const bool isMeshSet = component.GetMeshPtr() != nullptr;
         std::string comboLabel;
 
@@ -352,7 +353,7 @@ void SceneHierarchyPanel::DrawProperties()
                 // Textures
                 if (Material* material = component.GetMaterial()) {
                     const auto textures = gTextureManager.GetTextureNames();
-                    static int mapIndices[Material::TextureSlot::Count];
+                    static std::uint64_t mapIndices[Material::TextureSlot::Count];
 
                     for (int i = 0; i < Material::TextureSlot::Count; ++i) {
 
@@ -405,6 +406,8 @@ void SceneHierarchyPanel::DrawProperties()
 
     DrawComponent<SpotLightComponent>("Spot Light", m_selectedEntity, m_context, [](SpotLightComponent& component) {
         ImGui::Checkbox("Enabled", &component.enabled);
+        ImGui::Checkbox("Flashlight mode", &component.flashlightMode);
+        ImGui::Checkbox("Debug render", &component.debugRender);
 
         editor::DrawSliderFloat("Cut off angle", 0.0f, 180.0f, component.cutOff);
         editor::DrawSliderFloat("Outer cut off angle", 0.0f, 180.0f, component.outerCutOff);
@@ -416,6 +419,7 @@ void SceneHierarchyPanel::DrawProperties()
 
     DrawComponent<PointLightComponent>("Point Light", m_selectedEntity, m_context, [](PointLightComponent& component) {
         ImGui::Checkbox("Enabled", &component.enabled);
+        ImGui::Checkbox("Debug render", &component.debugRender);
 
         editor::DrawRGBColorControl("ambient", component.ambient);
         editor::DrawRGBColorControl("diffuse", component.diffuse);

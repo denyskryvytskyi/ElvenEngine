@@ -48,19 +48,19 @@ struct SpotLight {
     float outerCutOff;
 };
 
-#define NR_POINT_LIGHTS 4
+#define MAX_POINT_LIGHTS 16
+#define MAX_SPOT_LIGHTS 16
 
 uniform vec3 u_ViewPos;
 uniform Material u_Material;
 
 uniform bool u_DirLightEnabled;
-uniform bool u_SpotLightEnabled;
-uniform bool u_PointLightEnabled;
 uniform int u_ActivePointLightsAmount;
+uniform int u_ActiveSpotLightsAmount;
 
 uniform DirLight u_DirLight;
-uniform PointLight u_PointLights[NR_POINT_LIGHTS];
-uniform SpotLight u_SpotLight;
+uniform PointLight u_PointLights[MAX_POINT_LIGHTS];
+uniform SpotLight u_SpotLights[MAX_SPOT_LIGHTS];
 
 in vec3 v_FragPos;
 in vec3 v_Normal;
@@ -100,16 +100,11 @@ void main()
         result += CalcDirLight(u_DirLight, diffuseMap, specularMap, emissionMap, normal, viewDir);
     }
 
-    if (u_PointLightEnabled)
-    {
-        for (int i = 0; i < NR_POINT_LIGHTS && i < u_ActivePointLightsAmount; ++i)
-            result += CalcPointLight(u_PointLights[i], diffuseMap, specularMap, emissionMap, normal, viewDir);
-    }
+    for (int i = 0; i < MAX_POINT_LIGHTS && i < u_ActivePointLightsAmount; ++i)
+        result += CalcPointLight(u_PointLights[i], diffuseMap, specularMap, emissionMap, normal, viewDir);
 
-    if (u_SpotLightEnabled)
-    {
-        result += CalcSpotLight(u_SpotLight, diffuseMap, specularMap, emissionMap, normal, viewDir);
-    }
+    for (int i = 0; i < MAX_SPOT_LIGHTS && i < u_ActiveSpotLightsAmount; ++i)
+        result += CalcSpotLight(u_SpotLights[i], diffuseMap, specularMap, emissionMap, normal, viewDir);
 
     float alpha = texture(u_Material.texture_transparency, v_UV).r * diffuseMapWithAlpha.a;
 

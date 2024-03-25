@@ -54,9 +54,13 @@ Elven Engine is primarily a 2D/3D game engine that is being developed from scrat
   - [x] Add/Play/Pause/Stop functionality
 + [ ] In-engine editor (WIP; based on ImGui)
   - [x] Editor Camera (holding RMB): WASD movement, QE up/down, ZX rotation
-  - [x] Scene hierarchy
-  - [x] Properties: Transform, Static Mesh material, Point/Directional/Spot light, UI tranform, Text
-  - [x] Settings: fullscreen, VSync, MSAA
+  - [x] Scene hierarchy panel
+  - [x] Context menu to add/delete entity
+  - [x] Properties panel: 
+    - [x] Components: Transform, Static Mesh with material, Point/Directional/Spot light, UI transform, Text, Sprite
+    - [x] "Add component" button
+    - [x] Component settings context menu
+  - [x] Settings panel: fullscreen, VSync, MSAA
   - [ ] Telemetry: performance panel
   - [ ] Graphics stats
 + [x] Just cool stuff
@@ -64,9 +68,17 @@ Elven Engine is primarily a 2D/3D game engine that is being developed from scrat
   - [x] Fly(FPS-like) 3D camera support (CameraController)
   - [x] Editor camera controller to move on the scene in editor mode.
 + [ ] Multithreading support
+  - [x] async resources loading: texture, mesh
   - [ ] Thread pool
 
 ## Demo
+### 3D rendering
+<img src=".github/demo/Scene_demo_0.png">
+
+| Lighting environments with spotlight, directional, and point lights | Cube transformation and simple light |
+| --- | --- | 
+| <img src=".github/demo/light_casters_demo.gif"> | <img src=".github/demo/cube_light_demo.gif"> |
+
 ### 2D Rendering
 **Space Invaders full demo**
 
@@ -77,13 +89,6 @@ https://github.com/denyskryvytskyi/ElvenEngine/assets/25298585/f0d32c8b-1ed2-44e
 | <img src=".github/demo/invaders.gif"> | <img src=".github/demo/tron.gif"> |
 | Ping Pong | Quad and texture batch rendering (20000 wizards) |
 | <img src=".github/demo/pong.gif"> | <img src=".github/demo/wizards.gif"> |
-
-### 3D rendering
-<img src=".github/demo/models_1.png">
-
-| Lighting environments with spotlight, directional, and point lights | Cube transformation and simple light |
-| --- | --- | 
-| <img src=".github/demo/light_casters_demo.gif"> | <img src=".github/demo/cube_light_demo.gif"> |
 
 ## Getting Started
 

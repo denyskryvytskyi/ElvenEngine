@@ -22,6 +22,14 @@ MeshModelSandbox::MeshModelSandbox()
     auto& scene = elv::GetScene();
 
     if (true) {
+        const auto knight = scene.CreateEntity();
+        m_models.emplace_back(knight);
+        scene.AddComponent<elv::TagComponent>(knight, "Knight");
+        scene.AddComponent<elv::TransformComponent>(knight, lia::vec3(3.0f, 0.0f, -2.0f), lia::vec3(0.01f));
+        scene.AddComponent<elv::StaticMeshComponent>(knight, "knight", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "dark_knight/scene.gltf"));
+    }
+
+    if (false) {
         const auto walle = scene.CreateEntity();
         m_models.emplace_back(walle);
         scene.AddComponent<elv::TagComponent>(walle, "Walle");
@@ -87,14 +95,14 @@ MeshModelSandbox::MeshModelSandbox()
     scene.AddComponent<elv::TagComponent>(m_flashLightEntity, "Spot light");
     scene.AddComponent<elv::TransformComponent>(m_flashLightEntity);
     auto& spotLightComponent = scene.AddComponent<elv::SpotLightComponent>(m_flashLightEntity);
-    spotLightComponent.enabled = true;
+    spotLightComponent.enabled = false;
 
     for (size_t i = 0; i < kPointLightsAmount; ++i) {
         m_pointLightEntities[i] = scene.CreateEntity();
         scene.AddComponent<elv::TagComponent>(m_pointLightEntities[i], fmt::format("Point light {}", i));
-        scene.AddComponent<elv::TransformComponent>(m_pointLightEntities[i], kPointLightPositions[i]);
+        auto& transform = scene.AddComponent<elv::TransformComponent>(m_pointLightEntities[i], kPointLightPositions[i]);
         auto& pointLightComponent = scene.AddComponent<elv::PointLightComponent>(m_pointLightEntities[i]);
-        pointLightComponent.enabled = true;
+        pointLightComponent.enabled = false;
     }
 
     // default environment
@@ -103,17 +111,6 @@ MeshModelSandbox::MeshModelSandbox()
 
 void MeshModelSandbox::OnUpdate(float dt)
 {
-    if (m_cameraController) {
-        auto& scene = elv::GetScene();
-
-        if (scene.HasComponent<elv::TransformComponent>(m_flashLightEntity)) {
-
-            auto& flashLightTr = scene.GetComponent<elv::TransformComponent>(m_flashLightEntity);
-
-            flashLightTr.pos = m_cameraController->GetCamera().GetPosition();
-            flashLightTr.rotation = m_cameraController->GetFront();
-        }
-    }
 }
 
 void MeshModelSandbox::OnRender(float dt)

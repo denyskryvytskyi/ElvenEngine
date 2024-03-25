@@ -98,14 +98,6 @@ PrimitivesSandbox::PrimitivesSandbox()
 
 void PrimitivesSandbox::OnUpdate(float dt)
 {
-    if (m_cameraController) {
-        auto& scene = elv::GetScene();
-
-        auto& flashLightTr = scene.GetComponent<elv::TransformComponent>(m_spotLightEntity);
-
-        flashLightTr.pos = m_cameraController->GetCamera().GetPosition();
-        flashLightTr.rotation = m_cameraController->GetFront();
-    }
 }
 
 void PrimitivesSandbox::OnRender(float dt)

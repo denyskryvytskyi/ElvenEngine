@@ -50,7 +50,6 @@ void RenderSystem::OnRender(float dt)
 
     // point lights
     {
-        bool isAnyPointLightActive = false;
         int activePointLightsCounter = 0;
 
         auto pointLightsPool = m_pScene->GetComponentPool<PointLightComponent>();
@@ -60,7 +59,6 @@ void RenderSystem::OnRender(float dt)
             if (!pointLight.enabled)
                 continue;
 
-            isAnyPointLightActive = true;
             const auto entity = pointLightsPool->GetEntity(i);
             if (m_pScene->HasComponent<TransformComponent>(entity)) {
                 auto& transform = m_pScene->GetComponent<TransformComponent>(entity);
@@ -75,39 +73,38 @@ void RenderSystem::OnRender(float dt)
                 ++activePointLightsCounter;
             }
         }
-        m_shader->SetInteger("u_PointLightEnabled", isAnyPointLightActive);
         m_shader->SetInteger("u_ActivePointLightsAmount", activePointLightsCounter);
-        // TODO: need to pass how much point lights are activated
     }
 
-    // spotlight (flashlight in this example with camera position and view direction)
-    bool isAnySpotlightAvailable = false;
-    auto spotLightsPool = m_pScene->GetComponentPool<SpotLightComponent>();
-    auto& spotLightComponents = spotLightsPool->GetComponents();
-    for (std::uint32_t i = 0; i < spotLightsPool->Size(); ++i) {
-        auto& spotlight = spotLightComponents[i];
-        if (!spotlight.enabled)
-            continue;
+    // spotlights
+    {
+        int activeSpotLightsCounter = 0;
+        auto spotLightsPool = m_pScene->GetComponentPool<SpotLightComponent>();
+        auto& spotLightComponents = spotLightsPool->GetComponents();
+        for (std::uint32_t i = 0; i < spotLightsPool->Size(); ++i) {
+            auto& spotlight = spotLightComponents[i];
+            if (!spotlight.enabled)
+                continue;
 
-        isAnySpotlightAvailable = true;
+            const auto entity = spotLightsPool->GetEntity(i);
+            if (m_pScene->HasComponent<TransformComponent>(entity)) {
+                auto& transform = m_pScene->GetComponent<TransformComponent>(entity);
 
-        const auto entity = spotLightsPool->GetEntity(i);
-        if (m_pScene->HasComponent<TransformComponent>(entity)) {
-            auto& transform = m_pScene->GetComponent<TransformComponent>(entity);
-
-            m_shader->SetVector3f("u_SpotLight.position", transform.pos);
-            m_shader->SetVector3f("u_SpotLight.direction", transform.rotation);
-            m_shader->SetVector3f("u_SpotLight.ambient", spotlight.ambient);
-            m_shader->SetVector3f("u_SpotLight.diffuse", spotlight.diffuse);
-            m_shader->SetVector3f("u_SpotLight.specular", spotlight.specular);
-            m_shader->SetFloat("u_SpotLight.cutOff", cos(lia::radians(spotlight.cutOff)));
-            m_shader->SetFloat("u_SpotLight.outerCutOff", cos(lia::radians(spotlight.outerCutOff)));
-            m_shader->SetFloat("u_SpotLight.constant", spotlight.constant);
-            m_shader->SetFloat("u_SpotLight.linear", spotlight.linear);
-            m_shader->SetFloat("u_SpotLight.quadratic", spotlight.quadratic);
+                m_shader->SetVector3f(fmt::format("u_SpotLights[{}].position", activeSpotLightsCounter), transform.pos);
+                m_shader->SetVector3f(fmt::format("u_SpotLights[{}].direction", activeSpotLightsCounter), transform.rotation);
+                m_shader->SetVector3f(fmt::format("u_SpotLights[{}].ambient", activeSpotLightsCounter), spotlight.ambient);
+                m_shader->SetVector3f(fmt::format("u_SpotLights[{}].diffuse", activeSpotLightsCounter), spotlight.diffuse);
+                m_shader->SetVector3f(fmt::format("u_SpotLights[{}].specular", activeSpotLightsCounter), spotlight.specular);
+                m_shader->SetFloat(fmt::format("u_SpotLights[{}].cutOff", activeSpotLightsCounter), cos(lia::radians(spotlight.cutOff)));
+                m_shader->SetFloat(fmt::format("u_SpotLights[{}].outerCutOff", activeSpotLightsCounter), cos(lia::radians(spotlight.outerCutOff)));
+                m_shader->SetFloat(fmt::format("u_SpotLights[{}].constant", activeSpotLightsCounter), spotlight.constant);
+                m_shader->SetFloat(fmt::format("u_SpotLights[{}].linear", activeSpotLightsCounter), spotlight.linear);
+                m_shader->SetFloat(fmt::format("u_SpotLights[{}].quadratic", activeSpotLightsCounter), spotlight.quadratic);
+                ++activeSpotLightsCounter;
+            }
         }
+        m_shader->SetInteger("u_ActiveSpotLightsAmount", activeSpotLightsCounter);
     }
-    m_shader->SetInteger("u_SpotLightEnabled", isAnySpotlightAvailable);
 
     // ===================================================
 
@@ -132,10 +129,12 @@ void RenderSystem::OnRender(float dt)
         }
     }
 
-    // render debug render point lights meshes
+    // render debug point/spot lights meshes
     const bool renderDebugPointLightsMesh = true;
     if (renderDebugPointLightsMesh) {
         m_lightShader->Bind();
+
+        // point lights
         auto pointLightsPool = m_pScene->GetComponentPool<PointLightComponent>();
         auto& pointLightComponents = pointLightsPool->GetComponents();
         for (std::uint32_t i = 0; i < pointLightsPool->Size(); ++i) {
@@ -152,6 +151,24 @@ void RenderSystem::OnRender(float dt)
                 m_lightShader->SetVector3f("u_Color.diffuse", pointLight.diffuse);
 
                 Renderer::Submit(m_lightShader, m_debugLightMesh, transform.worldMatrix);
+            }
+        }
+
+        // spotlights
+        auto spotLightsPool = m_pScene->GetComponentPool<SpotLightComponent>();
+        auto& spotLightComponents = spotLightsPool->GetComponents();
+        for (std::uint32_t i = 0; i < spotLightsPool->Size(); ++i) {
+            auto& spotlight = spotLightComponents[i];
+            if (spotlight.debugRender) {
+                const auto entity = spotLightsPool->GetEntity(i);
+                if (m_pScene->HasComponent<TransformComponent>(entity)) {
+                    auto& transform = m_pScene->GetComponent<TransformComponent>(entity);
+
+                    m_lightShader->SetVector3f("u_Color.ambient", spotlight.ambient);
+                    m_lightShader->SetVector3f("u_Color.diffuse", spotlight.diffuse);
+
+                    Renderer::Submit(m_lightShader, m_debugLightMesh, transform.worldMatrix);
+                }
             }
         }
     }

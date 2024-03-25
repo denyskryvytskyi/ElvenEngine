@@ -1,0 +1,11 @@
+Model Information:
+* title:	Dark Knight
+* source:	https://sketchfab.com/3d-models/dark-knight-e2208bdc46304f6faa18728778986f35
+* author:	Nick Scott (https://sketchfab.com/Nickjjscott)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Dark Knight" (https://sketchfab.com/3d-models/dark-knight-e2208bdc46304f6faa18728778986f35) by Nick Scott (https://sketchfab.com/Nickjjscott) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)

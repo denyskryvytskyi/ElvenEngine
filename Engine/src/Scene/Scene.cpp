@@ -10,6 +10,7 @@
 #include "Components/SceneComponents.h"
 #include "Components/StaticMeshComponent.h"
 #include "Systems/BehaviorSystem.h"
+#include "Systems/LightSystem.h"
 #include "Systems/Physics2dSystem.h"
 #include "Systems/Render2dSystem.h"
 #include "Systems/RenderSystem.h"
@@ -44,6 +45,7 @@ void Scene::OnInit()
 #endif
     RegisterSystem<Render2dSystem>();
     RegisterSystem<Physics2dSystem>();
+    RegisterSystem<LightSystem>();
 
     if (gEngineSettings.enableSceneGraph) {
         m_sceneGraph.OnInit(this);
