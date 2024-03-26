@@ -27,7 +27,7 @@ private:
 
     std::vector<elv::ecs::Entity> m_models;
 
-    elv::ecs::Entity m_dirLightEntity;
-    elv::ecs::Entity m_flashLightEntity;
-    elv::ecs::Entity m_pointLightEntities[kPointLightsAmount];
+    elv::ecs::Entity m_dirLightEntity { elv::ecs::INVALID_COMPONENT_TYPE_ID };
+    elv::ecs::Entity m_flashLightEntity { elv::ecs::INVALID_COMPONENT_TYPE_ID };
+    elv::ecs::Entity m_pointLightEntities[kPointLightsAmount] { elv::ecs::INVALID_COMPONENT_TYPE_ID };
 };

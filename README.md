@@ -66,7 +66,6 @@ Elven Engine is primarily a 2D/3D game engine that is being developed from scrat
 + [x] Just cool stuff
   - [x] Orthographic camera controller (OrthographicCameraController), that can be used if needed
   - [x] Fly(FPS-like) 3D camera support (CameraController)
-  - [x] Editor camera controller to move on the scene in editor mode.
 + [ ] Multithreading support
   - [x] async resources loading: texture, mesh
   - [ ] Thread pool

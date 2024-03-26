@@ -214,4 +214,17 @@ struct TagComponent {
     std::string tag;
 };
 
+struct SoundComponent {
+
+    void Play();
+    void Pause();
+    void Stop();
+
+    void UpdateVolume();
+
+    bool isLooped { true };
+    float volume { 0.5f };
+    std::string soundName;
+};
+
 } // namespace elv

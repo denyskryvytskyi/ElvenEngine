@@ -143,14 +143,16 @@ void RenderSystem::OnRender(float dt)
                 continue;
             }
 
-            const auto entity = pointLightsPool->GetEntity(i);
-            if (m_pScene->HasComponent<TransformComponent>(entity)) {
-                auto& transform = m_pScene->GetComponent<TransformComponent>(entity);
+            if (pointLight.debugRender) {
+                const auto entity = pointLightsPool->GetEntity(i);
+                if (m_pScene->HasComponent<TransformComponent>(entity)) {
+                    auto& transform = m_pScene->GetComponent<TransformComponent>(entity);
 
-                m_lightShader->SetVector3f("u_Color.ambient", pointLight.ambient);
-                m_lightShader->SetVector3f("u_Color.diffuse", pointLight.diffuse);
+                    m_lightShader->SetVector3f("u_Color.ambient", pointLight.ambient);
+                    m_lightShader->SetVector3f("u_Color.diffuse", pointLight.diffuse);
 
-                Renderer::Submit(m_lightShader, m_debugLightMesh, transform.worldMatrix);
+                    Renderer::Submit(m_lightShader, m_debugLightMesh, transform.worldMatrix);
+                }
             }
         }
 

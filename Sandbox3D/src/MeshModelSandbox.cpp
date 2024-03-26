@@ -1,9 +1,10 @@
 #include "MeshModelSandbox.h"
 
 #include <Core/Profiler.h>
-#include <Renderer/Mesh.h>
-#include <Renderer/RenderTopology.h>
-#include <Resources/MeshLibrary.h>
+// #include <Renderer/Mesh.h>
+//  #include <Renderer/RenderTopology.h>
+#include <Resources/AudioManager.h>
+// #include <Resources/MeshLibrary.h>
 #include <Scene/Components/LightComponent.h>
 #include <Scene/Components/StaticMeshComponent.h>
 
@@ -29,7 +30,7 @@ MeshModelSandbox::MeshModelSandbox()
         scene.AddComponent<elv::StaticMeshComponent>(knight, "knight", fmt::format("{}{}", elv::fileSystem::MODELS_PATH, "dark_knight/scene.gltf"));
     }
 
-    if (false) {
+    if (true) {
         const auto walle = scene.CreateEntity();
         m_models.emplace_back(walle);
         scene.AddComponent<elv::TagComponent>(walle, "Walle");
@@ -91,22 +92,26 @@ MeshModelSandbox::MeshModelSandbox()
     dirLightComponent.direction = lia::vec3(0.0f, -1.0f, 0.0f);
     dirLightComponent.enabled = true;
 
-    m_flashLightEntity = scene.CreateEntity();
-    scene.AddComponent<elv::TagComponent>(m_flashLightEntity, "Spot light");
-    scene.AddComponent<elv::TransformComponent>(m_flashLightEntity);
-    auto& spotLightComponent = scene.AddComponent<elv::SpotLightComponent>(m_flashLightEntity);
-    spotLightComponent.enabled = false;
+    /*  m_flashLightEntity = scene.CreateEntity();
+      scene.AddComponent<elv::TagComponent>(m_flashLightEntity, "Spot light");
+      scene.AddComponent<elv::TransformComponent>(m_flashLightEntity);
+      auto& spotLightComponent = scene.AddComponent<elv::SpotLightComponent>(m_flashLightEntity);
+      spotLightComponent.enabled = false;
 
-    for (size_t i = 0; i < kPointLightsAmount; ++i) {
-        m_pointLightEntities[i] = scene.CreateEntity();
-        scene.AddComponent<elv::TagComponent>(m_pointLightEntities[i], fmt::format("Point light {}", i));
-        auto& transform = scene.AddComponent<elv::TransformComponent>(m_pointLightEntities[i], kPointLightPositions[i]);
-        auto& pointLightComponent = scene.AddComponent<elv::PointLightComponent>(m_pointLightEntities[i]);
-        pointLightComponent.enabled = false;
-    }
+      for (size_t i = 0; i < kPointLightsAmount; ++i) {
+          m_pointLightEntities[i] = scene.CreateEntity();
+          scene.AddComponent<elv::TagComponent>(m_pointLightEntities[i], fmt::format("Point light {}", i));
+          scene.AddComponent<elv::TransformComponent>(m_pointLightEntities[i], kPointLightPositions[i]);
+          auto& pointLightComponent = scene.AddComponent<elv::PointLightComponent>(m_pointLightEntities[i]);
+          pointLightComponent.enabled = false;
+      }*/
 
     // default environment
     SetEnvironment(0);
+
+    // audio
+    elv::gAudioManager.AddSound("background music", "back.mp3");
+    elv::gAudioManager.AddSound("test", "test.wav");
 }
 
 void MeshModelSandbox::OnUpdate(float dt)
@@ -164,18 +169,19 @@ void MeshModelSandbox::SetEnvironment(const int envIndex)
     dirLight.specular = env.dirLight.specular;
     dirLight.direction = env.dirLight.direction;
 
-    // flashlight
-    auto& flashLight = scene.GetComponent<elv::SpotLightComponent>(m_flashLightEntity);
-    flashLight.ambient = env.spotLight.ambient;
-    flashLight.diffuse = env.spotLight.diffuse;
-    flashLight.specular = env.spotLight.specular;
+    // spotlights
+    for (auto& spotlight : scene.GetComponents<elv::SpotLightComponent>()) {
+        spotlight.ambient = env.spotLight.ambient;
+        spotlight.diffuse = env.spotLight.diffuse;
+        spotlight.specular = env.spotLight.specular;
+    }
 
     // point lights
+    auto& pointLights = scene.GetComponents<elv::PointLightComponent>();
     for (size_t i = 0; i < kPointLightsAmount; ++i) {
-        auto& pointLight = scene.GetComponent<elv::PointLightComponent>(m_pointLightEntities[i]);
-        pointLight.ambient = env.pointLightColors[i] * 0.1f;
-        pointLight.diffuse = env.pointLightColors[i];
-        pointLight.specular = env.pointLightColors[i];
+        pointLights[i].ambient = env.pointLightColors[i] * 0.1f;
+        pointLights[i].diffuse = env.pointLightColors[i];
+        pointLights[i].specular = env.pointLightColors[i];
     }
 }
 

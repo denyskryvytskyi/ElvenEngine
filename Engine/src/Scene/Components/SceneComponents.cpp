@@ -11,6 +11,7 @@
 #include "Core/StringId.h"
 #include "Events/EventManager.h"
 #include "Events/TextureEvent.h"
+#include "Resources/AudioManager.h"
 #include "Resources/TextureManager.h"
 
 namespace elv {
@@ -82,4 +83,25 @@ void from_json(const nlohmann::json& j, TextComponent& t)
     j.at("color").get_to(t.color);
     j.at("is_visible").get_to(t.isVisible);
 }
+
+void SoundComponent::Play()
+{
+    gAudioManager.Play(soundName, isLooped);
+}
+
+void SoundComponent::Pause()
+{
+    gAudioManager.Pause(soundName);
+}
+
+void SoundComponent::Stop()
+{
+    gAudioManager.Stop(soundName);
+}
+
+void SoundComponent::UpdateVolume()
+{
+    gAudioManager.SetVolume(soundName, volume);
+}
+
 } // namespace elv

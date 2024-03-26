@@ -18,8 +18,8 @@ void AudioManager::Init()
 void AudioManager::Shutdown()
 {
     for (auto it : m_sounds) {
-        if (it.second) {
-            it.second->drop();
+        if (it.second.sound) {
+            it.second.sound->drop();
         }
     }
 
@@ -28,21 +28,21 @@ void AudioManager::Shutdown()
 
 void AudioManager::AddSound(const std::string& name, const std::string& path)
 {
-    irrklang::ISound* sound = nullptr;
+    irrklang::ISoundSource* source = nullptr;
     {
         PROFILE_SCOPE(fmt::format("Audio file {} is loaded in:", name));
-        sound = m_engine->play2D(fmt::format("{}{}", fileSystem::SOUNDS_PATH, path).c_str(), false, true, true);
+        source = m_engine->addSoundSourceFromFile(fmt::format("{}{}", fileSystem::SOUNDS_PATH, path).c_str(), irrklang::ESM_AUTO_DETECT, true);
     }
-    if (sound) {
-        m_sounds.insert({ name, sound });
+    if (source) {
+        m_sounds.insert({ name, { nullptr, source } });
     }
 }
 
 void AudioManager::SetVolume(const std::string& name, float volume)
 {
     auto it = m_sounds.find(name);
-    if (it != m_sounds.end()) {
-        it->second->setVolume(volume);
+    if (it != m_sounds.end() && it->second.sound) {
+        it->second.sound->setVolume(volume);
     } else {
         EL_CORE_WARN("Set volume failed: {0} sound isn't  exist.", name);
     }
@@ -52,11 +52,16 @@ void AudioManager::Play(const std::string& name, bool looped)
 {
     auto it = m_sounds.find(name);
     if (it != m_sounds.end()) {
-        auto sound = it->second;
-        if (sound->isFinished()) {
-             m_engine->play2D(sound->getSoundSource(), looped, false, true);
-        } else if (sound->getIsPaused()) {
-            sound->setIsPaused(false);
+        if (it->second.sound) {
+            auto sound = it->second.sound;
+            if (sound->isFinished()) {
+                m_engine->play2D(sound->getSoundSource(), looped, false, false);
+            } else if (sound->getIsPaused()) {
+                sound->setIsPaused(false);
+            }
+        } else {
+            // first play of the sound using preloaded sound source
+            it->second.sound = m_engine->play2D(it->second.soundSource, looped, false, true);
         }
     } else {
         EL_CORE_WARN("Audio play failed: {0} isn't exist.", name);
@@ -66,8 +71,8 @@ void AudioManager::Play(const std::string& name, bool looped)
 void AudioManager::Pause(const std::string& name)
 {
     auto it = m_sounds.find(name);
-    if (it != m_sounds.end()) {
-        it->second->setIsPaused(true);
+    if (it != m_sounds.end() && it->second.sound) {
+        it->second.sound->setIsPaused(true);
     } else {
         EL_CORE_WARN("Audio play failed: {0} isn't exist.", name);
     }
@@ -76,10 +81,22 @@ void AudioManager::Pause(const std::string& name)
 void AudioManager::Stop(const std::string& name)
 {
     auto it = m_sounds.find(name);
-    if (it != m_sounds.end()) {
-        it->second->stop();
+    if (it != m_sounds.end() && it->second.sound) {
+        it->second.sound->stop();
+        it->second.sound->drop();
+        it->second.sound = nullptr;
     } else {
         EL_CORE_WARN("Audio play failed: {0} isn't exist.", name);
     }
+}
+std::vector<std::string> AudioManager::GetSounds() const
+{
+    std::vector<std::string> names;
+
+    for (const auto soundInfo : m_sounds) {
+        names.emplace_back(soundInfo.first);
+    }
+
+    return names;
 }
 } // namespace elv

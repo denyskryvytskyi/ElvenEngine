@@ -34,6 +34,7 @@ void Scene::OnInit()
     RegisterComponent<DirectionalLightComponent>();
     RegisterComponent<SpotLightComponent>();
     RegisterComponent<StaticMeshComponent>();
+    RegisterComponent<SoundComponent>();
     if (gEngineSettings.enableSceneGraph) {
         RegisterComponent<SceneNodeComponent>();
     }

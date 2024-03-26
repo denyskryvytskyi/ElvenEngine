@@ -6,6 +6,7 @@
 #include "Scene/Components/StaticMeshComponent.h"
 #include "Scene/SceneManager.h"
 
+#include "Resources/AudioManager.h"
 #include "Resources/MeshLibrary.h"
 #include "Resources/TextureManager.h"
 
@@ -207,6 +208,7 @@ void SceneHierarchyPanel::DrawProperties()
         DisplayAddComponentEntry<TextComponent>("Text");
         DisplayAddComponentEntry<RectTransformComponent>("UI Transform");
         DisplayAddComponentEntry<SpriteComponent>("Sprite");
+        DisplayAddComponentEntry<SoundComponent>("Sound");
 
         ImGui::EndPopup();
     }
@@ -398,7 +400,8 @@ void SceneHierarchyPanel::DrawProperties()
     DrawComponent<DirectionalLightComponent>("Directional Light", m_selectedEntity, m_context, [](DirectionalLightComponent& component) {
         ImGui::Checkbox("Enabled", &component.enabled);
 
-        editor::DrawVec3Control("direction", "direction", component.direction);
+        editor::DrawVec3Control("direction", "Direction", component.direction);
+        ImGui::Spacing();
         editor::DrawRGBColorControl("ambient", component.ambient);
         editor::DrawRGBColorControl("diffuse", component.diffuse);
         editor::DrawRGBColorControl("specular", component.specular);
@@ -448,6 +451,53 @@ void SceneHierarchyPanel::DrawProperties()
     // ====== SPRITE ======
     DrawComponent<SpriteComponent>("Sprite", m_selectedEntity, m_context, [](SpriteComponent& component) {
         editor::DrawRGBAColorControl("color##sprite", component.color);
+    });
+
+    // ====== SOUND ======
+    DrawComponent<SoundComponent>("Sound", m_selectedEntity, m_context, [](SoundComponent& component) {
+        if (ImGui::Button("Play")) {
+            component.Play();
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("Pause")) {
+            component.Pause();
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("Stop")) {
+            component.Stop();
+        }
+
+        ImGui::Checkbox("Loop", &component.isLooped);
+
+        if (editor::DrawSliderFloat("Volume", 0.0f, 1.0f, component.volume)) {
+            component.UpdateVolume();
+        }
+
+        const auto sounds = gAudioManager.GetSounds();
+        static std::uint64_t currentSoundIndex = 0;
+
+        if (!component.soundName.empty()) {
+            auto it = std::find(sounds.begin(), sounds.end(), component.soundName);
+            if (it != sounds.end()) {
+                currentSoundIndex = std::distance(sounds.begin(), it);
+            }
+        }
+
+        if (ImGui::BeginCombo("Sound", component.soundName.c_str())) {
+            for (int i = 0; i < sounds.size(); ++i) {
+                const bool is_selected = (currentSoundIndex == i);
+                if (ImGui::Selectable(sounds[i].c_str(), is_selected)) {
+                    currentSoundIndex = i;
+                    component.soundName = sounds[currentSoundIndex];
+                }
+
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
     });
 }
 
