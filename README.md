@@ -72,11 +72,7 @@ Elven Engine is primarily a 2D/3D game engine that is being developed from scrat
 
 ## Demo
 ### 3D rendering
-<img src=".github/demo/Scene_demo_0.png">
-
-| Lighting environments with spotlight, directional, and point lights | Cube transformation and simple light |
-| --- | --- | 
-| <img src=".github/demo/light_casters_demo.gif"> | <img src=".github/demo/cube_light_demo.gif"> |
+<img src=".github/demo/demo.png">
 
 ### 2D Rendering
 **Space Invaders full demo**
