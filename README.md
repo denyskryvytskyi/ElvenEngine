@@ -39,7 +39,7 @@ Elven Engine is primarily a 2D/3D game engine that is being developed from scrat
   - [ ] Shadows
 + [x] ECS (investigated different techniques and my particular architecture in the [article](https://denyskryvytskyi.github.io/ecs))
   - [x] Data-oriented cache-friendly components system architecture
-  - [x] In-Engine components: Transform, Sprite, Text, Quad, StaticMesh, Camera, RectTransform, AABB, Tag
+  - [x] In-Engine components: Transform, Sprite, Text, Quad, StaticMesh, Camera, RectTransform, AABB, Tag, Sound
   - [x] Components serialization
   - [x] Behavior component as the entity brain
   - [x] Optional Systems for usability

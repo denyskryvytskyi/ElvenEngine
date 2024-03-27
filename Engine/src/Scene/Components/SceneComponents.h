@@ -216,6 +216,8 @@ struct TagComponent {
 
 struct SoundComponent {
 
+    ~SoundComponent();
+
     void Play();
     void Pause();
     void Stop();

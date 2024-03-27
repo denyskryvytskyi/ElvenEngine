@@ -84,6 +84,11 @@ void from_json(const nlohmann::json& j, TextComponent& t)
     j.at("is_visible").get_to(t.isVisible);
 }
 
+SoundComponent::~SoundComponent()
+{
+    Stop();
+}
+
 void SoundComponent::Play()
 {
     gAudioManager.Play(soundName, isLooped);

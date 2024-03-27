@@ -17,9 +17,12 @@ void AudioManager::Init()
 
 void AudioManager::Shutdown()
 {
-    for (auto it : m_sounds) {
+    for (auto& it : m_sounds) {
         if (it.second.sound) {
+            it.second.sound->stop();
             it.second.sound->drop();
+            it.second.sound = nullptr;
+            it.second.soundSource = nullptr;
         }
     }
 
@@ -61,7 +64,7 @@ void AudioManager::Play(const std::string& name, bool looped)
             }
         } else {
             // first play of the sound using preloaded sound source
-            it->second.sound = m_engine->play2D(it->second.soundSource, looped, false, true);
+            it->second.sound = m_engine->play2D(it->second.soundSource, looped, false, true, true);
         }
     } else {
         EL_CORE_WARN("Audio play failed: {0} isn't exist.", name);
@@ -74,7 +77,7 @@ void AudioManager::Pause(const std::string& name)
     if (it != m_sounds.end() && it->second.sound) {
         it->second.sound->setIsPaused(true);
     } else {
-        EL_CORE_WARN("Audio play failed: {0} isn't exist.", name);
+        EL_CORE_WARN("Audio pause failed: {0} isn't exist.", name);
     }
 }
 
@@ -86,7 +89,7 @@ void AudioManager::Stop(const std::string& name)
         it->second.sound->drop();
         it->second.sound = nullptr;
     } else {
-        EL_CORE_WARN("Audio play failed: {0} isn't exist.", name);
+        EL_CORE_WARN("Audio stop failed: {0} isn't exist.", name);
     }
 }
 std::vector<std::string> AudioManager::GetSounds() const
