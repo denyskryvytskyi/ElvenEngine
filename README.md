@@ -72,7 +72,8 @@ Elven Engine is primarily a 2D/3D game engine that is being developed from scrat
 
 ## Demo
 ### 3D rendering
-<img src=".github/demo/demo.png">
+Demo video on youtube (click on image):
+[<img src=".github/demo/demo.png">](https://www.youtube.com/watch?v=YhUVGp8Mb54)
 
 ### 2D Rendering
 **Space Invaders full demo**
