@@ -74,7 +74,7 @@ void Scene::OnShutdown()
 void Scene::OnUpdate(float dt)
 {
     {
-        // PROFILE_SCOPE("Scene updated in: ");
+        PROFILE_SCOPE("Scene updated in: ");
         for (auto& system : m_systems) {
             system->OnUpdate(dt);
         }
@@ -93,7 +93,7 @@ void Scene::OnUpdate(float dt)
 
 void Scene::OnRender(float dt)
 {
-    // PROFILE("Scene rendered in: ");
+    PROFILE("Scene rendered in: ");
     for (auto& system : m_systems) {
         system->OnRender(dt);
     }

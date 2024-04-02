@@ -43,6 +43,7 @@ GLenum GetTopology(const RenderTopology topology)
 void OpenGLRendererAPI::Init()
 {
 #ifdef DEBUG_MODE
+    // debug enabled
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     glDebugMessageCallback(OpenGLMessageCallback, nullptr);
@@ -50,10 +51,15 @@ void OpenGLRendererAPI::Init()
     glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
 #endif
 
+    // blending
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    // msaa
     glEnable(GL_MULTISAMPLE);
+
+    // faceculling
+    glEnable(GL_CULL_FACE);
 }
 
 void OpenGLRendererAPI::SetViewport(std::uint32_t x, std::uint32_t y, std::uint32_t width, std::uint32_t height)

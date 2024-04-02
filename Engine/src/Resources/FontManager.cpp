@@ -17,7 +17,7 @@ constexpr uint16_t asciiCharNumToLoad = 128;
 void FontManager::Load(const std::string& fontName, const std::string& fontPath)
 {
     EL_CORE_INFO("Font {0} loading...", fontName);
-    PROFILE("Font is loaded in");
+    PROFILE_TO_LOG("Font is loaded in");
 
     auto it = m_fonts.find(fontName);
     if (it != m_fonts.end()) {

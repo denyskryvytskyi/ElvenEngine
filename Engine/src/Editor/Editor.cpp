@@ -7,7 +7,6 @@
 #include "Core/Window.h"
 #include "Renderer/RenderCommand.h"
 #include "Renderer/Renderer.h"
-#include "Renderer/Renderer2D.h"
 
 #include <imgui.h>
 
@@ -47,18 +46,6 @@ void Editor::OnImGuiRender()
     if (ImGui::Checkbox("MSAA", &m_isMSAAEnabled)) {
         RenderCommand::EnableMSAA(m_isMSAAEnabled);
     }
-    ImGui::Spacing();
-    ImGui::Separator();
-
-    // telemetry
-    ImGui::Text("FPS: %.1f", Application::GetTelemetry().fps);
-    ImGui::Text("Frame time %.3f ms", Application::GetTelemetry().frameTime);
-
-    ImGui::Separator();
-
-    ImGui::Text("2D renderer telemetry:");
-    ImGui::Text("   draw calls: %i", Renderer2D::GetTelemetry().drawCalls);
-
     ImGui::End();
 
     // ============ Environment ============
@@ -73,5 +60,7 @@ void Editor::OnImGuiRender()
     if (gEngineSettings.enableSceneGraph) {
         m_sceneHierarchyPanel.OnImGuiRender();
     }
+
+    m_profileTelemetry.OnImGuiRender();
 }
 } // namespace elv::editor

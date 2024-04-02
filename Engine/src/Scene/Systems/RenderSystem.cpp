@@ -113,7 +113,7 @@ void RenderSystem::OnRender(float dt)
 
     // render static mesh
     {
-        // PROFILE_SCOPE("Static Meshes rendered in: ");
+        PROFILE_SCOPE("Static Meshes rendered in: ");
         auto meshPool = m_pScene->GetComponentPool<StaticMeshComponent>();
         auto& meshComponents = meshPool->GetComponents();
         for (std::uint32_t i = 0; i < meshPool->Size(); ++i) {

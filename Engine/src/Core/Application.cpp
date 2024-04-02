@@ -2,6 +2,7 @@
 
 #include "FileSystem.h"
 #include "Input.h"
+#include "Profiler.h"
 #include "SettingsConfig.h"
 #include "Timer.h"
 #include "Window.h"
@@ -106,61 +107,82 @@ void Application::Run()
             m_window->OnUpdate();
         }
 
-        const float elapsedTime = timer.Elapsed();
+        const float elapsedTimeMs = timer.ElapsedMs();
+        const float elapsedTime = elapsedTimeMs * 0.001f;
         timer.Restart();
 
-        if (timerFpsCounter.ElapsedMs() > 100.0f) {
-            s_telemetry.frameTime = elapsedTime * 1000.0f;
+        {
+            if (timerFpsCounter.ElapsedMs() > 100.0f) {
+                s_telemetry.frameTime = elapsedTimeMs;
 
-            s_telemetry.fps = 1.0f / elapsedTime;
+                s_telemetry.fps = 1.0f / elapsedTime;
 
-            timerFpsCounter.Restart();
-        }
+                timerFpsCounter.Restart();
+            }
 
-        if (gEngineSettings.enableFpsCounter) {
-            GetScene().GetComponent<TextComponent>(m_fpsCounterEntityId).text
-                = fmt::format("{:0.3f} ms ({} fps)", s_telemetry.frameTime, static_cast<int>(std::floor(s_telemetry.fps)));
+            if (gEngineSettings.enableFpsCounter) {
+                GetScene().GetComponent<TextComponent>(m_fpsCounterEntityId).text
+                    = fmt::format("{:0.3f} ms ({} fps)", s_telemetry.frameTime, static_cast<int>(std::floor(s_telemetry.fps)));
+            }
         }
 
         // ============== Process input step  ==============
+        {
+            PROFILE_SCOPE("Process input in: ");
 
-        if (m_cameraController) {
-            m_cameraController->OnProcessInput(elapsedTime);
+            if (m_cameraController) {
+                m_cameraController->OnProcessInput(elapsedTime);
+            }
+            OnProcessInput(elapsedTime);
         }
-        OnProcessInput(elapsedTime);
 
         // ============== Update step  ==============
 
-        if (m_cameraController) {
-            m_cameraController->OnUpdate(elapsedTime);
-        }
-        gMeshLibrary.Update();
-        gTextureManager.Update();
-        gSceneManager.Update(elapsedTime);
+        {
+            PROFILE_SCOPE("Update input in: ");
+            if (m_cameraController) {
+                m_cameraController->OnUpdate(elapsedTime);
+            }
+            gMeshLibrary.Update();
+            gTextureManager.Update();
+            gSceneManager.Update(elapsedTime);
 
-        OnUpdate(elapsedTime);
+            OnUpdate(elapsedTime);
+        }
+
+        // ============== Dispatch queued events ==============
+        {
+            PROFILE_SCOPE("Dispatch events in: ");
+            events::gEventManager.DispatchEvents();
+        }
 
         // ============== Rendering Step ==============
-        RenderCommand::SetClearColor(Renderer::GetClearColor());
-        RenderCommand::Clear();
+        {
+            PROFILE_SCOPE("Render in: ");
+            RenderCommand::SetClearColor(Renderer::GetClearColor());
+            RenderCommand::Clear();
 
-        gSceneManager.Render(elapsedTime);
-        OnRender(elapsedTime);
+            gSceneManager.Render(elapsedTime);
+            OnRender(elapsedTime);
+        }
 
 #if EDITOR_MODE
-        if (gEngineSettings.enableEditor) {
-            m_imGuiOverlay.Begin();
-            m_editor.OnImGuiRender();
-            OnImguiRender();
-            m_imGuiOverlay.End();
+        {
+            PROFILE_SCOPE("ImGui Render in: ");
+            if (gEngineSettings.enableEditor) {
+                m_imGuiOverlay.Begin();
+                m_editor.OnImGuiRender();
+                OnImguiRender();
+                m_imGuiOverlay.End();
+            }
         }
 #endif
 
         // ============== Window update step ==============
-        m_window->OnUpdate();
-
-        // ============== Dispatch queued events ==============
-        events::gEventManager.DispatchEvents();
+        {
+            PROFILE_SCOPE("Update window in: ");
+            m_window->OnUpdate();
+        }
     }
 }
 

@@ -33,7 +33,7 @@ void AudioManager::AddSound(const std::string& name, const std::string& path)
 {
     irrklang::ISoundSource* source = nullptr;
     {
-        PROFILE_SCOPE(fmt::format("Audio file {} is loaded in:", name));
+        PROFILE_TO_LOG(fmt::format("Audio file {} is loaded in:", name));
         source = m_engine->addSoundSourceFromFile(fmt::format("{}{}", fileSystem::SOUNDS_PATH, path).c_str(), irrklang::ESM_AUTO_DETECT, true);
     }
     if (source) {

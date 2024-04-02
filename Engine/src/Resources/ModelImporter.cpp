@@ -94,7 +94,7 @@ void ProcessNode(aiNode* node, const aiScene* scene, lia::mat4 worldMatrix, Load
 void ImportModel(const std::string& path, LoadedMeshesInfo& info)
 {
     EL_CORE_INFO("Model {} loading...", path);
-    PROFILE(fmt::format("Model {} is loaded: ", path));
+    PROFILE_TO_LOG(fmt::format("Model {} is loaded: ", path));
 
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_ImproveCacheLocality | aiProcess_OptimizeMeshes | aiProcess_OptimizeGraph);
@@ -105,7 +105,7 @@ void ImportModel(const std::string& path, LoadedMeshesInfo& info)
     }
 
     {
-        PROFILE_SCOPE(fmt::format("Process model {} nodes: ", path));
+        PROFILE_TO_LOG(fmt::format("Process model {} nodes: ", path));
         ProcessNode(scene->mRootNode, scene, lia::mat4(), info);
     }
 }

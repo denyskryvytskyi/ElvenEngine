@@ -1,10 +1,6 @@
 #include "MeshModelSandbox.h"
 
-#include <Core/Profiler.h>
-// #include <Renderer/Mesh.h>
-//  #include <Renderer/RenderTopology.h>
 #include <Resources/AudioManager.h>
-// #include <Resources/MeshLibrary.h>
 #include <Scene/Components/LightComponent.h>
 #include <Scene/Components/StaticMeshComponent.h>
 
@@ -89,19 +85,19 @@ MeshModelSandbox::MeshModelSandbox()
     dirLightComponent.direction = lia::vec3(0.0f, -1.0f, 0.0f);
     dirLightComponent.enabled = true;
 
-    /* auto flashLightEntity = scene.CreateEntity();
-     scene.AddComponent<elv::TagComponent>(flashLightEntity, "Spot light");
-     scene.AddComponent<elv::TransformComponent>(flashLightEntity);
-     auto& spotLightComponent = scene.AddComponent<elv::SpotLightComponent>(flashLightEntity);
-     spotLightComponent.enabled = false;
+    auto flashLightEntity = scene.CreateEntity();
+    scene.AddComponent<elv::TagComponent>(flashLightEntity, "Spot light");
+    scene.AddComponent<elv::TransformComponent>(flashLightEntity);
+    auto& spotLightComponent = scene.AddComponent<elv::SpotLightComponent>(flashLightEntity);
+    spotLightComponent.enabled = true;
 
-     for (size_t i = 0; i < kPointLightsAmount; ++i) {
-         auto pointLightEntity = scene.CreateEntity();
-         scene.AddComponent<elv::TagComponent>(pointLightEntity, fmt::format("Point light {}", i));
-         scene.AddComponent<elv::TransformComponent>(pointLightEntity, kPointLightPositions[i]);
-         auto& pointLightComponent = scene.AddComponent<elv::PointLightComponent>(pointLightEntity);
-         pointLightComponent.enabled = false;
-     }*/
+    for (size_t i = 0; i < kPointLightsAmount; ++i) {
+        auto pointLightEntity = scene.CreateEntity();
+        scene.AddComponent<elv::TagComponent>(pointLightEntity, fmt::format("Point light {}", i));
+        scene.AddComponent<elv::TransformComponent>(pointLightEntity, kPointLightPositions[i]);
+        auto& pointLightComponent = scene.AddComponent<elv::PointLightComponent>(pointLightEntity);
+        pointLightComponent.enabled = true;
+    }
 
     // default environment
     SetEnvironment(0);

@@ -83,6 +83,7 @@ if (EDITOR_MODE)
     "src/Editor/EditorHelpers.h"
     "src/Editor/Editor.h"
     "src/Editor/Panels/SceneHierarchyPanel.h"
+    "src/Editor/Panels/ProfileTelemetryPanel.h"
     )
 endif()
 
@@ -93,6 +94,7 @@ set(ENGINE_SOURCES
 "src/Core/Log.cpp"
 "src/Core/Window.cpp"
 "src/Core/SettingsConfig.cpp"
+"src/Core/Profiler.cpp"
 "src/Events/EventManager.cpp"
 "src/Renderer/Buffer.cpp"
 "src/Renderer/GraphicsContext.cpp"
@@ -149,6 +151,7 @@ if (EDITOR_MODE)
     "src/Editor/EditorHelpers.cpp"
     "src/Editor/Editor.cpp"
     "src/Editor/Panels/SceneHierarchyPanel.cpp"
+    "src/Editor/Panels/ProfileTelemetryPanel.cpp"
     )
 endif()
 

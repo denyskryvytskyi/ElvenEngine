@@ -25,7 +25,7 @@ static void LoadTextureFromFile(std::vector<TextureManager::LoadedTextureInfo>& 
     info.textureName = textureName;
 
     {
-        PROFILE_SCOPE(fmt::format("Texture {} is loaded in", textureName.c_str()))
+        PROFILE_TO_LOG(fmt::format("Texture {} is loaded in", textureName.c_str()))
         info.data = stbi_load(filepath.data(), &info.width, &info.height, &info.nrChannels, 0);
     }
 

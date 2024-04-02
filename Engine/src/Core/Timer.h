@@ -18,8 +18,6 @@ public:
     float Elapsed() const { return std::chrono::duration_cast<seconds>(clock::now() - m_start).count(); }
     float ElapsedMs() const { return std::chrono::duration_cast<milliseconds>(clock::now() - m_start).count(); }
 
-    // static long long GetTimeNow() { return std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count(); }
-
 private:
     using clock = std::chrono::high_resolution_clock; // QueryPerformanceCounter
     using seconds = std::chrono::duration<float, std::ratio<1>>;
@@ -27,5 +25,7 @@ private:
 
     std::chrono::time_point<clock> m_start;
 };
+
+inline long long GetTimeNow() { return std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count(); }
 
 } // namespace elv

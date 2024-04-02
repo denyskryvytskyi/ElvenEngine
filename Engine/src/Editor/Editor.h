@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Panels/ProfileTelemetryPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
 
 namespace elv::editor {
@@ -12,6 +13,7 @@ public:
 private:
     // panels
     SceneHierarchyPanel m_sceneHierarchyPanel;
+    ProfileTelemetryPanel m_profileTelemetry;
 
     // settings
     bool m_isVSync { false };
