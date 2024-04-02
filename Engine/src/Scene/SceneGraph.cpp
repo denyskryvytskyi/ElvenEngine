@@ -62,7 +62,7 @@ void SceneGraph::OnUpdate(Scene* scene)
 
             if (transform.isDirty || node.isParentDirty) {
                 transform.UpdateLocalMatrix();
-                transform.worldMatrix = transform.GetLocalMatrix();
+                transform.modelMatrix = transform.localMatrix;
 
                 ecs::Entity parentId = node.parent;
                 while (parentId != ecs::INVALID_ENTITY_ID) {
@@ -70,11 +70,13 @@ void SceneGraph::OnUpdate(Scene* scene)
                         break;
                     }
                     const auto& parentTransform = m_transformsPool->GetComponent(parentId);
-                    transform.worldMatrix = transform.worldMatrix * parentTransform.GetLocalMatrix();
+                    transform.modelMatrix = transform.modelMatrix * parentTransform.localMatrix;
 
                     const auto& parentNode = m_sceneNodesPool->GetComponent(parentId);
                     parentId = parentNode.parent;
                 }
+
+                transform.normalMatrix = lia::transpose(lia::inverse(transform.modelMatrix));
             }
         }
     }

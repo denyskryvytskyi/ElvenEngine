@@ -4,8 +4,8 @@
 
 namespace elv::events {
 
-using EventId = std::uint32_t;
-using HandlerId = std::uint64_t;
+using EventType = std::uint32_t;
+using EventId = std::uint64_t;
 
 class EventManager {
 public:
@@ -15,42 +15,42 @@ public:
 
     void Shutdown();
 
-    void Subscribe(EventId eventId, UniquePtr<IEventHandlerWrapper>&& handler, HandlerId handlerId);
-    void Unsubscribe(EventId eventId, const std::string& handlerName, HandlerId handlerId);
-    void TriggerEvent(const Event& event_, HandlerId handlerId);
-    void QueueEvent(UniquePtr<Event>&& event_, HandlerId handlerId);
+    void Subscribe(EventType eventType, UniquePtr<IEventHandlerWrapper>&& handler, EventId eventId);
+    void Unsubscribe(EventType eventType, const std::string& handlerName, EventId eventId);
+    void TriggerEvent(const Event& event_, EventId eventId);
+    void QueueEvent(UniquePtr<Event>&& event_, EventId eventId);
     void DispatchEvents();
 
 private:
-    std::vector<std::pair<UniquePtr<Event>, HandlerId>> m_eventsQueue;
-    std::unordered_map<EventId, std::vector<UniquePtr<IEventHandlerWrapper>>> m_subscribers;
-    std::unordered_map<EventId, std::unordered_map<HandlerId, std::vector<UniquePtr<IEventHandlerWrapper>>>> m_subscribersByHandlerId;
+    std::vector<std::pair<UniquePtr<Event>, EventId>> m_eventsQueue;
+    std::unordered_map<EventType, std::vector<UniquePtr<IEventHandlerWrapper>>> m_subscribers;
+    std::unordered_map<EventType, std::unordered_map<EventId, std::vector<UniquePtr<IEventHandlerWrapper>>>> m_subscribersByEventId;
 };
 
 extern EventManager gEventManager;
 
 template<typename EventType>
-inline void Subscribe(const EventHandler<EventType>& callback, HandlerId handlerId = 0, const bool unsubscribeOnSuccess = false)
+inline void Subscribe(const EventHandler<EventType>& callback, EventId eventId = 0, const bool unsubscribeOnSuccess = false)
 {
     UniquePtr<IEventHandlerWrapper> handler = MakeUniquePtr<EventHandlerWrapper<EventType>>(callback, unsubscribeOnSuccess);
-    gEventManager.Subscribe(EventType::GetStaticEventType(), std::move(handler), handlerId);
+    gEventManager.Subscribe(EventType::GetStaticEventType(), std::move(handler), eventId);
 }
 
 template<typename EventType>
-inline void Unsubscribe(const EventHandler<EventType>& callback, HandlerId handlerId = 0)
+inline void Unsubscribe(const EventHandler<EventType>& callback, EventId eventId = 0)
 {
     const std::string handlerName = callback.target_type().name();
-    gEventManager.Unsubscribe(EventType::GetStaticEventType(), handlerName, handlerId);
+    gEventManager.Unsubscribe(EventType::GetStaticEventType(), handlerName, eventId);
 }
 
-inline void TriggerEvent(const Event& triggeredEvent, HandlerId handlerId = 0)
+inline void TriggerEvent(const Event& triggeredEvent, EventId eventId = 0)
 {
-    gEventManager.TriggerEvent(triggeredEvent, handlerId);
+    gEventManager.TriggerEvent(triggeredEvent, eventId);
 }
 
-inline void QueueEvent(UniquePtr<Event>&& queuedEvent, HandlerId handlerId = 0)
+inline void QueueEvent(UniquePtr<Event>&& queuedEvent, EventId eventId = 0)
 {
-    gEventManager.QueueEvent(std::forward<UniquePtr<Event>>(queuedEvent), handlerId);
+    gEventManager.QueueEvent(std::forward<UniquePtr<Event>>(queuedEvent), eventId);
 }
 
 } // namespace elv::events

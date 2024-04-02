@@ -1,6 +1,7 @@
 #include "RenderSystem.h"
 
 #include "Core/Application.h"
+#include "Core/Profiler.h"
 #include "Renderer/CameraController.h"
 #include "Renderer/Mesh.h"
 #include "Renderer/Renderer.h"
@@ -111,20 +112,22 @@ void RenderSystem::OnRender(float dt)
     // TODO: Need to implement sorting logic for proper rendering of transparent objects
 
     // render static mesh
-    auto meshPool = m_pScene->GetComponentPool<StaticMeshComponent>();
-    auto& meshComponents = meshPool->GetComponents();
-    for (std::uint32_t i = 0; i < meshPool->Size(); ++i) {
-        auto entity = meshPool->GetEntity(i);
+    {
+        // PROFILE_SCOPE("Static Meshes rendered in: ");
+        auto meshPool = m_pScene->GetComponentPool<StaticMeshComponent>();
+        auto& meshComponents = meshPool->GetComponents();
+        for (std::uint32_t i = 0; i < meshPool->Size(); ++i) {
+            auto entity = meshPool->GetEntity(i);
 
-        if (m_pScene->HasComponent<TransformComponent>(entity)) {
-            auto& meshComponent = meshComponents[i];
-            auto& transform = m_pScene->GetComponent<TransformComponent>(entity);
+            if (m_pScene->HasComponent<TransformComponent>(entity)) {
+                auto& meshComponent = meshComponents[i];
+                auto& transform = m_pScene->GetComponent<TransformComponent>(entity);
 
-            // TODO: maybe cache inverse world matrix too
-            m_shader->SetMatrix4("u_InversedNormalModel", lia::inverse(transform.worldMatrix));
-            const auto& meshPtr = meshComponent.GetMeshPtr();
-            if (meshPtr) {
-                Renderer::Submit(m_shader, meshPtr, transform.worldMatrix);
+                m_shader->SetMatrix4("u_NormalModel", transform.normalMatrix);
+                const auto& meshPtr = meshComponent.GetMeshPtr();
+                if (meshPtr) {
+                    Renderer::Submit(m_shader, meshPtr, transform.modelMatrix);
+                }
             }
         }
     }
@@ -151,7 +154,7 @@ void RenderSystem::OnRender(float dt)
                     m_lightShader->SetVector3f("u_Color.ambient", pointLight.ambient);
                     m_lightShader->SetVector3f("u_Color.diffuse", pointLight.diffuse);
 
-                    Renderer::Submit(m_lightShader, m_debugLightMesh, transform.worldMatrix);
+                    Renderer::Submit(m_lightShader, m_debugLightMesh, transform.modelMatrix);
                 }
             }
         }
@@ -169,7 +172,7 @@ void RenderSystem::OnRender(float dt)
                     m_lightShader->SetVector3f("u_Color.ambient", spotlight.ambient);
                     m_lightShader->SetVector3f("u_Color.diffuse", spotlight.diffuse);
 
-                    Renderer::Submit(m_lightShader, m_debugLightMesh, transform.worldMatrix);
+                    Renderer::Submit(m_lightShader, m_debugLightMesh, transform.modelMatrix);
                 }
             }
         }

@@ -9,23 +9,23 @@ void EventManager::Shutdown()
     m_subscribers.clear();
 }
 
-void EventManager::Subscribe(EventId eventId, UniquePtr<IEventHandlerWrapper>&& handler, HandlerId handlerId)
+void EventManager::Subscribe(EventType eventType, UniquePtr<IEventHandlerWrapper>&& handler, EventId eventId)
 {
-    if (handlerId) {
-        auto subscribers = m_subscribersByHandlerId.find(eventId);
+    if (eventId) {
+        auto subscribers = m_subscribersByEventId.find(eventType);
 
-        if (subscribers != m_subscribersByHandlerId.end()) {
+        if (subscribers != m_subscribersByEventId.end()) {
             auto& handlersMap = subscribers->second;
-            auto handlers = handlersMap.find(handlerId);
+            auto handlers = handlersMap.find(eventId);
             if (handlers != handlersMap.end()) {
                 handlers->second.emplace_back(std::move(handler));
                 return;
             }
         }
-        m_subscribersByHandlerId[eventId][handlerId].emplace_back(std::move(handler));
+        m_subscribersByEventId[eventType][eventId].emplace_back(std::move(handler));
 
     } else {
-        auto subscribers = m_subscribers.find(eventId);
+        auto subscribers = m_subscribers.find(eventType);
         if (subscribers != m_subscribers.end()) {
             auto& handlers = subscribers->second;
             for (auto& it : handlers) {
@@ -36,18 +36,18 @@ void EventManager::Subscribe(EventId eventId, UniquePtr<IEventHandlerWrapper>&& 
             }
             handlers.emplace_back(std::move(handler));
         } else {
-            m_subscribers[eventId].emplace_back(std::move(handler));
+            m_subscribers[eventType].emplace_back(std::move(handler));
         }
     }
 }
 
-void EventManager::Unsubscribe(EventId eventId, const std::string& handlerName, HandlerId handlerId)
+void EventManager::Unsubscribe(EventType eventType, const std::string& handlerName, EventId eventId)
 {
-    if (handlerId) {
-        auto subscribers = m_subscribersByHandlerId.find(eventId);
-        if (subscribers != m_subscribersByHandlerId.end()) {
+    if (eventId) {
+        auto subscribers = m_subscribersByEventId.find(eventType);
+        if (subscribers != m_subscribersByEventId.end()) {
             auto& handlersMap = subscribers->second;
-            auto handlers = handlersMap.find(handlerId);
+            auto handlers = handlersMap.find(eventId);
             if (handlers != handlersMap.end()) {
                 auto& callbacks = handlers->second;
                 for (auto it = callbacks.begin(); it != callbacks.end(); ++it) {
@@ -59,7 +59,7 @@ void EventManager::Unsubscribe(EventId eventId, const std::string& handlerName, 
             }
         }
     } else {
-        auto handlersIt = m_subscribers.find(eventId);
+        auto handlersIt = m_subscribers.find(eventType);
         if (handlersIt != m_subscribers.end()) {
             auto& handlers = handlersIt->second;
             for (auto it = handlers.begin(); it != handlers.end(); ++it) {
@@ -72,14 +72,14 @@ void EventManager::Unsubscribe(EventId eventId, const std::string& handlerName, 
     }
 }
 
-void EventManager::TriggerEvent(const Event& event_, HandlerId handlerId)
+void EventManager::TriggerEvent(const Event& event_, EventId eventId)
 {
     for (auto& handler : m_subscribers[event_.GetEventType()]) {
         handler->Exec(event_);
     }
 
-    auto& handlersMap = m_subscribersByHandlerId[event_.GetEventType()];
-    auto handlers = handlersMap.find(handlerId);
+    auto& handlersMap = m_subscribersByEventId[event_.GetEventType()];
+    auto handlers = handlersMap.find(eventId);
     if (handlers != handlersMap.end()) {
         auto& callbacks = handlers->second;
         for (auto it = callbacks.begin(); it != callbacks.end();) {
@@ -94,9 +94,9 @@ void EventManager::TriggerEvent(const Event& event_, HandlerId handlerId)
     }
 }
 
-void EventManager::QueueEvent(UniquePtr<Event>&& event_, HandlerId handlerId)
+void EventManager::QueueEvent(UniquePtr<Event>&& event_, EventId eventId)
 {
-    m_eventsQueue.emplace_back(std::move(event_), handlerId);
+    m_eventsQueue.emplace_back(std::move(event_), eventId);
 }
 
 void EventManager::DispatchEvents()

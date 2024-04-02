@@ -97,7 +97,7 @@ void ImportModel(const std::string& path, LoadedMeshesInfo& info)
     PROFILE(fmt::format("Model {} is loaded: ", path));
 
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate);
+    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_ImproveCacheLocality | aiProcess_OptimizeMeshes | aiProcess_OptimizeGraph);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         EL_CORE_ERROR("ASSIMP: Failed to load model {}", path);

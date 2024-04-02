@@ -11,7 +11,6 @@ public:
     TransformComponent(const lia::vec3& pos, const lia::vec3& scale = { 1.0f }, const lia::vec3& rotation = { 0.0f });
 
     void UpdateLocalMatrix();
-    const lia::mat4& GetLocalMatrix() const { return localMatrix; }
 
 public:
     bool isDirty { true };
@@ -20,7 +19,8 @@ public:
     lia::vec3 scale { 1.0f };
 
     lia::mat4 localMatrix;
-    lia::mat4 worldMatrix;
+    lia::mat4 modelMatrix;  // world space
+    lia::mat4 normalMatrix; // matrix to handle transformation for the normal vector
 };
 void to_json(nlohmann::json& j, const TransformComponent& t);
 void from_json(const nlohmann::json& j, TransformComponent& t);
