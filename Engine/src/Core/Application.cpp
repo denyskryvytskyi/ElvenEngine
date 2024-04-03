@@ -4,7 +4,6 @@
 #include "Input.h"
 #include "Profiler.h"
 #include "SettingsConfig.h"
-#include "Timer.h"
 #include "Window.h"
 
 #include "Renderer/CameraController.h"
@@ -53,8 +52,10 @@ Application::Application()
     gSceneManager.Init();
 
 #if EDITOR_MODE
-    m_imGuiOverlay.Init();
-    m_editor.OnInit();
+    if (gEngineSettings.enableEditor) {
+        m_imGuiOverlay.Init();
+        m_editor.OnInit();
+    }
 #endif
 
     events::Subscribe<events::WindowCloseEvent>(m_windowCloseCallback);
@@ -82,7 +83,9 @@ Application::~Application()
     OnDestroy();
 
 #if EDITOR_MODE
-    m_imGuiOverlay.Shutdown();
+    if (gEngineSettings.enableEditor) {
+        m_imGuiOverlay.Shutdown();
+    }
 #endif
 
     gAudioManager.Shutdown();
@@ -111,20 +114,7 @@ void Application::Run()
         const float elapsedTime = elapsedTimeMs * 0.001f;
         timer.Restart();
 
-        {
-            if (timerFpsCounter.ElapsedMs() > 100.0f) {
-                s_telemetry.frameTime = elapsedTimeMs;
-
-                s_telemetry.fps = 1.0f / elapsedTime;
-
-                timerFpsCounter.Restart();
-            }
-
-            if (gEngineSettings.enableFpsCounter) {
-                GetScene().GetComponent<TextComponent>(m_fpsCounterEntityId).text
-                    = fmt::format("{:0.3f} ms ({} fps)", s_telemetry.frameTime, static_cast<int>(std::floor(s_telemetry.fps)));
-            }
-        }
+        UpdateFps(timerFpsCounter, elapsedTime, elapsedTimeMs);
 
         // ============== Process input step  ==============
         {
@@ -167,14 +157,12 @@ void Application::Run()
         }
 
 #if EDITOR_MODE
-        {
+        if (gEngineSettings.enableEditor) {
             PROFILE_SCOPE("ImGui Render in: ");
-            if (gEngineSettings.enableEditor) {
-                m_imGuiOverlay.Begin();
-                m_editor.OnImGuiRender();
-                OnImguiRender();
-                m_imGuiOverlay.End();
-            }
+            m_imGuiOverlay.Begin();
+            m_editor.OnImGuiRender();
+            OnImguiRender();
+            m_imGuiOverlay.End();
         }
 #endif
 
@@ -213,6 +201,32 @@ void Application::OnWindowResize(const events::WindowResizeEvent& e)
     }
 
     OnWindowResizeApp();
+}
+
+void Application::UpdateFps(Timer& fpsCounter, const float elapsed, const float elapsedMs)
+{
+    static float accumTime = 0.0f;
+    static float accumTimeMs = 0.0f;
+    static float accumFrameCount = 0.0f;
+
+    if (fpsCounter.ElapsedMs() > 1000.0f) {
+        s_telemetry.frameTime = accumTimeMs / accumFrameCount;
+        s_telemetry.fps = accumFrameCount / accumTime;
+
+        fpsCounter.Restart();
+        accumTime = 0.0f;
+        accumTimeMs = 0.0f;
+        accumFrameCount = 0.0f;
+
+        if (gEngineSettings.enableFpsCounter) {
+            GetScene().GetComponent<TextComponent>(m_fpsCounterEntityId).text
+                = fmt::format("{:0.3f} ms ({} fps)", s_telemetry.frameTime, static_cast<int>(std::floor(s_telemetry.fps)));
+        }
+    } else {
+        accumTime += elapsed;
+        accumTimeMs += elapsedMs;
+        accumFrameCount += 1.0f;
+    }
 }
 
 } // namespace elv

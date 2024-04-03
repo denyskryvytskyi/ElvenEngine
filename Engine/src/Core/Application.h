@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Timer.h"
+
 #include "Events/ApplicationEvent.h"
 #include "Events/EventHandler.h"
 #include "Scene/Entity.h"
@@ -53,6 +55,8 @@ protected:
 private:
     void OnWindowClose(const events::WindowCloseEvent& e);
     void OnWindowResize(const events::WindowResizeEvent& e);
+
+    void UpdateFps(Timer& fpsCounter, const float elapsed, const float elapsedMs);
 
 protected:
     ecs::Entity m_orthoCameraEntity { ecs::INVALID_ENTITY_ID };

@@ -51,7 +51,7 @@ Elven Engine is primarily a 2D/3D game engine that is being developed from scrat
   - [x] Load/Save engine settings from/to JSON files
 + [x] Sound engine
   - [x] Support formats: mp3, wav, ogg, flac etc.
-  - [x] Add/Play/Pause/Stop functionality
+  - [x] Add/Play/Pause/Stop/Loop functionality
 + [ ] In-engine editor (WIP; based on ImGui)
   - [x] Editor Camera (holding RMB): WASD movement, QE up/down, ZX rotation
   - [x] Scene hierarchy panel
@@ -61,7 +61,7 @@ Elven Engine is primarily a 2D/3D game engine that is being developed from scrat
     - [x] "Add component" button
     - [x] Component settings context menu
   - [x] Settings panel: fullscreen, VSync, MSAA
-  - [ ] Telemetry: performance panel
+  - [x] Telemetry: performance panel
   - [ ] Graphics stats
 + [x] Just cool stuff
   - [x] Orthographic camera controller (OrthographicCameraController), that can be used if needed
