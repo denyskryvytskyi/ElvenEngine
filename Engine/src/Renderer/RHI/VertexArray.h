@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Renderer/Buffer.h"
-
 namespace elv {
+class VertexBuffer;
+class IndexBuffer;
 
 class VertexArray {
 public:

@@ -1,21 +1,17 @@
 #include "Scene.h"
 
-#include "Renderer/RenderCommand.h"
-#include "Renderer/Renderer2D.h"
-#include "Renderer/Texture2D.h"
-
 #include "Core/Profiler.h"
+#include "Core/SettingsConfig.h"
 
 #include "Components/LightComponent.h"
 #include "Components/SceneComponents.h"
 #include "Components/StaticMeshComponent.h"
+
 #include "Systems/BehaviorSystem.h"
 #include "Systems/LightSystem.h"
 #include "Systems/Physics2dSystem.h"
 #include "Systems/Render2dSystem.h"
 #include "Systems/RenderSystem.h"
-
-#include "Core/SettingsConfig.h"
 
 namespace elv {
 void Scene::OnInit()
@@ -41,7 +37,7 @@ void Scene::OnInit()
 
     // Engine systems register
     RegisterSystem<BehaviorSystem>();
-#if ASSIMP_MODE
+#ifdef THREE_D_MODE
     RegisterSystem<RenderSystem>();
 #endif
     RegisterSystem<Render2dSystem>();

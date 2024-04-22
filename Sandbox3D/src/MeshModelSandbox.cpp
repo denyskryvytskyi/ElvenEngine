@@ -153,7 +153,7 @@ void MeshModelSandbox::SetEnvironment(const int envIndex)
 
     const auto& env = kEnvironmenMaterials[envIndex];
 
-    elv::Renderer::SetClearColor(env.clearColor);
+    m_renderer.SetClearColor(env.clearColor);
 
     // directional
     auto& dirLights = scene.GetComponents<elv::DirectionalLightComponent>();

@@ -9,7 +9,6 @@
 
 #include "Core/Application.h"
 #include "Core/Window.h"
-#include "Renderer/RenderCommand.h"
 #include "Renderer/Renderer2D.h"
 
 namespace elv {

@@ -108,7 +108,7 @@ void Sandbox2D::OnTextureLoaded(const elv::events::TextureLoadedEvent& e)
 
         elv::Scene& scene = elv::GetScene();
 
-        const elv::SharedPtr<elv::Texture2D> texture = elv::textures::Get("wizard_fire");
+        const elv::SharedPtr<elv::Texture> texture = elv::textures::Get("wizard_fire");
 
         for (size_t i = 0; i < 100; ++i) {
             for (size_t j = 0; j < 100; ++j) {

@@ -6,8 +6,9 @@
 namespace elv {
 
 class Shader;
-class Texture2D;
+class Texture;
 class VertexArray;
+class Renderer;
 
 struct MeshVertex {
     lia::vec3 Position;
@@ -29,7 +30,7 @@ public:
     virtual ~Mesh() = default;
 
     void SetInfo(const std::vector<MeshVertex>& vertices, const std::vector<std::uint32_t>& indices, const std::vector<MeshTexture>& texturesInfo);
-    void Draw(const SharedPtr<Shader>& shader) const;
+    void Draw(Renderer* renderer, const SharedPtr<Shader>& shader) const;
     void AddSubmesh(Mesh&& submesh);
     void SetMaterialTexture(const Material::TextureSlot slot, const std::string& name, const std::string& path, bool async);
 

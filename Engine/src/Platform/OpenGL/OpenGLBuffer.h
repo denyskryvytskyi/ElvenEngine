@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderer/Buffer.h"
+#include "Renderer/RHI/Buffer.h"
 
 namespace elv {
 

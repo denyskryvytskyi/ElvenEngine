@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Core/Window.h"
-#include "Renderer/GraphicsContext.h"
 
 struct GLFWwindow;
 struct GLFWmonitor;
 
 namespace elv {
+
+class GraphicsContext;
 
 class WindowsWindow : public Window {
 private:

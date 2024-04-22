@@ -48,13 +48,13 @@ void FontManager::Load(const std::string& fontName, const std::string& fontPath)
             continue;
         }
 
-        SharedPtr<Texture2D> texture { nullptr };
+        SharedPtr<Texture> texture { nullptr };
         // don't create texture for the Space symbol
         if (c != 32) {
 
             const std::string textureName = fmt::format("{}{}{}", fontName, "text2d_glyph_", c);
             texture = textures::LoadUnique(textureName, face->glyph->bitmap.width, face->glyph->bitmap.rows, 1);
-            texture->SetWrappingMode(TextureWrappingMode::ClampToBorder);
+            texture->SetWrappingMode(Texture::WrappingMode::ClampToBorder);
             texture->SetData(face->glyph->bitmap.buffer);
         }
 

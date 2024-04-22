@@ -1,6 +1,6 @@
 #include "ModelImporter.h"
 
-#if ASSIMP_MODE
+#if THREE_D_MODE
 
 #    include "Core/Profiler.h"
 

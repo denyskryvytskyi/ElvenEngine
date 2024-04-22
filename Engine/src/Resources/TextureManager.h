@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderer/Texture2D.h"
+#include "Renderer/RHI/Texture.h"
 
 #include <future>
 #include <set>
@@ -26,13 +26,14 @@ public:
     void Load(const std::string& textureName, const std::string& filePath, const bool isAsync);
 
     // just create texture for specific texture implementation
-    SharedPtr<Texture2D> Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels, bool AddToPool = true);
+    SharedPtr<Texture> Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels, bool save = true);
+    SharedPtr<Texture> Load(const std::uint32_t width, const std::uint32_t height, const Texture::Info& info);
 
     void Init();
     void Update();
     void Shutdown();
 
-    SharedPtr<Texture2D> Get(std::string_view textureName);
+    SharedPtr<Texture> Get(std::string_view textureName);
 
     std::vector<std::string> GetTextureNames() const;
 
@@ -40,7 +41,7 @@ private:
     void CreateTexture(const LoadedTextureInfo& info);
 
 private:
-    std::unordered_map<std::string, SharedPtr<Texture2D>> m_textures;
+    std::unordered_map<std::string, SharedPtr<Texture>> m_textures;
     std::vector<LoadedTextureInfo> m_loadedInfo;
     std::set<std::string> m_textureLoadingInProgress;
     std::vector<std::future<void>> m_futures;
@@ -55,17 +56,22 @@ inline void Load(const std::string& textureName, const std::string& filePath, co
     gTextureManager.Load(textureName, filePath, async);
 }
 
-inline SharedPtr<Texture2D> Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels = 3)
+inline SharedPtr<Texture> Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels = 3)
 {
     return gTextureManager.Load(textureName, width, height, nrChannels);
 }
 
-inline SharedPtr<Texture2D> LoadUnique(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels = 3)
+inline SharedPtr<Texture> Load(std::uint32_t width, std::uint32_t height, const Texture::Info& info)
+{
+    return gTextureManager.Load(width, height, info);
+}
+
+inline SharedPtr<Texture> LoadUnique(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels = 3)
 {
     return gTextureManager.Load(textureName, width, height, nrChannels, false);
 }
 
-inline SharedPtr<Texture2D> Get(std::string_view textureName)
+inline SharedPtr<Texture> Get(std::string_view textureName)
 {
     return gTextureManager.Get(textureName);
 }

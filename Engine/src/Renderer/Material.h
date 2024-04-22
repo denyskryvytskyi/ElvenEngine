@@ -1,7 +1,7 @@
 #pragma once
 
 namespace elv {
-class Texture2D;
+class Texture;
 class Shader;
 
 class Material {
@@ -20,7 +20,7 @@ private:
     struct TextureMap {
         bool needReload { false };
         std::string name;
-        SharedPtr<Texture2D> texturePtr { nullptr };
+        SharedPtr<Texture> texturePtr { nullptr };
     };
 
 public:
@@ -33,7 +33,7 @@ public:
      * @param name Texture name
      * @param texture already loaded texture pointer
      */
-    void SetTexture(const TextureSlot slot, const std::string& name, SharedPtr<Texture2D> texture);
+    void SetTexture(const TextureSlot slot, const std::string& name, SharedPtr<Texture> texture);
 
     /**
      * Set texture info to the slot, texture will be loaded on LoadTextures function call

@@ -1,7 +1,7 @@
 #include "Material.h"
 
-#include "Shader.h"
-#include "Texture2D.h"
+#include "RHI/Shader.h"
+#include "RHI/Texture.h"
 
 #include "Core/StringId.h"
 #include "Events/EventManager.h"
@@ -32,7 +32,7 @@ Material::Material()
     LoadTexture("", false, m_textures[TextureSlot::Transparency]);
 }
 
-void Material::SetTexture(const TextureSlot slot, const std::string& name, SharedPtr<Texture2D> texture)
+void Material::SetTexture(const TextureSlot slot, const std::string& name, SharedPtr<Texture> texture)
 {
     auto& map = m_textures[slot];
     map.name = name;
@@ -105,7 +105,7 @@ void Material::ApplyMaterial(const SharedPtr<Shader>& shader) const
     for (int i = 0; i < TextureSlot::Count; ++i) {
         const auto& textureMap = m_textures[i];
         if (textureMap.texturePtr) {
-            textureMap.texturePtr->BindToUnit(i);
+            textureMap.texturePtr->BindToSlot(i);
             shader->SetInteger(fmt::format("u_Material.{}", kDefaultTextureMapNames[i]), i);
         }
     }

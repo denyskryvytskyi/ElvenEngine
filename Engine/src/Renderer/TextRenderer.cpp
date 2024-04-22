@@ -1,15 +1,16 @@
 #include "TextRenderer.h"
 
-#include "RenderCommand.h"
-#include "Renderer/Buffer.h"
-#include "Renderer/VertexArray.h"
-#include "Resources/FontManager.h"
-#include "Resources/TextureManager.h"
-#include "Shader.h"
-#include "Texture2D.h"
+#include "RHI/Buffer.h"
+#include "RHI/Shader.h"
+#include "RHI/Texture.h"
+#include "RHI/VertexArray.h"
 
 #include "Core/Application.h"
 #include "Core/Window.h"
+
+#include "Resources/FontManager.h"
+#include "Resources/TextureManager.h"
+
 #include "Scene/Components/SceneComponents.h"
 #include "Scene/SceneManager.h"
 
@@ -55,7 +56,7 @@ static lia::vec2 FromUiToCameraPos(const lia::vec2& pos, const OrthoCameraBounds
              cameraBounds.top - ((pos.y - uiRectMin) * cameraRangeY / uiRange) };
 }
 
-void TextRenderer::Init()
+void TextRenderer::Init(Renderer& renderer)
 {
     s_data.shader = ShaderManager::Load("text2d", "text2d.vert", "text2d.frag");
 
@@ -77,7 +78,7 @@ void TextRenderer::Init()
     s_data.vao->SetIndexBuffer(ebo);
 
     // disable byte-alignment restriction
-    RenderCommand::DisableByteAlignment();
+    renderer.DisableByteAlignment();
 }
 
 void TextRenderer::PreRender(const Camera& camera)
@@ -89,7 +90,7 @@ void TextRenderer::PreRender(const Camera& camera)
     s_data.pixelToCamera = GetPixelToCameraVec(s_data.cameraBounds);
 }
 
-void TextRenderer::RenderText(std::string_view text, const std::string& fontName, const lia::vec2& pos, const lia::vec2& scale, lia::vec4 color)
+void TextRenderer::RenderText(Renderer& renderer, std::string_view text, const std::string& fontName, const lia::vec2& pos, const lia::vec2& scale, lia::vec4 color)
 {
     const auto& glyphs = gFontManager.GetGlyphs(fontName);
 
@@ -138,9 +139,9 @@ void TextRenderer::RenderText(std::string_view text, const std::string& fontName
 
         s_data.vbo->SetData(vertices, sizeof(vertices));
 
-        glyph.texture->BindToUnit(0);
+        glyph.texture->BindToSlot(0);
 
-        RenderCommand::DrawIndexed(s_data.vao, quadIndexCount);
+        renderer.Submit(s_data.vao, quadIndexCount);
 
         // now advance cursors for next glyph
         currentGlyphPosX += s_data.pixelToCamera.x * scale.x * static_cast<float>(glyph.advance >> 6); // bitshift by 6 to get value in pixels (1/64th times 2^6 = 64)

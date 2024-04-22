@@ -1,7 +1,8 @@
-#include "Renderer/Shader.h"
-#include "Core/FileSystem.h"
+#include "Shader.h"
+
 #include "Renderer/Renderer.h"
 
+#include "Core/FileSystem.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
 namespace elv {

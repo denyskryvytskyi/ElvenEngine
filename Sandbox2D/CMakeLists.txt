@@ -46,7 +46,7 @@ else()
   message("This is not supported platform for now!")
 endif()
 
-set(RES_COMMON_PATH ${PROJECT_SOURCE_DIR}/Engine/res)
+set(RES_COMMON_PATH ${PROJECT_SOURCE_DIR}/Engine/assets)
 
 add_custom_command(TARGET ${APP_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory

@@ -1,4 +1,3 @@
-// Fragment shader for the mesh
 #version 450 core
 
 struct Material {

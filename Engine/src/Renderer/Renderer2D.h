@@ -4,9 +4,10 @@
 
 namespace elv {
 
+class Renderer;
 class VertexArray;
 class Shader;
-class Texture2D;
+class Texture;
 struct Renderer2DData;
 
 class Renderer2D {
@@ -17,7 +18,7 @@ private:
     };
 
 public:
-    static void Init();
+    static void Init(Renderer* renderer);
     static void Shutdown();
 
     static void BeginScene(const Camera& camera);
@@ -31,7 +32,7 @@ public:
      * @param angle Rotation angle around Z axis in degrees
      */
     static void DrawQuad(const lia::vec3& pos, const lia::vec3& scale, float rotation, const lia::vec4& color = lia::vec4(1.0f));
-    static void DrawQuad(const SharedPtr<Texture2D>& texture, const lia::vec3& pos, const lia::vec3& scale, float rotation, const lia::vec4& color = lia::vec4(1.0f));
+    static void DrawQuad(const SharedPtr<Texture>& texture, const lia::vec3& pos, const lia::vec3& scale, float rotation, const lia::vec4& color = lia::vec4(1.0f));
 
     static Telemetry GetTelemetry() { return s_telemetry; }
 
@@ -41,6 +42,7 @@ private:
 
 private:
     static Renderer2DData s_data;
+    static Renderer* s_rendererPtr;
     static Telemetry s_telemetry;
 };
 

@@ -1,5 +1,9 @@
-#include "Renderer/VertexArray.h"
+#include "VertexArray.h"
+
+#include "Buffer.h"
+
 #include "Renderer/Renderer.h"
+#include "RendererAPI.h"
 
 #include "Platform/OpenGL/OpenGLVertexArray.h"
 

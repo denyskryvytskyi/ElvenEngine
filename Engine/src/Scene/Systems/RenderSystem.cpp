@@ -4,8 +4,8 @@
 #include "Core/Profiler.h"
 #include "Renderer/CameraController.h"
 #include "Renderer/Mesh.h"
+#include "Renderer/RHI/Shader.h"
 #include "Renderer/Renderer.h"
-#include "Renderer/Shader.h"
 #include "Resources/MeshLibrary.h"
 #include "Scene/Components/LightComponent.h"
 #include "Scene/Components/StaticMeshComponent.h"
@@ -22,14 +22,14 @@ void RenderSystem::OnInit()
 
 void RenderSystem::OnRender(float dt)
 {
+    auto& renderer = Application::Get().GetRenderer();
+
     auto cameraController = Application::Get().GetCameraController();
     if (!cameraController) {
         EL_CORE_ERROR("Failed to find main camera");
         return;
     }
     auto& camera = cameraController->GetCamera();
-
-    Renderer::BeginScene(camera);
 
     m_shader->Bind();
     m_shader->SetVector3f("u_ViewPos", camera.GetPosition());
@@ -126,7 +126,7 @@ void RenderSystem::OnRender(float dt)
                 m_shader->SetMatrix4("u_NormalModel", transform.normalMatrix);
                 const auto& meshPtr = meshComponent.GetMeshPtr();
                 if (meshPtr) {
-                    Renderer::Submit(m_shader, meshPtr, transform.modelMatrix);
+                    renderer.Submit(m_shader, meshPtr, transform.modelMatrix);
                 }
             }
         }
@@ -154,7 +154,7 @@ void RenderSystem::OnRender(float dt)
                     m_lightShader->SetVector3f("u_Color.ambient", pointLight.ambient);
                     m_lightShader->SetVector3f("u_Color.diffuse", pointLight.diffuse);
 
-                    Renderer::Submit(m_lightShader, m_debugLightMesh, transform.modelMatrix);
+                    renderer.Submit(m_lightShader, m_debugLightMesh, transform.modelMatrix);
                 }
             }
         }
@@ -172,12 +172,10 @@ void RenderSystem::OnRender(float dt)
                     m_lightShader->SetVector3f("u_Color.ambient", spotlight.ambient);
                     m_lightShader->SetVector3f("u_Color.diffuse", spotlight.diffuse);
 
-                    Renderer::Submit(m_lightShader, m_debugLightMesh, transform.modelMatrix);
+                    renderer.Submit(m_lightShader, m_debugLightMesh, transform.modelMatrix);
                 }
             }
         }
     }
-
-    Renderer::EndScene();
 }
 } // namespace elv

@@ -1,4 +1,4 @@
-if (NOT ASSIMP_MODE)
+if (NOT THREE_D_MODE)
     add_subdirectory(TRON)
     add_subdirectory(Pong)
     add_subdirectory(Invaders)

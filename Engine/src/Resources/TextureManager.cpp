@@ -3,7 +3,7 @@
 #include "Core/StringId.h"
 #include "Events/EventManager.h"
 #include "Events/TextureEvent.h"
-#include "Platform/OpenGL/OpenGLTexture2D.h"
+#include "Platform/OpenGL/OpenGLTexture.h"
 #include "Renderer/Renderer.h"
 
 #include "Core/Profiler.h"
@@ -62,7 +62,7 @@ void TextureManager::Load(const std::string& textureName, const std::string& fil
     EL_CORE_INFO("Texture {0} is already loaded.", textureName);
 }
 
-SharedPtr<Texture2D> TextureManager::Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels, bool addToPool)
+SharedPtr<Texture> TextureManager::Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels, bool save)
 {
     // check whether we already loaded this texture
     auto it = m_textures.find(textureName);
@@ -70,8 +70,8 @@ SharedPtr<Texture2D> TextureManager::Load(const std::string& textureName, std::u
     if (it == m_textures.end()) {
         switch (Renderer::GetAPI()) {
         case RendererAPI::API::OpenGL: {
-            SharedPtr<Texture2D> texture = MakeSharedPtr<OpenGLTexture2D>(width, height, nrChannels);
-            if (addToPool) {
+            SharedPtr<Texture> texture = MakeSharedPtr<OpenGLTexture>(width, height, nrChannels);
+            if (save) {
                 m_textures.insert({ textureName, texture });
             }
             return texture;
@@ -87,13 +87,25 @@ SharedPtr<Texture2D> TextureManager::Load(const std::string& textureName, std::u
     return nullptr;
 }
 
+SharedPtr<Texture> TextureManager::Load(const std::uint32_t width, const std::uint32_t height, const Texture::Info& info)
+{
+    switch (Renderer::GetAPI()) {
+    case RendererAPI::API::OpenGL:
+        SharedPtr<Texture> texture = MakeSharedPtr<OpenGLTexture>(width, height, info);
+        return texture;
+    }
+
+    EL_CORE_ASSERT(false, "Unknown Renderer API!");
+    return nullptr;
+}
+
 void TextureManager::Init()
 {
-    SharedPtr<Texture2D> whiteTexture = Load("white", 1, 1, 3);
+    SharedPtr<Texture> whiteTexture = Load("white", 1, 1, 3);
     unsigned char whiteData[] = { 255, 255, 255 }; // RGB format
     whiteTexture->SetData(&whiteData, false);
 
-    SharedPtr<Texture2D> blackTexture = Load("black", 1, 1, 3);
+    SharedPtr<Texture> blackTexture = Load("black", 1, 1, 3);
     unsigned char blackData[] = { 0, 0, 0 }; // RGB format
     blackTexture->SetData(&blackData, false);
 }
@@ -130,7 +142,7 @@ void TextureManager::Shutdown()
     m_loadedInfo.clear();
 }
 
-SharedPtr<Texture2D> TextureManager::Get(std::string_view textureName)
+SharedPtr<Texture> TextureManager::Get(std::string_view textureName)
 {
     auto it = m_textures.find(textureName.data());
     return it != m_textures.end() ? it->second : nullptr;
@@ -151,7 +163,7 @@ void TextureManager::CreateTexture(const LoadedTextureInfo& info)
 {
     switch (Renderer::GetAPI()) {
     case RendererAPI::API::OpenGL: {
-        SharedPtr<Texture2D> texture = MakeSharedPtr<OpenGLTexture2D>(info.width, info.height, info.nrChannels);
+        SharedPtr<Texture> texture = MakeSharedPtr<OpenGLTexture>(info.width, info.height, info.nrChannels);
         texture->SetData(info.data);
 
         m_textures.insert({ info.textureName, std::move(texture) });

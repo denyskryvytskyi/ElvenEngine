@@ -1,9 +1,10 @@
 #include "Mesh.h"
 
-#include "RenderCommand.h"
-#include "Shader.h"
-#include "Texture2D.h"
-#include "VertexArray.h"
+#include "RHI/Buffer.h"
+#include "RHI/Shader.h"
+#include "RHI/Texture.h"
+#include "RHI/VertexArray.h"
+#include "Renderer.h"
 
 namespace elv {
 
@@ -57,15 +58,15 @@ void Mesh::LoadTextures(const std::string& dir, const bool async)
     }
 }
 
-void Mesh::Draw(const SharedPtr<Shader>& shader) const
+void Mesh::Draw(Renderer* renderer, const SharedPtr<Shader>& shader) const
 {
     m_vao->Bind();
     m_material.ApplyMaterial(shader);
-    RenderCommand::DrawIndexed(m_vao, 0, m_topology);
+    renderer->Submit(m_vao, 0, m_topology);
 
     // draw submeshes
     for (auto& submesh : m_submeshes) {
-        submesh.Draw(shader);
+        submesh.Draw(renderer, shader);
     }
 }
 

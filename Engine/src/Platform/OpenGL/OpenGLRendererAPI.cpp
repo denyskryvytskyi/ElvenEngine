@@ -54,12 +54,6 @@ void OpenGLRendererAPI::Init()
     // blending
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    // msaa
-    glEnable(GL_MULTISAMPLE);
-
-    // faceculling
-    glEnable(GL_CULL_FACE);
 }
 
 void OpenGLRendererAPI::SetViewport(std::uint32_t x, std::uint32_t y, std::uint32_t width, std::uint32_t height)
@@ -74,6 +68,11 @@ void OpenGLRendererAPI::SetClearColor(const lia::vec4& color)
 void OpenGLRendererAPI::Clear()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void OpenGLRendererAPI::ClearColorBit()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void OpenGLRendererAPI::EnableDepthTesting(bool enabled)
@@ -92,6 +91,15 @@ void OpenGLRendererAPI::EnableMSAA(bool enabled)
         glEnable(GL_MULTISAMPLE);
     } else {
         glDisable(GL_MULTISAMPLE);
+    }
+}
+
+void OpenGLRendererAPI::EnableFaceculling(bool enabled)
+{
+    if (enabled) {
+        glEnable(GL_CULL_FACE);
+    } else {
+        glDisable(GL_CULL_FACE);
     }
 }
 

@@ -26,19 +26,19 @@ set(ENGINE_HEADERS
 "src/Events/TextureEvent.h"
 "src/Events/PhysicsEvent.h"
 "src/Events/MeshEvent.h"
-"src/Renderer/Buffer.h"
-"src/Renderer/GraphicsContext.h"
+"src/Renderer/RHI/Buffer.h"
+"src/Renderer/RHI/GraphicsContext.h"
+"src/Renderer/RHI/RendererAPI.h"
+"src/Renderer/RHI/Shader.h"
+"src/Renderer/RHI/VertexArray.h"
+"src/Renderer/RHI/Texture.h"
+"src/Renderer/RHI/RenderTarget.h"
 "src/Renderer/Camera.h"
 "src/Renderer/CameraController.h"
 "src/Renderer/OrthographicCameraController.h"
 "src/Renderer/EditorCameraController.h"
-"src/Renderer/RenderCommand.h"
 "src/Renderer/Renderer2D.h"
 "src/Renderer/Renderer.h"
-"src/Renderer/RendererAPI.h"
-"src/Renderer/Shader.h"
-"src/Renderer/VertexArray.h"
-"src/Renderer/Texture2D.h"
 "src/Renderer/TextRenderer.h"
 "src/Renderer/Material.h"
 "src/Renderer/Mesh.h"
@@ -49,7 +49,8 @@ set(ENGINE_HEADERS
 "src/Platform/OpenGL/OpenGLRendererAPI.h"
 "src/Platform/OpenGL/OpenGLShader.h"
 "src/Platform/OpenGL/OpenGLVertexArray.h"
-"src/Platform/OpenGL/OpenGLTexture2D.h"
+"src/Platform/OpenGL/OpenGLTexture.h"
+"src/Platform/OpenGL/OpenGLRenderTarget.h"
 "src/Scene/Entity.h"
 "src/Scene/Component.h"
 "src/Scene/Behavior.h"
@@ -96,18 +97,18 @@ set(ENGINE_SOURCES
 "src/Core/SettingsConfig.cpp"
 "src/Core/Profiler.cpp"
 "src/Events/EventManager.cpp"
-"src/Renderer/Buffer.cpp"
-"src/Renderer/GraphicsContext.cpp"
+"src/Renderer/RHI/Buffer.cpp"
+"src/Renderer/RHI/GraphicsContext.cpp"
+"src/Renderer/RHI/RendererAPI.cpp"
+"src/Renderer/RHI/Shader.cpp"
+"src/Renderer/RHI/VertexArray.cpp"
+"src/Renderer/RHI/RenderTarget.cpp"
 "src/Renderer/Camera.cpp"
 "src/Renderer/CameraController.cpp"
 "src/Renderer/OrthographicCameraController.cpp"
 "src/Renderer/EditorCameraController.cpp"
-"src/Renderer/RenderCommand.cpp"
 "src/Renderer/Renderer2D.cpp"
 "src/Renderer/Renderer.cpp"
-"src/Renderer/RendererAPI.cpp"
-"src/Renderer/Shader.cpp"
-"src/Renderer/VertexArray.cpp"
 "src/Renderer/TextRenderer.cpp"
 "src/Renderer/Mesh.cpp"
 "src/Renderer/Material.cpp"
@@ -116,7 +117,8 @@ set(ENGINE_SOURCES
 "src/Platform/OpenGL/OpenGLRendererAPI.cpp"
 "src/Platform/OpenGL/OpenGLShader.cpp"
 "src/Platform/OpenGL/OpenGLVertexArray.cpp"
-"src/Platform/OpenGL/OpenGLTexture2D.cpp"
+"src/Platform/OpenGL/OpenGLTexture.cpp"
+"src/Platform/OpenGL/OpenGLRenderTarget.cpp"
 "src/Platform/Windows/WindowsInput.cpp"
 "src/Platform/Windows/WindowsWindow.cpp"
 "src/Scene/Behavior.cpp"
@@ -193,17 +195,6 @@ target_include_directories(${LIBRARY_NAME}
     PUBLIC ${ENGINE_INCLUDE_DIRS}
 )
 
-if (EDITOR_MODE)
-    add_subdirectory(${VENDOR_PATH}/imgui)
-    set_target_properties(imgui PROPERTIES FOLDER "Libs")
-endif()
-
-if (EDITOR_MODE)
-    set(STATIC_THIRD_PARTY_LIBRARIES
-        imgui
-    )
-endif()
-
 set(VENDOR_PATH_DEBUG ${PROJECT_SOURCE_DIR}/build_vendor/lib/Debug/)
 set(VENDOR_PATH_RELEASE ${PROJECT_SOURCE_DIR}/build_vendor/lib/Release/)
 
@@ -214,6 +205,7 @@ find_library(lia_d NAMES lia PATHS ${VENDOR_PATH_DEBUG})
 find_library(stb_d NAMES stb PATHS ${VENDOR_PATH_DEBUG})
 find_library(freetype_d NAMES freetyped PATHS ${VENDOR_PATH_DEBUG})
 find_library(fmt_d NAMES fmtd PATHS ${VENDOR_PATH_DEBUG})
+find_library(imgui_d NAMES imguid PATHS ${VENDOR_PATH_DEBUG})
 find_library(assimp_d NAMES assimp-vc143-mtd PATHS ${VENDOR_PATH_DEBUG})
 find_library(zlib_d NAMES zlibstaticd PATHS ${VENDOR_PATH_DEBUG})
 
@@ -224,6 +216,7 @@ find_library(lia NAMES lia PATHS ${VENDOR_PATH_RELEASE})
 find_library(stb NAMES stb PATHS ${VENDOR_PATH_RELEASE})
 find_library(freetype NAMES freetype PATHS ${VENDOR_PATH_RELEASE})
 find_library(fmt NAMES fmt PATHS ${VENDOR_PATH_RELEASE})
+find_library(imgui NAMES imgui PATHS ${VENDOR_PATH_RELEASE})
 find_library(irrklang NAMES irrKlang.lib PATHS ${VENDOR_PATH}/irrklang/lib)
 find_library(assimp NAMES assimp-vc143-mt PATHS ${VENDOR_PATH_RELEASE})
 find_library(zlib NAMES zlibstatic PATHS ${VENDOR_PATH_RELEASE})
@@ -239,7 +232,14 @@ debug ${irrklang} optimized ${irrklang}
 debug ${fmt_d} optimized ${fmt}
 )
 
-if (ASSIMP_MODE)
+if (EDITOR_MODE)
+    set(VENDOR
+        ${VENDOR}
+        debug ${imgui_d} optimized ${imgui}
+    )
+endif()
+
+if (THREE_D_MODE)
     set(VENDOR
         ${VENDOR}
         debug ${assimp_d} optimized ${assimp}
@@ -247,7 +247,7 @@ if (ASSIMP_MODE)
     )
 endif()
 
-target_link_libraries(${LIBRARY_NAME} ${STATIC_THIRD_PARTY_LIBRARIES} ${VENDOR})
+target_link_libraries(${LIBRARY_NAME} ${VENDOR})
 
 # pch header file path
 set(ENGINE_PRECOMPILED_HEADERS

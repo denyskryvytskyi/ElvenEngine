@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Renderer/VertexArray.h"
+#include "Renderer/RHI/Buffer.h"
+#include "Renderer/RHI/VertexArray.h"
 
 namespace elv {
 

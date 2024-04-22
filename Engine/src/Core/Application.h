@@ -4,6 +4,7 @@
 
 #include "Events/ApplicationEvent.h"
 #include "Events/EventHandler.h"
+#include "Renderer/Renderer.h"
 #include "Scene/Entity.h"
 
 #if EDITOR_MODE
@@ -40,6 +41,8 @@ public:
 
     SharedPtr<CameraController> GetCameraController() const { return m_cameraController; }
 
+    Renderer& GetRenderer() { return m_renderer; }
+
 protected:
     virtual void OnCreate() {};
     virtual void OnUpdate(float dt) {};
@@ -63,6 +66,7 @@ protected:
     bool m_running { false };
 
     SharedPtr<CameraController> m_cameraController { nullptr };
+    Renderer m_renderer;
 
 private:
     static Application* s_instance;

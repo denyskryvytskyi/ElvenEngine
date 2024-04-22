@@ -2,11 +2,13 @@
 #include "Platform/OpenGL/OpenGLContext.h"
 
 #include "Events/ApplicationEvent.h"
+#include "Events/EventManager.h"
 #include "Events/KeyEvent.h"
 #include "Events/MouseEvent.h"
 
 #include "Core/SettingsConfig.h"
-#include "Events/EventManager.h"
+
+#include "Renderer/RHI/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
 

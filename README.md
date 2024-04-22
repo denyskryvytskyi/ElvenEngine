@@ -13,14 +13,15 @@ Elven Engine is primarily a 2D/3D game engine that is being developed from scrat
 ## Features
 + [x] Logging system
 + [x] Event system (non-blocking event queue-based system, described architecture in the [article](https://denyskryvytskyi.github.io/event-system))
-+ [x] Custom math library ([lia](https://github.com/denyskryvytskyi/lia))
-+ [x] Renderer core (graphics API agnostic)
-  - [x] Shaders loading
-  - [x] Async textures loading
-  - [x] Buffers, Shader, Texture abstractions
++ [x] Custom 3D math library ([lia](https://github.com/denyskryvytskyi/lia))
++ [x] Renderer Core
+  - [x] RHI (Render Hardware Interface): Buffers, Shader, Texture, Render Target
+  - [x] Graphics API agnostic Renderer API
+  - [x] Modern OpenGL (with Direct State Access) specific Renderer API implementation
+  - [x] Shader loading
+  - [x] Async texture loading
   - [x] Camera (orthographic, perspective)
-  - [x] DSA OpenGL Renderer implementation
-  - [x] Fullscreen switch support
+  - [x] Render Passes based on Render Targets
 + [ ] 2D Renderer
   - [x] Quad rendering
   - [x] Texture rendering
@@ -33,8 +34,9 @@ Elven Engine is primarily a 2D/3D game engine that is being developed from scrat
   - [x] Mesh-Material system (Static mesh support with one material slot per mesh/submesh for now)
   - [x] Primitives: cube, sphere, plane
   - [x] Async 3D model loading and async material textures loading
+  - [x] Render Target
+  - [x] MSAA (Multisample anti-alising)
   - [ ] Uniform buffer
-  - [ ] Framebuffer
   - [ ] Cubemap
   - [ ] Shadows
 + [x] ECS (investigated different techniques and my particular architecture in the [article](https://denyskryvytskyi.github.io/ecs))
@@ -64,6 +66,7 @@ Elven Engine is primarily a 2D/3D game engine that is being developed from scrat
   - [x] Telemetry: performance panel
   - [ ] Graphics stats
 + [x] Just cool stuff
+  - [x] Fullscreen switch support
   - [x] Orthographic camera controller (OrthographicCameraController), that can be used if needed
   - [x] Fly(FPS-like) 3D camera support (CameraController)
 + [ ] Multithreading support
@@ -109,7 +112,7 @@ You can modify configure file to enable/disable the following cmake options:
 - **BUILD_GAMES** (default ON): Enable Games build
 - **PROFILE_MODE** (default ON): Enable Profiling (`PROFILE_MODE` preprocessor definition will be added)
 - **EDITOR_MODE** (default ON): Enable Editor (`EDITOR_MODE` preprocessor definition will be added)
-- **ASSIMP_MODE** (default ON): Enable Assimp library for 3D model loading (`ASSIMP_MODE` preprocessor definition will be added). **IMPORTANT**: ON - only Sandbox3D project will be configured, OFF - only Sandbox2D and Games projects will be configured.
+- **THREE_D_MODE** (default ON): Enable 3D mode and Assimp library for 3D model loading (`THREE_D_MODE` preprocessor definition will be added). **IMPORTANT**: ON - only Sandbox3D project will be configured, OFF - only Sandbox2D and Games projects will be configured.
 
 ## Third-party libraries
 | Lib |  |

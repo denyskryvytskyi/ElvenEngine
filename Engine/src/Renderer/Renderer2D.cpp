@@ -1,8 +1,10 @@
 #include "Renderer2D.h"
 
-#include "Renderer/RenderCommand.h"
-#include "Renderer/Shader.h"
-#include "Renderer/VertexArray.h"
+#include "Renderer/RHI/Buffer.h"
+#include "Renderer/RHI/Shader.h"
+#include "Renderer/RHI/VertexArray.h"
+#include "Renderer/Renderer.h"
+
 #include "Resources/TextureManager.h"
 
 #include "Core/FileSystem.h"
@@ -35,7 +37,7 @@ struct Renderer2DData {
     QuadVertex* quadVerticesBegin { nullptr };
     QuadVertex* quadVerticesCurrent { nullptr };
     uint32_t quadIndexCount = 0;
-    std::array<SharedPtr<Texture2D>, MAX_TEXTURE_SLOTS> textures;
+    std::array<SharedPtr<Texture>, MAX_TEXTURE_SLOTS> textures;
     uint32_t usedTextureSlots = 1; // white texture
 
     const lia::vec4 quadPositions[4] = {
@@ -53,10 +55,12 @@ struct Renderer2DData {
 };
 
 Renderer2DData Renderer2D::s_data;
+Renderer* Renderer2D::s_rendererPtr = nullptr;
 Renderer2D::Telemetry Renderer2D::s_telemetry;
 
-void Renderer2D::Init()
+void Renderer2D::Init(Renderer* renderer)
 {
+    s_rendererPtr = renderer;
     s_data.quadVAO = VertexArray::Create();
 
     s_data.quadVerticesBegin = new QuadVertex[MAX_QUAD_VERTICES];
@@ -90,7 +94,7 @@ void Renderer2D::Init()
     s_data.shader = ShaderManager::Load("sprite", "sprite.vert", "sprite.frag");
 
     // Textures
-    SharedPtr<Texture2D> whiteTexture = textures::Get("white");
+    SharedPtr<Texture> whiteTexture = textures::Get("white");
     s_data.textures[0] = std::move(whiteTexture);
 }
 
@@ -121,10 +125,10 @@ void Renderer2D::Flush()
     s_data.shader->SetMatrix4("u_ViewProjection", s_data.viewProjectionMat);
 
     for (std::uint32_t i = 0; i < s_data.usedTextureSlots; ++i) {
-        s_data.textures[i]->BindToUnit(i);
+        s_data.textures[i]->BindToSlot(i);
     }
 
-    RenderCommand::DrawIndexed(s_data.quadVAO, s_data.quadIndexCount);
+    s_rendererPtr->Submit(s_data.quadVAO, s_data.quadIndexCount);
 
     s_telemetry.drawCalls++;
 }
@@ -147,7 +151,7 @@ void Renderer2D::DrawQuad(const lia::vec3& pos, const lia::vec3& scale, float ro
     DrawQuad(pos, scale, rotation, color, 0);
 }
 
-void Renderer2D::DrawQuad(const SharedPtr<Texture2D>& texture, const lia::vec3& pos, const lia::vec3& scale, float rotation, const lia::vec4& color)
+void Renderer2D::DrawQuad(const SharedPtr<Texture>& texture, const lia::vec3& pos, const lia::vec3& scale, float rotation, const lia::vec4& color)
 {
     if (s_data.usedTextureSlots >= MAX_TEXTURE_SLOTS) {
         NextBatch();

@@ -18,7 +18,7 @@ struct QuadComponent {
 void to_json(nlohmann::json& j, const QuadComponent& t);
 void from_json(const nlohmann::json& j, QuadComponent& t);
 
-class Texture2D;
+class Texture;
 struct SpriteComponent {
     SpriteComponent() = default;
 
@@ -60,7 +60,7 @@ struct SpriteComponent {
 public:
     std::string textureName;
     std::string texturePath;
-    SharedPtr<Texture2D> texture { nullptr };
+    SharedPtr<Texture> texture { nullptr };
     lia::vec4 color { 1.0f };
 };
 

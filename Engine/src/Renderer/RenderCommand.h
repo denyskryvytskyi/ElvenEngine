@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderer/RendererAPI.h"
+#include "Renderer/RHI/RendererAPI.h"
 
 namespace elv {
 
@@ -28,6 +28,11 @@ public:
     static void Clear()
     {
         s_RendererAPI->Clear();
+    }
+
+    static void ClearColorBit()
+    {
+        s_RendererAPI->ClearColorBit();
     }
 
     static void EnableDepthTesting(bool enable)

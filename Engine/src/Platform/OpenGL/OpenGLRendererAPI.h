@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderer/RendererAPI.h"
+#include "Renderer/RHI/RendererAPI.h"
 
 namespace elv {
 
@@ -10,9 +10,11 @@ class OpenGLRendererAPI : public RendererAPI {
 
     void SetClearColor(const lia::vec4& color) override;
     void Clear() override;
+    void ClearColorBit() override;
 
     void EnableDepthTesting(bool enabled) override;
     void EnableMSAA(bool enabled) override;
+    void EnableFaceculling(bool enabled) override;
 
     void DisableByteAlignment() override;
 

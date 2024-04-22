@@ -136,6 +136,7 @@ void PrimitivesSandbox::OnImguiRender()
 
     ImGui::End();
 }
+#endif
 
 void PrimitivesSandbox::SetEnvironment(const int envIndex)
 {
@@ -143,7 +144,7 @@ void PrimitivesSandbox::SetEnvironment(const int envIndex)
 
     const auto& env = kEnvironmenMaterials[envIndex];
 
-    elv::Renderer::SetClearColor(env.clearColor);
+    m_renderer.SetClearColor(env.clearColor);
 
     // directional
     auto& dirLight = scene.GetComponent<elv::DirectionalLightComponent>(m_dirLightEntity);
@@ -166,4 +167,3 @@ void PrimitivesSandbox::SetEnvironment(const int envIndex)
         pointLight.specular = env.pointLightColors[i];
     }
 }
-#endif

@@ -5,7 +5,7 @@
 #include "Core/SettingsConfig.h"
 #include "Events/EventManager.h"
 #include "Events/TextureEvent.h"
-#include "Renderer/RenderCommand.h"
+#include "Renderer/Renderer.h"
 #include "Renderer/Renderer2D.h"
 #include "Renderer/TextRenderer.h"
 #include "Resources/FontManager.h"
@@ -88,7 +88,9 @@ void Render2dSystem::OnRender(float dt)
     Renderer2D::EndScene();
 
     // Text
-    RenderCommand::EnableDepthTesting(false);
+    auto& renderer = Application::Get().GetRenderer();
+    renderer.EnableDepthTesting(false);
+
     TextRenderer::PreRender(camera);
     auto& textComponents = m_textsPool->GetComponents();
     for (uint32_t i = 0; i < textComponents.size(); ++i) {
@@ -99,11 +101,10 @@ void Render2dSystem::OnRender(float dt)
 
             if (m_pScene->HasComponent<RectTransformComponent>(entity)) {
                 auto& rectTransform = m_rectTransformPool->GetComponent(entity);
-                TextRenderer::RenderText(textComponent.text, textComponent.fontName, rectTransform.pos, rectTransform.scale, textComponent.color);
+                TextRenderer::RenderText(renderer, textComponent.text, textComponent.fontName, rectTransform.pos, rectTransform.scale, textComponent.color);
             }
         }
     }
-
-    RenderCommand::EnableDepthTesting(true);
+    renderer.EnableDepthTesting(true);
 }
 } // namespace elv

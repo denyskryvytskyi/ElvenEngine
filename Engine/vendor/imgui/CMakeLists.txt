@@ -11,8 +11,8 @@ add_library(imgui STATIC ${IMGUI_SOURCES})
 
 set(INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_SOURCE_DIR}/Engine/vendor/GLFW/include
-    ${CMAKE_SOURCE_DIR}/Engine/vendor/GLAD/include
+    ${CMAKE_SOURCE_DIR}/GLFW/include
+    ${CMAKE_SOURCE_DIR}/GLAD/include
 )
 
 target_include_directories(imgui PUBLIC ${INCLUDE_DIRS})

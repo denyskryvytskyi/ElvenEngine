@@ -37,17 +37,15 @@ Application::Application()
 
     EL_CORE_INFO("Executable path: {0}", fileSystem::GetCurrentPath());
 
-    // Init global engine settings
     gEngineSettings.LoadSettings();
 
     m_window = Window::Create({ "ElvenEngine", gEngineSettings.windowWidth, gEngineSettings.windowHeight, gEngineSettings.enableFullscreen, gEngineSettings.enableVSync });
-    RenderCommand::SetViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
 
     gTextureManager.Init();
     gMeshLibrary.Init();
-    Renderer::Init();
-    Renderer2D::Init();
-    TextRenderer::Init();
+    m_renderer.Init(m_window->GetWidth(), m_window->GetHeight());
+    Renderer2D::Init(&m_renderer);
+    TextRenderer::Init(m_renderer);
     gAudioManager.Init();
     gSceneManager.Init();
 
@@ -93,7 +91,7 @@ Application::~Application()
     gMeshLibrary.Shutdown();
     gSceneManager.Shutdown();
     gTextureManager.Shutdown();
-    Renderer::Shutdown();
+    m_renderer.Shutdown();
     Renderer2D::Shutdown();
 }
 
@@ -149,11 +147,10 @@ void Application::Run()
         // ============== Rendering Step ==============
         {
             PROFILE_SCOPE("Render in: ");
-            RenderCommand::SetClearColor(Renderer::GetClearColor());
-            RenderCommand::Clear();
-
+            m_renderer.BeginScene(m_cameraController);
             gSceneManager.Render(elapsedTime);
             OnRender(elapsedTime);
+            m_renderer.EndScene();
         }
 
 #if EDITOR_MODE
@@ -187,7 +184,7 @@ void Application::OnWindowResize(const events::WindowResizeEvent& e)
     }
     m_isPaused = false;
 
-    Renderer::OnWindowResize(e.width, e.height);
+    m_renderer.OnWindowResize(e.width, e.height);
 
     if (!OrthographicCameraController::IsCustomCameraController()) {
         auto& cameraComponent = GetScene().GetComponent<CameraComponent>(m_orthoCameraEntity);
