@@ -205,7 +205,7 @@ find_library(lia_d NAMES lia PATHS ${VENDOR_PATH_DEBUG})
 find_library(stb_d NAMES stb PATHS ${VENDOR_PATH_DEBUG})
 find_library(freetype_d NAMES freetyped PATHS ${VENDOR_PATH_DEBUG})
 find_library(fmt_d NAMES fmtd PATHS ${VENDOR_PATH_DEBUG})
-find_library(imgui_d NAMES imguid PATHS ${VENDOR_PATH_DEBUG})
+find_library(imgui_d NAMES imgui imguid PATHS ${VENDOR_PATH_DEBUG})
 find_library(assimp_d NAMES assimp-vc143-mtd PATHS ${VENDOR_PATH_DEBUG})
 find_library(zlib_d NAMES zlibstaticd PATHS ${VENDOR_PATH_DEBUG})
 
