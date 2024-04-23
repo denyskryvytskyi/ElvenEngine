@@ -24,6 +24,8 @@ void RenderSystem::OnRender(float dt)
 {
     auto& renderer = Application::Get().GetRenderer();
 
+    renderer.EnableFaceCulling(true);
+
     auto cameraController = Application::Get().GetCameraController();
     if (!cameraController) {
         EL_CORE_ERROR("Failed to find main camera");
@@ -177,5 +179,7 @@ void RenderSystem::OnRender(float dt)
             }
         }
     }
+
+    renderer.EnableFaceCulling(false);
 }
 } // namespace elv

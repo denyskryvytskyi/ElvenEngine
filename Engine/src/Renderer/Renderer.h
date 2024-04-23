@@ -33,6 +33,7 @@ public:
 
     void EnableDepthTesting(bool enabled);
     void DisableByteAlignment();
+    void EnableFaceCulling(bool enabled);
 
     void SetClearColor(const lia::vec4& color) { m_clearColor = color; }
     const lia::vec4& GetClearColor() { return m_clearColor; }

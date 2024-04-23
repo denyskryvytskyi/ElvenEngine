@@ -23,7 +23,7 @@ public:
     virtual void ClearColorBit() = 0;
     virtual void EnableDepthTesting(bool enabled) = 0;
     virtual void EnableMSAA(bool enabled) = 0;
-    virtual void EnableFaceculling(bool enabled) = 0;
+    virtual void EnableFaceCulling(bool enabled) = 0;
     virtual void DisableByteAlignment() = 0;
 
     virtual void DrawIndexed(const SharedPtr<VertexArray>& vertexArray, const std::uint32_t indexCount = 0, const RenderTopology topology = RenderTopology::Triangles) = 0;

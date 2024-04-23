@@ -94,7 +94,7 @@ void OpenGLRendererAPI::EnableMSAA(bool enabled)
     }
 }
 
-void OpenGLRendererAPI::EnableFaceculling(bool enabled)
+void OpenGLRendererAPI::EnableFaceCulling(bool enabled)
 {
     if (enabled) {
         glEnable(GL_CULL_FACE);

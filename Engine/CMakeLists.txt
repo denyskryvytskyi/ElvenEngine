@@ -173,7 +173,7 @@ set(ENGINE_INCLUDE_DIRS
 ${ENGINE_SOURCE_DIR}
 ${VENDOR_PATH}/GLAD/include
 ${VENDOR_PATH}/GLFW/include
-${VENDOR_PATH}/lia
+${VENDOR_PATH}/lia/include
 ${VENDOR_PATH}/spdlog/include
 ${VENDOR_PATH}/stb/include
 ${VENDOR_PATH}/json/include
@@ -201,7 +201,6 @@ set(VENDOR_PATH_RELEASE ${PROJECT_SOURCE_DIR}/build_vendor/lib/Release/)
 find_library(glfw_d NAMES glfw3 PATHS ${VENDOR_PATH_DEBUG})
 find_library(glad_d NAMES glad PATHS ${VENDOR_PATH_DEBUG})
 find_library(spdlog_d NAMES spdlogd PATHS ${VENDOR_PATH_DEBUG})
-find_library(lia_d NAMES lia PATHS ${VENDOR_PATH_DEBUG})
 find_library(stb_d NAMES stb PATHS ${VENDOR_PATH_DEBUG})
 find_library(freetype_d NAMES freetyped PATHS ${VENDOR_PATH_DEBUG})
 find_library(fmt_d NAMES fmtd PATHS ${VENDOR_PATH_DEBUG})
@@ -212,7 +211,6 @@ find_library(zlib_d NAMES zlibstaticd PATHS ${VENDOR_PATH_DEBUG})
 find_library(glad NAMES glad PATHS ${VENDOR_PATH_RELEASE})
 find_library(glfw NAMES glfw3 PATHS ${VENDOR_PATH_RELEASE})
 find_library(spdlog NAMES spdlog PATHS ${VENDOR_PATH_RELEASE})
-find_library(lia NAMES lia PATHS ${VENDOR_PATH_RELEASE})
 find_library(stb NAMES stb PATHS ${VENDOR_PATH_RELEASE})
 find_library(freetype NAMES freetype PATHS ${VENDOR_PATH_RELEASE})
 find_library(fmt NAMES fmt PATHS ${VENDOR_PATH_RELEASE})
@@ -225,7 +223,6 @@ set(VENDOR
 debug ${glfw_d} optimized ${glfw}
 debug ${glad_d} optimized ${glad}
 debug ${spdlog_d} optimized ${spdlog}
-debug ${lia_d} optimized ${lia}
 debug ${stb_d} optimized ${stb}
 debug ${freetype_d} optimized ${freetype}
 debug ${irrklang} optimized ${irrklang}

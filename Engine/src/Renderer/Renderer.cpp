@@ -135,4 +135,8 @@ void Renderer::DisableByteAlignment()
 {
     m_rendererAPI->DisableByteAlignment();
 }
+void Renderer::EnableFaceCulling(bool enabled)
+{
+    m_rendererAPI->EnableFaceCulling(enabled);
+}
 } // namespace elv

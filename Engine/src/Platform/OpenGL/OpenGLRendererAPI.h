@@ -14,7 +14,7 @@ class OpenGLRendererAPI : public RendererAPI {
 
     void EnableDepthTesting(bool enabled) override;
     void EnableMSAA(bool enabled) override;
-    void EnableFaceculling(bool enabled) override;
+    void EnableFaceCulling(bool enabled) override;
 
     void DisableByteAlignment() override;
 
