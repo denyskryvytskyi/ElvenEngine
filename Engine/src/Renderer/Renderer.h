@@ -5,6 +5,8 @@
 #include "RHI/RendererAPI.h"
 #include "RHI/Shader.h"
 
+#include "Scene/Components/LightComponent.h"
+
 namespace elv {
 
 class Mesh;
@@ -41,10 +43,14 @@ public:
     void EnableMSAA(bool enabled);
     bool IsMSAAEnabled() const { return m_isMSAAEnabled; }
 
+    void EnableBlinnPhong(const bool enabled) { m_isBlinnPhongEnabled = enabled; }
+    bool IsBlinnPhongEnabled() const { return m_isBlinnPhongEnabled; }
+
     static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 
 private:
     bool m_isMSAAEnabled { true };
+    bool m_isBlinnPhongEnabled { false };
 
     SceneData m_sceneData;
     lia::vec4 m_clearColor { 0.2f, 0.2f, 0.2f, 1.0f };

@@ -33,6 +33,7 @@ void Editor::OnImGuiRender()
     bool isVSync = window->IsVSync();
     bool isFullScreen = window->IsFullScreen();
     bool isMSAAEnabled = renderer.IsMSAAEnabled();
+    bool isBlinnPhongEnabled = renderer.IsBlinnPhongEnabled();
 
     // ============ Settings panel ============
     ImGui::Begin("Settings");
@@ -48,6 +49,10 @@ void Editor::OnImGuiRender()
 
     if (ImGui::Checkbox("MSAA", &isMSAAEnabled)) {
         renderer.EnableMSAA(isMSAAEnabled);
+    }
+
+    if (ImGui::Checkbox("Blinn-Phong", &isBlinnPhongEnabled)) {
+        renderer.EnableBlinnPhong(isBlinnPhongEnabled);
     }
     ImGui::End();
 

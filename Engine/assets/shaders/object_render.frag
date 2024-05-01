@@ -53,6 +53,7 @@ struct SpotLight {
 uniform vec3 u_ViewPos;
 uniform Material u_Material;
 
+uniform bool u_BlinnPhong;
 uniform bool u_DirLightEnabled;
 uniform int u_ActivePointLightsAmount;
 uniform int u_ActiveSpotLightsAmount;
@@ -123,7 +124,16 @@ vec3 CalcDirLight(DirLight light, vec3 diffuseMap, float specularMap, vec3 emiss
     vec3 diffuse = light.diffuse * diff * diffuseMap;
 
     // specular
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
+    float spec = 0.0;
+    if (u_BlinnPhong)
+    {
+        vec3 halfwayDir = normalize(lightDir + viewDir);
+        spec = pow(max(dot(normal, halfwayDir), 0.0), u_Material.shininess);
+    }
+    else
+    {
+        spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
+    }
     vec3 specular = light.specular * spec * specularMap * u_Material.specularColor;
 
     // emission
@@ -145,7 +155,16 @@ vec3 CalcPointLight(PointLight light, vec3 diffuseMap, float specularMap, vec3 e
     vec3 diffuse = light.diffuse * diff * diffuseMap;
 
     // specular
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
+    float spec = 0.0;
+    if (u_BlinnPhong)
+    {
+        vec3 halfwayDir = normalize(lightDir + viewDir);
+        spec = pow(max(dot(normal, halfwayDir), 0.0), u_Material.shininess);
+    }
+    else
+    {
+        spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
+    }
     vec3 specular = light.specular * spec * specularMap * u_Material.specularColor;
 
     // emission
@@ -175,7 +194,16 @@ vec3 CalcSpotLight(SpotLight light, vec3 diffuseMap, float specularMap, vec3 emi
     vec3 diffuse = light.diffuse * diff * diffuseMap;
 
     // specular
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
+    float spec = 0.0;
+    if (u_BlinnPhong)
+    {
+        vec3 halfwayDir = normalize(lightDir + viewDir);
+        spec = pow(max(dot(normal, halfwayDir), 0.0), u_Material.shininess);
+    }
+    else
+    {
+        spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
+    }
     vec3 specular = light.specular * spec * specularMap * u_Material.specularColor;
 
     // emission

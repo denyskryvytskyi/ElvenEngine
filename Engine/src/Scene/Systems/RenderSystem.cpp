@@ -15,7 +15,7 @@
 namespace elv {
 void RenderSystem::OnInit()
 {
-    m_shader = ShaderManager::Load("mesh_phong", "mesh_phong.vert", "mesh_phong.frag");
+    m_shader = ShaderManager::Load("object_render", "object_render.vert", "object_render.frag");
     m_debugLightMesh = gMeshLibrary.GetMesh("sphere");
     m_lightShader = ShaderManager::Load("light_debug", "light_debug.vert", "light_debug.frag");
 }
@@ -35,6 +35,7 @@ void RenderSystem::OnRender(float dt)
 
     m_shader->Bind();
     m_shader->SetVector3f("u_ViewPos", camera.GetPosition());
+    m_shader->SetInteger("u_BlinnPhong", renderer.IsBlinnPhongEnabled());
 
     // ================== LIGHT UNIFORMS ===========================
 
