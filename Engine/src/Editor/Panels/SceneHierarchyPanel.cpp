@@ -239,15 +239,19 @@ void SceneHierarchyPanel::DrawProperties()
 
     // ====== TRANSFORM ======
     DrawComponent<TransformComponent>("Transform", m_selectedEntity, m_context, [](TransformComponent& component) {
-        if (DrawVec3Control("model_pos", "Position", component.pos)) {
-            component.isDirty = true;
+        lia::vec3 position = component.GetPosition();
+        if (DrawVec3Control("model_pos", "Position", position)) {
+            component.SetPosition(position);
         }
 
-        if (DrawVec3Control("model_rotation", "Rotation", component.rotation)) {
-            component.isDirty = true;
+        lia::vec3 rotation = lia::degrees(component.GetRotation());
+        if (DrawVec3Control("model_rotation", "Rotation", rotation)) {
+            component.SetRotation(lia::radians(rotation));
         }
-        if (DrawVec3Control("model_scale", "Scale", component.scale)) {
-            component.isDirty = true;
+
+        lia::vec3 scale = component.GetScale();
+        if (DrawVec3Control("model_scale", "Scale", scale)) {
+            component.SetScale(scale);
         }
     });
 

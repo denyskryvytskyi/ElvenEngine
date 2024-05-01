@@ -43,9 +43,9 @@ class PaddleBehavior : public elv::ecs::IBehavior {
         elv::TransformComponent& tr = GetComponent<elv::TransformComponent>();
 
         if (elv::Input::IsKeyPressed(m_paddle.downKey)) {
-            tr.pos.y = std::max(tr.pos.y - paddleSpeed * dt, m_paddle.bottomBoundPos);
+            tr.SetPositionY(std::max(tr.GetPosition().y - paddleSpeed * dt, m_paddle.bottomBoundPos));
         } else if (elv::Input::IsKeyPressed(m_paddle.upKey)) {
-            tr.pos.y = std::min(tr.pos.y + paddleSpeed * dt, m_paddle.topBoundPos);
+            tr.SetPositionY(std::min(tr.GetPosition().y + paddleSpeed * dt, m_paddle.topBoundPos));
         }
     }
 
@@ -71,7 +71,7 @@ class BallBehavior : public elv::ecs::IBehavior {
         elv::TransformComponent& tr = GetComponent<elv::TransformComponent>();
         BallComponent& ball = GetComponent<BallComponent>();
 
-        tr.pos += ball.velocity * ball.speed * dt;
+        tr.Translate(ball.velocity * ball.speed * dt);
     }
 };
 
@@ -128,14 +128,14 @@ void Pong::OnWindowResizeApp()
     if (m_gameState != GameState::Menu) {
 
         elv::Scene& scene = elv::GetScene();
-        auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
+        const auto& cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
 
         // fix paddles positions
         auto& player1Transform = scene.GetComponent<elv::TransformComponent>(m_players[0].entity);
-        player1Transform.pos.x = cameraBounds.left + paddleOffset;
+        player1Transform.SetPositionX(cameraBounds.left + paddleOffset);
 
         auto& player2Transform = scene.GetComponent<elv::TransformComponent>(m_players[1].entity);
-        player2Transform.pos.x = cameraBounds.right - paddleOffset;
+        player2Transform.SetPositionX(cameraBounds.right - paddleOffset);
     }
 }
 
@@ -149,7 +149,7 @@ void Pong::OnMenu()
         scene.DestroyEntity(m_startMenuTextEntity);
         scene.DestroyEntity(m_quitMenuTextEntity);
 
-        auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
+        const auto& cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
 
         // paddle 1
         auto player1 = scene.CreateEntity();
@@ -158,8 +158,8 @@ void Pong::OnMenu()
         scene.AddComponent<elv::BehaviorComponent>(player1).Bind<PaddleBehavior>();
 
         auto& transformPlayer1 = scene.AddComponent<elv::TransformComponent>(player1);
-        transformPlayer1.pos = { cameraBounds.left + paddleOffset, 0.0f, 0.0f };
-        transformPlayer1.scale = paddleScale;
+        transformPlayer1.SetPosition({ cameraBounds.left + paddleOffset, 0.0f, 0.0f });
+        transformPlayer1.SetScale(paddleScale);
 
         auto& quadPlayer1 = scene.AddComponent<elv::QuadComponent>(player1);
         quadPlayer1.color = paddle1Color;
@@ -179,8 +179,8 @@ void Pong::OnMenu()
         scene.AddComponent<elv::BehaviorComponent>(player2).Bind<PaddleBehavior>();
 
         auto& transform_player2 = scene.AddComponent<elv::TransformComponent>(player2);
-        transform_player2.pos = { cameraBounds.right - paddleOffset, 0.0f, 0.0f };
-        transform_player2.scale = paddleScale;
+        transform_player2.SetPosition({ cameraBounds.right - paddleOffset, 0.0f, 0.0f });
+        transform_player2.SetScale(paddleScale);
 
         auto& quad_player2 = scene.AddComponent<elv::QuadComponent>(player2);
         quad_player2.color = paddle2Color;
@@ -201,7 +201,7 @@ void Pong::OnMenu()
         scene.AddComponent<BallComponent>(m_ball);
 
         auto& ballTransform = scene.AddComponent<elv::TransformComponent>(m_ball);
-        ballTransform.scale = ballScale;
+        ballTransform.SetScale(ballScale);
 
         auto& ballQuad = scene.AddComponent<elv::QuadComponent>(m_ball);
         ballQuad.color = ballColor;
@@ -216,14 +216,15 @@ void Pong::OnPlay()
 
     auto& ballTransform = scene.GetComponent<elv::TransformComponent>(m_ball);
 
-    auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
+    const auto& cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
 
     // Check collision with left/right borders to find winner
     int16_t winnerId = -1;
-    const float ballSizeHalf = ballTransform.scale.x * 0.5f;
-    if (ballTransform.pos.x + ballSizeHalf >= cameraBounds.right) {
+    const float ballSizeHalf = ballTransform.GetScale().x * 0.5f;
+    lia::vec3 ballPos = ballTransform.GetPosition();
+    if (ballPos.x + ballSizeHalf >= cameraBounds.right) {
         winnerId = 0;
-    } else if (ballTransform.pos.x - ballSizeHalf <= cameraBounds.left) {
+    } else if (ballPos.x - ballSizeHalf <= cameraBounds.left) {
         winnerId = 1;
     }
 
@@ -238,37 +239,40 @@ void Pong::OnPlay()
     }
 
     // Check collion with top/bottom borders
-    const bool isCollisionTop = ballTransform.pos.y + ballSizeHalf >= cameraBounds.top;
-    const bool isCollisionBottom = ballTransform.pos.y - ballSizeHalf <= cameraBounds.bottom;
+    const bool isCollisionTop = ballPos.y + ballSizeHalf >= cameraBounds.top;
+    const bool isCollisionBottom = ballPos.y - ballSizeHalf <= cameraBounds.bottom;
     if (isCollisionTop || isCollisionBottom) {
         // reverse Y velocity
         auto& ballComponent = scene.GetComponent<BallComponent>(m_ball);
         ballComponent.velocity.y = -ballComponent.velocity.y;
         // penetration fix
         if (isCollisionTop) {
-            const float penetration = ballSizeHalf - std::abs(cameraBounds.top - ballTransform.pos.y);
-            ballTransform.pos.y -= penetration;
+            const float penetration = ballSizeHalf - std::abs(cameraBounds.top - ballPos.y);
+            ballTransform.TranslateY(-penetration);
         } else {
-            const float penetration = ballSizeHalf - std::abs(cameraBounds.bottom - ballTransform.pos.y);
-            ballTransform.pos.y += penetration;
+            const float penetration = ballSizeHalf - std::abs(cameraBounds.bottom - ballPos.y);
+            ballTransform.TranslateY(penetration);
         }
 
         // hit sound
         elv::gAudioManager.Play("hit_wall");
     }
 
+    ballPos = ballTransform.GetPosition();
+
     // Check collision with paddle 1
     auto& paddle1 = scene.GetComponent<elv::TransformComponent>(m_players[0].entity);
+    const auto& paddle1Pos = paddle1.GetPosition();
 
-    if (ballTransform.pos.x - ballSizeHalf <= paddle1.pos.x + paddleSizeXhalf
-        && ballTransform.pos.y + ballSizeHalf > paddle1.pos.y - paddleSizeYhalf
-        && ballTransform.pos.y - ballSizeHalf < paddle1.pos.y + paddleSizeYhalf) {
+    if (ballPos.x - ballSizeHalf <= paddle1Pos.x + paddleSizeXhalf
+        && ballPos.y + ballSizeHalf > paddle1Pos.y - paddleSizeYhalf
+        && ballPos.y - ballSizeHalf < paddle1Pos.y + paddleSizeYhalf) {
         // reverse X velocity
         auto& ballComponent = scene.GetComponent<BallComponent>(m_ball);
         ballComponent.velocity.x = -ballComponent.velocity.x;
         // penetration fix
-        const float penetration = ballSizeHalf - std::abs((ballTransform.pos.x - (paddle1.pos.x + paddleSizeXhalf)));
-        ballTransform.pos.x += penetration;
+        const float penetration = ballSizeHalf - std::abs((ballPos.x - (paddle1Pos.x + paddleSizeXhalf)));
+        ballTransform.TranslateX(penetration);
 
         // change ball color to paddle one
         scene.GetComponent<elv::QuadComponent>(m_ball).color = paddle1Color;
@@ -278,17 +282,21 @@ void Pong::OnPlay()
         elv::gAudioManager.Play("hit_paddle");
     }
 
+    ballPos = ballTransform.GetPosition();
+
     // Check collision with paddle 2
     auto& paddle2 = scene.GetComponent<elv::TransformComponent>(m_players[1].entity);
-    if (ballTransform.pos.x + ballSizeHalf >= paddle2.pos.x - paddleSizeXhalf
-        && ballTransform.pos.y + ballSizeHalf > paddle2.pos.y - paddleSizeYhalf
-        && ballTransform.pos.y - ballSizeHalf < paddle2.pos.y + paddleSizeYhalf) {
+    const auto& paddle2Pos = paddle2.GetPosition();
+
+    if (ballPos.x + ballSizeHalf >= paddle2Pos.x - paddleSizeXhalf
+        && ballPos.y + ballSizeHalf > paddle2Pos.y - paddleSizeYhalf
+        && ballPos.y - ballSizeHalf < paddle2Pos.y + paddleSizeYhalf) {
         // reverse X velocity
         auto& ballComponent = scene.GetComponent<BallComponent>(m_ball);
         ballComponent.velocity.x = -ballComponent.velocity.x;
         // penetration fix
-        const float penetration = ballSizeHalf - std::abs(((paddle2.pos.x - paddleSizeXhalf) - ballTransform.pos.x));
-        ballTransform.pos.x -= penetration;
+        const float penetration = ballSizeHalf - std::abs(((paddle2Pos.x - paddleSizeXhalf) - ballPos.x));
+        ballTransform.TranslateX(-penetration);
 
         // change ball color to paddle one
         scene.GetComponent<elv::QuadComponent>(m_ball).color = paddle2Color;
@@ -307,11 +315,11 @@ void Pong::OnGameOver()
     for (auto player : m_players) {
         scene.RemoveComponent<elv::BehaviorComponent>(player.entity);
         auto& playerTransform = scene.GetComponent<elv::TransformComponent>(player.entity);
-        playerTransform.pos.y = 0.0f;
+        playerTransform.SetPositionY(0.0f);
     }
     scene.RemoveComponent<elv::BehaviorComponent>(m_ball);
     auto& ballTransform = scene.GetComponent<elv::TransformComponent>(m_ball);
-    ballTransform.pos = { 0.0f, 0.0f, 0.0f };
+    ballTransform.SetPosition({ 0.0f, 0.0f, 0.0f });
     scene.GetComponent<elv::QuadComponent>(m_ball).color = ballColor;
 
     m_gameState = GameState::GameOver;

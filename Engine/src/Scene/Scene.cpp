@@ -71,8 +71,18 @@ void Scene::OnUpdate(float dt)
 {
     {
         PROFILE_SCOPE("Scene updated in: ");
+
         for (auto& system : m_systems) {
             system->OnUpdate(dt);
+        }
+
+        if (!gEngineSettings.enableSceneGraph) {
+            // if scene graph is disabled then just update tranforms for dirty components
+            for (auto& transform : GetComponents<TransformComponent>()) {
+                if (transform.IsDirty()) {
+                    transform.UpdateLocalMatrix();
+                }
+            }
         }
     }
 

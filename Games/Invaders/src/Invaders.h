@@ -41,7 +41,7 @@ public:
     void OnWindowResizeApp() override;
 
 private:
-    void GeneratePlayerBullet();
+    void GeneratePlayerBullet() const;
     void GenerateEnemiesGrid();
     void SetupBackground(elv::Scene& scene);
 

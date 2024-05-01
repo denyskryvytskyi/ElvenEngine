@@ -176,7 +176,7 @@ public:
                 // get type of powerup
                 const int powerupType = elv::GetRand(0, 1);
                 const auto& enemyTransform = m_pScene->GetComponent<elv::TransformComponent>(entity1Tag == "enemy" ? e.entity1 : e.entity2);
-                elv::events::TriggerEvent(SpawnPowerUpEvent(static_cast<PowerUpType>(powerupType), enemyTransform.pos));
+                elv::events::TriggerEvent(SpawnPowerUpEvent(static_cast<PowerUpType>(powerupType), enemyTransform.GetPosition()));
             }
 
         } else if (entity1Tag == "enemy" && entity2Tag == "player"
@@ -206,8 +206,9 @@ public:
                 const auto bulletEntity = m_pScene->CreateEntity();
 
                 auto& bulletTransform = m_pScene->AddComponent<elv::TransformComponent>(bulletEntity);
-                bulletTransform.pos = { enemyTransform.pos.x, enemyTransform.pos.y - kEnemySizeHalfY - kBulletStartOffset, 0.0f };
-                bulletTransform.scale = kBulletScale;
+                const auto& enemyPosition = enemyTransform.GetPosition();
+                bulletTransform.SetPosition({ enemyPosition.x, enemyPosition.y - kEnemySizeHalfY - kBulletStartOffset, 0.0f });
+                bulletTransform.SetScale(kBulletScale);
 
                 auto& bulletSprite = m_pScene->AddComponent<elv::SpriteComponent>(bulletEntity);
                 bulletSprite.SetTexture("laserRed", "Lasers/laserRed02.png");
@@ -222,16 +223,16 @@ public:
             }
 
             // slow movement to the player
-            enemyTransform.pos.y -= kEnemySpeedY * dt;
-            auto cameraBounds = m_pScene->GetComponents<elv::CameraComponent>().back().camera.GetOrthographicsBounds();
-            if (enemyTransform.pos.y <= cameraBounds.bottom) {
+            enemyTransform.TranslateY(-kEnemySpeedY * dt);
+            const auto& cameraBounds = m_pScene->GetComponents<elv::CameraComponent>().back().camera.GetOrthographicsBounds();
+            if (enemyTransform.GetPosition().y <= cameraBounds.bottom) {
                 elv::events::TriggerEvent(GameOverEvent());
                 break;
             }
 
             // movement by x-axis
             enemy.movementX += kEnemySpeedX * dt;
-            enemyTransform.pos.x = enemy.startPositionX + std::sin(enemy.movementX) * kEnemySpeedX;
+            enemyTransform.SetPositionX(enemy.startPositionX + std::sin(enemy.movementX) * kEnemySpeedX);
 
             ++componentIndex;
         }
@@ -245,7 +246,7 @@ public:
         auto transformsPool = m_pScene->GetComponentPool<elv::TransformComponent>();
         auto bulletsPool = m_pScene->GetComponentPool<BulletComponent>();
 
-        auto cameras = m_pScene->GetComponents<elv::CameraComponent>();
+        const auto& cameras = m_pScene->GetComponents<elv::CameraComponent>();
         const auto& orthoCameraBounds = cameras.back().camera.GetOrthographicsBounds();
 
         // move bullets according to velocity
@@ -254,9 +255,10 @@ public:
 
             auto& bullet = bulletsPool->GetComponent(entity);
             auto& transform = transformsPool->GetComponent(entity);
-            transform.pos += bullet.velocity * bullet.speed * dt;
-            if (transform.pos.y - kBulletSizeHalfY > orthoCameraBounds.top
-                || transform.pos.y + kBulletSizeHalfY < orthoCameraBounds.bottom) {
+            transform.Translate(bullet.velocity * bullet.speed * dt);
+            const auto posY = transform.GetPosition().y;
+            if (posY - kBulletSizeHalfY > orthoCameraBounds.top
+                || posY + kBulletSizeHalfY < orthoCameraBounds.bottom) {
                 m_pScene->DestroyEntity(entity);
             }
         }
@@ -279,7 +281,7 @@ public:
         for (uint32_t index = 0; index < powerupsPool->Size(); ++index) {
             auto entity = powerupsPool->GetEntity(index);
             auto& transform = transformsPool->GetComponent(entity);
-            transform.pos += kPowerUpVelocity * kPowerUpSpeed * dt;
+            transform.Translate(kPowerUpVelocity * kPowerUpSpeed * dt);
         }
     }
 
@@ -318,8 +320,8 @@ public:
         const auto powerUpEntity = m_pScene->CreateEntity();
 
         auto& powerUpTransform = m_pScene->AddComponent<elv::TransformComponent>(powerUpEntity);
-        powerUpTransform.pos = e.position;
-        powerUpTransform.scale = kPowerUpScale;
+        powerUpTransform.SetPosition(e.position);
+        powerUpTransform.SetScale(kPowerUpScale);
 
         auto& powerUpSprite = m_pScene->AddComponent<elv::SpriteComponent>(powerUpEntity);
         auto powerUpvisualInfo = GetPowerUpVisualInfo(e.powerUpType);
@@ -364,23 +366,23 @@ public:
         auto& playerComponent = GetComponent<PlayerComponent>();
 
         if (elv::Input::IsKeyPressed(elv::key::A)) {
-            transform.pos.x = std::max(transform.pos.x - kPlayerSpeed * dt, playerComponent.widthBounds.x);
+            transform.SetPositionX(std::max(transform.GetPosition().x - kPlayerSpeed * dt, playerComponent.widthBounds.x));
             if (playerComponent.isShieldActive)
-                UpdateShieldPosition(transform.pos);
+                UpdateShieldPosition(transform.GetPosition());
         } else if (elv::Input::IsKeyPressed(elv::key::D)) {
-            transform.pos.x = std::min(transform.pos.x + kPlayerSpeed * dt, playerComponent.widthBounds.y);
+            transform.SetPositionX(std::min(transform.GetPosition().x + kPlayerSpeed * dt, playerComponent.widthBounds.y));
             if (playerComponent.isShieldActive)
-                UpdateShieldPosition(transform.pos);
+                UpdateShieldPosition(transform.GetPosition());
         }
 
         if (elv::Input::IsKeyPressed(elv::key::W)) {
-            transform.pos.y = std::min(transform.pos.y + kPlayerSpeed * dt, playerComponent.heightBounds.x);
+            transform.SetPositionY(std::min(transform.GetPosition().y + kPlayerSpeed * dt, playerComponent.heightBounds.x));
             if (playerComponent.isShieldActive)
-                UpdateShieldPosition(transform.pos);
+                UpdateShieldPosition(transform.GetPosition());
         } else if (elv::Input::IsKeyPressed(elv::key::S)) {
-            transform.pos.y = std::max(transform.pos.y - kPlayerSpeed * dt, playerComponent.heightBounds.y);
+            transform.SetPositionY(std::max(transform.GetPosition().y - kPlayerSpeed * dt, playerComponent.heightBounds.y));
             if (playerComponent.isShieldActive)
-                UpdateShieldPosition(transform.pos);
+                UpdateShieldPosition(transform.GetPosition());
         }
 
         if (playerComponent.isShieldActive && m_shieldTimer.Elapsed() >= kPowerUpShieldActiveTime) {
@@ -394,7 +396,7 @@ public:
     void UpdateShieldPosition(const lia::vec3& pos)
     {
         auto& shieldTransform = p_Scene->GetComponent<elv::TransformComponent>(m_shieldEntity);
-        shieldTransform.pos = pos;
+        shieldTransform.SetPosition(pos);
     }
 
     void OnHit(const PlayerHitEvent& e)
@@ -432,11 +434,11 @@ public:
             shipLifeSprite.SetTexture("playerLife", "ships/playerLife3_green.png");
 
             auto& shipLifeTransform = p_Scene->AddComponent<elv::TransformComponent>(playerLifeEntity);
-            shipLifeTransform.scale = kPlayerLifeScale;
+            shipLifeTransform.SetScale(kPlayerLifeScale);
 
-            auto cameraBounds = p_Scene->GetComponents<elv::CameraComponent>().back().camera.GetOrthographicsBounds();
-            shipLifeTransform.pos = { cameraBounds.left + kPlayerLifeOffset.x * playerComponent.health,
-                                      cameraBounds.bottom + kPlayerLifeOffset.y, 0.0f };
+            const auto& cameraBounds = p_Scene->GetComponents<elv::CameraComponent>().back().camera.GetOrthographicsBounds();
+            shipLifeTransform.SetPosition({ cameraBounds.left + kPlayerLifeOffset.x * playerComponent.health,
+                                            cameraBounds.bottom + kPlayerLifeOffset.y, 0.0f });
         } else if (e.powerUpType == PowerUpType::Shield) {
             if (m_shieldEntity != elv::ecs::INVALID_ENTITY_ID) {
                 // if shield is aready active then just reset timer
@@ -448,8 +450,8 @@ public:
                 auto& playerTransform = GetComponent<elv::TransformComponent>();
 
                 auto& shipLifeTransform = p_Scene->AddComponent<elv::TransformComponent>(m_shieldEntity);
-                shipLifeTransform.pos = playerTransform.pos;
-                shipLifeTransform.scale = kPlayerShieldScale;
+                shipLifeTransform.SetPosition(playerTransform.GetPosition());
+                shipLifeTransform.SetScale(kPlayerShieldScale);
 
                 auto& shipLifeSprite = p_Scene->AddComponent<elv::SpriteComponent>(m_shieldEntity);
                 shipLifeSprite.SetTexture("shield", "Effects/shield1.png");
@@ -589,7 +591,7 @@ void Invaders::OnWindowResizeApp()
     SetupBackground(scene);
 }
 
-void Invaders::GeneratePlayerBullet()
+void Invaders::GeneratePlayerBullet() const
 {
     auto& scene = elv::GetScene();
 
@@ -598,8 +600,9 @@ void Invaders::GeneratePlayerBullet()
     const auto bulletEntity = scene.CreateEntity();
 
     auto& bulletTransform = scene.AddComponent<elv::TransformComponent>(bulletEntity);
-    bulletTransform.pos = { playerTransform.pos.x, playerTransform.pos.y + kPlayerSizeHalfY + kBulletStartOffset, 0.0f };
-    bulletTransform.scale = kBulletScale;
+    const auto& playerPos = playerTransform.GetPosition();
+    bulletTransform.SetPosition({ playerPos.x, playerPos.y + kPlayerSizeHalfY + kBulletStartOffset, 0.0f });
+    bulletTransform.SetScale(kBulletScale);
 
     auto& bulletSprite = scene.AddComponent<elv::SpriteComponent>(bulletEntity);
     bulletSprite.SetTexture("laserGreen", "Lasers/laserGreen04.png");
@@ -619,7 +622,7 @@ void Invaders::GenerateEnemiesGrid()
     m_destroyedWaveEnemies = 0;
 
     auto& scene = elv::GetScene();
-    auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
+    const auto& cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
 
     const float startX = cameraBounds.left + kEnemiesGridMargin;
     const float startY = cameraBounds.top + kEnemiesGridStartOffsetY;
@@ -633,15 +636,15 @@ void Invaders::GenerateEnemiesGrid()
             enemySprite.SetTexture(visualInfo.textureName, visualInfo.texturePath);
 
             auto& enemyTransform = scene.AddComponent<elv::TransformComponent>(enemy);
-            enemyTransform.scale = kEnemyScale;
-            enemyTransform.pos = { startX + j * kEnemiesGridShipPadding, startY - i * kEnemiesGridShipPadding, 0.0f };
+            enemyTransform.SetScale(kEnemyScale);
+            enemyTransform.SetPosition({ startX + j * kEnemiesGridShipPadding, startY - i * kEnemiesGridShipPadding, 0.0f });
 
             scene.AddComponent<elv::AABBComponent>(enemy, kEnemyAabbSize);
             scene.AddComponent<elv::TagComponent>(enemy, "enemy");
 
             auto& enemyComponent = scene.AddComponent<EnemyComponent>(enemy);
             enemyComponent.shootingTimeout = static_cast<float>(elv::GetRand(1, 15)); // 1 - 15 seconds to shoot
-            enemyComponent.startPositionX = enemyTransform.pos.x;
+            enemyComponent.startPositionX = enemyTransform.GetPosition().x;
             enemyComponent.timerToShoot.Restart();
         }
     }
@@ -673,8 +676,8 @@ void Invaders::SetupBackground(elv::Scene& scene)
             tileSprite.SetTexture("backTile", "Backgrounds/blue.png");
             auto& tileTransform = scene.AddComponent<elv::TransformComponent>(tileEntity);
 
-            tileTransform.scale = { kBackTileSize, kBackTileSize, 1.0f };
-            tileTransform.pos = { startTileX + j * kBackTileSize, startTileY - i * kBackTileSize, -1.0f };
+            tileTransform.SetScale({ kBackTileSize, kBackTileSize, 1.0f });
+            tileTransform.SetPosition({ startTileX + j * kBackTileSize, startTileY - i * kBackTileSize, -1.0f });
         }
     }
 }
@@ -715,7 +718,7 @@ void Invaders::OnRoundStart()
     restartText.isVisible = false;
 
     //
-    auto cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
+    const auto& cameraBounds = scene.GetComponent<elv::CameraComponent>(m_orthoCameraEntity).camera.GetOrthographicsBounds();
 
     // enemies
     GenerateEnemiesGrid();
@@ -729,8 +732,8 @@ void Invaders::OnRoundStart()
     shipSprite.SetTexture("greenShip", "ships/playerShip3_green.png");
 
     auto& shipTransform = scene.AddComponent<elv::TransformComponent>(ship);
-    shipTransform.scale = kPlayerScale;
-    shipTransform.pos = { 0.0f, cameraBounds.bottom + 10.0f, 0.0f };
+    shipTransform.SetScale(kPlayerScale);
+    shipTransform.SetPosition({ 0.0f, cameraBounds.bottom + 10.0f, 0.0f });
 
     scene.AddComponent<elv::BehaviorComponent>(ship).Bind<PlayerBehavior>();
 
@@ -756,8 +759,8 @@ void Invaders::OnRoundStart()
         shipLifeSprite.SetTexture("playerLife", "ships/playerLife3_green.png");
 
         auto& shipLifeTransform = scene.AddComponent<elv::TransformComponent>(shipLife);
-        shipLifeTransform.scale = kPlayerLifeScale;
-        shipLifeTransform.pos = { startLifeX + kPlayerLifeOffset.x * i, cameraBounds.bottom + kPlayerLifeOffset.y, 1.0f };
+        shipLifeTransform.SetScale(kPlayerLifeScale);
+        shipLifeTransform.SetPosition({ startLifeX + kPlayerLifeOffset.x * i, cameraBounds.bottom + kPlayerLifeOffset.y, 1.0f });
     }
 
     m_gameState = GameState::Play;

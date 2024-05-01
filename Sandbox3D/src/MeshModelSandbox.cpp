@@ -69,7 +69,7 @@ MeshModelSandbox::MeshModelSandbox()
     scene.AddComponent<elv::TagComponent>(sphere, "Sphere");
 
     auto& transform = scene.AddComponent<elv::TransformComponent>(sphere);
-    transform.pos = lia::vec3(-2.0f, 0.5f, 0.0f);
+    transform.SetPosition(lia::vec3(-2.0f, 0.5f, 0.0f));
     auto& sphereMesh = scene.AddComponent<elv::StaticMeshComponent>(sphere, "sphere");
     auto sphereMaterial = sphereMesh.GetMaterial();
     sphereMaterial->SetAmbientColor(lia::vec3(0.0f, 1.0f, 0.0f));
@@ -188,14 +188,13 @@ void MeshModelSandbox::SetupCubes()
     scene.AddComponent<elv::TagComponent>(mainCube, "Cube");
 
     auto& transform = scene.AddComponent<elv::TransformComponent>(mainCube);
-    transform.pos = lia::vec3(0.0f, 0.5f, 0.0f);
+    transform.SetPosition(lia::vec3(0.0f, 0.5f, 0.0f));
 
     auto& mesh = scene.AddComponent<elv::StaticMeshComponent>(mainCube, "cube");
     mesh.SetMaterialTexture(elv::Material::TextureSlot::Diffuse, "wooden_container.png", "assets/images/");
     mesh.SetMaterialTexture(elv::Material::TextureSlot::Specular, "wooden_container_specular.png", "assets/images/");
 
     for (size_t i = 0; i < kCubesAmount; ++i) {
-
         auto cube = scene.CreateChildEntity(mainCube);
         scene.AddComponent<elv::TagComponent>(cube, "Small cube");
 

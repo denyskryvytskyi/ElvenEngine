@@ -58,7 +58,7 @@ void Editor::OnImGuiRender()
 
     // ============ Environment ============
     ImGui::Begin("Environment");
-    auto clearColor = renderer.GetClearColor();
+    lia::vec4 clearColor = renderer.GetClearColor();
     if (DrawRGBAColorControl("Clear color", clearColor)) {
         renderer.SetClearColor(clearColor);
     }

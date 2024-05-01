@@ -43,7 +43,7 @@ void Render2dSystem::OnRender(float dt)
         std::vector<SpriteSortingInfo> sortingInfo;
         const auto& entities = m_spritesPool->GetEntities();
         for (auto entity : entities) {
-            sortingInfo.emplace_back(entity, m_trasformsPool->GetComponent(entity).pos.z);
+            sortingInfo.emplace_back(entity, m_trasformsPool->GetComponent(entity).GetPosition().z);
         }
 
         std::sort(sortingInfo.begin(), sortingInfo.end(), [](const auto& left, const auto& right) {
@@ -55,7 +55,7 @@ void Render2dSystem::OnRender(float dt)
             auto& spriteComponent = m_spritesPool->GetComponent(info.entity);
             auto& transformComponent = m_trasformsPool->GetComponent(info.entity);
             if (spriteComponent.texture != nullptr) {
-                Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, spriteComponent.color);
+                Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.GetModelMatrix(), spriteComponent.color);
             }
         }
     } else {
@@ -67,7 +67,7 @@ void Render2dSystem::OnRender(float dt)
                 auto& spriteComponent = spriteComponents[index];
                 auto& transformComponent = m_trasformsPool->GetComponent(entity);
                 if (spriteComponent.texture != nullptr) {
-                    Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, spriteComponent.color);
+                    Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.GetModelMatrix(), spriteComponent.color);
                 }
             }
         }
@@ -82,7 +82,7 @@ void Render2dSystem::OnRender(float dt)
 
         auto& quadComponent = quadComponents[index];
         auto& transformComponent = m_trasformsPool->GetComponent(entity);
-        Renderer2D::DrawQuad(transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, quadComponent.color);
+        Renderer2D::DrawQuad(transformComponent.GetModelMatrix(), quadComponent.color);
     }
     //
     Renderer2D::EndScene();

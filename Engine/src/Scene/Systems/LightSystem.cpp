@@ -24,8 +24,8 @@ void LightSystem::OnUpdate(float dt)
 
                 const auto cameraController = Application::Get().GetCameraController();
 
-                transform.pos = cameraController->GetCamera().GetPosition();
-                transform.rotation = cameraController->GetFront();
+                transform.SetPosition(cameraController->GetCamera().GetPosition());
+                transform.SetRotation(cameraController->GetFront());
                 break;
             }
         }
