@@ -104,7 +104,7 @@ void SceneHierarchyPanel::OnImGuiRender()
     DrawEntity(ecs::INVALID_ENTITY_ID);
 
     // Context menu
-    if (ImGui::BeginPopupContextWindow(0, 1, false)) {
+    if (ImGui::BeginPopupContextWindow(0, ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems)) {
         if (ImGui::MenuItem("Create Entity"))
             m_context->CreateEntity();
 
@@ -223,7 +223,11 @@ void SceneHierarchyPanel::DrawProperties()
         if (m_context->HasComponent<TagComponent>(m_selectedEntity)) {
             auto& tag = m_context->GetComponent<TagComponent>(m_selectedEntity).tag;
 
+#ifdef _MSC_VER
             strncpy_s(buffer, sizeof(buffer), tag.c_str(), sizeof(buffer));
+#else
+            strncpy(buffer, tag.c_str(), sizeof(buffer));
+#endif
 
             if (ImGui::InputText("Tag", buffer, IM_ARRAYSIZE(buffer))) {
                 tag = std::string(buffer);
@@ -434,7 +438,11 @@ void SceneHierarchyPanel::DrawProperties()
         ImGui::Checkbox("Is visible##textVisible", &component.isVisible);
         char buffer[256];
         memset(buffer, 0, sizeof(buffer));
+#ifdef _MSC_VER
         strncpy_s(buffer, sizeof(buffer), component.text.c_str(), sizeof(buffer));
+#else
+        strncpy(buffer, component.text.c_str(), sizeof(buffer));
+#endif
 
         if (ImGui::InputText("##text", buffer, IM_ARRAYSIZE(buffer))) {
             component.text = std::string(buffer);

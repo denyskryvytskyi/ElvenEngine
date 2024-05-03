@@ -229,7 +229,7 @@ FetchContent_MakeAvailable(assimp)
 FetchContent_Declare(
   imgui
   GIT_REPOSITORY https://github.com/ocornut/imgui
-  GIT_TAG "v1.90.4"
+  GIT_TAG "docking"
 )
 
 FetchContent_MakeAvailable(imgui)
@@ -242,10 +242,13 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(zlib)
 
+
+set(IRRKLANG_INSTALL_DIR ${CMAKE_BINARY_DIR}/_deps/irrklang)
+
 FetchContent_Declare(
     irrklang
 	URL "http://www.ambiera.at/downloads/irrKlang-64bit-1.5.0.zip"
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build/_deps/irrklang
+    SOURCE_DIR ${IRRKLANG_INSTALL_DIR}
 )
 
 FetchContent_GetProperties(irrklang)
@@ -276,21 +279,40 @@ if (EDITOR_MODE)
         ${IMGUI_DIR}/backends/imgui_impl_glfw.h
     )
 
-    target_include_directories(${LIBRARY_NAME}
-        PUBLIC ${ENGINE_INCLUDE_DIRS}
+    set(IMGUI_SOURCES
+        ${IMGUI_DIR}/imgui.cpp
+        ${IMGUI_DIR}/imgui_draw.cpp
+        ${IMGUI_DIR}/imgui_tables.cpp
+        ${IMGUI_DIR}/imgui_widgets.cpp
+        ${IMGUI_DIR}/misc/cpp/imgui_stdlib.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
     )
+
+    target_include_directories(${LIBRARY_NAME}
+        PUBLIC ${IMGUI_DIR} ${IMGUI_DIR}/backends
+    )
+
+    target_sources(${LIBRARY_NAME} PRIVATE ${IMGUI_SOURCES})
 endif()
 
+
 target_include_directories(${LIBRARY_NAME}
-    PUBLIC ${ENGINE_INCLUDE_DIRS}
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-target_link_libraries(${LIBRARY_NAME} glfw lia spdlog freetype fmt glad stb)
+find_library(irrklang
+    NAMES
+      irrKlang
+    PATHS
+      ${IRRKLANG_INSTALL_DIR}
+  )
+target_link_libraries(${LIBRARY_NAME} glfw spdlog freetype fmt glad stb)
 target_link_libraries(${LIBRARY_NAME} nlohmann_json::nlohmann_json)
 target_include_directories(${LIBRARY_NAME} PUBLIC ${lia_SOURCE_DIR}/include)
 target_include_directories(${LIBRARY_NAME} PUBLIC ${irrklang_SOURCE_DIR}/include)
 target_include_directories(${LIBRARY_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
-target_link_libraries(${LIBRARY_NAME} irrklang)
+# target_link_libraries(${LIBRARY_NAME} irrklang)
 
 
 if (THREE_D_MODE)
