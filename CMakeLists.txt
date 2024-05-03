@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.11)
 
 project(ElvenEngine
         VERSION 1.0
@@ -9,6 +9,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+include(FetchContent)
+set(FETCHCONTENT_QUIET OFF)
 
 option(BUILD_SANDBOX "build sandbox projects" ON)
 option(BUILD_GAMES "build games" ON)
@@ -22,7 +25,11 @@ if(WIN32)
         NOMINMAX
     )
 else()
-    message("This is not supported platform for now!")
+    if (APPLE)
+        # something
+    else()
+        message("This is not supported platform for now!")
+    endif()
 endif()
 
 if (EDITOR_MODE)
@@ -40,7 +47,6 @@ endif()
 add_subdirectory(Engine)
 
 set(ElvenEngine_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-
 
 if (BUILD_SANDBOX)
     if (THREE_D_MODE)

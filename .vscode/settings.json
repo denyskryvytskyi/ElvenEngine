@@ -1,0 +1,11 @@
+{
+  "files.associations": {
+    "*.cl": "cuda-cpp",
+    "*.sl": "latex",
+    "vector": "cpp",
+    "__split_buffer": "cpp",
+    "deque": "cpp",
+    "list": "cpp",
+    "__config": "cpp"
+  }
+}

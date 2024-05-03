@@ -161,6 +161,11 @@ endif()
 set(LIBRARY_NAME ElvenEngine)
 add_library(${LIBRARY_NAME} STATIC ${ENGINE_SOURCES})
 
+target_compile_features(${LIBRARY_NAME} PRIVATE cxx_std_20)
+set(CMAKE_CXX_STANDARD 20 CACHE STRING "v")
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ENGINE_SOURCES})
 
 # path to dependencies
@@ -169,25 +174,110 @@ set(VENDOR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
 # include dirs
 set(ENGINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-set(ENGINE_INCLUDE_DIRS
-${ENGINE_SOURCE_DIR}
-${VENDOR_PATH}/GLAD/include
-${VENDOR_PATH}/GLFW/include
-${VENDOR_PATH}/lia/include
-${VENDOR_PATH}/spdlog/include
-${VENDOR_PATH}/stb/include
-${VENDOR_PATH}/json/include
-${VENDOR_PATH}/freetype/include
-${VENDOR_PATH}/irrklang/include
-${VENDOR_PATH}/fmt/include
-${VENDOR_PATH}/assimp/include
-${PROJECT_SOURCE_DIR}/build_vendor/assimp/include # include generated config.h for assimp
+# ------------------
+# Dependencies
+# ------------------
+FetchContent_Declare(
+        glfw
+        GIT_REPOSITORY "https://github.com/glfw/glfw.git"
+        GIT_TAG "3.4"
+)
+FetchContent_MakeAvailable(glfw)
+
+FetchContent_Declare(
+        lia
+        GIT_REPOSITORY "https://github.com/denyskryvytskyi/lia.git"
+        GIT_TAG "main"
+)
+FetchContent_MakeAvailable(lia)
+
+FetchContent_Declare(
+        spdlog
+        GIT_REPOSITORY "https://github.com/gabime/spdlog.git"
+        GIT_TAG "v1.14.1"
+)
+FetchContent_MakeAvailable(spdlog)
+
+FetchContent_Declare(json URL "https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz")
+FetchContent_MakeAvailable(json)
+
+FetchContent_Declare(
+        freetype
+        GIT_REPOSITORY "https://github.com/freetype/freetype.git"
+        GIT_TAG "VER-2-13-2"
+)
+FetchContent_MakeAvailable(freetype)
+
+FetchContent_Declare(
+        fmt
+        GIT_REPOSITORY "https://github.com/fmtlib/fmt.git"
+        GIT_TAG "10.2.1"
+)
+FetchContent_MakeAvailable(fmt)
+
+FetchContent_Declare(assimp
+GIT_REPOSITORY "https://github.com/assimp/assimp.git"
+GIT_TAG "v5.3.1")
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_INJECT_DEBUG_POSTFIX OFF CACHE BOOL "" FORCE)
+set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ZLIB OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(assimp)
+
+FetchContent_Declare(
+  imgui
+  GIT_REPOSITORY https://github.com/ocornut/imgui
+  GIT_TAG "v1.90.4"
 )
 
+FetchContent_MakeAvailable(imgui)
+
+
+FetchContent_Declare(
+        zlib
+        GIT_REPOSITORY "https://github.com/madler/zlib.git"
+        GIT_TAG "v1.3.1"
+)
+FetchContent_MakeAvailable(zlib)
+
+FetchContent_Declare(
+    irrklang
+	URL "http://www.ambiera.at/downloads/irrKlang-64bit-1.5.0.zip"
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build/_deps/irrklang
+)
+
+FetchContent_GetProperties(irrklang)
+
+if(NOT irrklang_POPULATED)
+	FetchContent_Populate(irrklang)
+	set(IRRKLANG_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+	set(IRRKLANG_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+	set(IRRKLANG_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+endif()
+
+add_subdirectory(${VENDOR_PATH}/GLAD)
+add_subdirectory(${VENDOR_PATH}/stb)
+
+
 if (EDITOR_MODE)
-    set(ENGINE_INCLUDE_DIRS
-        ${ENGINE_INCLUDE_DIRS}
-        ${VENDOR_PATH}/imgui/include
+    set(IMGUI_DIR ${imgui_SOURCE_DIR})
+
+    set(IMGUI_PUBLIC_HEADERS
+        ${IMGUI_DIR}/imconfig.h
+        ${IMGUI_DIR}/imgui.h
+        ${IMGUI_DIR}/imgui_internal.h # not actually public, but users might need it
+        ${IMGUI_DIR}/imstb_rectpack.h
+        ${IMGUI_DIR}/imstb_textedit.h
+        ${IMGUI_DIR}/imstb_truetype.h
+        ${IMGUI_DIR}/misc/cpp/imgui_stdlib.h
+        ${IMGUI_DIR}/backends/imgui_impl_opengl3.h
+        ${IMGUI_DIR}/backends/imgui_impl_glfw.h
+    )
+
+    target_include_directories(${LIBRARY_NAME}
+        PUBLIC ${ENGINE_INCLUDE_DIRS}
     )
 endif()
 
@@ -195,56 +285,17 @@ target_include_directories(${LIBRARY_NAME}
     PUBLIC ${ENGINE_INCLUDE_DIRS}
 )
 
-set(VENDOR_PATH_DEBUG ${PROJECT_SOURCE_DIR}/build_vendor/lib/Debug/)
-set(VENDOR_PATH_RELEASE ${PROJECT_SOURCE_DIR}/build_vendor/lib/Release/)
+target_link_libraries(${LIBRARY_NAME} glfw lia spdlog freetype fmt glad stb)
+target_link_libraries(${LIBRARY_NAME} nlohmann_json::nlohmann_json)
+target_include_directories(${LIBRARY_NAME} PUBLIC ${lia_SOURCE_DIR}/include)
+target_include_directories(${LIBRARY_NAME} PUBLIC ${irrklang_SOURCE_DIR}/include)
+target_include_directories(${LIBRARY_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_link_libraries(${LIBRARY_NAME} irrklang)
 
-find_library(glfw_d NAMES glfw3 PATHS ${VENDOR_PATH_DEBUG})
-find_library(glad_d NAMES glad PATHS ${VENDOR_PATH_DEBUG})
-find_library(spdlog_d NAMES spdlogd PATHS ${VENDOR_PATH_DEBUG})
-find_library(stb_d NAMES stb PATHS ${VENDOR_PATH_DEBUG})
-find_library(freetype_d NAMES freetyped PATHS ${VENDOR_PATH_DEBUG})
-find_library(fmt_d NAMES fmtd PATHS ${VENDOR_PATH_DEBUG})
-find_library(imgui_d NAMES imgui imguid PATHS ${VENDOR_PATH_DEBUG})
-find_library(assimp_d NAMES assimp-vc143-mtd PATHS ${VENDOR_PATH_DEBUG})
-find_library(zlib_d NAMES zlibstaticd PATHS ${VENDOR_PATH_DEBUG})
-
-find_library(glad NAMES glad PATHS ${VENDOR_PATH_RELEASE})
-find_library(glfw NAMES glfw3 PATHS ${VENDOR_PATH_RELEASE})
-find_library(spdlog NAMES spdlog PATHS ${VENDOR_PATH_RELEASE})
-find_library(stb NAMES stb PATHS ${VENDOR_PATH_RELEASE})
-find_library(freetype NAMES freetype PATHS ${VENDOR_PATH_RELEASE})
-find_library(fmt NAMES fmt PATHS ${VENDOR_PATH_RELEASE})
-find_library(imgui NAMES imgui PATHS ${VENDOR_PATH_RELEASE})
-find_library(irrklang NAMES irrKlang.lib PATHS ${VENDOR_PATH}/irrklang/lib)
-find_library(assimp NAMES assimp-vc143-mt PATHS ${VENDOR_PATH_RELEASE})
-find_library(zlib NAMES zlibstatic PATHS ${VENDOR_PATH_RELEASE})
-
-set(VENDOR
-debug ${glfw_d} optimized ${glfw}
-debug ${glad_d} optimized ${glad}
-debug ${spdlog_d} optimized ${spdlog}
-debug ${stb_d} optimized ${stb}
-debug ${freetype_d} optimized ${freetype}
-debug ${irrklang} optimized ${irrklang}
-debug ${fmt_d} optimized ${fmt}
-)
-
-if (EDITOR_MODE)
-    set(VENDOR
-        ${VENDOR}
-        debug ${imgui_d} optimized ${imgui}
-    )
-endif()
 
 if (THREE_D_MODE)
-    set(VENDOR
-        ${VENDOR}
-        debug ${assimp_d} optimized ${assimp}
-        debug ${zlib_d} optimized ${zlib}
-    )
+    target_link_libraries(${LIBRARY_NAME} zlib assimp)
 endif()
-
-target_link_libraries(${LIBRARY_NAME} ${VENDOR})
 
 # pch header file path
 set(ENGINE_PRECOMPILED_HEADERS

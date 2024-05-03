@@ -43,7 +43,10 @@ void Render2dSystem::OnRender(float dt)
         std::vector<SpriteSortingInfo> sortingInfo;
         const auto& entities = m_spritesPool->GetEntities();
         for (auto entity : entities) {
-            sortingInfo.emplace_back(entity, m_trasformsPool->GetComponent(entity).pos.z);
+            SpriteSortingInfo info;
+            info.entity = entity;
+            info.zOrder = m_trasformsPool->GetComponent(entity).pos.z;
+            sortingInfo.push_back(info);
         }
 
         std::sort(sortingInfo.begin(), sortingInfo.end(), [](const auto& left, const auto& right) {

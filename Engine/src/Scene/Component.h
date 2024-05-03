@@ -74,7 +74,7 @@ public:
     ComponentType& AddComponent(Entity entity, Args&&... args)
     {
         m_entityToComponentIndex.insert({ entity, m_components.size() });
-        m_components.emplace_back(std::forward<Args>(args)...);
+        // m_components.emplace_back(std::forward<Args>(args)...);
         m_entities.emplace_back(entity);
         return m_components.back();
     }

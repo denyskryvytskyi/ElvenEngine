@@ -43,7 +43,7 @@ if(WIN32)
     ${IRRKLANG_BIN_PATH}ikpFlac.dll
     ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/ikpFlac.dll)
 else()
-  message("This is not supported platform for now!")
+  # message("This is not supported platform for now!")
 endif()
 
 set(RES_COMMON_PATH ${PROJECT_SOURCE_DIR}/Engine/assets)

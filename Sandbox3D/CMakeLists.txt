@@ -53,7 +53,7 @@ if(WIN32)
     ${ASSIMP_BIN_PATH}$<CONFIG>/${ASSIMP_DLL}
     ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/${ASSIMP_DLL})
 else()
-  message("This is not supported platform for now!")
+  # message("This is not supported platform for now!")
 endif()
 
 set(RES_COMMON_PATH ${PROJECT_SOURCE_DIR}/Engine/assets)
