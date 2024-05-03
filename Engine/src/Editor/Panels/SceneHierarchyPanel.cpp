@@ -206,7 +206,7 @@ void SceneHierarchyPanel::DrawProperties()
         DisplayAddComponentEntry<PointLightComponent>("Point Light");
         DisplayAddComponentEntry<SpotLightComponent>("Spotlight");
         DisplayAddComponentEntry<TextComponent>("Text");
-        DisplayAddComponentEntry<RectTransformComponent>("UI Transform");
+        DisplayAddComponentEntry<UITransformComponent>("UI Transform");
         DisplayAddComponentEntry<SpriteComponent>("Sprite");
         DisplayAddComponentEntry<SoundComponent>("Sound");
 
@@ -447,7 +447,7 @@ void SceneHierarchyPanel::DrawProperties()
         editor::DrawRGBAColorControl("color##text", component.color);
     });
 
-    DrawComponent<RectTransformComponent>("UI Transform", m_selectedEntity, m_context, [](RectTransformComponent& component) {
+    DrawComponent<UITransformComponent>("UI Transform", m_selectedEntity, m_context, [](UITransformComponent& component) {
         editor::DrawVec2Control("Position", "pos", component.pos);
         editor::DrawVec2Control("Scale", "scale", component.scale);
     });

@@ -71,7 +71,7 @@ Application::Application()
     if (gEngineSettings.enableFpsCounter) {
         m_fpsCounterEntityId = scene.CreateEntity();
         scene.AddComponent<TagComponent>(m_fpsCounterEntityId, "FPS text");
-        scene.AddComponent<RectTransformComponent>(m_fpsCounterEntityId, lia::vec2(0.5f, 97.0f), lia::vec2(0.4f, 0.4f));
+        scene.AddComponent<UITransformComponent>(m_fpsCounterEntityId, lia::vec2(0.5f, 97.0f), lia::vec2(0.4f, 0.4f));
         scene.AddComponent<TextComponent>(m_fpsCounterEntityId, "0");
     }
 }

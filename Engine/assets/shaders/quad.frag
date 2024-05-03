@@ -1,6 +1,6 @@
 #version 450 core
 
-uniform sampler2D u_screenTexture;
+layout (binding = 0) uniform sampler2D u_screenTexture;
 
 in vec2 v_uv;
 

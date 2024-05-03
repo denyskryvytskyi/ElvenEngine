@@ -23,7 +23,7 @@ void Scene::OnInit()
     RegisterComponent<QuadComponent>();
     RegisterComponent<CameraComponent>();
     RegisterComponent<TextComponent>();
-    RegisterComponent<RectTransformComponent>();
+    RegisterComponent<UITransformComponent>();
     RegisterComponent<AABBComponent>();
     RegisterComponent<TagComponent>();
     RegisterComponent<PointLightComponent>();

@@ -44,6 +44,8 @@ void Renderer::Init(const uint16_t width, const uint16_t height)
     m_NDCPlaneVao->SetIndexBuffer(ebo);
 
     m_rendererAPI->Init();
+
+    m_postProcessor.Init(width, height);
 }
 
 void Renderer::Shutdown()
@@ -75,18 +77,20 @@ void Renderer::EndScene()
         m_renderTargetIntermidiate->Blit(m_renderTargetMultisampled);
     }
 
-    // 3. Render pass: draw on screen
-    m_renderTargetIntermidiate->Unbind();
+    // 3. Render pass: post-processing
+    const auto postProcessedTexture = m_postProcessor.Process(this, m_renderTargetIntermidiate->GetColorTextureAttachment());
+
+    // 4. Render pass: draw on screen
+    m_rendererAPI->BindDefaultFramebuffer();
 
     m_rendererAPI->EnableDepthTesting(false);
     m_rendererAPI->SetClearColor(Renderer::GetClearColor());
     m_rendererAPI->ClearColorBit();
 
     m_screenQuadShader->Bind();
-    m_renderTargetIntermidiate->BindColorTexture(0);
-    m_screenQuadShader->SetInteger("u_screenTexture", 0);
+    postProcessedTexture->BindToSlot(0);
 
-    m_rendererAPI->DrawIndexed(m_NDCPlaneVao);
+    RenderNDCQuad();
 }
 
 void Renderer::Submit(const SharedPtr<Shader>& shader, const SharedPtr<VertexArray>& vertexArray, const lia::mat4& modelMatrix)
@@ -119,6 +123,7 @@ void Renderer::OnWindowResize(std::uint32_t width, std::uint32_t height)
     m_renderTargetMultisampled->Resize(width, height);
     m_renderTargetIntermidiate->Resize(width, height);
     m_rendererAPI->SetViewport(0, 0, width, height);
+    m_postProcessor.OnWindowResized(width, height);
 }
 void Renderer::EnableDepthTesting(bool enabled)
 {
@@ -131,6 +136,11 @@ void Renderer::EnableMSAA(bool enabled)
     m_rendererAPI->EnableMSAA(enabled);
 }
 
+void Renderer::RenderNDCQuad()
+{
+    m_rendererAPI->DrawIndexed(m_NDCPlaneVao);
+}
+
 void Renderer::DisableByteAlignment()
 {
     m_rendererAPI->DisableByteAlignment();
@@ -138,5 +148,13 @@ void Renderer::DisableByteAlignment()
 void Renderer::EnableFaceCulling(bool enabled)
 {
     m_rendererAPI->EnableFaceCulling(enabled);
+}
+void Renderer::ClearBufferBit(const BufferBitType bitType)
+{
+    if (bitType == BufferBitType::Color) {
+        m_rendererAPI->ClearColorBit();
+    } else {
+        m_rendererAPI->Clear();
+    }
 }
 } // namespace elv

@@ -181,8 +181,6 @@ void Renderer2D::DrawQuad(const SharedPtr<Texture>& texture, const lia::mat4& mo
 
 void Renderer2D::DrawQuad(const lia::mat4& model, const lia::vec4& color, int textureUnit)
 {
-    lia::mat4 t = model;
-    t(2, 2) = 0.0f;
     if (s_data.quadIndexCount >= MAX_QUAD_INDICES) {
         NextBatch();
     }

@@ -27,7 +27,7 @@ void Render2dSystem::OnInit()
     m_trasformsPool = m_pScene->GetComponentPool<TransformComponent>();
     m_quadsPool = m_pScene->GetComponentPool<QuadComponent>();
     m_textsPool = m_pScene->GetComponentPool<TextComponent>();
-    m_rectTransformPool = m_pScene->GetComponentPool<RectTransformComponent>();
+    m_rectTransformPool = m_pScene->GetComponentPool<UITransformComponent>();
 }
 
 void Render2dSystem::OnRender(float dt)
@@ -99,7 +99,7 @@ void Render2dSystem::OnRender(float dt)
         auto& textComponent = textComponents[i];
         if (textComponent.isVisible) {
 
-            if (m_pScene->HasComponent<RectTransformComponent>(entity)) {
+            if (m_pScene->HasComponent<UITransformComponent>(entity)) {
                 auto& rectTransform = m_rectTransformPool->GetComponent(entity);
                 TextRenderer::RenderText(renderer, textComponent.text, textComponent.fontName, rectTransform.pos, rectTransform.scale, textComponent.color);
             }

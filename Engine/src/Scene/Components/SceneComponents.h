@@ -67,36 +67,6 @@ public:
 void to_json(nlohmann::json& j, const SpriteComponent& t);
 void from_json(const nlohmann::json& j, SpriteComponent& t);
 
-// TODO: spritesheet animation
-// struct SriteAnimation {
-//    SriteAnimation(int frames_count, float time_per_frame)
-//        : framesCount(frames_count)
-//        , timePerFrame(time_per_frame)
-//    { }
-//
-//    void AddTextures(std::string_view sprite_sheet_name, const std::string_view sprite_sheet_path)
-//    {
-//        /*textures = std::move(textures_);
-//        LoadTextures(pathToTextures);*/
-//    }
-//
-//    void Update(float elapsed)
-//    {
-//
-//        elapsedTime += elapsed;
-//    }
-//
-// private:
-//    void LoadTextures(const std::string& pathToTextures);
-//
-// public:
-//    int framesCount { 0 };
-//    float timePerFrame { 0.0f };  // time while one frame is active
-//    int currentTextureName { 0 }; // name of the current frame texture
-//    float elapsedTime { 0.0f };   // internal usage
-//    std::vector<std::string> textures;
-//};
-
 struct BehaviorComponent {
 public:
     BehaviorComponent() = default;
@@ -158,9 +128,9 @@ public:
  * Position is 2d coordinates maps to camera bounds.
  * [0;0] is a left top position of the screen and [100;100] is the right bottom position
  */
-struct RectTransformComponent {
-    RectTransformComponent() = default;
-    RectTransformComponent(const lia::vec2& pos_, const lia::vec2& scale_ = lia::vec2(1.0f))
+struct UITransformComponent {
+    UITransformComponent() = default;
+    UITransformComponent(const lia::vec2& pos_, const lia::vec2& scale_ = lia::vec2(1.0f))
         : pos(pos_)
         , scale(scale_)
     { }
@@ -170,8 +140,8 @@ public:
     lia::vec2 scale { 1.0f };
 };
 
-void to_json(nlohmann::json& j, const RectTransformComponent& t);
-void from_json(const nlohmann::json& j, RectTransformComponent& t);
+void to_json(nlohmann::json& j, const UITransformComponent& t);
+void from_json(const nlohmann::json& j, UITransformComponent& t);
 
 struct TextComponent {
     TextComponent() = default;
@@ -228,5 +198,35 @@ struct SoundComponent {
     float volume { 0.5f };
     std::string soundName;
 };
+
+// TODO: spritesheet animation
+// struct SriteAnimation {
+//    SriteAnimation(int frames_count, float time_per_frame)
+//        : framesCount(frames_count)
+//        , timePerFrame(time_per_frame)
+//    { }
+//
+//    void AddTextures(std::string_view sprite_sheet_name, const std::string_view sprite_sheet_path)
+//    {
+//        /*textures = std::move(textures_);
+//        LoadTextures(pathToTextures);*/
+//    }
+//
+//    void Update(float elapsed)
+//    {
+//
+//        elapsedTime += elapsed;
+//    }
+//
+// private:
+//    void LoadTextures(const std::string& pathToTextures);
+//
+// public:
+//    int framesCount { 0 };
+//    float timePerFrame { 0.0f };  // time while one frame is active
+//    int currentTextureName { 0 }; // name of the current frame texture
+//    float elapsedTime { 0.0f };   // internal usage
+//    std::vector<std::string> textures;
+//};
 
 } // namespace elv

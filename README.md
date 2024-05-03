@@ -29,19 +29,20 @@ Elven Engine is primarily a 2D/3D game engine that is being developed from scrat
   - [x] Text Rendering
   - [ ] Spritesheet animation
 + [ ] 3D Renderer (WIP)
-  - [x] Phong Lighting
+  - [x] Phong/Blinn-Phong Lighting
   - [x] Multiple light casters: spotlight, directional, and point light
   - [x] Mesh-Material system (Static mesh support with one material slot per mesh/submesh for now)
   - [x] Primitives: cube, sphere, plane
   - [x] Async 3D model loading and async material textures loading
   - [x] Render Target
   - [x] MSAA (Multisample anti-alising)
+  - [x] Post-processor: blur with custom mask texture building algorithms
   - [ ] Uniform buffer
   - [ ] Cubemap
   - [ ] Shadows
 + [x] ECS (investigated different techniques and my particular architecture in the [article](https://denyskryvytskyi.github.io/ecs))
   - [x] Data-oriented cache-friendly components system architecture
-  - [x] In-Engine components: Transform, Sprite, Text, Quad, StaticMesh, Camera, RectTransform, AABB, Tag, Sound
+  - [x] In-Engine components: Transform, Sprite, Text, Quad, StaticMesh, Camera, UITransform, AABB, Tag, Sound, PointLight/DirectionalLight/SpotLight.
   - [x] Components serialization
   - [x] Behavior component as the entity brain
   - [x] Optional Systems for usability
