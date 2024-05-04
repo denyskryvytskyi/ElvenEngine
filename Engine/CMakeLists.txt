@@ -78,7 +78,7 @@ set(ENGINE_HEADERS
 )
 
 #editor stuff
-if (EDITOR_MODE)
+if (MODULE_EDITOR_ENABLED)
     set(ENGINE_HEADERS
     ${ENGINE_HEADERS}
     "src/Editor/ImGuiOverlay.h"
@@ -148,7 +148,7 @@ set(ENGINE_SOURCES
 ${ENGINE_HEADERS}
 )
 
-if (EDITOR_MODE)
+if (MODULE_EDITOR_ENABLED)
     set(ENGINE_SOURCES
     ${ENGINE_SOURCES}
     "src/Editor/ImGuiOverlay.cpp"
@@ -180,22 +180,32 @@ ${VENDOR_PATH}/spdlog/include
 ${VENDOR_PATH}/stb/include
 ${VENDOR_PATH}/json/include
 ${VENDOR_PATH}/freetype/include
-${VENDOR_PATH}/irrklang/include
 ${VENDOR_PATH}/fmt/include
-${VENDOR_PATH}/assimp/include
-${PROJECT_SOURCE_DIR}/build_vendor/assimp/include # include generated config.h for assimp
 )
 
-if (EDITOR_MODE)
+if (MODULE_EDITOR_ENABLED)
     set(ENGINE_INCLUDE_DIRS
         ${ENGINE_INCLUDE_DIRS}
         ${VENDOR_PATH}/imgui/include
     )
 endif()
 
-target_include_directories(${LIBRARY_NAME}
-    PUBLIC ${ENGINE_INCLUDE_DIRS}
-)
+if (MODULE_SOUND_ENABLED)
+    set(ENGINE_INCLUDE_DIRS
+        ${ENGINE_INCLUDE_DIRS}
+        ${VENDOR_PATH}/irrklang/include
+    )
+endif()
+
+if (MODULE_3D_ENABLED)
+    set(ENGINE_INCLUDE_DIRS
+        ${ENGINE_INCLUDE_DIRS}
+        ${VENDOR_PATH}/assimp/include
+        ${PROJECT_SOURCE_DIR}/build_vendor/assimp/include # include generated config.h for assimp
+    )
+endif()
+
+target_include_directories(${LIBRARY_NAME} PUBLIC ${ENGINE_INCLUDE_DIRS})
 
 set(VENDOR_PATH_DEBUG ${PROJECT_SOURCE_DIR}/build_vendor/lib/Debug/)
 set(VENDOR_PATH_RELEASE ${PROJECT_SOURCE_DIR}/build_vendor/lib/Release/)
@@ -206,39 +216,48 @@ find_library(spdlog_d NAMES spdlogd PATHS ${VENDOR_PATH_DEBUG})
 find_library(stb_d NAMES stb PATHS ${VENDOR_PATH_DEBUG})
 find_library(freetype_d NAMES freetyped PATHS ${VENDOR_PATH_DEBUG})
 find_library(fmt_d NAMES fmtd PATHS ${VENDOR_PATH_DEBUG})
-find_library(imgui_d NAMES imgui imguid PATHS ${VENDOR_PATH_DEBUG})
-find_library(assimp_d NAMES assimp-vc143-mtd PATHS ${VENDOR_PATH_DEBUG})
-find_library(zlib_d NAMES zlibstaticd PATHS ${VENDOR_PATH_DEBUG})
-
 find_library(glad NAMES glad PATHS ${VENDOR_PATH_RELEASE})
 find_library(glfw NAMES glfw3 PATHS ${VENDOR_PATH_RELEASE})
 find_library(spdlog NAMES spdlog PATHS ${VENDOR_PATH_RELEASE})
 find_library(stb NAMES stb PATHS ${VENDOR_PATH_RELEASE})
 find_library(freetype NAMES freetype PATHS ${VENDOR_PATH_RELEASE})
 find_library(fmt NAMES fmt PATHS ${VENDOR_PATH_RELEASE})
-find_library(imgui NAMES imgui PATHS ${VENDOR_PATH_RELEASE})
-find_library(irrklang NAMES irrKlang.lib PATHS ${VENDOR_PATH}/irrklang/lib)
-find_library(assimp NAMES assimp-vc143-mt PATHS ${VENDOR_PATH_RELEASE})
-find_library(zlib NAMES zlibstatic PATHS ${VENDOR_PATH_RELEASE})
 
 set(VENDOR
-debug ${glfw_d} optimized ${glfw}
-debug ${glad_d} optimized ${glad}
-debug ${spdlog_d} optimized ${spdlog}
-debug ${stb_d} optimized ${stb}
-debug ${freetype_d} optimized ${freetype}
-debug ${irrklang} optimized ${irrklang}
-debug ${fmt_d} optimized ${fmt}
+    debug ${glfw_d} optimized ${glfw}
+    debug ${glad_d} optimized ${glad}
+    debug ${spdlog_d} optimized ${spdlog}
+    debug ${stb_d} optimized ${stb}
+    debug ${freetype_d} optimized ${freetype}
+    debug ${fmt_d} optimized ${fmt}
 )
 
-if (EDITOR_MODE)
+if (MODULE_EDITOR_ENABLED)
+    find_library(imgui_d NAMES imgui imguid PATHS ${VENDOR_PATH_DEBUG})
+    find_library(imgui NAMES imgui PATHS ${VENDOR_PATH_RELEASE})
+
     set(VENDOR
         ${VENDOR}
         debug ${imgui_d} optimized ${imgui}
+        
     )
 endif()
 
-if (THREE_D_MODE)
+if (MODULE_SOUND_ENABLED)
+    find_library(irrklang NAMES irrKlang.lib PATHS ${VENDOR_PATH}/irrklang/lib)
+
+    set(VENDOR
+        ${VENDOR}
+        debug ${irrklang} optimized ${irrklang}
+    )
+endif()
+
+if (MODULE_3D_ENABLED)
+    find_library(assimp_d NAMES assimp-vc143-mtd PATHS ${VENDOR_PATH_DEBUG})
+    find_library(zlib_d NAMES zlibstaticd PATHS ${VENDOR_PATH_DEBUG})
+    find_library(assimp NAMES assimp-vc143-mt PATHS ${VENDOR_PATH_RELEASE})
+    find_library(zlib NAMES zlibstatic PATHS ${VENDOR_PATH_RELEASE})
+
     set(VENDOR
         ${VENDOR}
         debug ${assimp_d} optimized ${assimp}

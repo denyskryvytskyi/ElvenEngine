@@ -1,4 +1,4 @@
-if (NOT THREE_D_MODE)
+if (NOT MODULE_3D_ENABLED)
     add_subdirectory(TRON)
     add_subdirectory(Pong)
     add_subdirectory(Invaders)

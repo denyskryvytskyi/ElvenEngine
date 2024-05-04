@@ -160,7 +160,7 @@ void SceneHierarchyPanel::DrawEntity(const ecs::Entity parentEntity)
             nodeName = fmt::format("Entity_{}", m_entityNameCounter++);
         }
 
-        const bool opened = ImGui::TreeNodeEx((void*)(intptr_t)nodeEntity, flags, nodeName.c_str());
+        const bool opened = ImGui::TreeNodeEx(reinterpret_cast<void*>((intptr_t)nodeEntity), flags, nodeName.c_str());
         if (ImGui::IsItemClicked()) {
             m_selectedEntity = nodeEntity;
         }

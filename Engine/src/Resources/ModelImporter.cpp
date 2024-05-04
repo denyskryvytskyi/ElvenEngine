@@ -1,6 +1,6 @@
 #include "ModelImporter.h"
 
-#if THREE_D_MODE
+#if MODULE_3D_ENABLED
 
 #    include "Core/Profiler.h"
 

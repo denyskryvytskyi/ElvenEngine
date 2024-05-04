@@ -38,7 +38,7 @@ private:
     void CreateExponentialGradientMask(unsigned char* data);
 
 public:
-    bool IsBlurEnabled { true };
+    bool IsBlurEnabled { false };
     int BlurMaskThreshold { 0 };
     BlurGradientMaskType GradientMaskType { BlurGradientMaskType::Linear };
 

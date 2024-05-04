@@ -6,7 +6,7 @@
 #include <Scene/Components/LightComponent.h>
 #include <Scene/Components/StaticMeshComponent.h>
 
-#if EDITOR_MODE
+#if MODULE_EDITOR_ENABLED
 #    include <Editor/EditorHelpers.h>
 #    include <imgui.h>
 #endif
@@ -108,7 +108,7 @@ void PrimitivesSandbox::OnProcessInput(float dt)
 {
 }
 
-#if EDITOR_MODE
+#if MODULE_EDITOR_ENABLED
 void PrimitivesSandbox::OnImguiRender()
 {
     auto& scene = elv::GetScene();

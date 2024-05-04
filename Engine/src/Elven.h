@@ -20,7 +20,7 @@
 
 #include "Events/EventManager.h"
 
-#if EDITOR_MODE
+#if MODULE_EDITOR_ENABLED
 #    include "Editor/ImGuiOverlay.h"
 #endif
 

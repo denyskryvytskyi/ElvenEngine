@@ -37,7 +37,7 @@ void Scene::OnInit()
 
     // Engine systems register
     RegisterSystem<BehaviorSystem>();
-#ifdef THREE_D_MODE
+#ifdef MODULE_3D_ENABLED
     RegisterSystem<RenderSystem>();
 #endif
     RegisterSystem<Render2dSystem>();

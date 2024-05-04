@@ -112,8 +112,9 @@ You can modify configure file to enable/disable the following cmake options:
 - **BUILD_SANDBOX** (default ON): Enable Sandbox2D and Sandbox3D projects build
 - **BUILD_GAMES** (default ON): Enable Games build
 - **PROFILE_MODE** (default ON): Enable Profiling (`PROFILE_MODE` preprocessor definition will be added)
-- **EDITOR_MODE** (default ON): Enable Editor (`EDITOR_MODE` preprocessor definition will be added)
-- **THREE_D_MODE** (default ON): Enable 3D mode and Assimp library for 3D model loading (`THREE_D_MODE` preprocessor definition will be added). **IMPORTANT**: ON - only Sandbox3D project will be configured, OFF - only Sandbox2D and Games projects will be configured.
+- **MODULE_EDITOR_ENABLED** (default ON): Enable Editor (`MODULE_EDITOR_ENABLED` preprocessor definition will be defined)
+- **MODULE_3D_ENABLED** (default ON): Enable 3D module and Assimp library for 3D model loading (`MODULE_3D_ENABLED` preprocessor definition will be defined). **IMPORTANT**: ON - only Sandbox3D project will be configured, OFF - only Sandbox2D and Games projects will be configured.
+- **MODULE_SOUND_ENABLED** (default ON): Enable sound module (`MODULE_SOUND_ENABLED` preprocessor definition will be defined)
 
 ## Third-party libraries
 | Lib |  |

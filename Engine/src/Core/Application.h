@@ -7,7 +7,7 @@
 #include "Renderer/Renderer.h"
 #include "Scene/Entity.h"
 
-#if EDITOR_MODE
+#if MODULE_EDITOR_ENABLED
 #    include "Editor/Editor.h"
 #    include "Editor/ImGuiOverlay.h"
 #endif
@@ -48,7 +48,7 @@ protected:
     virtual void OnUpdate(float dt) {};
     virtual void OnRender(float dt) {};
     virtual void OnProcessInput(float dt) {};
-#if EDITOR_MODE
+#if MODULE_EDITOR_ENABLED
     virtual void OnImguiRender() {};
 #endif
     virtual void OnDestroy() {};
@@ -76,7 +76,7 @@ private:
     ecs::Entity m_fpsCounterEntityId { 0 };
     bool m_isPaused { false };
 
-#if EDITOR_MODE
+#if MODULE_EDITOR_ENABLED
     ImGuiOverlay m_imGuiOverlay;
     editor::Editor m_editor;
 #endif

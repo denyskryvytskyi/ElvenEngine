@@ -12,9 +12,10 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 option(BUILD_SANDBOX "build sandbox projects" ON)
 option(BUILD_GAMES "build games" ON)
-option(EDITOR_MODE "Enable ImGUI editor overlay" ON)
 option(PROFILE_MODE "Enable functions profiling" ON)
-option(THREE_D_MODE "Enable 3D module with Assimp support" ON)
+option(MODULE_EDITOR_ENABLED "Enable ImGUI-based editor" ON)
+option(MODULE_3D_ENABLED "Enable 3D module with Assimp support" ON)
+option(MODULE_SOUND_ENABLED "Enable sound module with irrklang support" ON)
 
 if(WIN32)
     add_compile_definitions(
@@ -25,16 +26,20 @@ else()
     message("This is not supported platform for now!")
 endif()
 
-if (EDITOR_MODE)
-    add_compile_definitions(EDITOR_MODE)
-endif()
-
 if (PROFILE_MODE)
     add_compile_definitions(PROFILE_MODE)
 endif()
 
-if (THREE_D_MODE)
-    add_compile_definitions(THREE_D_MODE)
+if (MODULE_EDITOR_ENABLED)
+    add_compile_definitions(MODULE_EDITOR_ENABLED)
+endif()
+
+if (MODULE_3D_ENABLED)
+    add_compile_definitions(MODULE_3D_ENABLED)
+endif()
+
+if (MODULE_SOUND_ENABLED)
+    add_compile_definitions(MODULE_SOUND_ENABLED)
 endif()
 
 add_subdirectory(Engine)
@@ -43,7 +48,7 @@ set(ElvenEngine_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 
 if (BUILD_SANDBOX)
-    if (THREE_D_MODE)
+    if (MODULE_3D_ENABLED)
         add_subdirectory(Sandbox3D)
         set(STARTUP_PROJECT_NAME "Sandbox3D")
     else()

@@ -89,25 +89,25 @@ void Pong::OnCreate()
     scene.RegisterComponent<BallComponent>();
 
     m_startMenuTextEntity = scene.CreateEntity();
-    scene.AddComponent<elv::RectTransformComponent>(m_startMenuTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
+    scene.AddComponent<elv::UITransformComponent>(m_startMenuTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
     scene.AddComponent<elv::TextComponent>(m_startMenuTextEntity, "Press P to start the game");
 
     m_quitMenuTextEntity = scene.CreateEntity();
-    scene.AddComponent<elv::RectTransformComponent>(m_quitMenuTextEntity, lia::vec2(37.0f, 40.0f), lia::vec2(0.6f, 0.6f));
+    scene.AddComponent<elv::UITransformComponent>(m_quitMenuTextEntity, lia::vec2(37.0f, 40.0f), lia::vec2(0.6f, 0.6f));
     auto& quitText = scene.AddComponent<elv::TextComponent>(m_quitMenuTextEntity, "Press Q to exit");
 
     m_gameOverTextEntity = scene.CreateEntity();
-    scene.AddComponent<elv::RectTransformComponent>(m_gameOverTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
+    scene.AddComponent<elv::UITransformComponent>(m_gameOverTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
     auto& gameOverText = scene.AddComponent<elv::TextComponent>(m_gameOverTextEntity);
     gameOverText.Hide();
 
     m_restartMenuTextEntity = scene.CreateEntity();
-    scene.AddComponent<elv::RectTransformComponent>(m_restartMenuTextEntity, lia::vec2(37.0f, 40.0f), lia::vec2(0.6f, 0.6f));
+    scene.AddComponent<elv::UITransformComponent>(m_restartMenuTextEntity, lia::vec2(37.0f, 40.0f), lia::vec2(0.6f, 0.6f));
     auto& restartText = scene.AddComponent<elv::TextComponent>(m_restartMenuTextEntity, "Press R to start next round");
     restartText.Hide();
 
     m_pauseMenuTextEntity = scene.CreateEntity();
-    scene.AddComponent<elv::RectTransformComponent>(m_pauseMenuTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
+    scene.AddComponent<elv::UITransformComponent>(m_pauseMenuTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
     auto& pauseText = scene.AddComponent<elv::TextComponent>(m_pauseMenuTextEntity, "Press Space to resume the game");
     pauseText.Hide();
 
@@ -169,7 +169,7 @@ void Pong::OnMenu()
         paddlePlayer1.topBoundPos = cameraBounds.top - paddleSizeYhalf;
         paddlePlayer1.bottomBoundPos = cameraBounds.bottom + paddleSizeYhalf;
 
-        scene.AddComponent<elv::RectTransformComponent>(player1, lia::vec2(0.0f));
+        scene.AddComponent<elv::UITransformComponent>(player1, lia::vec2(0.0f));
         scene.AddComponent<elv::TextComponent>(player1, "0", paddle1Color);
 
         // paddle 2
@@ -191,7 +191,7 @@ void Pong::OnMenu()
         paddle2.topBoundPos = cameraBounds.top - paddleSizeYhalf;
         paddle2.bottomBoundPos = cameraBounds.bottom + paddleSizeYhalf;
 
-        scene.AddComponent<elv::RectTransformComponent>(player2, lia::vec2(95.0f, 0.0f));
+        scene.AddComponent<elv::UITransformComponent>(player2, lia::vec2(95.0f, 0.0f));
         scene.AddComponent<elv::TextComponent>(player2, "0", paddle2Color);
 
         // ball

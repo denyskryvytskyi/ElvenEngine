@@ -105,7 +105,6 @@ void DrawPostProcessSettings(Renderer& renderer)
                 const bool is_selected = (currentIndex == i);
                 if (ImGui::Selectable(items[i], is_selected)) {
                     currentIndex = i;
-                    itemStr = items[currentIndex];
                     postProcessor.GradientMaskType = static_cast<PostProcessor::BlurGradientMaskType>(currentIndex);
                 }
 
@@ -125,7 +124,7 @@ void DrawPostProcessSettings(Renderer& renderer)
         ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
         ImVec4 border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f);
 
-        ImGui::Image((void*)(intptr_t)postProcessor.GetMaskTextureId(), ImVec2(kMaskPreviewWidth, kMaskPreviewHeight), uv_min, uv_max, tint_col, border_col);
+        ImGui::Image(reinterpret_cast<void*>((intptr_t)postProcessor.GetMaskTextureId()), ImVec2(kMaskPreviewWidth, kMaskPreviewHeight), uv_min, uv_max, tint_col, border_col);
         ImGui::TreePop();
     }
 }

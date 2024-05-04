@@ -26,7 +26,7 @@ static void LoadMeshFromFile(std::vector<LoadedMeshesInfo>& loadedMeshesInfo, co
     info.name = meshName;
     info.root = root;
 
-#ifdef THREE_D_MODE
+#ifdef MODULE_3D_ENABLED
     ImportModel(meshPath, info);
 #endif
 

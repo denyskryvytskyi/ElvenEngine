@@ -537,29 +537,29 @@ void Invaders::OnCreate()
 
     // Menus
     m_gameName = scene.CreateEntity();
-    scene.AddComponent<elv::RectTransformComponent>(m_gameName, lia::vec2(37.0f, 30.0f), lia::vec2(1.0f, 1.0f));
+    scene.AddComponent<elv::UITransformComponent>(m_gameName, lia::vec2(37.0f, 30.0f), lia::vec2(1.0f, 1.0f));
     scene.AddComponent<elv::TextComponent>(m_gameName, "INVADERS", kTextColor, "kenvector_future");
 
     m_startMenuTextEntity = scene.CreateEntity();
-    scene.AddComponent<elv::RectTransformComponent>(m_startMenuTextEntity, lia::vec2(37.0f, 50.0f), lia::vec2(0.5f, 0.5f));
+    scene.AddComponent<elv::UITransformComponent>(m_startMenuTextEntity, lia::vec2(37.0f, 50.0f), lia::vec2(0.5f, 0.5f));
     scene.AddComponent<elv::TextComponent>(m_startMenuTextEntity, "Press P to start the game", kTextColor, "kenvector_future");
 
     m_quitMenuTextEntity = scene.CreateEntity();
-    scene.AddComponent<elv::RectTransformComponent>(m_quitMenuTextEntity, lia::vec2(37.0f, 60.0f), lia::vec2(0.5f, 0.5f));
+    scene.AddComponent<elv::UITransformComponent>(m_quitMenuTextEntity, lia::vec2(37.0f, 60.0f), lia::vec2(0.5f, 0.5f));
     auto& quitText = scene.AddComponent<elv::TextComponent>(m_quitMenuTextEntity, "Press Q to exit", kTextColor, "kenvector_future");
 
     m_gameOverTextEntity = scene.CreateEntity();
-    scene.AddComponent<elv::RectTransformComponent>(m_gameOverTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(1.0f, 1.0f));
+    scene.AddComponent<elv::UITransformComponent>(m_gameOverTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(1.0f, 1.0f));
     auto& gameOverText = scene.AddComponent<elv::TextComponent>(m_gameOverTextEntity, "Game Over!", kTextColor, "kenvector_future");
     gameOverText.Hide();
 
     m_restartMenuTextEntity = scene.CreateEntity();
-    scene.AddComponent<elv::RectTransformComponent>(m_restartMenuTextEntity, lia::vec2(37.0f, 50.0f), lia::vec2(0.6f, 0.6f));
+    scene.AddComponent<elv::UITransformComponent>(m_restartMenuTextEntity, lia::vec2(37.0f, 50.0f), lia::vec2(0.6f, 0.6f));
     auto& restartText = scene.AddComponent<elv::TextComponent>(m_restartMenuTextEntity, "Press P to start new game", kTextColor, "kenvector_future");
     restartText.Hide();
 
     m_nextWaveTextEntity = scene.CreateEntity();
-    scene.AddComponent<elv::RectTransformComponent>(m_nextWaveTextEntity, lia::vec2(37.0f, 40.0f), lia::vec2(0.8f, 0.8f));
+    scene.AddComponent<elv::UITransformComponent>(m_nextWaveTextEntity, lia::vec2(37.0f, 40.0f), lia::vec2(0.8f, 0.8f));
     auto& nextWaveText = scene.AddComponent<elv::TextComponent>(m_nextWaveTextEntity, "Next round", kTextColor, "kenvector_future");
     nextWaveText.Hide();
 
@@ -746,7 +746,7 @@ void Invaders::OnRoundStart()
     scene.AddComponent<elv::AABBComponent>(ship, kPlayerAabbSize);
     scene.AddComponent<elv::TagComponent>(ship, "player");
 
-    scene.AddComponent<elv::RectTransformComponent>(ship, lia::vec2(1.0f, 1.0f), lia::vec2(0.6f, 0.6f));
+    scene.AddComponent<elv::UITransformComponent>(ship, lia::vec2(1.0f, 1.0f), lia::vec2(0.6f, 0.6f));
     scene.AddComponent<elv::TextComponent>(ship, "Score: 0", kTextColor);
 
     // player lifes

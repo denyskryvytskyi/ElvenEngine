@@ -49,7 +49,7 @@ Application::Application()
     gAudioManager.Init();
     gSceneManager.Init();
 
-#if EDITOR_MODE
+#if MODULE_EDITOR_ENABLED
     if (gEngineSettings.enableEditor) {
         m_imGuiOverlay.Init();
         m_editor.OnInit();
@@ -80,7 +80,7 @@ Application::~Application()
 {
     OnDestroy();
 
-#if EDITOR_MODE
+#if MODULE_EDITOR_ENABLED
     if (gEngineSettings.enableEditor) {
         m_imGuiOverlay.Shutdown();
     }
@@ -153,7 +153,7 @@ void Application::Run()
             m_renderer.EndScene();
         }
 
-#if EDITOR_MODE
+#if MODULE_EDITOR_ENABLED
         if (gEngineSettings.enableEditor) {
             PROFILE_SCOPE("ImGui Render in: ");
             m_imGuiOverlay.Begin();

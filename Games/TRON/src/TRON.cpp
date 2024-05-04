@@ -117,27 +117,27 @@ void TRON::OnCreate()
 
     // text
     m_startMenuText1Entity = scene.CreateEntity();
-    scene.AddComponent<elv::RectTransformComponent>(m_startMenuText1Entity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
+    scene.AddComponent<elv::UITransformComponent>(m_startMenuText1Entity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
     scene.AddComponent<elv::TextComponent>(m_startMenuText1Entity, "Grid initialization...");
     m_startMenuText2Entity = scene.CreateEntity();
-    scene.AddComponent<elv::RectTransformComponent>(m_startMenuText2Entity, lia::vec2(37.0f, 40.0f), lia::vec2(0.6f, 0.6f));
+    scene.AddComponent<elv::UITransformComponent>(m_startMenuText2Entity, lia::vec2(37.0f, 40.0f), lia::vec2(0.6f, 0.6f));
     scene.AddComponent<elv::TextComponent>(m_startMenuText2Entity, "Press P to start the line");
     m_startMenuText3Entity = scene.CreateEntity();
-    scene.AddComponent<elv::RectTransformComponent>(m_startMenuText3Entity, lia::vec2(37.0f, 50.0f), lia::vec2(0.6f, 0.6f));
+    scene.AddComponent<elv::UITransformComponent>(m_startMenuText3Entity, lia::vec2(37.0f, 50.0f), lia::vec2(0.6f, 0.6f));
     scene.AddComponent<elv::TextComponent>(m_startMenuText3Entity, "Press Q to leave the line");
 
     m_gameOverTextEntity = scene.CreateEntity();
-    scene.AddComponent<elv::RectTransformComponent>(m_gameOverTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
+    scene.AddComponent<elv::UITransformComponent>(m_gameOverTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
     auto& gameOverText = scene.AddComponent<elv::TextComponent>(m_gameOverTextEntity);
     gameOverText.Hide();
 
     m_restartMenuTextEntity = scene.CreateEntity();
-    scene.AddComponent<elv::RectTransformComponent>(m_restartMenuTextEntity, lia::vec2(37.0f, 40.0f), lia::vec2(0.6f, 0.6f));
+    scene.AddComponent<elv::UITransformComponent>(m_restartMenuTextEntity, lia::vec2(37.0f, 40.0f), lia::vec2(0.6f, 0.6f));
     auto& restartText = scene.AddComponent<elv::TextComponent>(m_restartMenuTextEntity, "Press R to restart the line");
     restartText.Hide();
 
     m_pauseMenuTextEntity = scene.CreateEntity();
-    scene.AddComponent<elv::RectTransformComponent>(m_pauseMenuTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
+    scene.AddComponent<elv::UITransformComponent>(m_pauseMenuTextEntity, lia::vec2(37.0f, 30.0f), lia::vec2(0.6f, 0.6f));
     auto& pauseText = scene.AddComponent<elv::TextComponent>(m_pauseMenuTextEntity, "Press Space to resume the line");
     pauseText.Hide();
 
@@ -266,7 +266,7 @@ void TRON::OnStartGame()
         quadPlayer1.color = lightCycleColor;
         scene.AddComponent<LightCycleComponent>(player1);
 
-        scene.AddComponent<elv::RectTransformComponent>(player1, lia::vec2(0.0f));
+        scene.AddComponent<elv::UITransformComponent>(player1, lia::vec2(0.0f));
         scene.AddComponent<elv::TextComponent>(player1, "0", player1LineColor);
 
         // player 2
@@ -290,7 +290,7 @@ void TRON::OnStartGame()
         lightcycleComponent.leftKey = elv::key::Left;
         lightcycleComponent.rightKey = elv::key::Right;
 
-        scene.AddComponent<elv::RectTransformComponent>(player2, lia::vec2(95.0f, 0.0f));
+        scene.AddComponent<elv::UITransformComponent>(player2, lia::vec2(95.0f, 0.0f));
         scene.AddComponent<elv::TextComponent>(player2, "0", player2LineColor);
 
         //
