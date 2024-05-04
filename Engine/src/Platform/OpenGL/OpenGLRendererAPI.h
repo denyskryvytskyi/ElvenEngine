@@ -18,6 +18,8 @@ class OpenGLRendererAPI : public RendererAPI {
 
     void DisableByteAlignment() override;
 
+    void BindDefaultFramebuffer() override;
+
     void DrawIndexed(const SharedPtr<VertexArray>& vertexArray, const std::uint32_t indexCount = 0, const RenderTopology topology = RenderTopology::Triangles) override;
 };
 

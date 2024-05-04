@@ -28,17 +28,13 @@ public:
     static void StartBatch();
     static void NextBatch();
 
-    /**
-     * @param angle Rotation angle around Z axis in degrees
-     */
-    static void DrawQuad(const lia::vec3& pos, const lia::vec3& scale, float rotation, const lia::vec4& color = lia::vec4(1.0f));
-    static void DrawQuad(const SharedPtr<Texture>& texture, const lia::vec3& pos, const lia::vec3& scale, float rotation, const lia::vec4& color = lia::vec4(1.0f));
+    static void DrawQuad(const lia::mat4& modelMatrix, const lia::vec4& color = lia::vec4(1.0f));
+    static void DrawQuad(const SharedPtr<Texture>& texture, const lia::mat4& modelMatrix, const lia::vec4& color = lia::vec4(1.0f));
 
     static Telemetry GetTelemetry() { return s_telemetry; }
 
 private:
-    static void DrawQuad(const lia::vec3& pos, const lia::vec3& scale, float rotation, const lia::vec4& color, int textureUnit);
-    static void DrawQuad(const lia::mat4& model, const lia::vec4& color, int textureUnit = 0);
+    static void DrawQuad(const lia::mat4& modelMatrix, const lia::vec4& color, int textureUnit);
 
 private:
     static Renderer2DData s_data;

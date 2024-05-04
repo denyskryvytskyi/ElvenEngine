@@ -160,7 +160,7 @@ void SceneHierarchyPanel::DrawEntity(const ecs::Entity parentEntity)
             nodeName = fmt::format("Entity_{}", m_entityNameCounter++);
         }
 
-        const bool opened = ImGui::TreeNodeEx((void*)(intptr_t)nodeEntity, flags, nodeName.c_str());
+        const bool opened = ImGui::TreeNodeEx(reinterpret_cast<void*>((intptr_t)nodeEntity), flags, nodeName.c_str());
         if (ImGui::IsItemClicked()) {
             m_selectedEntity = nodeEntity;
         }
@@ -206,7 +206,7 @@ void SceneHierarchyPanel::DrawProperties()
         DisplayAddComponentEntry<PointLightComponent>("Point Light");
         DisplayAddComponentEntry<SpotLightComponent>("Spotlight");
         DisplayAddComponentEntry<TextComponent>("Text");
-        DisplayAddComponentEntry<RectTransformComponent>("UI Transform");
+        DisplayAddComponentEntry<UITransformComponent>("UI Transform");
         DisplayAddComponentEntry<SpriteComponent>("Sprite");
         DisplayAddComponentEntry<SoundComponent>("Sound");
 
@@ -243,15 +243,19 @@ void SceneHierarchyPanel::DrawProperties()
 
     // ====== TRANSFORM ======
     DrawComponent<TransformComponent>("Transform", m_selectedEntity, m_context, [](TransformComponent& component) {
-        if (DrawVec3Control("model_pos", "Position", component.pos)) {
-            component.isDirty = true;
+        lia::vec3 position = component.GetPosition();
+        if (DrawVec3Control("model_pos", "Position", position)) {
+            component.SetPosition(position);
         }
 
-        if (DrawVec3Control("model_rotation", "Rotation", component.rotation)) {
-            component.isDirty = true;
+        lia::vec3 rotation = lia::degrees(component.GetRotation());
+        if (DrawVec3Control("model_rotation", "Rotation", rotation)) {
+            component.SetRotation(lia::radians(rotation));
         }
-        if (DrawVec3Control("model_scale", "Scale", component.scale)) {
-            component.isDirty = true;
+
+        lia::vec3 scale = component.GetScale();
+        if (DrawVec3Control("model_scale", "Scale", scale)) {
+            component.SetScale(scale);
         }
     });
 
@@ -451,7 +455,7 @@ void SceneHierarchyPanel::DrawProperties()
         editor::DrawRGBAColorControl("color##text", component.color);
     });
 
-    DrawComponent<RectTransformComponent>("UI Transform", m_selectedEntity, m_context, [](RectTransformComponent& component) {
+    DrawComponent<UITransformComponent>("UI Transform", m_selectedEntity, m_context, [](UITransformComponent& component) {
         editor::DrawVec2Control("Position", "pos", component.pos);
         editor::DrawVec2Control("Scale", "scale", component.scale);
     });

@@ -108,6 +108,11 @@ void OpenGLRendererAPI::DisableByteAlignment()
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 }
 
+void OpenGLRendererAPI::BindDefaultFramebuffer()
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void OpenGLRendererAPI::DrawIndexed(const SharedPtr<VertexArray>& vertexArray, const std::uint32_t indexCount, const RenderTopology topology)
 {
     const std::uint32_t count = indexCount ? indexCount : vertexArray->GetIndexCount();

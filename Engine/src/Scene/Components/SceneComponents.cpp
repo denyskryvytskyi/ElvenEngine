@@ -60,12 +60,12 @@ void SpriteComponent::LoadTexture()
     }
 }
 
-void to_json(nlohmann::json& j, const RectTransformComponent& t)
+void to_json(nlohmann::json& j, const UITransformComponent& t)
 {
     j["pos"] = t.pos;
     j["scale"] = t.scale;
 }
-void from_json(const nlohmann::json& j, RectTransformComponent& t)
+void from_json(const nlohmann::json& j, UITransformComponent& t)
 {
     j.at("position").get_to(t.pos);
     j.at("scale").get_to(t.scale);

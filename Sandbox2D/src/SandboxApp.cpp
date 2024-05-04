@@ -72,21 +72,21 @@ void Sandbox2D::OnCreate()
     auto& back_sprite = scene.AddComponent<elv::SpriteComponent>(back_entity);
     back_sprite.SetTexture("battleground", "Battleground.png");
     auto& back_transform = scene.AddComponent<elv::TransformComponent>(back_entity);
-    back_transform.scale = { 384.0f, 216.0f, 1.0f };
+    back_transform.SetScale({ 384.0f, 216.0f, 1.0f });
 
     const elv::ecs::Entity skeleton_entity = scene.CreateEntity();
     auto& skeleton_sprite = scene.AddComponent<elv::SpriteComponent>(skeleton_entity);
     skeleton_sprite.SetTexture("skeleton", "Attack_3.png");
     auto& skeleton_transform = scene.AddComponent<elv::TransformComponent>(skeleton_entity);
-    skeleton_transform.scale = { 400.0f, 100.0f, 1.0f };
-    skeleton_transform.pos = { 50.0f, -25.0f, 0.0f };
+    skeleton_transform.SetPosition({ 50.0f, -25.0f, 0.0f });
+    skeleton_transform.SetScale({ 400.0f, 100.0f, 1.0f });
 
     const elv::ecs::Entity magic_entity = scene.CreateEntity();
     auto& magic_sprite = scene.AddComponent<elv::SpriteComponent>(magic_entity);
     magic_sprite.SetTexture("wizard", "Attack_1.png");
     auto& magic_transform = scene.AddComponent<elv::TransformComponent>(magic_entity);
-    magic_transform.scale = { 700.0f, 100.0f, 1.0f };
-    magic_transform.pos = { -50.0f, -25.0f, 0.0f };
+    magic_transform.SetScale({ 700.0f, 100.0f, 1.0f });
+    magic_transform.SetPosition({ -50.0f, -25.0f, 0.0f });
 }
 
 void Sandbox2D::OnUpdate(float dt)

@@ -27,7 +27,7 @@ void Render2dSystem::OnInit()
     m_trasformsPool = m_pScene->GetComponentPool<TransformComponent>();
     m_quadsPool = m_pScene->GetComponentPool<QuadComponent>();
     m_textsPool = m_pScene->GetComponentPool<TextComponent>();
-    m_rectTransformPool = m_pScene->GetComponentPool<RectTransformComponent>();
+    m_rectTransformPool = m_pScene->GetComponentPool<UITransformComponent>();
 }
 
 void Render2dSystem::OnRender(float dt)
@@ -45,7 +45,7 @@ void Render2dSystem::OnRender(float dt)
         for (auto entity : entities) {
             SpriteSortingInfo info;
             info.entity = entity;
-            info.zOrder = m_trasformsPool->GetComponent(entity).pos.z;
+            info.zOrder = m_trasformsPool->GetComponent(entity).GetPosition().z;
             sortingInfo.push_back(info);
         }
 
@@ -58,7 +58,7 @@ void Render2dSystem::OnRender(float dt)
             auto& spriteComponent = m_spritesPool->GetComponent(info.entity);
             auto& transformComponent = m_trasformsPool->GetComponent(info.entity);
             if (spriteComponent.texture != nullptr) {
-                Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, spriteComponent.color);
+                Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.GetModelMatrix(), spriteComponent.color);
             }
         }
     } else {
@@ -70,7 +70,7 @@ void Render2dSystem::OnRender(float dt)
                 auto& spriteComponent = spriteComponents[index];
                 auto& transformComponent = m_trasformsPool->GetComponent(entity);
                 if (spriteComponent.texture != nullptr) {
-                    Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, spriteComponent.color);
+                    Renderer2D::DrawQuad(spriteComponent.texture, transformComponent.GetModelMatrix(), spriteComponent.color);
                 }
             }
         }
@@ -85,7 +85,7 @@ void Render2dSystem::OnRender(float dt)
 
         auto& quadComponent = quadComponents[index];
         auto& transformComponent = m_trasformsPool->GetComponent(entity);
-        Renderer2D::DrawQuad(transformComponent.pos, transformComponent.scale, transformComponent.rotation.z, quadComponent.color);
+        Renderer2D::DrawQuad(transformComponent.GetModelMatrix(), quadComponent.color);
     }
     //
     Renderer2D::EndScene();
@@ -102,7 +102,7 @@ void Render2dSystem::OnRender(float dt)
         auto& textComponent = textComponents[i];
         if (textComponent.isVisible) {
 
-            if (m_pScene->HasComponent<RectTransformComponent>(entity)) {
+            if (m_pScene->HasComponent<UITransformComponent>(entity)) {
                 auto& rectTransform = m_rectTransformPool->GetComponent(entity);
                 TextRenderer::RenderText(renderer, textComponent.text, textComponent.fontName, rectTransform.pos, rectTransform.scale, textComponent.color);
             }

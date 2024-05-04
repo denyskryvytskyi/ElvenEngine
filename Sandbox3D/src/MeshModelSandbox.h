@@ -11,7 +11,7 @@ public:
     void OnUpdate(float dt) override;
     void OnRender(float dt) override;
     void OnProcessInput(float dt) override;
-#if EDITOR_MODE
+#if MODULE_EDITOR_ENABLED
     void OnImguiRender() override;
 #endif
 

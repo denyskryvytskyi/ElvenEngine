@@ -23,7 +23,7 @@ void Scene::OnInit()
     RegisterComponent<QuadComponent>();
     RegisterComponent<CameraComponent>();
     RegisterComponent<TextComponent>();
-    RegisterComponent<RectTransformComponent>();
+    RegisterComponent<UITransformComponent>();
     RegisterComponent<AABBComponent>();
     RegisterComponent<TagComponent>();
     RegisterComponent<PointLightComponent>();
@@ -37,7 +37,7 @@ void Scene::OnInit()
 
     // Engine systems register
     RegisterSystem<BehaviorSystem>();
-#ifdef THREE_D_MODE
+#ifdef MODULE_3D_ENABLED
     RegisterSystem<RenderSystem>();
 #endif
     RegisterSystem<Render2dSystem>();
@@ -71,8 +71,18 @@ void Scene::OnUpdate(float dt)
 {
     {
         PROFILE_SCOPE("Scene updated in: ");
+
         for (auto& system : m_systems) {
             system->OnUpdate(dt);
+        }
+
+        if (!gEngineSettings.enableSceneGraph) {
+            // if scene graph is disabled then just update tranforms for dirty components
+            for (auto& transform : GetComponents<TransformComponent>()) {
+                if (transform.IsDirty()) {
+                    transform.UpdateLocalMatrix();
+                }
+            }
         }
     }
 

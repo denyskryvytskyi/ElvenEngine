@@ -15,7 +15,7 @@
 namespace elv {
 void RenderSystem::OnInit()
 {
-    m_shader = ShaderManager::Load("mesh_phong", "mesh_phong.vert", "mesh_phong.frag");
+    m_shader = ShaderManager::Load("object_render", "object_render.vert", "object_render.frag");
     m_debugLightMesh = gMeshLibrary.GetMesh("sphere");
     m_lightShader = ShaderManager::Load("light_debug", "light_debug.vert", "light_debug.frag");
 }
@@ -35,6 +35,7 @@ void RenderSystem::OnRender(float dt)
 
     m_shader->Bind();
     m_shader->SetVector3f("u_ViewPos", camera.GetPosition());
+    m_shader->SetInteger("u_BlinnPhong", renderer.IsBlinnPhongEnabled());
 
     // ================== LIGHT UNIFORMS ===========================
 
@@ -66,7 +67,7 @@ void RenderSystem::OnRender(float dt)
             if (m_pScene->HasComponent<TransformComponent>(entity)) {
                 auto& transform = m_pScene->GetComponent<TransformComponent>(entity);
 
-                m_shader->SetVector3f(fmt::format("u_PointLights[{}].position", activePointLightsCounter), transform.pos);
+                m_shader->SetVector3f(fmt::format("u_PointLights[{}].position", activePointLightsCounter), transform.GetPosition());
                 m_shader->SetVector3f(fmt::format("u_PointLights[{}].ambient", activePointLightsCounter), pointLight.ambient);
                 m_shader->SetVector3f(fmt::format("u_PointLights[{}].diffuse", activePointLightsCounter), pointLight.diffuse);
                 m_shader->SetVector3f(fmt::format("u_PointLights[{}].specular", activePointLightsCounter), pointLight.specular);
@@ -93,8 +94,8 @@ void RenderSystem::OnRender(float dt)
             if (m_pScene->HasComponent<TransformComponent>(entity)) {
                 auto& transform = m_pScene->GetComponent<TransformComponent>(entity);
 
-                m_shader->SetVector3f(fmt::format("u_SpotLights[{}].position", activeSpotLightsCounter), transform.pos);
-                m_shader->SetVector3f(fmt::format("u_SpotLights[{}].direction", activeSpotLightsCounter), transform.rotation);
+                m_shader->SetVector3f(fmt::format("u_SpotLights[{}].position", activeSpotLightsCounter), transform.GetPosition());
+                m_shader->SetVector3f(fmt::format("u_SpotLights[{}].direction", activeSpotLightsCounter), transform.GetRotation());
                 m_shader->SetVector3f(fmt::format("u_SpotLights[{}].ambient", activeSpotLightsCounter), spotlight.ambient);
                 m_shader->SetVector3f(fmt::format("u_SpotLights[{}].diffuse", activeSpotLightsCounter), spotlight.diffuse);
                 m_shader->SetVector3f(fmt::format("u_SpotLights[{}].specular", activeSpotLightsCounter), spotlight.specular);
@@ -125,10 +126,10 @@ void RenderSystem::OnRender(float dt)
                 auto& meshComponent = meshComponents[i];
                 auto& transform = m_pScene->GetComponent<TransformComponent>(entity);
 
-                m_shader->SetMatrix4("u_NormalModel", transform.normalMatrix);
+                m_shader->SetMatrix4("u_NormalModel", transform.GetNormalModelMatrix());
                 const auto& meshPtr = meshComponent.GetMeshPtr();
                 if (meshPtr) {
-                    renderer.Submit(m_shader, meshPtr, transform.modelMatrix);
+                    renderer.Submit(m_shader, meshPtr, transform.GetModelMatrix());
                 }
             }
         }
@@ -156,7 +157,7 @@ void RenderSystem::OnRender(float dt)
                     m_lightShader->SetVector3f("u_Color.ambient", pointLight.ambient);
                     m_lightShader->SetVector3f("u_Color.diffuse", pointLight.diffuse);
 
-                    renderer.Submit(m_lightShader, m_debugLightMesh, transform.modelMatrix);
+                    renderer.Submit(m_lightShader, m_debugLightMesh, transform.GetModelMatrix());
                 }
             }
         }
@@ -174,7 +175,7 @@ void RenderSystem::OnRender(float dt)
                     m_lightShader->SetVector3f("u_Color.ambient", spotlight.ambient);
                     m_lightShader->SetVector3f("u_Color.diffuse", spotlight.diffuse);
 
-                    renderer.Submit(m_lightShader, m_debugLightMesh, transform.modelMatrix);
+                    renderer.Submit(m_lightShader, m_debugLightMesh, transform.GetModelMatrix());
                 }
             }
         }

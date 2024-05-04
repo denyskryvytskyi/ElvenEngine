@@ -21,7 +21,7 @@ private:
     SharedPtr<ecs::ComponentPool<TransformComponent>> m_trasformsPool { nullptr };
     SharedPtr<ecs::ComponentPool<QuadComponent>> m_quadsPool { nullptr };
     SharedPtr<ecs::ComponentPool<TextComponent>> m_textsPool { nullptr };
-    SharedPtr<ecs::ComponentPool<RectTransformComponent>> m_rectTransformPool { nullptr };
+    SharedPtr<ecs::ComponentPool<UITransformComponent>> m_rectTransformPool { nullptr };
 };
 
 } // namespace elv

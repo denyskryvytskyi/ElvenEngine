@@ -6,7 +6,7 @@
 #include <Scene/Components/LightComponent.h>
 #include <Scene/Components/StaticMeshComponent.h>
 
-#if EDITOR_MODE
+#if MODULE_EDITOR_ENABLED
 #    include <Editor/EditorHelpers.h>
 #    include <imgui.h>
 #endif
@@ -48,7 +48,7 @@ PrimitivesSandbox::PrimitivesSandbox()
     const auto sphere = scene.CreateEntity();
     scene.AddComponent<elv::TagComponent>(sphere, "Sphere");
     auto& sphereTransform = scene.AddComponent<elv::TransformComponent>(sphere);
-    sphereTransform.pos = lia::vec3(-1.5f, 0.0f, 0.0f);
+    sphereTransform.SetPosition(lia::vec3(-1.5f, 0.0f, 0.0f));
     auto& sphereMesh = scene.AddComponent<elv::StaticMeshComponent>(sphere, "sphere");
     auto sphereMaterial = sphereMesh.GetMaterial();
     sphereMaterial->SetAmbientColor(lia::vec3(0.5f, 0.5f, 0.5f));
@@ -60,10 +60,10 @@ PrimitivesSandbox::PrimitivesSandbox()
     const auto plane = scene.CreateEntity();
 
     scene.AddComponent<elv::TagComponent>(plane, "Plane");
-    auto& planeTransform = scene.AddComponent<elv::TransformComponent>(plane);
-    planeTransform.pos = lia::vec3(0.0f, -0.51f, 0.0f);
-    planeTransform.rotation = lia::vec3(-90.0f, 0.0f, 1.0f);
-    planeTransform.scale = lia::vec3(3.0f, 3.0f, 1.0f);
+    auto& planeTransform = scene.AddComponent<elv::TransformComponent>(plane,
+                                                                       lia::vec3(0.0f, -0.51f, 0.0f),
+                                                                       lia::vec3(-90.0f, 0.0f, 1.0f),
+                                                                       lia::vec3(3.0f, 3.0f, 1.0f));
     auto& planeMesh = scene.AddComponent<elv::StaticMeshComponent>(plane, "plane", elv::RenderTopology::TriangleStrip);
     auto planeMaterial = planeMesh.GetMaterial();
     planeMaterial->SetAmbientColor(lia::vec3(1.0f, 1.0f, 0.0f));
@@ -108,7 +108,7 @@ void PrimitivesSandbox::OnProcessInput(float dt)
 {
 }
 
-#if EDITOR_MODE
+#if MODULE_EDITOR_ENABLED
 void PrimitivesSandbox::OnImguiRender()
 {
     auto& scene = elv::GetScene();

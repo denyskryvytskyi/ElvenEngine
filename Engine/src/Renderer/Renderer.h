@@ -1,9 +1,13 @@
 #pragma once
 
 #include "CameraController.h"
+#include "PostProcessor.h"
+
 #include "RHI/RenderTarget.h"
 #include "RHI/RendererAPI.h"
 #include "RHI/Shader.h"
+
+#include "Scene/Components/LightComponent.h"
 
 namespace elv {
 
@@ -12,6 +16,15 @@ class RenderTarget;
 class VertexArray;
 
 class Renderer {
+    friend class PostProcessor;
+
+public:
+    enum class BufferBitType {
+        Color,
+        Depth,
+        ColorDepth
+    };
+
 private:
     struct SceneData {
         lia::mat4 ViewProjectionMatrix;
@@ -34,6 +47,7 @@ public:
     void EnableDepthTesting(bool enabled);
     void DisableByteAlignment();
     void EnableFaceCulling(bool enabled);
+    void ClearBufferBit(const BufferBitType colorBit);
 
     void SetClearColor(const lia::vec4& color) { m_clearColor = color; }
     const lia::vec4& GetClearColor() { return m_clearColor; }
@@ -41,13 +55,24 @@ public:
     void EnableMSAA(bool enabled);
     bool IsMSAAEnabled() const { return m_isMSAAEnabled; }
 
+    void EnableBlinnPhong(const bool enabled) { m_isBlinnPhongEnabled = enabled; }
+    bool IsBlinnPhongEnabled() const { return m_isBlinnPhongEnabled; }
+
+    PostProcessor& GetPostProcessor() { return m_postProcessor; }
+
     static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 
 private:
+    void RenderNDCQuad();
+
+private:
     bool m_isMSAAEnabled { true };
+    bool m_isBlinnPhongEnabled { false };
 
     SceneData m_sceneData;
     lia::vec4 m_clearColor { 0.2f, 0.2f, 0.2f, 1.0f };
+
+    PostProcessor m_postProcessor;
 
     UniquePtr<RendererAPI> m_rendererAPI { nullptr };
 

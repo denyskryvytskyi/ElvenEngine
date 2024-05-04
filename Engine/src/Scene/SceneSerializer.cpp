@@ -74,8 +74,8 @@ void SceneSerializer::LoadEntity(ecs::Entity entity, const nlohmann::json& jObj)
     spriteComponentRef.LoadTexture();
 
     //
-    auto rectTransform = jObj.at("RectTransform").get<RectTransformComponent>();
-    m_pScene->AddComponent(entity, std::move(rectTransform));
+    auto uiTransform = jObj.at("UITransform").get<UITransformComponent>();
+    m_pScene->AddComponent(entity, std::move(uiTransform));
 
     //
     auto text = jObj.at("Text").get<TextComponent>();
@@ -100,9 +100,9 @@ bool SceneSerializer::SaveEntity(std::pair<ecs::Entity, ecs::ComponentMask> enti
         jObj["Sprite"] = m_pScene->GetComponent<SpriteComponent>(entityInfo.first);
         isEntityHasComponents = true;
     }
-    if (entityInfo.second.test(ecs::GetComponentTypeId<RectTransformComponent>())) {
+    if (entityInfo.second.test(ecs::GetComponentTypeId<UITransformComponent>())) {
 
-        jObj["RectTransform"] = m_pScene->GetComponent<RectTransformComponent>(entityInfo.first);
+        jObj["UITransform"] = m_pScene->GetComponent<UITransformComponent>(entityInfo.first);
         isEntityHasComponents = true;
     }
     if (entityInfo.second.test(ecs::GetComponentTypeId<TextComponent>())) {

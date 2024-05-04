@@ -153,6 +153,11 @@ bool DrawSliderFloat(const std::string& label, const float min, const float max,
     return ImGui::SliderFloat(label.c_str(), &property, min, max, "value = %.3f");
 }
 
+bool DrawSliderInt(const std::string& label, const int min, const int max, int& property)
+{
+    return ImGui::SliderInt(label.c_str(), &property, min, max, "value = %d");
+}
+
 bool DrawRGBColorControl(const std::string& label, lia::vec3& colorProperty)
 {
     return ImGui::ColorEdit3(label.c_str(), colorProperty.elementsPtr());

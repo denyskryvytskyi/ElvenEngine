@@ -43,6 +43,7 @@ set(ENGINE_HEADERS
 "src/Renderer/Material.h"
 "src/Renderer/Mesh.h"
 "src/Renderer/RenderTopology.h"
+"src/Renderer/PostProcessor.h"
 "src/Platform/Windows/WindowsWindow.h"
 "src/Platform/OpenGL/OpenGLBuffer.h"
 "src/Platform/OpenGL/OpenGLContext.h"
@@ -77,7 +78,7 @@ set(ENGINE_HEADERS
 )
 
 #editor stuff
-if (EDITOR_MODE)
+if (MODULE_EDITOR_ENABLED)
     set(ENGINE_HEADERS
     ${ENGINE_HEADERS}
     "src/Editor/ImGuiOverlay.h"
@@ -112,6 +113,7 @@ set(ENGINE_SOURCES
 "src/Renderer/TextRenderer.cpp"
 "src/Renderer/Mesh.cpp"
 "src/Renderer/Material.cpp"
+"src/Renderer/PostProcessor.cpp"
 "src/Platform/OpenGL/OpenGLBuffer.cpp"
 "src/Platform/OpenGL/OpenGLContext.cpp"
 "src/Platform/OpenGL/OpenGLRendererAPI.cpp"
@@ -146,7 +148,7 @@ set(ENGINE_SOURCES
 ${ENGINE_HEADERS}
 )
 
-if (EDITOR_MODE)
+if (MODULE_EDITOR_ENABLED)
     set(ENGINE_SOURCES
     ${ENGINE_SOURCES}
     "src/Editor/ImGuiOverlay.cpp"
@@ -264,7 +266,7 @@ add_subdirectory(${VENDOR_PATH}/GLAD)
 add_subdirectory(${VENDOR_PATH}/stb)
 
 
-if (EDITOR_MODE)
+if (MODULE_EDITOR_ENABLED)
     set(IMGUI_DIR ${imgui_SOURCE_DIR})
 
     set(IMGUI_PUBLIC_HEADERS
@@ -301,21 +303,29 @@ target_include_directories(${LIBRARY_NAME}
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-find_library(irrklang
-    NAMES
-      irrKlang
-    PATHS
-      ${IRRKLANG_INSTALL_DIR}
-  )
+if (MODULE_SOUND_ENABLED)
+    if (APPLE)
+        messsage("Sound module is not yet supported on MacOS")
+    else()
+        target_include_directories(${LIBRARY_NAME} PUBLIC ${irrklang_SOURCE_DIR}/include)
+
+        find_library(irrklang
+            NAMES
+            irrKlang
+            PATHS
+            ${IRRKLANG_INSTALL_DIR}
+        )
+    endif()
+endif()
+
+
 target_link_libraries(${LIBRARY_NAME} glfw spdlog freetype fmt glad stb)
 target_link_libraries(${LIBRARY_NAME} nlohmann_json::nlohmann_json)
 target_include_directories(${LIBRARY_NAME} PUBLIC ${lia_SOURCE_DIR}/include)
-target_include_directories(${LIBRARY_NAME} PUBLIC ${irrklang_SOURCE_DIR}/include)
+
 target_include_directories(${LIBRARY_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
-# target_link_libraries(${LIBRARY_NAME} irrklang)
 
-
-if (THREE_D_MODE)
+if (MODULE_3D_ENABLED)
     target_link_libraries(${LIBRARY_NAME} zlib assimp)
 endif()
 

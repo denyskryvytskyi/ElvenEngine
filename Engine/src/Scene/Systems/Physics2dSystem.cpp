@@ -38,14 +38,14 @@ void Physics2dSystem::OnUpdate(float dt)
                 check whether right side of the 1st aabb is greater then left side of the 2nd aabb
                 and check whether right side of the 2nd aabb is greater then left side of the 1st aabb
             */
-            const bool isCollisionX = transform1.pos.x + halfAabbSize1.x >= transform2.pos.x - halfAabbSize2.x
-                && transform1.pos.x - halfAabbSize1.x <= transform2.pos.x + halfAabbSize2.x;
+            const bool isCollisionX = transform1.GetPosition().x + halfAabbSize1.x >= transform2.GetPosition().x - halfAabbSize2.x
+                && transform1.GetPosition().x - halfAabbSize1.x <= transform2.GetPosition().x + halfAabbSize2.x;
             /*
                 check whether top side of the 1st aabb is greater then bottom side of the 2nd aabb
                 and check whether top side of the 2nd aabb is greater then bottom side of the 1st aabb
             */
-            const bool isCollisionY = transform1.pos.y + halfAabbSize1.y >= transform2.pos.y - halfAabbSize2.y
-                && transform1.pos.y - halfAabbSize1.y <= transform2.pos.y + halfAabbSize2.y;
+            const bool isCollisionY = transform1.GetPosition().y + halfAabbSize1.y >= transform2.GetPosition().y - halfAabbSize2.y
+                && transform1.GetPosition().y - halfAabbSize1.y <= transform2.GetPosition().y + halfAabbSize2.y;
 
             if (isCollisionX && isCollisionY) {
                 events::TriggerEvent(events::CollisionEnter2dEvent(aabb1Entity, aabb2Entity));
