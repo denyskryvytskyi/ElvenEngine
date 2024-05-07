@@ -58,5 +58,6 @@ private:
 #else
 #    define PROFILE(...)
 #    define PROFILE_SCOPE(...)
+#    define PROFILE_TO_LOG(...)
 #endif
 } // namespace elv

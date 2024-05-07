@@ -14,6 +14,7 @@ SharedPtr<Shader> Shader::Create(const std::string& name, const ShaderProgramSou
         EL_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
         return nullptr;
     case RendererAPI::API::OpenGL:
+    case RendererAPI::API::OpenGL41: // should be backward compatible
         return MakeSharedPtr<OpenGLShader>(name, shaderSrc);
     }
 

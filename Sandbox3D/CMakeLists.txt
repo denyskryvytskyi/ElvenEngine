@@ -52,29 +52,29 @@ if(WIN32)
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     ${ASSIMP_BIN_PATH}$<CONFIG>/${ASSIMP_DLL}
     ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/${ASSIMP_DLL})
-elseif(APPLE)
-  set(IRRKLANG_BIN_PATH ${CMAKE_BINARY_DIR}/_deps/irrklang/bin/macosx-gcc)
+# elseif(APPLE)
+#   set(IRRKLANG_BIN_PATH ${CMAKE_BINARY_DIR}/_deps/irrklang/bin/macosx-gcc)
 
-  target_link_libraries(${APP_NAME} PUBLIC
-    ${IRRKLANG_BIN_PATH}/libirrklang.dylib
-    ${IRRKLANG_BIN_PATH}/ikpMP3.dylib
-    ${IRRKLANG_BIN_PATH}/ikpFlac.dylib)
+#   target_link_libraries(${APP_NAME} PUBLIC
+#     ${IRRKLANG_BIN_PATH}/libirrklang.dylib
+#     ${IRRKLANG_BIN_PATH}/ikpMP3.dylib
+#     ${IRRKLANG_BIN_PATH}/ikpFlac.dylib)
 
-  # add_custom_command(TARGET ${APP_NAME} POST_BUILD
-  #   COMMAND ${CMAKE_COMMAND} -E copy_if_different
-  #   ${IRRKLANG_BIN_PATH}libirrklang.dylib
-  #   ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/libirrklang.dylib
+#   # add_custom_command(TARGET ${APP_NAME} POST_BUILD
+#   #   COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#   #   ${IRRKLANG_BIN_PATH}libirrklang.dylib
+#   #   ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/libirrklang.dylib
 
-  #   COMMAND ${CMAKE_COMMAND} -E copy_if_different
-  #   ${IRRKLANG_BIN_PATH}ikpMP3.dylib
-  #   ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/ikpMP3.dylib
+#   #   COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#   #   ${IRRKLANG_BIN_PATH}ikpMP3.dylib
+#   #   ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/ikpMP3.dylib
 
-  #   COMMAND ${CMAKE_COMMAND} -E copy_if_different
-  #   ${IRRKLANG_BIN_PATH}ikpFlac.dylib
-  #   ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/ikpFlac.dylib
-  # )
-else()
-  message("This is not supported platform for now!")
+#   #   COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#   #   ${IRRKLANG_BIN_PATH}ikpFlac.dylib
+#   #   ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/ikpFlac.dylib
+#   # )
+# else()
+  # message("This is not supported platform for now!")
 endif()
 
 set(RES_COMMON_PATH ${PROJECT_SOURCE_DIR}/Engine/assets)

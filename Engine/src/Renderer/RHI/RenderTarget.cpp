@@ -5,6 +5,7 @@
 #include "Texture.h"
 
 #include "Platform/OpenGL/OpenGLRenderTarget.h"
+#include "Platform/OpenGL41/OpenGL41RenderTarget.h"
 
 namespace elv {
 
@@ -25,6 +26,8 @@ UniquePtr<RenderTarget> RenderTarget::Create()
         return nullptr;
     case RendererAPI::API::OpenGL:
         return MakeUniquePtr<OpenGLRenderTarget>();
+    case RendererAPI::API::OpenGL41:
+        return MakeUniquePtr<OpenGL41RenderTarget>();
     }
 
     EL_CORE_ASSERT(false, "Unknown RendererAPI!");

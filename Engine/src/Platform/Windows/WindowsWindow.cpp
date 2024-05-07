@@ -102,8 +102,15 @@ void WindowsWindow::Init(const WindowProps& props)
         glfwSetErrorCallback(GLFWErrorCallback);
     }
 
+// TODO: avoid using macros here
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+#else
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+#endif
+
     glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_TRUE);
     glfwWindowHint(GLFW_SAMPLES, 4);
 

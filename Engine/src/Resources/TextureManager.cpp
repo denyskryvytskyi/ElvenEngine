@@ -25,7 +25,7 @@ static void LoadTextureFromFile(std::vector<TextureManager::LoadedTextureInfo>& 
     info.textureName = textureName;
 
     {
-        PROFILE_TO_LOG(fmt::format("Texture {} is loaded in", textureName.c_str()))
+        PROFILE_TO_LOG(fmt::format("Texture {} is loaded in", textureName.c_str()));
         info.data = stbi_load(filepath.data(), &info.width, &info.height, &info.nrChannels, 0);
     }
 
@@ -68,16 +68,11 @@ SharedPtr<Texture> TextureManager::Load(const std::string& textureName, std::uin
     auto it = m_textures.find(textureName);
 
     if (it == m_textures.end()) {
-        switch (Renderer::GetAPI()) {
-        case RendererAPI::API::OpenGL: {
-            SharedPtr<Texture> texture = MakeSharedPtr<OpenGLTexture>(width, height, nrChannels);
-            if (save) {
-                m_textures.insert({ textureName, texture });
-            }
-            return texture;
-        }
-        default:
-            EL_CORE_ASSERT(false, "Unknown Renderer API!");
+        SharedPtr<Texture> texture = Texture::Create(
+            width, height, nrChannels);
+
+        if (save) {
+            m_textures.insert({ textureName, texture });
         }
     } else {
         EL_CORE_INFO("Texture {0} is already loaded.", textureName);
@@ -89,14 +84,8 @@ SharedPtr<Texture> TextureManager::Load(const std::string& textureName, std::uin
 
 SharedPtr<Texture> TextureManager::Load(const std::uint32_t width, const std::uint32_t height, const Texture::Info& info)
 {
-    switch (Renderer::GetAPI()) {
-    case RendererAPI::API::OpenGL:
-        SharedPtr<Texture> texture = MakeSharedPtr<OpenGLTexture>(width, height, info);
-        return texture;
-    }
-
-    EL_CORE_ASSERT(false, "Unknown Renderer API!");
-    return nullptr;
+    return Texture::Create(
+        width, height, info);
 }
 
 void TextureManager::Init()
@@ -161,19 +150,13 @@ std::vector<std::string> TextureManager::GetTextureNames() const
 
 void TextureManager::CreateTexture(const LoadedTextureInfo& info)
 {
-    switch (Renderer::GetAPI()) {
-    case RendererAPI::API::OpenGL: {
-        SharedPtr<Texture> texture = MakeSharedPtr<OpenGLTexture>(info.width, info.height, info.nrChannels);
-        texture->SetData(info.data);
+    auto texture = Texture::Create(info.width, info.height, info.nrChannels);
 
-        m_textures.insert({ info.textureName, std::move(texture) });
+    texture->SetData(info.data);
 
-        events::TriggerEvent(events::TextureLoadedEvent { info.textureName }, string_id(info.textureName));
-        break;
-    }
-    default:
-        EL_CORE_ASSERT(false, "Unknown Renderer API!");
-    }
+    m_textures.insert({ info.textureName, std::move(texture) });
+
+    events::TriggerEvent(events::TextureLoadedEvent { info.textureName }, string_id(info.textureName));
 }
 
 } // namespace elv

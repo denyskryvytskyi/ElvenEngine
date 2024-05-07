@@ -4,6 +4,7 @@
       "name": "Mac",
       "includePath": [
         "${workspaceFolder}/**",
+        "${workspaceFolder}/Engine/src/**",
         "${workspaceFolder}/build/_deps/json-src/include"
       ],
       "defines": [],
@@ -12,7 +13,9 @@
       ],
       "compilerPath": "/usr/bin/clang",
       "cStandard": "c17",
-      "intelliSenseMode": "macos-clang-arm64"
+      "cppStandard": "c++17",
+      "intelliSenseMode": "macos-clang-arm64",
+      "forcedInclude": ["${workspaceFolder}/Engine/src/elpch.h"]
     }
   ],
   "version": 4
