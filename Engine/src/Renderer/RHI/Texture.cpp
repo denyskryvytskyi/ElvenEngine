@@ -5,7 +5,7 @@
 #include "Platform/OpenGL41/OpenGL41Texture.h"
 
 namespace elv {
-SharedPtr<Texture> Create(std::uint32_t width, std::uint32_t height, const Texture::Info& info)
+SharedPtr<Texture> Texture::Create(std::uint32_t width, std::uint32_t height, const Texture::Info& info)
 {
     switch (Renderer::GetAPI()) {
     case RendererAPI::API::None:
@@ -21,7 +21,7 @@ SharedPtr<Texture> Create(std::uint32_t width, std::uint32_t height, const Textu
     return nullptr;
 }
 
-SharedPtr<Texture> Create(std::uint32_t width, std::uint32_t height, std::uint32_t nrChannels = 3)
+SharedPtr<Texture> Texture::Create(std::uint32_t width, std::uint32_t height, std::uint32_t nrChannels)
 {
     switch (Renderer::GetAPI()) {
     case RendererAPI::API::None:

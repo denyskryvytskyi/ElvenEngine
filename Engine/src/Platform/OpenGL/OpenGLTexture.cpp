@@ -1,46 +1,10 @@
 #include "OpenGLTexture.h"
 
+#include "Platform/OpenGLCommon.h"
+
 #include <glad/gl.h>
 
 namespace elv {
-
-GLenum GetGLWrappingMode(const Texture::WrappingMode wrappingMode)
-{
-    switch (wrappingMode) {
-    case Texture::WrappingMode::Repeat:
-        return GL_REPEAT;
-    case Texture::WrappingMode::MirroredRepeat:
-        return GL_MIRRORED_REPEAT;
-    case Texture::WrappingMode::ClampToBorder:
-        return GL_CLAMP_TO_BORDER;
-    }
-
-    return GL_CLAMP_TO_EDGE;
-}
-
-std::pair<GLenum, GLenum> GetGLDataFormat(const Texture::InternalFormat format)
-{
-    GLenum internalFormat = GL_RGBA8;
-    GLenum dataFormat = GL_RGBA;
-
-    switch (format) {
-    case Texture::InternalFormat::RGB8:
-        internalFormat = GL_RGB8;
-        dataFormat = GL_RGB;
-        break;
-    case Texture::InternalFormat::R8:
-        internalFormat = GL_R8;
-        dataFormat = GL_RED;
-        break;
-    case Texture::InternalFormat::DepthStencil:
-        internalFormat = GL_DEPTH24_STENCIL8;
-        dataFormat = GL_DEPTH_STENCIL;
-        break;
-    }
-
-    return std::make_pair(internalFormat, dataFormat);
-}
-
 OpenGLTexture::OpenGLTexture(std::uint32_t width, std::uint32_t height, std::uint32_t nrChannels /* = 3 */)
     : m_width(width)
     , m_height(height)
@@ -68,7 +32,7 @@ OpenGLTexture::OpenGLTexture(std::uint32_t width, std::uint32_t height, std::uin
 
 OpenGLTexture::OpenGLTexture(std::uint32_t width, std::uint32_t height, const Info& info)
 {
-    const auto format = GetGLDataFormat(info.InternalFormat);
+    const auto format = OpenGL::GetGLDataFormat(info.InternalFormat);
 
     if (info.Multisampled) {
         glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &m_id);
@@ -77,10 +41,10 @@ OpenGLTexture::OpenGLTexture(std::uint32_t width, std::uint32_t height, const In
         glCreateTextures(GL_TEXTURE_2D, 1, &m_id);
         glTextureStorage2D(m_id, 1, format.first, width, height);
 
-        const auto mode = GetGLWrappingMode(info.WrapR);
-        glTextureParameteri(m_id, GL_TEXTURE_WRAP_R, GetGLWrappingMode(info.WrapR));
-        glTextureParameteri(m_id, GL_TEXTURE_WRAP_S, GetGLWrappingMode(info.WrapS));
-        glTextureParameteri(m_id, GL_TEXTURE_WRAP_T, GetGLWrappingMode(info.WrapT));
+        const auto mode = OpenGL::GetGLWrappingMode(info.WrapR);
+        glTextureParameteri(m_id, GL_TEXTURE_WRAP_R, OpenGL::GetGLWrappingMode(info.WrapR));
+        glTextureParameteri(m_id, GL_TEXTURE_WRAP_S, OpenGL::GetGLWrappingMode(info.WrapS));
+        glTextureParameteri(m_id, GL_TEXTURE_WRAP_T, OpenGL::GetGLWrappingMode(info.WrapT));
         glTextureParameteri(m_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTextureParameteri(m_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
@@ -112,7 +76,7 @@ void OpenGLTexture::SetData(void* data, bool generateMipmap /* = true */)
 
 void OpenGLTexture::SetWrappingMode(const WrappingMode wrappingMode)
 {
-    auto mode = GetGLWrappingMode(wrappingMode);
+    auto mode = OpenGL::GetGLWrappingMode(wrappingMode);
 
     glTextureParameteri(m_id, GL_TEXTURE_WRAP_S, mode);
     glTextureParameteri(m_id, GL_TEXTURE_WRAP_T, mode);

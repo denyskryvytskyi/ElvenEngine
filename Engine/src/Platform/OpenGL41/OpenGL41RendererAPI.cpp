@@ -1,5 +1,6 @@
 #include "Platform/OpenGL41/OpenGL41RendererAPI.h"
 #include "Platform/OpenGL41/OpenGL41Check.h"
+#include "Platform/OpenGLCommon.h"
 
 #include <glad/gl.h>
 
@@ -64,22 +65,10 @@ void glCheckError(
 
             // Log the error
             EL_CORE_ERROR(finalMessage);
+
+            throw std::runtime_error(finalMessage);
         }
     } while (errorCode != GL_NO_ERROR);
-}
-
-GLenum GetTopology(const RenderTopology topology)
-{
-    switch (topology) {
-    case RenderTopology::TriangleStrip:
-        return GL_TRIANGLE_STRIP;
-    case RenderTopology::Lines:
-        return GL_LINES;
-    case RenderTopology::LineStrip:
-        return GL_LINE_STRIP;
-    }
-
-    return GL_TRIANGLES;
 }
 
 ////////////////////////////////////////////////////////
@@ -152,7 +141,7 @@ void OpenGL41RendererAPI::DrawIndexed(const SharedPtr<VertexArray>& vertexArray,
 {
     const std::uint32_t count = indexCount ? indexCount : vertexArray->GetIndexCount();
     vertexArray->Bind();
-    glCheck(glDrawElements(GetTopology(topology), count, GL_UNSIGNED_INT, nullptr));
+    glCheck(glDrawElements(OpenGL::GetTopology(topology), count, GL_UNSIGNED_INT, nullptr));
 }
 
 } // namespace elv

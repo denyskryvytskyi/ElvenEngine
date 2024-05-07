@@ -77,7 +77,7 @@ void OpenGLRenderTarget::InitAttachments()
     }
 
     if (glCheckNamedFramebufferStatus(m_id, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        std::cout << "Framebuffer is not complete!" << std::endl;
+        EL_CORE_ERROR("Framebuffer is not complete!");
     }
 }
 } // namespace elv

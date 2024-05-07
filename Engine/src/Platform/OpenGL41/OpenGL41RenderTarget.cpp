@@ -67,9 +67,10 @@ void OpenGL41RenderTarget::InitAttachments()
 
         m_colorTextureAttachment = textures::Load(m_size.Width, m_size.Height, info);
         glCheck(
-            glFramebufferTexture(
+            glFramebufferTexture2D(
                 GL_FRAMEBUFFER,
                 GL_COLOR_ATTACHMENT0,
+                GL_TEXTURE_2D,
                 m_colorTextureAttachment->GetId(),
                 0));
     }
@@ -83,15 +84,18 @@ void OpenGL41RenderTarget::InitAttachments()
         // glNamedFramebufferTexture(m_id, GL_DEPTH_STENCIL_ATTACHMENT, m_depthStencilAttachment->GetId(), 0);
 
         glCheck(
-            glFramebufferTexture(
+            glFramebufferTexture2D(
                 GL_FRAMEBUFFER,
                 GL_DEPTH_STENCIL_ATTACHMENT,
+                GL_TEXTURE_2D,
                 m_depthStencilAttachment->GetId(),
                 0));
     }
 
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        std::cout << "Framebuffer is not complete!" << std::endl;
+    auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+    if (status != GL_FRAMEBUFFER_COMPLETE) {
+        EL_CORE_ERROR("Framebuffer is not complete!");
     }
 }
 } // namespace elv

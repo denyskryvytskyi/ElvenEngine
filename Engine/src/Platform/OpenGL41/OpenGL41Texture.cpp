@@ -1,49 +1,13 @@
 #include "OpenGL41Texture.h"
 
 #include "Platform/OpenGL41/OpenGL41Check.h"
+#include "Platform/OpenGLCommon.h"
 
 #include <glad/gl.h>
 
 namespace elv {
 
-GLenum GetGLWrappingMode(const Texture::WrappingMode wrappingMode)
-{
-    switch (wrappingMode) {
-    case Texture::WrappingMode::Repeat:
-        return GL_REPEAT;
-    case Texture::WrappingMode::MirroredRepeat:
-        return GL_MIRRORED_REPEAT;
-    case Texture::WrappingMode::ClampToBorder:
-        return GL_CLAMP_TO_BORDER;
-    }
-
-    return GL_CLAMP_TO_EDGE;
-}
-
-std::pair<GLenum, GLenum> GetGLDataFormat(const Texture::InternalFormat format)
-{
-    GLenum internalFormat = GL_RGBA8;
-    GLenum dataFormat = GL_RGBA;
-
-    switch (format) {
-    case Texture::InternalFormat::RGB8:
-        internalFormat = GL_RGB8;
-        dataFormat = GL_RGB;
-        break;
-    case Texture::InternalFormat::R8:
-        internalFormat = GL_R8;
-        dataFormat = GL_RED;
-        break;
-    case Texture::InternalFormat::DepthStencil:
-        internalFormat = GL_DEPTH24_STENCIL8;
-        dataFormat = GL_DEPTH_STENCIL;
-        break;
-    }
-
-    return std::make_pair(internalFormat, dataFormat);
-}
-
-OpenGL41Texture::OpenGL41Texture(std::uint32_t width, std::uint32_t height, std::uint32_t nrChannels /* = 3 */)
+OpenGL41Texture::OpenGL41Texture(std::uint32_t width, std::uint32_t height, std::uint32_t nrChannels)
     : m_width(width)
     , m_height(height)
 {
@@ -71,24 +35,33 @@ OpenGL41Texture::OpenGL41Texture(std::uint32_t width, std::uint32_t height, std:
 }
 
 OpenGL41Texture::OpenGL41Texture(std::uint32_t width, std::uint32_t height, const Info& info)
+    : m_width(width)
+    , m_height(height)
 {
-    const auto format = GetGLDataFormat(info.InternalFormat);
+    const auto format = OpenGL::GetGLDataFormat(info.InternalFormat);
 
-    if (info.Multisampled) {
-        // glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &m_id);
-        // glTextureStorage2DMultisample(m_id, 4, format.first, width, height, GL_TRUE);
+    m_internalFormat = format.first;
+    m_dataFormat = format.second;
+
+    // if (info.Multisampled) {
+    //     // TODO:  Implement multisampled texture
+    //     //  glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &m_id);
+    //     //  glTextureStorage2DMultisample(m_id, 4, format.first, width, height, GL_TRUE);
+    // } else {
+    glCheck(glGenTextures(1, &m_id));
+    glCheck(glBindTexture(GL_TEXTURE_2D, m_id));
+    if (info.InternalFormat == Texture::InternalFormat::DepthStencil) {
+        glCheck(glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, m_width, m_height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr));
     } else {
-        glCheck(glGenTextures(1, &m_id));
-        glCheck(glBindTexture(GL_TEXTURE_2D, m_id));
-        glTexImage2D(GL_TEXTURE_2D, 0, m_internalFormat, m_width, m_height, 0, m_dataFormat, GL_UNSIGNED_BYTE, nullptr);
-
-        glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GetGLWrappingMode(info.WrapS)));
-        glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GetGLWrappingMode(info.WrapR)));
-        glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GetGLWrappingMode(info.WrapT)));
-        glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-        glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-        glCheck(glBindTexture(GL_TEXTURE_2D, 0));
+        glCheck(glTexImage2D(GL_TEXTURE_2D, 0, m_internalFormat, m_width, m_height, 0, m_dataFormat, GL_UNSIGNED_BYTE, nullptr));
     }
+
+    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, OpenGL::GetGLWrappingMode(info.WrapS)));
+    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, OpenGL::GetGLWrappingMode(info.WrapR)));
+    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, OpenGL::GetGLWrappingMode(info.WrapT)));
+    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+    glCheck(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
 OpenGL41Texture::~OpenGL41Texture()
@@ -121,7 +94,7 @@ void OpenGL41Texture::SetData(void* data, bool generateMipmap /* = true */)
 
 void OpenGL41Texture::SetWrappingMode(const WrappingMode wrappingMode)
 {
-    auto mode = GetGLWrappingMode(wrappingMode);
+    auto mode = OpenGL::GetGLWrappingMode(wrappingMode);
 
     glCheck(glBindTexture(GL_TEXTURE_2D, m_id));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, mode));

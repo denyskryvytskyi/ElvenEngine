@@ -74,6 +74,8 @@ SharedPtr<Texture> TextureManager::Load(const std::string& textureName, std::uin
         if (save) {
             m_textures.insert({ textureName, texture });
         }
+
+        return texture;
     } else {
         EL_CORE_INFO("Texture {0} is already loaded.", textureName);
         return it->second;

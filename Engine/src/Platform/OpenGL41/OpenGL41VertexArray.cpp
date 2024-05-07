@@ -1,39 +1,11 @@
 #include "OpenGL41VertexArray.h"
 
 #include "Platform/OpenGL41/OpenGL41Check.h"
+#include "Platform/OpenGLCommon.h"
 
 #include <glad/gl.h>
 
 namespace elv {
-static GLenum BufferAttributeTypeToOpenGLBaseType(BufferAttributeType type)
-{
-    switch (type) {
-    case BufferAttributeType::Float:
-        return GL_FLOAT;
-    case BufferAttributeType::Float2:
-        return GL_FLOAT;
-    case BufferAttributeType::Float3:
-        return GL_FLOAT;
-    case BufferAttributeType::Float4:
-        return GL_FLOAT;
-    case BufferAttributeType::Int:
-        return GL_INT;
-    case BufferAttributeType::Int2:
-        return GL_INT;
-    case BufferAttributeType::Int3:
-        return GL_INT;
-    case BufferAttributeType::Int4:
-        return GL_INT;
-    case BufferAttributeType::Bool:
-        return GL_BOOL;
-    }
-
-    EL_CORE_ASSERT(false, "Unknown BufferAttributeType!");
-    return 0;
-}
-
-////////////////////////////////////////////////////////////////////////
-
 OpenGL41VertexArray::OpenGL41VertexArray()
 {
     glCheck(
@@ -64,8 +36,8 @@ void OpenGL41VertexArray::AddVertexBuffer(const SharedPtr<VertexBuffer>& vertexB
         glCheck(
             glVertexAttribPointer(
                 attributeIndex,
-                attribute.m_size,
-                BufferAttributeTypeToOpenGLBaseType(attribute.m_type),
+                attribute.GetComponentsCount(),
+                OpenGL::BufferAttributeTypeToOpenGLBaseType(attribute.m_type),
                 attribute.m_normalized ? GL_TRUE : GL_FALSE,
                 layout.GetStride(),
                 (const void*)attribute.m_offset));
@@ -89,6 +61,10 @@ void OpenGL41VertexArray::SetIndexBuffer(const SharedPtr<IndexBuffer>& indexBuff
 void OpenGL41VertexArray::Bind() const
 {
     glCheck(glBindVertexArray(m_id));
+
+    if (m_indexBuffer) {
+        glCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer->GetId()));
+    }
 }
 
 void OpenGL41VertexArray::Unbind() const
