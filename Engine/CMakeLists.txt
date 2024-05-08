@@ -216,6 +216,12 @@ FetchContent_Declare(
         GIT_REPOSITORY "https://github.com/freetype/freetype.git"
         GIT_TAG "VER-2-13-2"
 )
+
+set(FT_DISABLE_ZLIB ON CACHE BOOL "" FORCE)
+set(FT_DISABLE_BZIP2 ON CACHE BOOL "" FORCE)
+set(FT_DISABLE_PNG ON CACHE BOOL "" FORCE)
+set(FT_DISABLE_HARFBUZZ ON CACHE BOOL "" FORCE)
+set(FT_DISABLE_BROTLI ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(freetype)
 
 FetchContent_Declare(
@@ -232,17 +238,29 @@ FetchContent_Declare(
         GIT_TAG "v1.3.1"
 )
 FetchContent_MakeAvailable(zlib)
+# ----
 
-FetchContent_Declare(assimp
-GIT_REPOSITORY "https://github.com/assimp/assimp.git"
-GIT_TAG "v5.3.1")
+FetchContent_Declare(
+        assimp
+        GIT_REPOSITORY "https://github.com/assimp/assimp.git"
+        GIT_TAG "v5.3.1"
+)
+
+# Manually tell assimp where to find zlib
+set(ZLIB_FOUND ON)
+set(ZLIB_INCLUDE_DIR ${zlib_SOURCE_DIR} CACHE PATH "zlib include directory" FORCE)
+set(ZLIB_LIBRARIES zlibstatic CACHE STRING "zlib list of libraries to link" FORCE)
+set(ZLIB_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(ASSIMP_INJECT_DEBUG_POSTFIX OFF CACHE BOOL "" FORCE)
 set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_ZLIB OFF CACHE BOOL "" FORCE)
+set(ASSIMP_INJECT_DEBUG_POSTFIX ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(assimp)
+
 
 FetchContent_Declare(
   imgui
@@ -251,9 +269,6 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(imgui)
-
-
-
 
 
 set(IRRKLANG_INSTALL_DIR ${CMAKE_BINARY_DIR}/_deps/irrklang)
@@ -316,16 +331,14 @@ target_include_directories(${LIBRARY_NAME}
 
 if (MODULE_SOUND_ENABLED)
     if (APPLE)
-        messsage("Sound module is not yet supported on MacOS")
+        messsage(FATAL_ERROR "Sound module is not yet supported on MacOS. Please disable this option for now")
     else()
         target_include_directories(${LIBRARY_NAME} PUBLIC ${irrklang_SOURCE_DIR}/include)
-
-        find_library(irrklang
-            NAMES
-            irrKlang
-            PATHS
-            ${IRRKLANG_INSTALL_DIR}
-        )
+        # irrklang is marked here STATIC to avoid IMPORTED_IMPLIB not found error on Windows
+        # the dlls are copied manually in the post build step
+        add_library(irrklang STATIC IMPORTED)
+        set_target_properties(irrklang PROPERTIES IMPORTED_LOCATION "${IRRKLANG_INSTALL_DIR}/lib/Winx64-visualStudio/irrKlang.lib")
+        target_link_libraries(${LIBRARY_NAME} irrklang)
     endif()
 endif()
 
