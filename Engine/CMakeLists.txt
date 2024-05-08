@@ -225,6 +225,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(fmt)
 
+# zlib must be built before assimp
+FetchContent_Declare(
+        zlib
+        GIT_REPOSITORY "https://github.com/madler/zlib.git"
+        GIT_TAG "v1.3.1"
+)
+FetchContent_MakeAvailable(zlib)
+
 FetchContent_Declare(assimp
 GIT_REPOSITORY "https://github.com/assimp/assimp.git"
 GIT_TAG "v5.3.1")
@@ -245,12 +253,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(imgui)
 
 
-FetchContent_Declare(
-        zlib
-        GIT_REPOSITORY "https://github.com/madler/zlib.git"
-        GIT_TAG "v1.3.1"
-)
-FetchContent_MakeAvailable(zlib)
+
 
 
 set(IRRKLANG_INSTALL_DIR ${CMAKE_BINARY_DIR}/_deps/irrklang)
