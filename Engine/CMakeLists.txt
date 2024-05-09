@@ -193,6 +193,7 @@ FetchContent_Declare(
         GIT_TAG "3.4"
 )
 FetchContent_MakeAvailable(glfw)
+set_target_properties(glfw PROPERTIES FOLDER "Libs")
 
 FetchContent_Declare(
         lia
@@ -200,6 +201,7 @@ FetchContent_Declare(
         GIT_TAG "main"
 )
 FetchContent_MakeAvailable(lia)
+set_target_properties(lia PROPERTIES FOLDER "Libs")
 
 FetchContent_Declare(
         spdlog
@@ -207,9 +209,11 @@ FetchContent_Declare(
         GIT_TAG "v1.14.1"
 )
 FetchContent_MakeAvailable(spdlog)
+set_target_properties(spdlog PROPERTIES FOLDER "Libs")
 
 FetchContent_Declare(json URL "https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz")
 FetchContent_MakeAvailable(json)
+set_target_properties(nlohmann_json PROPERTIES FOLDER "Libs")
 
 FetchContent_Declare(
         freetype
@@ -223,6 +227,7 @@ set(FT_DISABLE_PNG ON CACHE BOOL "" FORCE)
 set(FT_DISABLE_HARFBUZZ ON CACHE BOOL "" FORCE)
 set(FT_DISABLE_BROTLI ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(freetype)
+set_target_properties(freetype PROPERTIES FOLDER "Libs")
 
 FetchContent_Declare(
         fmt
@@ -230,15 +235,7 @@ FetchContent_Declare(
         GIT_TAG "10.2.1"
 )
 FetchContent_MakeAvailable(fmt)
-
-# zlib must be built before assimp
-FetchContent_Declare(
-        zlib
-        GIT_REPOSITORY "https://github.com/madler/zlib.git"
-        GIT_TAG "v1.3.1"
-)
-FetchContent_MakeAvailable(zlib)
-# ----
+set_target_properties(fmt PROPERTIES FOLDER "Libs")
 
 FetchContent_Declare(
         assimp
@@ -247,20 +244,14 @@ FetchContent_Declare(
 )
 
 # Manually tell assimp where to find zlib
-set(ZLIB_FOUND ON)
-set(ZLIB_INCLUDE_DIR ${zlib_SOURCE_DIR} CACHE PATH "zlib include directory" FORCE)
-set(ZLIB_LIBRARIES zlibstatic CACHE STRING "zlib list of libraries to link" FORCE)
-set(ZLIB_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(ASSIMP_INJECT_DEBUG_POSTFIX OFF CACHE BOOL "" FORCE)
 set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT OFF CACHE BOOL "" FORCE)
-set(ASSIMP_BUILD_ZLIB OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ZLIB ON CACHE BOOL "" FORCE)
 set(ASSIMP_INJECT_DEBUG_POSTFIX ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(assimp)
-
+set_target_properties(assimp PROPERTIES FOLDER "Libs")
 
 FetchContent_Declare(
   imgui
@@ -269,7 +260,6 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(imgui)
-
 
 set(IRRKLANG_INSTALL_DIR ${CMAKE_BINARY_DIR}/_deps/irrklang)
 
@@ -316,18 +306,16 @@ if (MODULE_EDITOR_ENABLED)
         ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
         ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
     )
+    add_library(imgui STATIC ${IMGUI_SOURCES})
 
-    target_include_directories(${LIBRARY_NAME}
+    target_include_directories(imgui
         PUBLIC ${IMGUI_DIR} ${IMGUI_DIR}/backends
     )
 
-    target_sources(${LIBRARY_NAME} PRIVATE ${IMGUI_SOURCES})
+    target_link_libraries(imgui glfw)
+    target_link_libraries(${LIBRARY_NAME} imgui)
+    set_target_properties(imgui PROPERTIES FOLDER "Libs")
 endif()
-
-
-target_include_directories(${LIBRARY_NAME}
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
-)
 
 if (MODULE_SOUND_ENABLED)
     if (APPLE)
@@ -343,14 +331,15 @@ if (MODULE_SOUND_ENABLED)
 endif()
 
 
+target_include_directories(${LIBRARY_NAME}
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
 target_link_libraries(${LIBRARY_NAME} glfw spdlog freetype fmt glad stb)
 target_link_libraries(${LIBRARY_NAME} nlohmann_json::nlohmann_json)
 target_include_directories(${LIBRARY_NAME} PUBLIC ${lia_SOURCE_DIR}/include)
 
-target_include_directories(${LIBRARY_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
-
 if (MODULE_3D_ENABLED)
-    target_link_libraries(${LIBRARY_NAME} zlib assimp)
+    target_link_libraries(${LIBRARY_NAME} assimp)
 endif()
 
 # pch header file path
