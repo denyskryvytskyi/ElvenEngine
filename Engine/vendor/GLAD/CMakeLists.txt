@@ -6,6 +6,8 @@ set(GLAD_SOURCES
 
 add_library(glad STATIC ${GLAD_SOURCES})
 
+set_target_properties(glad PROPERTIES FOLDER "Libs")
+
 target_include_directories(glad
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
         )
