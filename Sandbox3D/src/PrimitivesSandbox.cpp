@@ -62,8 +62,8 @@ PrimitivesSandbox::PrimitivesSandbox()
     scene.AddComponent<elv::TagComponent>(plane, "Plane");
     auto& planeTransform = scene.AddComponent<elv::TransformComponent>(plane,
                                                                        lia::vec3(0.0f, -0.51f, 0.0f),
-                                                                       lia::vec3(-90.0f, 0.0f, 1.0f),
-                                                                       lia::vec3(3.0f, 3.0f, 1.0f));
+                                                                       lia::vec3(3.0f, 3.0f, 1.0f),
+                                                                       lia::vec3(lia::radians(-90.0f), 0.0f, 0.0f));
     auto& planeMesh = scene.AddComponent<elv::StaticMeshComponent>(plane, "plane", elv::RenderTopology::TriangleStrip);
     auto planeMaterial = planeMesh.GetMaterial();
     planeMaterial->SetAmbientColor(lia::vec3(1.0f, 1.0f, 0.0f));

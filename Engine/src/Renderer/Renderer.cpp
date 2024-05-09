@@ -115,7 +115,7 @@ void Renderer::Submit(const SharedPtr<Shader>& shader, const SharedPtr<Mesh>& me
 
 void Renderer::Submit(const SharedPtr<VertexArray>& vertexArray, std::uint32_t indexCount, const RenderTopology topology)
 {
-    m_rendererAPI->DrawIndexed(vertexArray, indexCount);
+    m_rendererAPI->DrawIndexed(vertexArray, indexCount, topology);
 }
 
 void Renderer::OnWindowResize(std::uint32_t width, std::uint32_t height)
