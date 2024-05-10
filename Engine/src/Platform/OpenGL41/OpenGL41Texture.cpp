@@ -43,11 +43,8 @@ OpenGL41Texture::OpenGL41Texture(std::uint32_t width, std::uint32_t height, cons
     m_internalFormat = format.first;
     m_dataFormat = format.second;
 
-    // if (info.Multisampled) {
-    //     // TODO:  Implement multisampled texture
-    //     //  glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &m_id);
-    //     //  glTextureStorage2DMultisample(m_id, 4, format.first, width, height, GL_TRUE);
-    // } else {
+    // TODO: handle multisample textures if possible
+
     glCheck(glGenTextures(1, &m_id));
     glCheck(glBindTexture(GL_TEXTURE_2D, m_id));
     if (info.InternalFormat == Texture::InternalFormat::DepthStencil) {

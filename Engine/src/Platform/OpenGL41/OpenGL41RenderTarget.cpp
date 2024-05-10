@@ -81,7 +81,6 @@ void OpenGL41RenderTarget::InitAttachments()
         info.Multisampled = m_isMultisampled;
 
         m_depthStencilAttachment = textures::Load(m_size.Width, m_size.Height, info);
-        // glNamedFramebufferTexture(m_id, GL_DEPTH_STENCIL_ATTACHMENT, m_depthStencilAttachment->GetId(), 0);
 
         glCheck(
             glFramebufferTexture2D(

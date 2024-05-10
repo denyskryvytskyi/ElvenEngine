@@ -19,7 +19,7 @@ void glCheckError(
         errorCode = glGetError();
 
         if (errorCode != GL_NO_ERROR) {
-            std::string fileString = file;
+            const std::string fileString = file;
             std::string error = "Unknown error = " + std::to_string(errorCode);
             std::string description = "No description";
 
@@ -61,12 +61,14 @@ void glCheckError(
             }
             }
 
-            std::string finalMessage = "An internal OpenGL call failed in " + fileString + "(" + std::to_string(line) + ").\nExpression:\n   " + expression + "\nError description:\n   " + error + "\n   " + description + "\n";
+            const std::string finalMessage = fmt::format("An internal OpenGL call failed in {}({}).\nExpression:\n   {}\nError description:\n   {}\n   {}\n", fileString, line, expression, error, description);
 
             // Log the error
             EL_CORE_ERROR(finalMessage);
 
+#ifdef DEBUG_MODE
             throw std::runtime_error(finalMessage);
+#endif
         }
     } while (errorCode != GL_NO_ERROR);
 }
