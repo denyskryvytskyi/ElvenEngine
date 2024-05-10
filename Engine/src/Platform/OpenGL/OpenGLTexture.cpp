@@ -8,6 +8,7 @@ namespace elv {
 OpenGLTexture::OpenGLTexture(std::uint32_t width, std::uint32_t height, std::uint32_t nrChannels /* = 3 */)
     : m_width(width)
     , m_height(height)
+    , m_dataType(GL_UNSIGNED_BYTE)
 {
 
     if (nrChannels == 4) {
@@ -31,6 +32,9 @@ OpenGLTexture::OpenGLTexture(std::uint32_t width, std::uint32_t height, std::uin
 }
 
 OpenGLTexture::OpenGLTexture(std::uint32_t width, std::uint32_t height, const Info& info)
+    : m_width(width)
+    , m_height(height)
+    , m_dataType(OpenGL::GetGLTextureDataType(info.DataType))
 {
     const auto format = OpenGL::GetGLDataFormat(info.InternalFormat);
 
@@ -71,7 +75,7 @@ void OpenGLTexture::SetData(void* data, bool generateMipmap /* = true */)
     if (generateMipmap) {
         glGenerateTextureMipmap(m_id);
     }
-    glTextureSubImage2D(m_id, 0, 0, 0, m_width, m_height, m_dataFormat, GL_UNSIGNED_BYTE, data);
+    glTextureSubImage2D(m_id, 0, 0, 0, m_width, m_height, m_dataFormat, m_dataType, data);
 }
 
 void OpenGLTexture::SetWrappingMode(const WrappingMode wrappingMode)

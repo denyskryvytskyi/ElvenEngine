@@ -9,6 +9,13 @@ OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
 {
 }
 
+void OpenGLContext::PreInit()
+{
+    // Note: at PreInit phase glfw window is NOT created yet!
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+}
+
 void OpenGLContext::Init()
 {
     glfwMakeContextCurrent(m_windowHandle);

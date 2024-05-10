@@ -285,18 +285,6 @@ add_subdirectory(${VENDOR_PATH}/stb)
 if (MODULE_EDITOR_ENABLED)
     set(IMGUI_DIR ${imgui_SOURCE_DIR})
 
-    set(IMGUI_PUBLIC_HEADERS
-        ${IMGUI_DIR}/imconfig.h
-        ${IMGUI_DIR}/imgui.h
-        ${IMGUI_DIR}/imgui_internal.h # not actually public, but users might need it
-        ${IMGUI_DIR}/imstb_rectpack.h
-        ${IMGUI_DIR}/imstb_textedit.h
-        ${IMGUI_DIR}/imstb_truetype.h
-        ${IMGUI_DIR}/misc/cpp/imgui_stdlib.h
-        ${IMGUI_DIR}/backends/imgui_impl_opengl3.h
-        ${IMGUI_DIR}/backends/imgui_impl_glfw.h
-    )
-
     set(IMGUI_SOURCES
         ${IMGUI_DIR}/imgui.cpp
         ${IMGUI_DIR}/imgui_draw.cpp
@@ -305,6 +293,7 @@ if (MODULE_EDITOR_ENABLED)
         ${IMGUI_DIR}/misc/cpp/imgui_stdlib.cpp
         ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
         ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
+        ${IMGUI_DIR}/imgui_demo.cpp
     )
     add_library(imgui STATIC ${IMGUI_SOURCES})
 

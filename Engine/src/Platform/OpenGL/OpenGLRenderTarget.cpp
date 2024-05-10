@@ -71,6 +71,7 @@ void OpenGLRenderTarget::InitAttachments()
         Texture::Info info;
         info.InternalFormat = Texture::InternalFormat::DepthStencil;
         info.Multisampled = m_isMultisampled;
+        info.DataType = Texture::DataType::UnsignedInt24_8;
 
         m_depthStencilAttachment = textures::Load(m_size.Width, m_size.Height, info);
         glNamedFramebufferTexture(m_id, GL_DEPTH_STENCIL_ATTACHMENT, m_depthStencilAttachment->GetId(), 0);

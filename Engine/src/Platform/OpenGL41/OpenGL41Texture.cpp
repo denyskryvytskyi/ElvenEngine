@@ -47,11 +47,7 @@ OpenGL41Texture::OpenGL41Texture(std::uint32_t width, std::uint32_t height, cons
 
     glCheck(glGenTextures(1, &m_id));
     glCheck(glBindTexture(GL_TEXTURE_2D, m_id));
-    if (info.InternalFormat == Texture::InternalFormat::DepthStencil) {
-        glCheck(glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, m_width, m_height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr));
-    } else {
-        glCheck(glTexImage2D(GL_TEXTURE_2D, 0, m_internalFormat, m_width, m_height, 0, m_dataFormat, GL_UNSIGNED_BYTE, nullptr));
-    }
+    glCheck(glTexImage2D(GL_TEXTURE_2D, 0, m_internalFormat, m_width, m_height, 0, m_dataFormat, OpenGL::GetGLTextureDataType(info.DataType), nullptr));
 
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, OpenGL::GetGLWrappingMode(info.WrapS)));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, OpenGL::GetGLWrappingMode(info.WrapR)));

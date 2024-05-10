@@ -30,7 +30,7 @@ void Editor::OnImGuiRender()
     // Demo window
     if (false) {
         static bool showDemo = true;
-        //ImGui::ShowDemoWindow(&showDemo);
+        ImGui::ShowDemoWindow(&showDemo);
     }
 
     auto& window = Application::Get().GetWindow();

@@ -1,7 +1,6 @@
 #include "OpenGLCommon.h"
 
-namespace elv {
-namespace OpenGL {
+namespace elv::OpenGL {
 
 GLenum GetTopology(const RenderTopology topology)
 {
@@ -81,5 +80,19 @@ GLenum BufferAttributeTypeToOpenGLBaseType(BufferAttributeType type)
     return 0;
 }
 
-} // namespace OpenGL
-} // namespace elv
+GLenum GetGLTextureDataType(const Texture::DataType dataType)
+{
+    switch (dataType) {
+    case Texture::DataType::UnsignedByte:
+        return GL_UNSIGNED_BYTE;
+    case Texture::DataType::UnsignedInt32:
+        return GL_UNSIGNED_INT;
+    case Texture::DataType::UnsignedInt24_8:
+        return GL_UNSIGNED_INT_24_8;
+    }
+
+    EL_CORE_ASSERT(false, "Unknown Texture::DataType!");
+    return 0;
+}
+
+} // namespace elv::OpenGL

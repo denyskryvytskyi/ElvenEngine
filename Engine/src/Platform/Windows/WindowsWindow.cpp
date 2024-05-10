@@ -102,14 +102,9 @@ void WindowsWindow::Init(const WindowProps& props)
         glfwSetErrorCallback(GLFWErrorCallback);
     }
 
-// TODO: avoid using macros here
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-#else
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-#endif
+    m_context = GraphicsContext::Create(m_window);
+
+    m_context->PreInit();
 
     glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_TRUE);
     glfwWindowHint(GLFW_SAMPLES, 4);
@@ -123,7 +118,6 @@ void WindowsWindow::Init(const WindowProps& props)
     m_window = glfwCreateWindow(m_data.Width, m_data.Height, m_data.Title.c_str(), m_data.FullScreen ? m_monitor : nullptr, nullptr);
     ++s_GLFWwindowCount;
 
-    m_context = GraphicsContext::Create(m_window);
     m_context->Init();
 
     glfwSetWindowUserPointer(m_window, &m_data);

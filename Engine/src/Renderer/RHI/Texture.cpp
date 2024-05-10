@@ -32,5 +32,8 @@ SharedPtr<Texture> Texture::Create(std::uint32_t width, std::uint32_t height, st
     case RendererAPI::API::OpenGL41:
         return MakeSharedPtr<OpenGL41Texture>(width, height, nrChannels);
     }
+
+    EL_CORE_ASSERT(false, "Unknown RendererAPI!");
+    return nullptr;
 }
 } // namespace elv

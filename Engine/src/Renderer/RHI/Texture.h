@@ -20,7 +20,8 @@ public:
 
     enum class DataType {
         UnsignedByte,
-        UnsignedInt32
+        UnsignedInt32,
+        UnsignedInt24_8
     };
 
     struct Info {

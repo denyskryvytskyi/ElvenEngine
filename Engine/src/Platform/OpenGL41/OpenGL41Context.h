@@ -12,6 +12,7 @@ public:
 
     void Init() override;
     void SwapBuffers() override;
+    void PreInit() override;
 
 private:
     GLFWwindow* m_windowHandle { nullptr };
