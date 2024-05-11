@@ -25,10 +25,19 @@ constexpr float uiRectMax = 100.0f;
 constexpr float uiRange = uiRectMax - uiRectMin;
 
 struct Data {
-    SharedPtr<Shader> shader;
+public:
+    void Reset()
+    {
+        shader.reset();
+        vao.reset();
+        vbo.reset();
+    }
 
-    SharedPtr<VertexArray> vao;
-    SharedPtr<VertexBuffer> vbo;
+public:
+    SharedPtr<Shader> shader { nullptr };
+
+    SharedPtr<VertexArray> vao { nullptr };
+    SharedPtr<VertexBuffer> vbo { nullptr };
 
     OrthoCameraBounds cameraBounds;
 
@@ -79,6 +88,11 @@ void TextRenderer::Init(Renderer& renderer)
 
     // disable byte-alignment restriction
     renderer.DisableByteAlignment();
+}
+
+void TextRenderer::Shutdown()
+{
+    s_data.Reset();
 }
 
 void TextRenderer::PreRender(const Camera& camera)

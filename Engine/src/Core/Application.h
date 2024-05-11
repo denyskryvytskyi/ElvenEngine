@@ -66,13 +66,13 @@ protected:
     bool m_running { false };
 
     SharedPtr<CameraController> m_cameraController { nullptr };
+    UniquePtr<Window> m_window { nullptr };
     Renderer m_renderer;
 
 private:
     static Application* s_instance;
     static Telemetry s_telemetry;
 
-    UniquePtr<Window> m_window { nullptr };
     ecs::Entity m_fpsCounterEntityId { 0 };
     bool m_isPaused { false };
 

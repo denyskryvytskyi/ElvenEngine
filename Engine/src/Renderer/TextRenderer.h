@@ -10,6 +10,7 @@ class Renderer;
 class TextRenderer {
 public:
     static void Init(Renderer& renderer);
+    static void Shutdown();
 
     // Setting up projection matrix for the shader
     static void PreRender(const Camera& camera);

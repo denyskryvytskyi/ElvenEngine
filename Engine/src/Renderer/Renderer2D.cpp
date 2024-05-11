@@ -28,6 +28,17 @@ constexpr uint8_t VERTICES_PER_QUAD = 4;
 } // namespace
 
 struct Renderer2DData {
+    void Reset()
+    {
+        quadVAO.reset();
+        quadVBO.reset();
+        delete[] quadVerticesBegin;
+        for (auto& texture : textures) {
+            texture.reset();
+        }
+    }
+
+public:
     lia::mat4 viewProjectionMat;
     SharedPtr<Shader> shader;
 
@@ -100,7 +111,7 @@ void Renderer2D::Init(Renderer* renderer)
 
 void Renderer2D::Shutdown()
 {
-    delete[] s_data.quadVerticesBegin;
+    s_data.Reset();
 }
 
 void Renderer2D::BeginScene(const Camera& camera)

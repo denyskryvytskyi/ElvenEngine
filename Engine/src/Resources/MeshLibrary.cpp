@@ -57,6 +57,9 @@ void MeshLibrary::Shutdown()
     }
 
     m_futures.clear();
+
+    m_meshes.clear();
+    m_loadedMeshes.clear();
 }
 
 void MeshLibrary::LoadMesh(const std::string& name, const std::string& path, SharedPtr<Mesh> root)
