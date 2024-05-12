@@ -63,7 +63,6 @@ void OpenGL41RenderTarget::InitAttachments()
 {
     {
         Texture::Info info;
-        info.Multisampled = m_isMultisampled;
 
         m_colorTextureAttachment = textures::Load(m_size.Width, m_size.Height, info);
         glCheck(
@@ -79,7 +78,6 @@ void OpenGL41RenderTarget::InitAttachments()
         Texture::Info info;
         info.InternalFormat = Texture::InternalFormat::DepthStencil;
         info.DataType = Texture::DataType::UnsignedInt24_8;
-        info.Multisampled = m_isMultisampled;
 
         m_depthStencilAttachment = textures::Load(m_size.Width, m_size.Height, info);
 

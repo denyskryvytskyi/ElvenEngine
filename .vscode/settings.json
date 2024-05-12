@@ -6,6 +6,7 @@
     "__split_buffer": "cpp",
     "deque": "cpp",
     "list": "cpp",
-    "__config": "cpp"
+    "__config": "cpp",
+    "ios": "cpp"
   }
 }

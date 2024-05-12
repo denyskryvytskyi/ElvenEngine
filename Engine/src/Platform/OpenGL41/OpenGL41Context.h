@@ -8,9 +8,9 @@ namespace elv {
 
 class OpenGL41Context : public GraphicsContext {
 public:
-    OpenGL41Context(GLFWwindow* windowHandle);
+    OpenGL41Context();
 
-    void Init() override;
+    void Init(void* wnd) override;
     void SwapBuffers() override;
     void PreInit() override;
 

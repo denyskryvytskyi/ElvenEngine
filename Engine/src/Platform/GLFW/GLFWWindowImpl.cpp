@@ -102,7 +102,7 @@ void GLFWWindowImpl::Init(const WindowProps& props)
         glfwSetErrorCallback(GLFWErrorCallback);
     }
 
-    m_context = GraphicsContext::Create(m_window);
+    m_context = GraphicsContext::Create();
 
     m_context->PreInit();
 
@@ -118,7 +118,7 @@ void GLFWWindowImpl::Init(const WindowProps& props)
     m_window = glfwCreateWindow(m_data.Width, m_data.Height, m_data.Title.c_str(), m_data.FullScreen ? m_monitor : nullptr, nullptr);
     ++s_GLFWwindowCount;
 
-    m_context->Init();
+    m_context->Init(m_window);
 
     glfwSetWindowUserPointer(m_window, &m_data);
     SetVSync(m_data.VSync);

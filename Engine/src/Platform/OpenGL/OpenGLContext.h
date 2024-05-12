@@ -8,9 +8,9 @@ namespace elv {
 
 class OpenGLContext : public GraphicsContext {
 public:
-    OpenGLContext(GLFWwindow* windowHandle);
+    OpenGLContext();
 
-    void Init() override;
+    void Init(void* wnd) override;
     void SwapBuffers() override;
     void PreInit() override;
 

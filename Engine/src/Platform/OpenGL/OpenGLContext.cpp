@@ -4,8 +4,8 @@
 #include <glad/gl.h>
 
 namespace elv {
-OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
-    : m_windowHandle(windowHandle)
+OpenGLContext::OpenGLContext()
+    : m_windowHandle(nullptr)
 {
 }
 
@@ -16,8 +16,10 @@ void OpenGLContext::PreInit()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 }
 
-void OpenGLContext::Init()
+void OpenGLContext::Init(void* wnd)
 {
+    m_windowHandle = static_cast<GLFWwindow*>(wnd);
+    EL_CORE_ASSERT(m_windowHandle, "OpenGLContext window handle is null. Did you forget to create a window?");
     glfwMakeContextCurrent(m_windowHandle);
 
     int status = gladLoadGL(glfwGetProcAddress);
