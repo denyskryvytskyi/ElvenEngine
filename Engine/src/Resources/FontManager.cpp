@@ -14,6 +14,11 @@ FontManager gFontManager;
 constexpr uint32_t fontSize = 64;
 constexpr uint16_t asciiCharNumToLoad = 128;
 
+void FontManager::Shutdown()
+{
+    m_fonts.clear();
+}
+
 void FontManager::Load(const std::string& fontName, const std::string& fontPath)
 {
     EL_CORE_INFO("Font {0} loading...", fontName);

@@ -12,6 +12,7 @@
 #include "Renderer/Renderer2D.h"
 #include "Renderer/TextRenderer.h"
 
+#include "Resources/FontManager.h"
 #include "Resources/MeshLibrary.h"
 #include "Resources/TextureManager.h"
 
@@ -86,12 +87,13 @@ Application::~Application()
     }
 #endif
 
+    gFontManager.Shutdown();
     gAudioManager.Shutdown();
     events::gEventManager.Shutdown();
     gMeshLibrary.Shutdown();
     gSceneManager.Shutdown();
     gTextureManager.Shutdown();
-    m_renderer.Shutdown();
+    TextRenderer::Shutdown();
     Renderer2D::Shutdown();
 }
 

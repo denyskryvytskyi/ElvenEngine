@@ -21,6 +21,8 @@ public:
     FontManager(const FontManager&) = delete;
     const FontManager& operator=(const FontManager&) = delete;
 
+    void Shutdown();
+
     // Precompile a list of glyphs from the font
     void Load(const std::string& fontName, const std::string& fontPath);
 

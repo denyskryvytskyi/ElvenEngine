@@ -14,6 +14,7 @@ public:
     void SetPositionX(const float x);
     void SetPositionY(const float y);
     void SetPositionZ(const float z);
+    // Rotation angles in radians
     void SetRotation(const lia::vec3& rotation);
     void SetScale(const lia::vec3& scale);
 
