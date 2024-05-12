@@ -9,7 +9,7 @@ namespace elv {
 
 class GraphicsContext;
 
-class WindowsWindow : public Window {
+class GLFWWindowImpl : public Window {
 private:
     struct WindowData {
         std::string Title;
@@ -20,8 +20,8 @@ private:
     };
 
 public:
-    WindowsWindow(const WindowProps& props);
-    ~WindowsWindow() override;
+    GLFWWindowImpl(const WindowProps& props);
+    ~GLFWWindowImpl() override;
 
     void OnUpdate() override;
 

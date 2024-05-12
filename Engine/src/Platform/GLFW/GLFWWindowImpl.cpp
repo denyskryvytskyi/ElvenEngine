@@ -1,4 +1,4 @@
-#include "Platform/Windows/WindowsWindow.h"
+#include "Platform/GLFW/GLFWWindowImpl.h"
 #include "Platform/OpenGL/OpenGLContext.h"
 
 #include "Events/ApplicationEvent.h"
@@ -28,23 +28,23 @@ static void GLFWErrorCallback(int error, const char* description)
     EL_CORE_ASSERT(false, "GLFW erroe calllback");
 }
 
-WindowsWindow::WindowsWindow(const WindowProps& props)
+GLFWWindowImpl::GLFWWindowImpl(const WindowProps& props)
 {
     Init(props);
 }
 
-WindowsWindow::~WindowsWindow()
+GLFWWindowImpl::~GLFWWindowImpl()
 {
     Shutdown();
 }
 
-void WindowsWindow::OnUpdate()
+void GLFWWindowImpl::OnUpdate()
 {
     m_context->SwapBuffers();
     glfwPollEvents();
 }
 
-void WindowsWindow::SetVSync(bool enabled)
+void GLFWWindowImpl::SetVSync(bool enabled)
 {
     if (enabled)
         glfwSwapInterval(1);
@@ -54,12 +54,12 @@ void WindowsWindow::SetVSync(bool enabled)
     m_data.VSync = enabled;
 }
 
-bool WindowsWindow::IsVSync() const
+bool GLFWWindowImpl::IsVSync() const
 {
     return m_data.VSync;
 }
 
-void WindowsWindow::SetFullScreen(bool enabled)
+void GLFWWindowImpl::SetFullScreen(bool enabled)
 {
     if (m_data.FullScreen != enabled) {
         m_data.FullScreen = enabled;
@@ -81,12 +81,12 @@ void WindowsWindow::SetFullScreen(bool enabled)
     }
 }
 
-bool WindowsWindow::IsFullScreen() const
+bool GLFWWindowImpl::IsFullScreen() const
 {
     return m_data.FullScreen;
 }
 
-void WindowsWindow::Init(const WindowProps& props)
+void GLFWWindowImpl::Init(const WindowProps& props)
 {
     m_data.Title = props.Title;
     m_data.Width = props.Width;
@@ -181,7 +181,7 @@ void WindowsWindow::Init(const WindowProps& props)
     });
 }
 
-void WindowsWindow::Shutdown()
+void GLFWWindowImpl::Shutdown()
 {
     glfwDestroyWindow(m_window);
     --s_GLFWwindowCount;
