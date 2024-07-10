@@ -20,7 +20,8 @@ public:
 
     enum class DataType {
         UnsignedByte,
-        UnsignedInt32
+        UnsignedInt32,
+        UnsignedInt24_8
     };
 
     struct Info {
@@ -42,6 +43,9 @@ public:
     virtual void SetWrappingMode(const WrappingMode wrappingMode) = 0;
 
     virtual std::uint32_t GetId() const = 0;
+
+    static SharedPtr<Texture> Create(std::uint32_t width, std::uint32_t height, const Info& info);
+    static SharedPtr<Texture> Create(std::uint32_t width, std::uint32_t height, std::uint32_t nrChannels = 3);
 };
 
 } // namespace elv

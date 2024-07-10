@@ -1,8 +1,8 @@
 #pragma once
 
-#include <json_fwd.hpp>
 #include <lia/mat4.h>
 #include <lia/vec3.h>
+#include <nlohmann/json_fwd.hpp>
 
 namespace elv {
 class TransformComponent {

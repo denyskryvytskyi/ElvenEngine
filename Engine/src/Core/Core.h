@@ -15,7 +15,7 @@
 #        include <signal.h>
 #        define EL_DEBUGBREAK() raise(SIGTRAP)
 #    else
-#        error "Platform doesn't support debugbreak yet!"
+#        define EL_DEBUGBREAK() __builtin_trap()
 #    endif
 #    define EL_ASSERTIONS_ENABLED
 #else

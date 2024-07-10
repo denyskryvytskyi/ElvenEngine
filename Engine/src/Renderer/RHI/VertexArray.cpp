@@ -6,6 +6,7 @@
 #include "RendererAPI.h"
 
 #include "Platform/OpenGL/OpenGLVertexArray.h"
+#include "Platform/OpenGL41/OpenGL41VertexArray.h"
 
 namespace elv {
 
@@ -17,6 +18,8 @@ SharedPtr<VertexArray> VertexArray::Create()
         return nullptr;
     case RendererAPI::API::OpenGL:
         return MakeSharedPtr<OpenGLVertexArray>();
+    case RendererAPI::API::OpenGL41:
+        return MakeSharedPtr<OpenGL41VertexArray>();
     }
 
     EL_CORE_ASSERT(false, "Unknown RendererAPI!");

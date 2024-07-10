@@ -24,6 +24,7 @@ private:
     uint32_t m_height { 0 };
     unsigned int m_internalFormat { 0 };
     unsigned int m_dataFormat { 0 };
+    unsigned int m_dataType { 0 };
 };
 
 } // namespace elv

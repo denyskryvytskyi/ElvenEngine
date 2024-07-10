@@ -1,12 +1,10 @@
 #include "EntryPoint.h"
 
-#ifdef EL_PLATFORM_WINDOWS
-
 int main(int argc, char** argv)
 {
-#    ifdef DEBUG_MODE
+#if defined(DEBUG_MODE) && defined(_WIN32)
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#    endif
+#endif
 
     srand(static_cast<uint32_t>(time(0)));
 
@@ -18,5 +16,3 @@ int main(int argc, char** argv)
 
     return 0;
 }
-
-#endif

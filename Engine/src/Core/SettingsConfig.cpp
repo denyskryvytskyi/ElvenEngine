@@ -1,4 +1,4 @@
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 
 #include "SettingsConfig.h"
 
@@ -14,7 +14,7 @@ void LoadSetting(const std::string& name, T& setting, nlohmann::json& j)
 {
     try {
         j.at(name).get_to(setting);
-    } catch (nlohmann::json_abi_v3_11_2::detail::out_of_range e) {
+    } catch (nlohmann::detail::out_of_range e) {
         EL_CORE_WARN("Failed to load setting: {}. Error: {}", name, e.what());
     } catch (...) {
         EL_CORE_WARN("Failed to load setting: {}", name);

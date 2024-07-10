@@ -44,7 +44,7 @@ set(ENGINE_HEADERS
 "src/Renderer/Mesh.h"
 "src/Renderer/RenderTopology.h"
 "src/Renderer/PostProcessor.h"
-"src/Platform/Windows/WindowsWindow.h"
+"src/Platform/GLFW/GLFWWindowImpl.h"
 "src/Platform/OpenGL/OpenGLBuffer.h"
 "src/Platform/OpenGL/OpenGLContext.h"
 "src/Platform/OpenGL/OpenGLRendererAPI.h"
@@ -104,6 +104,7 @@ set(ENGINE_SOURCES
 "src/Renderer/RHI/Shader.cpp"
 "src/Renderer/RHI/VertexArray.cpp"
 "src/Renderer/RHI/RenderTarget.cpp"
+"src/Renderer/RHI/Texture.cpp"
 "src/Renderer/Camera.cpp"
 "src/Renderer/CameraController.cpp"
 "src/Renderer/OrthographicCameraController.cpp"
@@ -121,8 +122,15 @@ set(ENGINE_SOURCES
 "src/Platform/OpenGL/OpenGLVertexArray.cpp"
 "src/Platform/OpenGL/OpenGLTexture.cpp"
 "src/Platform/OpenGL/OpenGLRenderTarget.cpp"
-"src/Platform/Windows/WindowsInput.cpp"
-"src/Platform/Windows/WindowsWindow.cpp"
+"src/Platform/OpenGL41/OpenGL41Buffer.cpp"
+"src/Platform/OpenGL41/OpenGL41Context.cpp"
+"src/Platform/OpenGL41/OpenGL41RendererAPI.cpp"
+"src/Platform/OpenGL41/OpenGL41VertexArray.cpp"
+"src/Platform/OpenGL41/OpenGL41Texture.cpp"
+"src/Platform/OpenGL41/OpenGL41RenderTarget.cpp"
+"src/Platform/GLFW/GLFWInputImpl.cpp"
+"src/Platform/GLFW/GLFWWindowImpl.cpp"
+"src/Platform/OpenGLCommon.cpp"
 "src/Scene/Behavior.cpp"
 "src/Scene/Component.cpp"
 "src/Scene/ComponentSystem.cpp"
@@ -163,6 +171,11 @@ endif()
 set(LIBRARY_NAME ElvenEngine)
 add_library(${LIBRARY_NAME} STATIC ${ENGINE_SOURCES})
 
+target_compile_features(${LIBRARY_NAME} PRIVATE cxx_std_20)
+set(CMAKE_CXX_STANDARD 20 CACHE STRING "v")
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ENGINE_SOURCES})
 
 # path to dependencies
@@ -171,101 +184,152 @@ set(VENDOR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
 # include dirs
 set(ENGINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-set(ENGINE_INCLUDE_DIRS
-${ENGINE_SOURCE_DIR}
-${VENDOR_PATH}/GLAD/include
-${VENDOR_PATH}/GLFW/include
-${VENDOR_PATH}/lia/include
-${VENDOR_PATH}/spdlog/include
-${VENDOR_PATH}/stb/include
-${VENDOR_PATH}/json/include
-${VENDOR_PATH}/freetype/include
-${VENDOR_PATH}/fmt/include
+# ------------------
+# Dependencies
+# ------------------
+FetchContent_Declare(
+        glfw
+        GIT_REPOSITORY "https://github.com/glfw/glfw.git"
+        GIT_TAG "3.4"
+)
+FetchContent_MakeAvailable(glfw)
+set_target_properties(glfw PROPERTIES FOLDER "Libs")
+
+FetchContent_Declare(
+        lia
+        GIT_REPOSITORY "https://github.com/denyskryvytskyi/lia.git"
+        GIT_TAG "main"
+)
+FetchContent_MakeAvailable(lia)
+set_target_properties(lia PROPERTIES FOLDER "Libs")
+
+FetchContent_Declare(
+        spdlog
+        GIT_REPOSITORY "https://github.com/gabime/spdlog.git"
+        GIT_TAG "v1.14.1"
+)
+FetchContent_MakeAvailable(spdlog)
+set_target_properties(spdlog PROPERTIES FOLDER "Libs")
+
+FetchContent_Declare(json URL "https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz")
+FetchContent_MakeAvailable(json)
+set_target_properties(nlohmann_json PROPERTIES FOLDER "Libs")
+
+FetchContent_Declare(
+        freetype
+        GIT_REPOSITORY "https://github.com/freetype/freetype.git"
+        GIT_TAG "VER-2-13-2"
 )
 
+set(FT_DISABLE_ZLIB ON CACHE BOOL "" FORCE)
+set(FT_DISABLE_BZIP2 ON CACHE BOOL "" FORCE)
+set(FT_DISABLE_PNG ON CACHE BOOL "" FORCE)
+set(FT_DISABLE_HARFBUZZ ON CACHE BOOL "" FORCE)
+set(FT_DISABLE_BROTLI ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(freetype)
+set_target_properties(freetype PROPERTIES FOLDER "Libs")
+
+FetchContent_Declare(
+        fmt
+        GIT_REPOSITORY "https://github.com/fmtlib/fmt.git"
+        GIT_TAG "10.2.1"
+)
+FetchContent_MakeAvailable(fmt)
+set_target_properties(fmt PROPERTIES FOLDER "Libs")
+
+FetchContent_Declare(
+        assimp
+        GIT_REPOSITORY "https://github.com/assimp/assimp.git"
+        GIT_TAG "v5.3.1"
+)
+
+# Manually tell assimp where to find zlib
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ZLIB ON CACHE BOOL "" FORCE)
+set(ASSIMP_INJECT_DEBUG_POSTFIX ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(assimp)
+set_target_properties(assimp PROPERTIES FOLDER "Libs")
+
+FetchContent_Declare(
+  imgui
+  GIT_REPOSITORY https://github.com/ocornut/imgui
+  GIT_TAG "docking"
+)
+
+FetchContent_MakeAvailable(imgui)
+
+set(IRRKLANG_INSTALL_DIR ${CMAKE_BINARY_DIR}/_deps/irrklang)
+
+FetchContent_Declare(
+    irrklang
+	URL "http://www.ambiera.at/downloads/irrKlang-64bit-1.5.0.zip"
+    SOURCE_DIR ${IRRKLANG_INSTALL_DIR}
+)
+
+FetchContent_GetProperties(irrklang)
+
+if(NOT irrklang_POPULATED)
+	FetchContent_Populate(irrklang)
+	set(IRRKLANG_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+	set(IRRKLANG_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+	set(IRRKLANG_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+endif()
+
+add_subdirectory(${VENDOR_PATH}/GLAD)
+add_subdirectory(${VENDOR_PATH}/stb)
+
+
 if (MODULE_EDITOR_ENABLED)
-    set(ENGINE_INCLUDE_DIRS
-        ${ENGINE_INCLUDE_DIRS}
-        ${VENDOR_PATH}/imgui/include
+    set(IMGUI_DIR ${imgui_SOURCE_DIR})
+
+    set(IMGUI_SOURCES
+        ${IMGUI_DIR}/imgui.cpp
+        ${IMGUI_DIR}/imgui_draw.cpp
+        ${IMGUI_DIR}/imgui_tables.cpp
+        ${IMGUI_DIR}/imgui_widgets.cpp
+        ${IMGUI_DIR}/misc/cpp/imgui_stdlib.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
+        ${IMGUI_DIR}/imgui_demo.cpp
     )
+    add_library(imgui STATIC ${IMGUI_SOURCES})
+
+    target_include_directories(imgui
+        PUBLIC ${IMGUI_DIR} ${IMGUI_DIR}/backends
+    )
+
+    target_link_libraries(imgui glfw)
+    target_link_libraries(${LIBRARY_NAME} imgui)
+    set_target_properties(imgui PROPERTIES FOLDER "Libs")
 endif()
 
 if (MODULE_SOUND_ENABLED)
-    set(ENGINE_INCLUDE_DIRS
-        ${ENGINE_INCLUDE_DIRS}
-        ${VENDOR_PATH}/irrklang/include
-    )
+    if (APPLE)
+        messsage(FATAL_ERROR "Sound module is not yet supported on MacOS. Please disable this option for now")
+    else()
+        target_include_directories(${LIBRARY_NAME} PUBLIC ${irrklang_SOURCE_DIR}/include)
+        # irrklang is marked here STATIC to avoid IMPORTED_IMPLIB not found error on Windows
+        # the dlls are copied manually in the post build step
+        add_library(irrklang STATIC IMPORTED)
+        set_target_properties(irrklang PROPERTIES IMPORTED_LOCATION "${IRRKLANG_INSTALL_DIR}/lib/Winx64-visualStudio/irrKlang.lib")
+        target_link_libraries(${LIBRARY_NAME} irrklang)
+    endif()
 endif()
 
-if (MODULE_3D_ENABLED)
-    set(ENGINE_INCLUDE_DIRS
-        ${ENGINE_INCLUDE_DIRS}
-        ${VENDOR_PATH}/assimp/include
-        ${PROJECT_SOURCE_DIR}/build_vendor/assimp/include # include generated config.h for assimp
-    )
-endif()
 
-target_include_directories(${LIBRARY_NAME} PUBLIC ${ENGINE_INCLUDE_DIRS})
-
-set(VENDOR_PATH_DEBUG ${PROJECT_SOURCE_DIR}/build_vendor/lib/Debug/)
-set(VENDOR_PATH_RELEASE ${PROJECT_SOURCE_DIR}/build_vendor/lib/Release/)
-
-find_library(glfw_d NAMES glfw3 PATHS ${VENDOR_PATH_DEBUG})
-find_library(glad_d NAMES glad PATHS ${VENDOR_PATH_DEBUG})
-find_library(spdlog_d NAMES spdlogd PATHS ${VENDOR_PATH_DEBUG})
-find_library(stb_d NAMES stb PATHS ${VENDOR_PATH_DEBUG})
-find_library(freetype_d NAMES freetyped PATHS ${VENDOR_PATH_DEBUG})
-find_library(fmt_d NAMES fmtd PATHS ${VENDOR_PATH_DEBUG})
-find_library(glad NAMES glad PATHS ${VENDOR_PATH_RELEASE})
-find_library(glfw NAMES glfw3 PATHS ${VENDOR_PATH_RELEASE})
-find_library(spdlog NAMES spdlog PATHS ${VENDOR_PATH_RELEASE})
-find_library(stb NAMES stb PATHS ${VENDOR_PATH_RELEASE})
-find_library(freetype NAMES freetype PATHS ${VENDOR_PATH_RELEASE})
-find_library(fmt NAMES fmt PATHS ${VENDOR_PATH_RELEASE})
-
-set(VENDOR
-    debug ${glfw_d} optimized ${glfw}
-    debug ${glad_d} optimized ${glad}
-    debug ${spdlog_d} optimized ${spdlog}
-    debug ${stb_d} optimized ${stb}
-    debug ${freetype_d} optimized ${freetype}
-    debug ${fmt_d} optimized ${fmt}
+target_include_directories(${LIBRARY_NAME}
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-
-if (MODULE_EDITOR_ENABLED)
-    find_library(imgui_d NAMES imgui imguid PATHS ${VENDOR_PATH_DEBUG})
-    find_library(imgui NAMES imgui PATHS ${VENDOR_PATH_RELEASE})
-
-    set(VENDOR
-        ${VENDOR}
-        debug ${imgui_d} optimized ${imgui}
-        
-    )
-endif()
-
-if (MODULE_SOUND_ENABLED)
-    find_library(irrklang NAMES irrKlang.lib PATHS ${VENDOR_PATH}/irrklang/lib)
-
-    set(VENDOR
-        ${VENDOR}
-        debug ${irrklang} optimized ${irrklang}
-    )
-endif()
+target_link_libraries(${LIBRARY_NAME} glfw spdlog freetype fmt glad stb)
+target_link_libraries(${LIBRARY_NAME} nlohmann_json::nlohmann_json)
+target_include_directories(${LIBRARY_NAME} PUBLIC ${lia_SOURCE_DIR}/include)
 
 if (MODULE_3D_ENABLED)
-    find_library(assimp_d NAMES assimp-vc143-mtd PATHS ${VENDOR_PATH_DEBUG})
-    find_library(zlib_d NAMES zlibstaticd PATHS ${VENDOR_PATH_DEBUG})
-    find_library(assimp NAMES assimp-vc143-mt PATHS ${VENDOR_PATH_RELEASE})
-    find_library(zlib NAMES zlibstatic PATHS ${VENDOR_PATH_RELEASE})
-
-    set(VENDOR
-        ${VENDOR}
-        debug ${assimp_d} optimized ${assimp}
-        debug ${zlib_d} optimized ${zlib}
-    )
+    target_link_libraries(${LIBRARY_NAME} assimp)
 endif()
-
-target_link_libraries(${LIBRARY_NAME} ${VENDOR})
 
 # pch header file path
 set(ENGINE_PRECOMPILED_HEADERS

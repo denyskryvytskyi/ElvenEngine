@@ -22,7 +22,7 @@ target_link_libraries(${APP_NAME} PUBLIC ElvenEngine)
 target_include_directories(${APP_NAME}
         PRIVATE ${PROJECT_INCLUDE_DIRECTORIES}
         )
-
+  
 set_target_properties(${APP_NAME} PROPERTIES 
                       VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>)
 
@@ -32,28 +32,36 @@ target_compile_definitions(${APP_NAME} PRIVATE
 )
 
 if(WIN32)
-  set(IRRKLANG_BIN_PATH ${PROJECT_SOURCE_DIR}/Engine/vendor/irrklang/bin/win/)
-  set(ASSIMP_BIN_PATH ${PROJECT_SOURCE_DIR}/build_vendor/bin/)
-  set(ASSIMP_DLL "assimp-vc143-mt$<$<CONFIG:Debug>:d>.dll")
+  if (MODULE_SOUND_ENABLED)
+    set(IRRKLANG_BIN_PATH ${CMAKE_BINARY_DIR}/_deps/irrklang/bin/winx64-visualStudio/)
 
-  add_custom_command(TARGET ${APP_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${IRRKLANG_BIN_PATH}irrKlang.dll
-    ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/irrKlang.dll
+    add_custom_command(TARGET ${APP_NAME} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+      ${IRRKLANG_BIN_PATH}irrKlang.dll
+      ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/irrKlang.dll
 
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${IRRKLANG_BIN_PATH}ikpMP3.dll
-    ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/ikpMP3.dll
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+      ${IRRKLANG_BIN_PATH}ikpMP3.dll
+      ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/ikpMP3.dll
 
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${IRRKLANG_BIN_PATH}ikpFlac.dll
-    ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/ikpFlac.dll
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+      ${IRRKLANG_BIN_PATH}ikpFlac.dll
+      ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/ikpFlac.dll
+    )
+  endif()
 
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${ASSIMP_BIN_PATH}$<CONFIG>/${ASSIMP_DLL}
-    ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/${ASSIMP_DLL})
-else()
-  message("This is not supported platform for now!")
+  if (BUILD_SHARED_LIBS)
+    set(ASSIMP_BIN_PATH ${CMAKE_BINARY_DIR}/_deps/assimp-build/lib/)
+    set(ASSIMP_DLL "assimp-vc143-mt$<$<CONFIG:Debug>:d>.dll")
+
+    add_custom_command(TARGET ${APP_NAME} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+      ${ASSIMP_BIN_PATH}$<CONFIG>/${ASSIMP_DLL}
+      ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/${ASSIMP_DLL}
+    )
+  endif()
+
+
 endif()
 
 set(RES_COMMON_PATH ${PROJECT_SOURCE_DIR}/Engine/assets)
