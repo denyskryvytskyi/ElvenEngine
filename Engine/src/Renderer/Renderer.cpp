@@ -46,6 +46,10 @@ void Renderer::Init(const uint16_t width, const uint16_t height)
     m_rendererAPI->Init();
 
     m_postProcessor.Init(width, height);
+
+    if (m_isSkyboxEnabled) {
+        m_skybox.Init();
+    }
 }
 
 void Renderer::Shutdown()
@@ -54,6 +58,12 @@ void Renderer::Shutdown()
 
 void Renderer::BeginScene(SharedPtr<CameraController>& cameraController)
 {
+    if (cameraController) {
+        m_sceneData.ViewProjectionMatrix = cameraController->GetCamera().GetViewProjectionMatrix();
+        m_sceneData.ViewMatrix = cameraController->GetCamera().GetViewMatrix();
+        m_sceneData.ProjectionMatrix = cameraController->GetCamera().GetProjectionMatrix();
+    }
+
     // 1. Render pass: draw to separate render target
     if (m_isMSAAEnabled) {
         m_renderTargetMultisampled->Bind();
@@ -64,14 +74,17 @@ void Renderer::BeginScene(SharedPtr<CameraController>& cameraController)
     m_rendererAPI->EnableDepthTesting(true);
     m_rendererAPI->SetClearColor(Renderer::GetClearColor());
     m_rendererAPI->Clear();
-
-    if (cameraController) {
-        m_sceneData.ViewProjectionMatrix = cameraController->GetCamera().GetViewProjectionMatrix();
-    }
 }
 
 void Renderer::EndScene()
 {
+    // Render the skybox last
+    if (m_isSkyboxEnabled) {
+        m_rendererAPI->EnableDepthMask(false);
+        m_skybox.Draw(this, m_sceneData.ViewMatrix, m_sceneData.ProjectionMatrix);
+        m_rendererAPI->EnableDepthMask(true);
+    }
+
     // 2. Render pass: blit the multisampled to the intermediate render target
     if (m_isMSAAEnabled) {
         m_renderTargetIntermidiate->Blit(m_renderTargetMultisampled);
@@ -118,6 +131,11 @@ void Renderer::Submit(const SharedPtr<VertexArray>& vertexArray, std::uint32_t i
     m_rendererAPI->DrawIndexed(vertexArray, indexCount, topology);
 }
 
+void Renderer::SubmitArrays(const SharedPtr<VertexArray>& vertexArray, std::uint32_t verticesAmount, const RenderTopology topology)
+{
+    m_rendererAPI->DrawArrays(vertexArray, verticesAmount, topology);
+}
+
 void Renderer::OnWindowResize(std::uint32_t width, std::uint32_t height)
 {
     m_renderTargetMultisampled->Resize(width, height);
@@ -156,5 +174,21 @@ void Renderer::ClearBufferBit(const BufferBitType bitType)
     } else {
         m_rendererAPI->Clear();
     }
+}
+
+void Renderer::EnableSkybox(bool enabled)
+{
+    m_isSkyboxEnabled = enabled;
+
+    static bool isInited = false;
+    if (enabled && !isInited) {
+        m_skybox.Init();
+        isInited = true;
+    }
+}
+
+void Renderer::SetSkyboxFaces(const Skybox::CubemapFaceFilepaths& filepathes)
+{
+    m_skybox.SetFaces(filepathes);
 }
 } // namespace elv

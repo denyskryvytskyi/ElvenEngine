@@ -61,7 +61,7 @@ void PostProcessor::BuildBlurMask(const BlurGradientMaskType type)
     delete[] data;
 }
 
-std::shared_ptr<Texture> PostProcessor::Process(Renderer* renderer, const std::shared_ptr<Texture>& src)
+SharedPtr<Texture> PostProcessor::Process(Renderer* renderer, const SharedPtr<Texture>& src)
 {
     if (IsBlurEnabled) {
         m_renderTargetPostProcessor->Bind();

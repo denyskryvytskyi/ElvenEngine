@@ -6,7 +6,9 @@ EventManager gEventManager;
 
 void EventManager::Shutdown()
 {
+    m_eventsQueue.clear();
     m_subscribers.clear();
+    m_subscribersByEventId.clear();
 }
 
 void EventManager::Subscribe(EventType eventType, UniquePtr<IEventHandlerWrapper>&& handler, EventId eventId)

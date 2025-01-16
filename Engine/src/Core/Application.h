@@ -44,22 +44,22 @@ public:
     Renderer& GetRenderer() { return m_renderer; }
 
 protected:
-    virtual void OnCreate() {};
-    virtual void OnUpdate(float dt) {};
-    virtual void OnRender(float dt) {};
-    virtual void OnProcessInput(float dt) {};
+    virtual void OnCreate() { };
+    virtual void OnUpdate(float dt) { };
+    virtual void OnRender(float dt) { };
+    virtual void OnProcessInput(float dt) { };
 #if MODULE_EDITOR_ENABLED
-    virtual void OnImguiRender() {};
+    virtual void OnImguiRender() { };
 #endif
-    virtual void OnDestroy() {};
+    virtual void OnDestroy() { };
 
-    virtual void OnWindowResizeApp() {};
+    virtual void OnWindowResizeApp() { };
 
 private:
     void OnWindowClose(const events::WindowCloseEvent& e);
     void OnWindowResize(const events::WindowResizeEvent& e);
 
-    void UpdateFps(Timer& fpsCounter, const float elapsed, const float elapsedMs);
+    void UpdateFps(Timer& fpsCounter, const float elapsed, const float elapsedMs) const;
 
 protected:
     ecs::Entity m_orthoCameraEntity { ecs::INVALID_ENTITY_ID };

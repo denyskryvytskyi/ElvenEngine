@@ -85,6 +85,11 @@ void OpenGLRendererAPI::EnableDepthTesting(bool enabled)
     }
 }
 
+void OpenGLRendererAPI::EnableDepthMask(bool enabled)
+{
+    glDepthMask(enabled ? GL_TRUE : GL_FALSE);
+}
+
 void OpenGLRendererAPI::EnableMSAA(bool enabled)
 {
     if (enabled) {
@@ -118,6 +123,11 @@ void OpenGLRendererAPI::DrawIndexed(const SharedPtr<VertexArray>& vertexArray, c
     const std::uint32_t count = indexCount ? indexCount : vertexArray->GetIndexCount();
     vertexArray->Bind();
     glDrawElements(GetTopology(topology), count, GL_UNSIGNED_INT, nullptr);
+}
+
+void OpenGLRendererAPI::DrawArrays(const SharedPtr<VertexArray>& vertexArray, const std::uint32_t verticesAmount, const RenderTopology topology)
+{
+    glDrawArrays(GetTopology(topology), 0, verticesAmount);
 }
 
 } // namespace elv

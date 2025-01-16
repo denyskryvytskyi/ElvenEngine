@@ -62,6 +62,22 @@ void TextureManager::Load(const std::string& textureName, const std::string& fil
     EL_CORE_INFO("Texture {0} is already loaded.", textureName);
 }
 
+TextureManager::LoadedTextureInfo TextureManager::LoadWithoutCache(const std::string& textureName, const std::string& filePath, const bool isFlipped)
+{
+    LoadedTextureInfo info;
+    stbi_set_flip_vertically_on_load(isFlipped);
+
+    {
+        PROFILE_TO_LOG(fmt::format("Texture {} is loaded in", textureName.c_str()))
+        info.data = stbi_load(filePath.data(), &info.width, &info.height, &info.nrChannels, 0);
+    }
+
+    if (info.data == nullptr) {
+        EL_CORE_CRITICAL("Failed to load texture: {0}", textureName);
+    }
+    return info;
+}
+
 SharedPtr<Texture> TextureManager::Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels, bool save)
 {
     // check whether we already loaded this texture
@@ -114,7 +130,7 @@ void TextureManager::Update()
 {
     // create texture with already loaded data
     if (texturesMutex.try_lock()) {
-        for (auto textureInfo : m_loadedInfo) {
+        for (auto& textureInfo : m_loadedInfo) {
             CreateTexture(textureInfo);
             m_textureLoadingInProgress.erase(textureInfo.textureName);
         }
@@ -152,7 +168,7 @@ std::vector<std::string> TextureManager::GetTextureNames() const
 {
     std::vector<std::string> names;
 
-    for (const auto texture : m_textures) {
+    for (const auto& texture : m_textures) {
         names.emplace_back(texture.first);
     }
 
@@ -174,6 +190,11 @@ void TextureManager::CreateTexture(const LoadedTextureInfo& info)
     default:
         EL_CORE_ASSERT(false, "Unknown Renderer API!");
     }
+}
+
+void TextureManager::LoadedTextureInfo::Free() const
+{
+    stbi_image_free(data);
 }
 
 } // namespace elv

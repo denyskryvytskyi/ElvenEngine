@@ -202,7 +202,7 @@ void Application::OnWindowResize(const events::WindowResizeEvent& e)
     OnWindowResizeApp();
 }
 
-void Application::UpdateFps(Timer& fpsCounter, const float elapsed, const float elapsedMs)
+void Application::UpdateFps(Timer& fpsCounter, const float elapsed, const float elapsedMs) const
 {
     static float accumTime = 0.0f;
     static float accumTimeMs = 0.0f;

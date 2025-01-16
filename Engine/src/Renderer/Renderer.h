@@ -9,6 +9,8 @@
 
 #include "Scene/Components/LightComponent.h"
 
+#include "Skybox.h"
+
 namespace elv {
 
 class Mesh;
@@ -28,6 +30,8 @@ public:
 private:
     struct SceneData {
         lia::mat4 ViewProjectionMatrix;
+        lia::mat4 ViewMatrix;
+        lia::mat4 ProjectionMatrix;
     };
 
 public:
@@ -40,6 +44,7 @@ public:
     void Submit(const SharedPtr<Shader>& shader, const SharedPtr<VertexArray>& vertexArray, const lia::mat4& modelMatrix = lia::mat4(1.0f));
     void Submit(const SharedPtr<Shader>& shader, const SharedPtr<Mesh>& mesh, const lia::mat4& modelMatrix = lia::mat4(1.0f));
     void Submit(const SharedPtr<VertexArray>& vertexArray, std::uint32_t indexCount = 0, const RenderTopology topology = RenderTopology::Triangles);
+    void SubmitArrays(const SharedPtr<VertexArray>& vertexArray, std::uint32_t verticesAmount, const RenderTopology topology = RenderTopology::Triangles);
     void EndScene();
 
     void OnWindowResize(std::uint32_t width, std::uint32_t height);
@@ -48,6 +53,10 @@ public:
     void DisableByteAlignment();
     void EnableFaceCulling(bool enabled);
     void ClearBufferBit(const BufferBitType colorBit);
+
+    void EnableSkybox(bool enabled);
+    bool IsSkyboxEnabled() const { return m_isSkyboxEnabled; }
+    void SetSkyboxFaces(const Skybox::CubemapFaceFilepaths& filepathes);
 
     void SetClearColor(const lia::vec4& color) { m_clearColor = color; }
     const lia::vec4& GetClearColor() { return m_clearColor; }
@@ -68,6 +77,7 @@ private:
 private:
     bool m_isMSAAEnabled { true };
     bool m_isBlinnPhongEnabled { false };
+    bool m_isSkyboxEnabled { true };
 
     SceneData m_sceneData;
     lia::vec4 m_clearColor { 0.2f, 0.2f, 0.2f, 1.0f };
@@ -81,6 +91,8 @@ private:
 
     SharedPtr<Shader> m_screenQuadShader { nullptr };
     SharedPtr<VertexArray> m_NDCPlaneVao { nullptr };
+
+    Skybox m_skybox;
 };
 
 } // namespace elv

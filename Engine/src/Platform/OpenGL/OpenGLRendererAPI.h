@@ -13,6 +13,7 @@ class OpenGLRendererAPI : public RendererAPI {
     void ClearColorBit() override;
 
     void EnableDepthTesting(bool enabled) override;
+    void EnableDepthMask(bool enabled) override;
     void EnableMSAA(bool enabled) override;
     void EnableFaceCulling(bool enabled) override;
 
@@ -21,6 +22,7 @@ class OpenGLRendererAPI : public RendererAPI {
     void BindDefaultFramebuffer() override;
 
     void DrawIndexed(const SharedPtr<VertexArray>& vertexArray, const std::uint32_t indexCount = 0, const RenderTopology topology = RenderTopology::Triangles) override;
+    void DrawArrays(const SharedPtr<VertexArray>& vertexArray, const std::uint32_t verticesAmount = 0, const RenderTopology topology = RenderTopology::Triangles) override;
 };
 
 } // namespace elv

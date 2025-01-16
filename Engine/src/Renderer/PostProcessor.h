@@ -24,7 +24,7 @@ public:
 
     void Init(const std::uint32_t width, const std::uint32_t height);
     void BuildBlurMask(const BlurGradientMaskType type);
-    std::shared_ptr<Texture> Process(Renderer* renderer, const std::shared_ptr<Texture>& src);
+    SharedPtr<Texture> Process(Renderer* renderer, const SharedPtr<Texture>& src);
 
     void OnWindowResized(const std::uint32_t width, const std::uint32_t height);
 
@@ -45,7 +45,7 @@ public:
 private:
     UniquePtr<RenderTarget> m_renderTargetPostProcessor { nullptr };
 
-    std::shared_ptr<Shader> m_blurShader { nullptr };
-    std::shared_ptr<Texture> m_blurMaskTexture { nullptr };
+    SharedPtr<Shader> m_blurShader { nullptr };
+    SharedPtr<Texture> m_blurMaskTexture { nullptr };
 };
 } // namespace elv

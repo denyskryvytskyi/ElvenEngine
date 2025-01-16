@@ -15,6 +15,8 @@ public:
         int nrChannels { 0 };
         unsigned char* data { nullptr };
         std::string textureName;
+
+        void Free() const;
     };
 
 public:
@@ -24,6 +26,9 @@ public:
 
     // async load from file
     void Load(const std::string& textureName, const std::string& filePath, const bool isAsync);
+
+    // load and return info without caching
+    LoadedTextureInfo LoadWithoutCache(const std::string& textureName, const std::string& filePath, const bool isFlipped);
 
     // just create texture for specific texture implementation
     SharedPtr<Texture> Load(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels, bool save = true);
@@ -69,6 +74,11 @@ inline SharedPtr<Texture> Load(std::uint32_t width, std::uint32_t height, const 
 inline SharedPtr<Texture> LoadUnique(const std::string& textureName, std::uint32_t width, std::uint32_t height, uint32_t nrChannels = 3)
 {
     return gTextureManager.Load(textureName, width, height, nrChannels, false);
+}
+
+inline TextureManager::LoadedTextureInfo LoadWithoutCache(const std::string& textureName, const std::string& filePath, const bool isFlipped = true)
+{
+    return gTextureManager.LoadWithoutCache(textureName, filePath, isFlipped);
 }
 
 inline SharedPtr<Texture> Get(std::string_view textureName)

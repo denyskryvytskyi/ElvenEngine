@@ -39,6 +39,7 @@ void Editor::OnImGuiRender()
     bool isVSync = window->IsVSync();
     bool isFullScreen = window->IsFullScreen();
     bool isMSAAEnabled = renderer.IsMSAAEnabled();
+    bool isSkyboxEnabled = renderer.IsSkyboxEnabled();
     bool isBlinnPhongEnabled = renderer.IsBlinnPhongEnabled();
 
     // ============ Settings panel ============
@@ -55,6 +56,10 @@ void Editor::OnImGuiRender()
 
     if (ImGui::Checkbox("MSAA", &isMSAAEnabled)) {
         renderer.EnableMSAA(isMSAAEnabled);
+    }
+
+    if (ImGui::Checkbox("Skybox", &isSkyboxEnabled)) {
+        renderer.EnableSkybox(isSkyboxEnabled);
     }
 
     if (ImGui::Checkbox("Blinn-Phong", &isBlinnPhongEnabled)) {

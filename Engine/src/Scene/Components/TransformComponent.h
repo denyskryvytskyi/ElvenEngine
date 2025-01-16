@@ -33,7 +33,7 @@ public:
 
     const lia::mat4& GetLocalMatrix() const { return m_localMatrix; }
     const lia::mat4& GetModelMatrix() const { return m_modelMatrix; }
-    const lia::mat4& GetNormalModelMatrix() const { return m_modelMatrix; }
+    const lia::mat4& GetNormalModelMatrix() const { return m_normalMatrix; }
 
     bool IsDirty() const { return m_isDirty; }
 
